@@ -95,7 +95,7 @@ on(document, "DOMContentLoaded", () => {
                     const file = input.files[i];
 
                     fileArray.push({
-                        base64: await toBase64Max(file, 2e5),
+                        base64: await toBase64(file),
                         name: file.name,
                         id: `auto_${randomString(37)}`,
                     });

@@ -37,7 +37,7 @@ element.blog_carousel {
     display: block;
 }
 
-.news-img {
+.news-div:has(element.blog_carousel) ~ .news-img {
     display: none;
 }
 
