@@ -230,7 +230,7 @@ on(document, "DOMContentLoaded", () => {
 
             if (!result) return;
 
-            json.newsletter = await confirm("Sollte dieser Beitrag als Newsletter verschickt werden? (OK = Ja, Abbrechen = Nein. Wenn du den Beitrag nur bearbeitest, wird sowieso keine E-Mail verschickt.)");
+            json.newsletter = await confirm("Sollte dieser Beitrag als Newsletter verschickt werden? (OK = Ja, Abbrechen = Nein. Die E-Mail kann nur einmal verschickt werden.)");
 
             json.src = getQuery(".news *:is(img, iframe)").get(0).src;
 
@@ -238,7 +238,7 @@ on(document, "DOMContentLoaded", () => {
             json.isBase64 = false;
 
             if (json.src.includes("ik.imagekit.io/zmt/pdf/") || json.src.includes(".pdf")) json.type = "iframe";
-            else if (json.src.includes("https://")) json.type = "img";
+            else if (json.src.startsWith("https://") || json.src.startsWith("http://")) json.type = "img";
             else {
                 json.type = "img";
                 json.isBase64 = true;
@@ -257,6 +257,8 @@ on(document, "DOMContentLoaded", () => {
             json.id = edit_btn.data("data-news-id");
 
             const response = await post(isNew ? "/post/news" : "/post/news/update", json);
+
+            alert("Bitte warte einen Moment, bis alles verarbeitet wurde. Schliesse den Builder nicht!");
 
             if (response.ok) return alert("Das hat geklappt, die News sind jetzt online und du kannst den Builder verlassen.");
 

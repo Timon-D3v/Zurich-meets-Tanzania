@@ -1,4 +1,4 @@
-main h1,
+main h1:not(.news-title),
 main h2,
 main h3,
 main h4,
@@ -7,7 +7,7 @@ main h6 {
     padding: 0 10vw;
 }
 
-main h1 {
+main h1:not(.news-title) {
     font-size: 25px;
 }
 

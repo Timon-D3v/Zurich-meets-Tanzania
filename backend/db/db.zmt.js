@@ -209,15 +209,15 @@ export async function getXNews(i) {
     return result;
 }
 
-export async function submitNews(html, type, src, position) {
-    let query = "INSERT INTO `zmt`.`news` (`html`, `type`, `src`, `position`) VALUES (?, ?, ?, ?);";
-    await pool.query(query, [JSON.stringify(html), type, src, position]);
+export async function submitNews(html, type, src, position, newsletter_is_sent) {
+    let query = "INSERT INTO `zmt`.`news` (`html`, `type`, `src`, `position`, `newsletter_is_sent`) VALUES (?, ?, ?, ?, ?);";
+    await pool.query(query, [JSON.stringify(html), type, src, position, newsletter_is_sent]);
     return true;
 }
 
-export async function updateNews(html, type, src, position, id) {
-    let query = "UPDATE `zmt`.`news` SET `html` = ?, `type` = ?, `src` = ?, `position` = ? WHERE (`id` = ?);";
-    await pool.query(query, [JSON.stringify(html), type, src, position, id]);
+export async function updateNews(html, type, src, position, id, newsletter_is_sent) {
+    let query = "UPDATE `zmt`.`news` SET `html` = ?, `type` = ?, `src` = ?, `position` = ?, `newsletter_is_sent` = ? WHERE (`id` = ?);";
+    await pool.query(query, [JSON.stringify(html), type, src, position, newsletter_is_sent, id]);
     return true;
 }
 

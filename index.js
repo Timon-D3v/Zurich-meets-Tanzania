@@ -1323,7 +1323,7 @@ app.post("/post/news", async (req, res) => {
             path = result.path;
         }
 
-        const result = await db.submitNews(html, type, path, pos);
+        const result = await db.submitNews(html, type, path, pos, newsletter);
 
         if (result) return res.json({ ok: true, message: "Das hat geklappt." });
 
@@ -1338,15 +1338,53 @@ app.post("/post/news/update", async (req, res) => {
     if (req.session?.user?.type !== "admin") return res.json({ error: "501: Forbidden" });
 
     try {
-        const { src, html, type, isBase64, id, pos } = req.body;
+        const { newsletter, src, html, type, isBase64, id, pos } = req.body;
         let path = src;
+
+        const news = await db.getNews();
+
+        if (newsletter && !news.newsletter_is_sent) {
+            const recipients = await db.getAllNewsletterSignUps();
+
+            let text = "";
+
+            const addText = (element) => {
+                element.children.forEach((child) => {
+                    switch (child.tagName) {
+                        case "___text___":
+                            text += child.content + " \n";
+                            break;
+                        case "BR":
+                            text += "\n";
+                            break;
+                        case "DIV":
+                            addText(child);
+                            break;
+                        case "H2":
+                            addText(child);
+                            break;
+                        case "P":
+                            addText(child);
+                            break;
+                    }
+                });
+            };
+
+            html.children.forEach(addText);
+
+            if (text === "") text = "--- Vorschau konnte nicht geladen werden. ---";
+
+            if (text.length > 1000) text = text.slice(0, 1500) + "...";
+
+            sendNewsletterEmail(recipients, EMAILS.newsletterSubject, text);
+        }
 
         if (isBase64) {
             const result = await imagekitUpload(src, type + "___NEWS___" + timon.randomString(32), "/news/");
             path = result.path;
         }
 
-        const result = await db.updateNews(html, type, path, pos, id);
+        const result = await db.updateNews(html, type, path, pos, id, newsletter || news.newsletter_is_sent);
 
         if (result) return res.json({ ok: true, message: "Das hat geklappt." });
 
