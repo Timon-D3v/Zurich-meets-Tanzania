@@ -1652,17 +1652,17 @@ nav .mit-bild a {
 }
 
 .calendar-title {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
     font-size: 1.75rem;
     letter-spacing: 0.75px;
 }
 
 .calendar-name {
-    font-weight: normal;
-    letter-spacing: 1px;
+    display: block;
+    margin-top: 6px;
     font-weight: 600;
+    font-family: "Titillium Web", sans-serif;
+    line-height: 1;
+    font-size: 1.25rem;
 }
 
 .calendar-name > a {
