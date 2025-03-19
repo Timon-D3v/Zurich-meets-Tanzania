@@ -75,7 +75,7 @@ submit_file.click(async () => {
 
 if (JSON.stringify(get_member) !== "{}") {
     get_member.click(async () => {
-        window.location.href = ORIGIN + "/spenden?exec=toggleDonateForm";
+        window.location.href = ORIGIN + "/spenden#scrollToMembership";
     });
 } else {
     getMyBills();

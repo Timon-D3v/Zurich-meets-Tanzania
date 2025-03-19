@@ -6,7 +6,7 @@ import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import EMAILS from "../backend/constants/emails.js";
 import { getAccount, updateProfile } from "../backend/db/db.zmt.js";
-import { createMailSubject, createMailText } from "./createMailMethods.js";
+import { createDonateSubject, createDonateText, createMailSubject, createMailText } from "./createMailMethods.js";
 
 dotenv.config({ path: resolve(dirname(fileURLToPath(import.meta.url)), "../.env") });
 
@@ -247,4 +247,16 @@ export async function sendNewsletterSignUpConfirmation(email, id, name, family_n
     const { response } = await sendMail(email, data);
 
     return response?.status === 200;
+}
+
+export async function sendDonationMail(name, familyName, email, usageType) {
+    const { header, footer } = EMAILS;
+    const data = {
+        Subject: createDonateSubject(name, familyName),
+        TextPart: createDonateText(name, familyName, email, usageType),
+        HTMLPart: header + "<p>" + createDonateText(name, familyName, email, usageType).replaceAll("\n", "<br>") + "</p>" + footer,
+        CustomID: "Donation Form",
+    };
+    const result = await sendMail("info@zurich-meets-tanzania.com", data);
+    return result.response.status;
 }

@@ -26,7 +26,8 @@ getQuery(".n-t-summary").forEach((elm, i) => {
     elm.click(() => getQuery(".n-t-details").get(i).toggleClass("open"));
 });
 
-getQuery("img").on("dragstart", () => {
+getQuery("img").on("dragstart", e => {
+    e.preventDefault();
     return false;
 });
 

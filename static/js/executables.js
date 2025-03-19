@@ -5,7 +5,6 @@ addEventListener("DOMContentLoaded", () => {
         passwordSuccessfulReset: () => neutralNotification("Passwort erfolgreich zurückgesetzt."),
         alreadyMember: () => infoNotification("Du bist schon ein Mitglied"),
         profileMembership: () => getElm("profile_dashboard_btn3").click(),
-        toggleDonateForm: () => donate_toggleForms(),
         toggleLoginForm: () => toggleForms(),
         informUserIsNotMember: () => infoNotification('Du bist kein Mitglied. Um Mitglied zu werden gehe bitte auf die Seite "Mitglied werden"'),
         error: () => {

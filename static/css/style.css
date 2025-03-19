@@ -275,6 +275,10 @@ img[src$=".svg"] {
     filter: invert(var(--darkmode));
 }
 
+img::selection {
+    background-color: transparent;
+}
+
 .invisible,
 .hidden {
     display: none !important;
@@ -659,6 +663,7 @@ main a:hover::selection {
     text-align: center;
     text-transform: uppercase;
     margin: 20px calc(50% - 200px);
+    cursor: pointer;
 }
 
 .hero-cta:hover {
@@ -1587,136 +1592,8 @@ p.news-a-t {
     transform: rotate(-180deg);
 }
 
-.donate-wrapper {
-    margin: var(--basic-margin);
-    background-color: var(--background-100);
-}
-
-.donate-title {
-    text-align: center;
-    font-size: calc(4vh * var(--font-ratio));
-    margin: 0;
-    padding-top: 4vh;
-}
-
-.donate-onetime {
-    --factor: 1;
-    display: none;
-    grid-template-columns: repeat(calc(2 / var(--factor)), 1fr);
-    grid-template-rows: repeat(calc(2 * var(--factor)), 30vh);
-    min-height: calc((30vh * 2 + 5vh) * var(--factor));
-    width: calc(100% - 10vw);
-    gap: 5vh 5vw;
-    padding: 5vh 5vw;
-}
-
-.donate-onetime.active {
-    display: grid;
-}
-
-.donate-amount {
-    background-color: var(--background-100);
-    border: 1vh solid var(--text-950);
-    color: var(--text-950);
-    transition: all 0.2s ease-out;
-    font-family: "Titillium Web", sans-serif;
-    overflow: hidden;
-}
-
-.donate-amount:hover,
-.donate-amount:active,
-.donate-amount.active {
-    color: var(--secondary-500);
-    border-color: var(--secondary-500);
-}
-
-.donate-currency {
-    height: 5vh;
-    margin: 0.5vh 1vw;
-    line-height: 1;
-    font-size: 4vh;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: inherit;
-    transition: inherit;
-    pointer-events: none;
-}
-
-.donate-number {
-    height: 21vh;
-    margin: 1vh 2vw;
-    text-align: center;
-    font-size: 14vh;
-    font-weight: 900;
-    line-height: 1;
-    background-color: transparent;
-    outline: none;
-    border: none;
-    max-width: calc(100% - 4vw);
-    padding: 0;
-    pointer-events: none;
-    color: inherit;
-    transition: inherit;
-}
-
-.donate-number::-webkit-inner-spin-button {
-    display: none;
-}
-
-.donate-number::placeholder {
-    color: inherit;
-}
-
-#donate_custom {
-    pointer-events: all;
-}
-
-button.donate-btn {
-    position: static;
-    transform: none;
-    margin: 0;
-    margin-bottom: 2.5vh;
-    height: auto;
-    min-height: 80px;
-    cursor: pointer;
-}
-
-.donate-decider {
-    border-bottom: 0.4vh solid var(--text-950);
-    margin: 0 5vw;
-}
-
-.donate-decider-btn {
-    border: 0.4vh solid var(--text-950);
-    border-bottom: none;
-    margin-top: 2.5vh;
-    padding: 1vh 1vw;
-    font-size: 3vh;
-    background-color: transparent;
-    transition: all 0.25s ease;
-    color: var(--text-950);
-}
-
-.donate-decider-btn.active,
-.donate-decider-btn:hover {
-    background-color: var(--text-950);
-    color: var(--text-50);
-}
-
-.donate-decider-btn:active {
-    background-color: #000;
-}
-
-.donate-decider-btn:nth-child(1) {
-    margin-right: 2.5vw;
-}
-
 .visions-liste > li {
     font-size: 1.2em;
-}
-
-.hero-cta.donate-btn.mitglied {
-    margin-top: 5vh;
 }
 
 nav .mit-bild a {
@@ -1742,28 +1619,6 @@ nav .mit-bild a {
 
 .n-t-darkmode {
     cursor: pointer;
-}
-
-.donate-btn-wrapper {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 5vw;
-    box-sizing: border-box;
-    padding: 5vh 5vw;
-    padding-top: 0;
-}
-
-.donate-btn.secondary {
-    background-color: transparent;
-    border: 0.6vh solid var(--text-950);
-    color: var(--text-950);
-    box-sizing: border-box;
-    font-size: 30px;
-}
-
-.donate-btn.secondary:hover {
-    background-color: transparent;
 }
 
 .calendar {
@@ -1993,6 +1848,213 @@ nav .mit-bild a {
 
 .cookie-text a:hover {
     color: var(--primary-500);
+}
+
+.donate-form {
+    margin: var(--basic-margin);
+    background-color: var(--background-100);
+    padding: 2vh 1vw;
+    box-sizing: border-box;
+}
+
+.donate-title {
+    font-size: 3.75em;
+    text-align: center;
+    margin: 0;
+    padding: 0 5vw;
+    text-decoration: underline;
+}
+
+.donate-btn.hero-cta {
+    position: static;
+    display: block;
+    transform: none;
+    width: auto;
+    height: auto;
+    font-size: 1.5em;
+    padding: 0.5em 1em;
+    margin: 20px 0;
+}
+
+.donate-btn.secondary {
+    background-color: transparent;
+    border: 0.6vh solid var(--text-950);
+    color: var(--text-950);
+    box-sizing: border-box;
+    font-size: 30px;
+}
+
+.donate-btn.secondary:hover {
+    background-color: transparent;
+}
+
+.donate-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.donate-amount {
+    background-color: var(--background-100);
+    border: 10px solid var(--text-950);
+    color: var(--text-950);
+    transition: all 0.2s ease-out;
+    font-family: "Titillium Web", sans-serif;
+    height: auto;
+    box-sizing: border-box;
+    margin: 2vh 0;
+    width: 40%;
+}
+
+.donate-amount:hover,
+.donate-amount:active,
+.donate-amount.active {
+    color: var(--secondary-500);
+    border-color: var(--secondary-500);
+}
+
+.donate-currency {
+    height: calc(100% / 27 * 5);
+    width: 100%;
+    padding: 5px 10px;
+    line-height: 1;
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: inherit;
+    transition: inherit;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.donate-number {
+    height: calc(100% / 27 * 21);
+    width: 100%;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 90px;
+    font-weight: 900;
+    line-height: 1;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    pointer-events: none;
+    color: inherit;
+    transition: inherit;
+    box-sizing: border-box;
+}
+
+.donate-number::-webkit-inner-spin-button {
+    display: none;
+}
+
+.donate-number::placeholder {
+    color: inherit;
+}
+
+.donate-form-pair {
+    width: 100%;
+}
+
+.donate-label {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 0.5rem;
+    max-width: 45rem;
+}
+
+.donate-input {
+    display: block;
+    width: 100%;
+    border: 1.5px solid var(--text-900);
+    background-color: transparent;
+    border-radius: 10px;
+    height: 50px;
+    max-width: 45rem;
+    padding: 0 10px;
+    margin: 0 auto;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+}
+
+.donate-input:focus {
+    border: 1.5px solid var(--violett);
+}
+
+.donate-option {
+    background-color: var(--background-50);
+}
+
+.donate-option:active {
+    background-color: var(--primary-500);
+}
+
+select.donate-input {
+    cursor: pointer;
+}
+
+.donate-name-pair {
+    width: 100%;
+    max-width: 45rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.donate-name-pair-inner {
+    min-width: -webkit-fill-available;
+    min-width: fit-content;
+    flex: 1;
+}
+
+.donate-wrapper {
+    display: flex;
+}
+
+.donate-form-wrapper {
+    flex: 2;
+}
+
+.donate-qr-wrapper {
+    flex: 1;
+    max-width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.donate-qr {
+    filter: invert(1) invert(92%) sepia(6%) saturate(2857%) hue-rotate(312deg) brightness(113%) contrast(101%); /* White to --background-100 */
+    width: 100%;
+    max-height: calc(402px + 2rem); /* Picture is 402px wide */
+    max-width: calc(402px + 2rem);
+    object-fit: contain;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.donate-qr::selection {
+    background-color: transparent;
+}
+
+.donate-qr-text {
+    width: 100%;
+    max-width: calc(402px + 2rem);
+    padding: 0 1rem;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.donate-description {
+    margin: 0;
+    padding: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    font-size: 1.25rem;
 }
 
 @media screen and (min-width: 1200px) {
@@ -2372,12 +2434,37 @@ nav .mit-bild a {
         font-size: calc(2.5vh / var(--font-ratio));
     }
 
-    .donate-onetime {
-        --factor: 2;
-    }
-
     .mobile-donation {
         display: flex;
+    }
+
+    .donate-amount {
+        width: 60%;
+        margin: 20px 7.5vw;
+    }
+
+    .donate-wrapper {
+        flex-direction: column-reverse;
+    }
+    
+    .donate-form-wrapper {
+        flex: 1;
+    }
+    
+    .donate-qr-wrapper {
+        flex: 1;
+        max-width: 100%;
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .donate-qr {
+        max-width: calc(201px + 2rem);
+    }
+
+    .donate-qr-text {
+        padding: 1rem;
+        max-width: 100%;
     }
 }
 
@@ -2475,26 +2562,43 @@ nav .mit-bild a {
         grid-area: unset;
     }
 
-    .donate-onetime {
-        --factor: 2;
+    .donate-amount {
+        width: 90%;
+        margin: 20px 5vw;
     }
 
-    .mobile-donation {
-        display: flex;
-    }
-
-    .donate-btn-wrapper {
-        flex-direction: column;
-        gap: 0;
-    }
-
-    .donate-btn-wrapper:has(> .secondary[data-redir$=".pdf"]) {
+    .donate-wrapper {
         flex-direction: column-reverse;
+    }
+    
+    .donate-form-wrapper {
+        flex: 1;
+    }
+    
+    .donate-qr-wrapper {
+        flex: 1;
+        max-width: 100%;
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .donate-qr {
+        max-width: calc(201px + 2rem);
+    }
+
+    .donate-qr-text {
+        padding: 1rem;
+        max-width: 100%;
     }
 
     @media screen and (max-width: 433px) {
         .t-mitglied-btn {
             height: 60px;
+        }
+
+        .donate-qr-wrapper {
+            flex-direction: column;
+            align-items: center;
         }
     }
 

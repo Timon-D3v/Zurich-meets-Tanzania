@@ -1,74 +1,53 @@
-const donate_btn = getElm("donate_btn"),
-    donate_once = getQuery(".donate-onetime").get(0),
-    donate_member = getQuery(".donate-membership").get(0),
-    donate_switch_onetime = getElm("donate_switch_onetime"),
-    donate_switch_member = getElm("donate_switch_member"),
-    donate_selections = getQuery(".donate-amount"),
-    donate_custom = getElm("donate_custom"),
-    donate_qr_link = getElm("donate_btn_iban");
+const donateName = getElm("donate-name");
+const donateFamilyName = getElm("donate-family-name");
+const donateEmail = getElm("donate-email");
+const donateUsageType = getElm("donate-usage-type");
+const donateSubmit = getElm("donate-submit");
+const membershipSubmit = getElm("membership-submit");
 
-donate_switch_member.click(donate_toggleForms);
-donate_switch_onetime.click(donate_toggleForms);
 
-donate_selections.click((e) => {
-    donate_selections.forEach((elm) => elm.removeClass("active"));
-    e.target.classList.toggle("active");
-});
 
-donate_custom.on("input", () => {
-    if (donate_custom.value === "") return;
-    donate_selections.forEach((elm) => elm.removeClass("active"));
-    donate_selections[3].addClass("active");
-});
+membershipSubmit.click(async e => {
+    e.preventDefault();
 
-donate_btn.click(async () => {
-    const data = donate_switch_member.hasClass("active")
-        ? {
-              type: "membership",
-              amount: -1,
-          }
-        : {
-              type: "onetime",
-              amount: donate_getAmount(),
-          };
-
-    if (isNaN(data.amount)) return;
-
-    const { link } = await post("/post/getPaymentLink", data);
+    const { link } = await post("/post/getPaymentLink", {
+        type: "membership",
+        amount: -1,
+    });
 
     if (typeof link === "string") return (window.location.href = link);
 
     return errorNotification("Etwas hat nicht geklappt...");
 });
 
-donate_qr_link.click(() => window.open(donate_qr_link.data("data-redir"), "_blank"));
+donateSubmit.click(async e => {
+    e.preventDefault();
 
-function donate_toggleForms() {
-    [donate_once, donate_member, donate_switch_onetime, donate_switch_member].forEach((elm) => elm.toggleClass("active"));
+    if (donateName.val().trim() === "") return errorNotification("Bitte geben Sie Ihren Namen ein.");
+    if (donateFamilyName.val().trim() === "") return errorNotification("Bitte geben Sie Ihren Nachnamen ein.");
+    if (donateEmail.val().trim() === "") return errorNotification("Bitte geben Sie Ihre E-Mail-Adresse ein.");
+    if (donateUsageType.val().trim() === "") return errorNotification("Bitte geben Sie den Verwendungszweck ein.");
 
-    if (donate_once.hasClass("active")) {
-        donate_btn.toggleClass("secondary");
-        donate_btn.text("Online Spenden");
-
-        donate_qr_link.toggleClass("secondary");
-        donate_qr_link.text("Jetzt Spenden");
-        donate_qr_link.data("data-redir", "https://ik.imagekit.io/zmt/pdf/Rechnung%20Spendenkonto.pdf");
-    } else {
-        donate_btn.toggleClass("secondary");
-        donate_btn.text("Mitglied werden");
-
-        donate_qr_link.toggleClass("secondary");
-        donate_qr_link.text("Mitglied werden (IBAN)");
-        donate_qr_link.data("data-redir", "https://ik.imagekit.io/zmt/pdf/Rechnung%20Mitgliederkonto.pdf");
-    }
-}
-
-function donate_getAmount() {
-    let value;
-    donate_selections.forEach((elm) => {
-        if (elm.classList.contains("active")) value = elm.querySelector("input").value;
+    const { error, message } = await post("/post/donateForm", {
+        name: donateName.val().trim(),
+        familyName: donateFamilyName.val().trim(),
+        email: donateEmail.val().trim(),
+        usageType: donateUsageType.val().trim(),
     });
-    if (typeof value === "number") return value;
-    value = Number(value);
-    return value;
-}
+
+    if (error) return errorNotification(message);
+
+    successNotification(message);
+});
+
+on(window, "DOMContentLoaded", async () => {
+    const prefilledDonateName = document.getElementById("donate-prefilled-name");
+    const prefilledDonateFamilyName = document.getElementById("donate-prefilled-family-name");
+    const prefilledDonateEmail = document.getElementById("donate-prefilled-email");
+
+    if (prefilledDonateName === null || prefilledDonateFamilyName === null || prefilledDonateEmail === null) return;
+
+    donateName.val(prefilledDonateName.innerText);
+    donateFamilyName.val(prefilledDonateFamilyName.innerText);
+    donateEmail.val(prefilledDonateEmail.innerText);
+});

@@ -14,13 +14,7 @@
         <script type="text/javascript" src="/js/gallery.js" defer></script>
     </head>
     <body>
-        <%
-        let link_mitglied;
-        if (typeof user !== "undefined" && user !== null) {
-            user?.valid ? link_mitglied = "/profile?exec=profileMembership" : link_mitglied = "/login";
-        } else {
-            link_mitglied = "/login";
-        }; %>
+        <% let link_mitglied; if (typeof user !== "undefined" && user !== null && user.valid) { link_mitglied = "/profile?exec=profileMembership" } else { link_mitglied = "/spenden#scrollToMembership"; }; %>
         <%- include("./snippets/header.ejs", {
             link_mitglied
         }) %>

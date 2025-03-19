@@ -14,7 +14,7 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { toRealDate } from "./components/toRealDate.js";
-import { sendContactMail, sendCriticalErrorMail, sendMailCode, sendNewsletterEmail, sendRecoveryCode, sendRecoveryPassword } from "./components/emailMethods.js";
+import { sendContactMail, sendCriticalErrorMail, sendDonationMail, sendMailCode, sendNewsletterEmail, sendRecoveryCode, sendRecoveryPassword } from "./components/emailMethods.js";
 import { stripe_c_s_created, stripe_c_s_updated, stripe_c_s_deleted, stripe_i_p_success } from "./components/stripeWebhookActions.js";
 import { initSignUpNewsletter, validateSignUpNewsletter } from "./components/initSignUpNewsletter.js";
 import * as db from "./backend/db/db.zmt.js";
@@ -1453,9 +1453,18 @@ app.post("/post/gallery/getLinks/:num", async (req, res) => {
 
 app.post("/post/getPaymentLink", async (req, res) => {
     if (isNaN(req.body.amount)) return res.end();
+
+    if (!req.session?.user?.valid) return res.json({
+        link: `${req.protocol}://${req.get("host")}/login?redir=/spenden%23scrollToMembership&exec=error&message=Bitte%20melde%20dich%20mit%20deinem%20Benutzerkonto%20an,%20um%20Mitglied%20zu%20werden.`
+    });
+
     const key = timon.randomString(256);
+
     payment_keys.push(key);
-    res.json({ link: `${req.protocol}://${req.get("host")}/pay?key=${key}&a=${req.body.amount}&t=${req.body.type}` });
+
+    res.json({
+        link: `${req.protocol}://${req.get("host")}/pay?key=${key}&a=${req.body.amount}&t=${req.body.type}`
+    });
 });
 
 app.post("/post/stripe/webhook", bodyParser.raw({ type: "application/json" }), async (req, res) => {
@@ -1752,6 +1761,34 @@ app.post("/post/deleteEvent", async (req, res) => {
 
     res.json(result);
 });
+
+app.post("/post/donateForm", async (req, res) => {
+    try {
+        const { name, familyName, email, usageType } = req.body;
+
+        if (typeof name !== "string" || typeof familyName !== "string" || typeof email !== "string" || typeof usageType !== "string") return res.json({
+            error: true,
+            massage: "Bitte gib gültige Daten ein."
+        });
+
+        const result = await sendDonationMail(name, familyName, email, usageType);
+
+        if (result === 200) return res.json({
+            error: false,
+            message: "Zurich meets Tanzania dankt dir sehr für deine Spende ❤️"
+        });
+
+        res.json({
+            error: true,
+            message: "Etwas ist schief gelaufen. Bitte versuche es später erneut."
+        });
+    } catch (error) {
+        res.json({
+            error: true,
+            message: "Etwas ist schief gelaufen. Bitte versuche es später erneut."
+        });
+    }
+})
 
 app.listen(process.env.PORT, () => {
     console.log("Server listens on localhost:" + process.env.PORT);

@@ -1,7 +1,7 @@
 {
   "name": "zuerich-meets-tanzania-website",
-  "version": "1.2.0",
-  "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\" project.",
+  "version": "2.0.0",
+  "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\".",
   "type": "module",
   "main": "index.js",
   "scripts": {
