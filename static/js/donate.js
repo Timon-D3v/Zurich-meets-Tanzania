@@ -37,6 +37,7 @@ donateSubmit.click(async e => {
 
     if (error) return errorNotification(message);
 
+    donateSubmit.disabled = true;
     successNotification(message);
 });
 

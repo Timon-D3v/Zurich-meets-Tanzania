@@ -74,7 +74,7 @@ submit_file.click(async () => {
 });
 
 if (JSON.stringify(get_member) !== "{}") {
-    get_member.click(async () => {
+    get_member.click(() => {
         window.location.href = ORIGIN + "/spenden#scrollToMembership";
     });
 } else {

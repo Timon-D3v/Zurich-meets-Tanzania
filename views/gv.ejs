@@ -10,7 +10,7 @@
             env: env,
             sitetype: sitetype
         }) %>
-        <link rel="stylesheet" href="/css/blog.css" />
+        <link rel="stylesheet" href="/css/blog.min.css" />
     </head>
     <body>
         <% let link_mitglied; if (typeof user !== "undefined" && user !== null && user.valid) { link_mitglied = "/profile?exec=profileMembership" } else { link_mitglied = "/spenden#scrollToMembership"; }; %>
@@ -24,7 +24,7 @@
             <%- include("./snippets/hero.ejs", {
                 img_alt: "Unsere Generalversammlung",
                 img_path: "/img/content/gv_5.jpg",
-                title: "GV Daten",
+                title: gv.titel,
                 subtitle: "",
                 cta_text: "",
                 cta_link: ""

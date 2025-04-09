@@ -32,11 +32,11 @@ getQuery("img").on("dragstart", e => {
 });
 
 newsletterMen.click(() => {
-    if (newsletterWoman.checked) newsletterWoman.checked = false;
+    newsletterWoman.checked = false;
 });
 
 newsletterWoman.click(() => {
-    if (newsletterMen.checked) newsletterMen.checked = false;
+    newsletterMen.checked = false;
 });
 
 navDesktopLinks.forEach((elm, i) => {

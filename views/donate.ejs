@@ -10,7 +10,7 @@
             env: env,
             sitetype: sitetype
         }) %>
-        <script type="text/javascript" src="/js/donate.js" defer></script>
+        <script type="text/javascript" src="/js/donate.min.js" defer></script>
     </head>
     <body>
         <% let link_mitglied; if (typeof user !== "undefined" && user !== null && user.valid) { link_mitglied = "/profile?exec=profileMembership" } else { link_mitglied = "/spenden#scrollToMembership"; }; %>

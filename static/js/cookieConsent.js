@@ -1,4 +1,4 @@
-consentEvent = new Event("cookie_consent_updated");
+const consentEvent = new Event("cookie_consent_updated");
 
 /**
  * Accepts the cookie consent by setting the appropriate values in localStorage.
@@ -56,7 +56,7 @@ function rejectCookies() {
             security_storage: "granted",
         }),
     );
-    document.dispatchEvent(this.consentEvent);
+    document.dispatchEvent(consentEvent);
 }
 
 /**

@@ -10,8 +10,8 @@
             env: env,
             sitetype: sitetype
         }) %>
-        <link rel="stylesheet" href="/css/static.css">
-        <script type="text/javascript" src="/js/profile.js" defer></script>
+        <link rel="stylesheet" href="/css/static.min.css">
+        <script type="text/javascript" src="/js/profile.min.js" defer></script>
     </head>
     <body><% let link_mitglied; if (typeof user !== "undefined" && user !== null && user.valid) { link_mitglied = "/profile?exec=profileMembership" } else { link_mitglied = "/spenden#scrollToMembership"; }; %>
        <%- include("./snippets/header.ejs", {

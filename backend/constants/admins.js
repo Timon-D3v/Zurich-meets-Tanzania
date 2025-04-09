@@ -71,7 +71,7 @@ const ABOUT_US = {
             name: "Tanja",
             family_name: "Freund Stössel",
             picture: "https://ik.imagekit.io/zmt/users/tanja",
-            job: "Anästhesiepflege NDS HF",
+            job: "Anästhesiepflege HF",
             motivation:
                 "Mein Wunsch in Afrika zu arbeiten war schon lange Zeit vorhanden, deshalb absolvierte ich nach der Krankenschwesterausbildung die Tropenschule in Basel und wollte dann eigentlich für ein humanitäres Institut mein Wissen einsetzen. Weiterbildung und Familiengründung durchkreuzten meine Pläne, aber als die Kinder gross und mein Anästhesiewissen fundiert wurde, kam ich im Spital mit Zurich meets Tanzania in Kontakt.<br>Nach meinem ersten Einsatz merkte ich wie wertvoll die Zusammenarbeit mit dem dortigen Spitalpersonal ist. Gegenseitiges Vertrauen und Zusammenarbeit mit dem Team von Zurich meets Tanzania ist für mich eine Seelenreinigung. Es macht mir Freude, dass mich meine Familie voll unterstützt und auch motiviert ist.",
             position: "",
