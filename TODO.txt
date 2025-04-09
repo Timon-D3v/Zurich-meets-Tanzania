@@ -1,3 +1,0 @@
-Upload minimized files
-
-Change the picture name in the database from me to /timon and not /_img_stock_jungle
