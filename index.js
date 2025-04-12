@@ -64,7 +64,7 @@ const recovery_code = [];
 
 async function imagekitUpload(base64, name, folder) {
     let res,
-        fileName = name.replace(/[\:\/\\\<\>\{\}\?\(\)\s]/g, "_");
+        fileName = name.replace(/[\:\/\\\<\>\{\}\?\(\)\s\@]/g, "_");
     imagekit.upload(
         {
             file: base64,
