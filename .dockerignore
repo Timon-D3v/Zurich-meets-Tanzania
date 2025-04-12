@@ -1,3 +1,8 @@
+**/node_modules
+*.env
+.env
+**/*.env
+.git/
 .hintrc
 .env
 _old/
@@ -14,3 +19,7 @@ plainToHash.js
 _Tutorials/
 Redesign spenden.txt
 *.env
+Text formatieren ZMT.docx
+LICENSE
+README.md
+HTML Einführung.docx

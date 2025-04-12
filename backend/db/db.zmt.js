@@ -17,6 +17,9 @@ const pool = mysql
     })
     .promise();
 
+/**
+ * @deprecated
+ */
 export async function createPost(title, author, preview, content, tag = "Blog", img = {}, comment = "Kein Kommentar") {
     let query = "INSERT INTO `zmt`.`blog` (`title`, `author`, `preview`, `content`, `tag`, `img`, `comment`) VALUES (?, ?, ?, ?, ?, ?, ?);",
         error;
@@ -26,6 +29,9 @@ export async function createPost(title, author, preview, content, tag = "Blog", 
     return error;
 }
 
+/**
+ * @deprecated
+ */
 export async function getPost() {
     let [result] = await pool.query("SELECT * FROM `zmt`.`blog`;");
     return result;
@@ -49,6 +55,9 @@ export async function getBlogWhereTitle(title) {
         throw new Error("Fehler");
     });
     if (result == []) throw new Error("Seite nicht vorhanden (404)");
+    result.forEach(object => {
+        object.data = JSON.parse(object.data);
+    });
     return result;
 }
 
@@ -88,6 +97,9 @@ export async function getLastXBlogs(x) {
         throw new Error("Fehler");
     });
     if (result.length !== x) throw new Error("Nicht die gewünschte Anzahl Elemente");
+    result.forEach(object => {
+        object.data = JSON.parse(object.data);
+    });
     return result;
 }
 
@@ -196,7 +208,8 @@ export async function getNews() {
     let [[result]] = await pool.query(query).catch((err) => {
         throw new Error("Something went wrong");
     });
-    if (result.length === 0) throw new Error("Nothing there");
+    if (typeof result.id !== "number") throw new Error("Nothing there");
+    result.html = JSON.parse(result.html);
     return result;
 }
 
@@ -206,6 +219,9 @@ export async function getXNews(i) {
         throw new Error("Something went wrong");
     });
     if (result.length === 0) throw new Error("Nothing there");
+    result.forEach((element) => {
+        element.html = JSON.parse(element.html);
+    });
     return result;
 }
 
@@ -267,6 +283,9 @@ export async function getGalleyWhereTitle(title) {
         throw new Error("Fehler");
     });
     if (result == []) throw new Error("Seite nicht vorhanden (404)");
+    result.forEach(object => {
+        object.img = JSON.parse(object.img);
+    });
     return result;
 }
 
@@ -405,6 +424,9 @@ export async function deleteNewsletterSignUpWithEmail(email) {
     await pool.query(query, [email]);
 }
 
+/**
+ * @deprecated
+ */
 export async function deleteLastXPosts(x) {
     let query = "DELETE FROM `zmt`.`blog` ORDER BY `id` DESC LIMIT " + x + ";";
     let [result] = await pool.query(query).catch(() => {
@@ -453,6 +475,9 @@ export async function getAllNewsletterEmails() {
 export async function getCurrentTeamInfo() {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query).catch(() => []);
+    result.forEach(object => {
+        object.members = JSON.parse(object.members);
+    });
     return result[0];
 }
 
@@ -465,7 +490,10 @@ export async function createTeam(date, spruch, desc, img) {
 export async function addTeamMember(user) {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query);
-    let team = result[0]?.members || [];
+    let team = [];
+    if (typeof result[0]?.members === "string") {
+        team = JSON.parse(result[0].members);
+    }
     team.push(user);
     query = "UPDATE `zmt`.`team` SET `members` = ? WHERE (`id` = ?);";
     await pool.query(query, [JSON.stringify(team), result[0].id]);
@@ -475,7 +503,10 @@ export async function addTeamMember(user) {
 export async function removeTeamMember(username) {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query);
-    let team = result[0]?.members || [];
+    let team = [];
+    if (typeof result[0]?.members === "string") {
+        team = JSON.parse(result[0].members);
+    }
     let length = team.length;
     for (let i = 0; i < team.length; i++) {
         if (team[i].username === username) {
@@ -575,11 +606,17 @@ export async function updateBlogPost(originalName, title, data) {
 export async function getBlogPost(title) {
     let query = "SELECT * FROM `zmt`.`blogs` WHERE title = ?;";
     let [result] = await pool.query(query, [title]);
+    result.forEach(object => {
+        object.data = JSON.parse(object.data);
+    });
     return result;
 }
 
 export async function getLastXBlogPosts(x) {
     let query = "SELECT * FROM `zmt`.`blogs` ORDER BY `id` DESC LIMIT ?;";
     let [result] = await pool.query(query, [x]);
+    result.forEach(object => {
+        object.data = JSON.parse(object.data);
+    });
     return result;
 }

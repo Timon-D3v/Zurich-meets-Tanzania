@@ -64,7 +64,7 @@ const recovery_code = [];
 
 async function imagekitUpload(base64, name, folder) {
     let res,
-        fileName = name.replace(/[:\/\\<>{}?()]/g, "_").replaceAll(" ", "_");
+        fileName = name.replace(/[\:\/\\\<\>\{\}\?\(\)\s]/g, "_");
     imagekit.upload(
         {
             file: base64,
@@ -1790,6 +1790,6 @@ app.post("/post/donateForm", async (req, res) => {
     }
 })
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, process.env.HOST, () => {
     console.log("Server listens on localhost:" + process.env.PORT);
 });
