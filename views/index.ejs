@@ -11,6 +11,7 @@
             sitetype: sitetype
         }) %>
         <script type="text/javascript" src="/js/calendar.min.js" defer></script>
+        <script type="text/javascript" src="/js/news.slider.js" defer></script>
     </head>
     <body>
         <% let link_mitglied; if (typeof user !== "undefined" && user !== null && user.valid) { link_mitglied = "/profile?exec=profileMembership" } else { link_mitglied = "/spenden#scrollToMembership"; }; %>
@@ -36,9 +37,18 @@
                 <a class="cta-btn flex" href="https://shop.unikat-hoengg.ch/produkte/zurichmeetstanzania-60?d=1">Shop</a>
                 <a class="cta-btn flex" href="<%= link_mitglied %>">Mitglied werden</a>
             </div>
-            <% 
-            news.isArchiv = false; %>
-            <%- include("./snippets/news.ejs", news) %>
+            <div class="news-slider-wrapper">
+                <div class="news-slider">
+                    <div class="news-slide">
+                        <% news.isArchiv = false; %>
+                        <%- include("./snippets/news.ejs", news) %>
+                    </div>
+                    <div class="news-slide">
+                        <%- include("./snippets/instagram.ejs") %>
+                    </div>
+                </div>
+                <progress class="news-progress" value="0" max="100"></progress>
+            </div>
             <a class="news-more special" href="/archiv">Mehr anzeigen</a>
             <h1 class="title">Terminkalender</h1>
             <ul class="calendar">
