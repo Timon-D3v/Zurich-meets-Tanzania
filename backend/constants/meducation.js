@@ -22,7 +22,7 @@
  */
 const MEDUCATION = {
     beschreibung: "Das Projekt Meducation, welches 2017 gegründet wurde, sorgt für eine gezielt Aus- und Weiterbildung des örtlichen Personals in Ifisi.",
-    aktualisiert: "Wed Apr 10 2024 09:32:14 GMT+0200 (Mitteleuropäische Sommerzeit)",
+    aktualisiert: "Sun May 25 2025 23:10:43 GMT+0200 (Mitteleuropäische Sommerzeit)",
     titel: "Meducation",
     abs1: "Mit ein Zweck der Gründung unseres Vereins 2017 war es, mit dem gespendeten Geld gezielt die Aus- und Weiterbildung von örtlichem Personal zu fördern.",
     abs2: "Unter dem label «meducation» haben aktuell neun Personen ihre Ausbildung beendet und sind, sofern sie schon vorher am Spital in Ifisi gearbeitet haben, auch dahin zurückgekehrt. Drei Personen sollten dieses, vier nächstes Jahr die Fortbildung abschliessen.",

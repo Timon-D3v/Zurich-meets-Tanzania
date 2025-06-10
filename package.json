@@ -2,6 +2,16 @@
   "name": "zurich-meets-tanzania-website",
   "version": "2.2.0",
   "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\".",
+  "homepage": "https://www.zurich-meets-tanzania.com",
+  "author": "Timon Fiedler",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Timon-D3v/Zurich-meets-Tanzania.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Timon-D3v/Zurich-meets-Tanzania/issues"
+  },
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -15,9 +25,6 @@
     "docker:tag": "docker tag zurich-meets-tanzania-website timond3v/zurich-meets-tanzania-website",
     "docker:push": "docker push timond3v/zurich-meets-tanzania-website"
   },
-  "keywords": [],
-  "author": "Timon Fiedler",
-  "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -36,5 +43,24 @@
     "nodemon": "^3.1.1",
     "prettier": "^3.4.2",
     "prettier-plugin-ejs": "^1.0.3"
-  }
+  },
+  "keywords": [
+    "charity",
+    "medical",
+    "tanzania",
+    "zurich",
+    "switzerland",
+    "zurich-meets-tanzania",
+    "non-profit",
+    "ngo",
+    "website",
+    "donate",
+    "nodejs",
+    "express",
+    "full-stack",
+    "blog",
+    "javascript",
+    "css",
+    "ejs"
+  ]
 }
