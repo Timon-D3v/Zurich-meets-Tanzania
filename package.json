@@ -1,6 +1,6 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
@@ -12,37 +12,47 @@
   "bugs": {
     "url": "https://github.com/Timon-D3v/Zurich-meets-Tanzania/issues"
   },
-  "type": "module",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "npx nodemon index.js",
-    "format": "npx prettier --write \"**/*.{ejs,js,css}\" \"!**/*.min.{js,css}\" \"!node_modules/**\"",
-    "docker:build": "docker build . -t zurich-meets-tanzania-website",
-    "docker:run": "docker run --rm --name zurich-meets-tanzania-website -p 8080:8080 --env-file ./docker.env zurich-meets-tanzania-website",
-    "docker:stop": "docker stop zurich-meets-tanzania-website",
-    "docker:tag": "docker tag zurich-meets-tanzania-website timond3v/zurich-meets-tanzania-website",
-    "docker:push": "docker push timond3v/zurich-meets-tanzania-website"
+    "ng": "ng",
+    "start": "ng serve",
+    "dev": "ng serve --port=8080",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:zurich-meets-tanzania-angular": "node dist/zurich-meets-tanzania-angular/server/server.mjs",
+    "format": "npx prettier --write \"src/**/*.{ts,html,scss}\"",
+    "prettier": "npx prettier"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.1",
-    "ejs": "^3.1.9",
+    "@angular/animations": "^19.0.0",
+    "@angular/common": "^19.0.0",
+    "@angular/compiler": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/forms": "^19.0.0",
+    "@angular/platform-browser": "^19.0.0",
+    "@angular/platform-browser-dynamic": "^19.0.0",
+    "@angular/platform-server": "^19.0.0",
+    "@angular/router": "^19.0.0",
+    "@angular/ssr": "^19.0.6",
     "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "imagekit": "^6.0.0",
-    "mysql2": "^3.9.8",
-    "node-mailjet": "^6.0.5",
-    "stripe": "^15.8.0",
-    "timonjs": "^2.0.5"
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.1",
-    "prettier": "^3.4.2",
-    "prettier-plugin-ejs": "^1.0.3"
+    "@angular-devkit/build-angular": "^19.0.6",
+    "@angular/cli": "^19.0.6",
+    "@angular/compiler-cli": "^19.0.0",
+    "@types/express": "^4.17.17",
+    "@types/jasmine": "~5.1.0",
+    "@types/node": "^18.18.0",
+    "jasmine-core": "~5.4.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.6.2"
   },
   "keywords": [
     "charity",
@@ -59,8 +69,9 @@
     "express",
     "full-stack",
     "blog",
-    "javascript",
-    "css",
-    "ejs"
+    "typescript",
+    "scss",
+    "angular",
+    "angular-ssr"
   ]
 }
