@@ -1,13 +1,60 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>ZurichMeetsTanzaniaAngular</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+<!--
+  _______                            __         
+ /_  __(_)___ ___  ____  ____   ____/ /__ _   __
+  / / / / __ `__ \/ __ \/ __ \ / __  / _ \ | / /
+ / / / / / / / / / /_/ / / / // /_/ /  __/ |/ / 
+/_/ /_/_/ /_/ /_/\____/_/ /_(_)__,_/\___/|___/  
+
+
+Visit https://www.timondev.com
+-->
+<html lang="de-ch">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>zurich meets tanzania</title>
+        <meta name="description" content="Welcome to www.zurich-meets-tanzania.com" />
+        <meta property="og:title" content="zurich meets tanzania" />
+        <meta property="og:description" content="Welcome to www.zurich-meets-tanzania.com" />
+        <meta property="og:url" content="https://www.zurich-meets-tanzania.com/" />
+
+        <base href="/" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta name="Owner" content="Präsident Dr. Stefan Christen (Innere Medizin / Kardiologie)" contact="info@zurich-meets-tanzania.com" />
+        <meta name="Manager" content="Sekretariat Webdesign Sara Pieretti" contact="info@zurich-meets-tanzania.com" />
+        <meta name="Developer" content="Timon Fiedler" contact="info@timondev.com" />
+        <meta name="Contact page" content="https://www.timondev.com" />
+        <meta name="theme-color" content="#f27c0d" />
+        <meta name="google" content="nositelinkssearchbox" />
+        <meta name="robots" content="index,follow" />
+        <meta property="og:image" content="/img/logo.png" />
+        <meta property="og:image:type" content="image/png" />
+        <link rel="icon" type="image/ico" href="/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                window.dataLayer.push(arguments);
+            }
+
+            gtag("js", new Date());
+            gtag("config", "G-74MV698XJC");
+            gtag("consent", "default", {
+                ad_storage: "denied",
+                analytics_storage: "denied",
+                personalization_storage: "denied",
+                functionality_storage: "granted",
+                security_storage: "granted",
+            });
+
+            document.addEventListener("cookie_consent_updated", () => {
+                gtag("consent", "update", JSON.parse(localStorage.getItem("cookie_consent_mode")));
+            });
+        </script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-74MV698XJC"></script>
+    </head>
+    <body>
+        <app-root></app-root>
+    </body>
 </html>
