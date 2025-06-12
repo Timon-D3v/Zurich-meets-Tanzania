@@ -1,1 +1,38 @@
-<p>header works!</p>
+<header>
+    <app-logo></app-logo>
+    <div class="navigation">
+        <div class="top">
+            <div class="large">
+                <a [routerLink]="becomeMemberUrl()" class="button member">Mitglied werden</a>
+                <a [routerLink]="'/spenden'" class="button donate">Spenden</a>
+                <a [routerLink]="'/contact'" class="button contact">Kontakt</a>
+                <a href="{{ UNIKAT_URL }}" target="_blank" class="button shop">Shop</a>
+            </div>
+            <div class="medium">
+                <a [routerLink]="becomeMemberUrl()" class="icon member" title="Mitglied werden">
+                    <img alt="Mitglied werden" src="/img/svg/member.svg" />
+                </a>
+                <a [routerLink]="'/spenden'" class="icon donate" title="Spenden">
+                    <img alt="Spenden" src="/img/svg/spenden.svg" />
+                </a>
+                <a [routerLink]="'/contact'" class="icon contact" title="Kontakt">
+                    <img alt="Kontakt" src="/img/svg/contact.svg" />
+                </a>
+                <a href="{{ UNIKAT_URL }}" target="_blank" class="icon shop" title="Shop">
+                    <img alt="Shop" src="/img/svg/shop.svg" />
+                </a>
+            </div>
+            <div class="small">
+                <app-hamburger></app-hamburger>
+            </div>
+        </div>
+        <div class="bottom">
+            <app-header-link [type]="'Verein'"></app-header-link>
+            <app-header-link [type]="'Projekte'"></app-header-link>
+            <app-header-link [type]="'Blogs'"></app-header-link>
+            <app-header-link [type]="'Bilder'"></app-header-link>
+            <app-header-link [type]="'Weiteres'"></app-header-link>
+            <app-theme-switch></app-theme-switch>
+        </div>
+    </div>
+</header>

@@ -1,1 +1,25 @@
-<p>footer works!</p>
+<footer>
+    <app-footer-newsletter-sign-up-form></app-footer-newsletter-sign-up-form>
+    <div class="wrapper">
+        <div class="links">
+            <h2>Folge uns!</h2>
+            <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener">Instagram</a>
+            <a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener">Facebook</a>
+            <h2>Weiteres</h2>
+            <a href="{{ UNIKAT_URL }}" target="_blank" rel="noopener">Unikat Höngg</a>
+            <a href="{{ PROGRAMMER_URL }}" target="_blank" rel="noopener">Seite des Erstellers</a>
+            <a [routerLink]="'/private/management'">Verwaltung</a>
+        </div>
+        <div class="links">
+            <h2>Rechtliches</h2>
+            <a [routerLink]="'/statuten'">Statuten</a>
+            <a [routerLink]="'/impressum'">Quellenangabe</a>
+            <a [routerLink]="'/datenschutz'">Datenschutzerklärung</a>
+            <h2>Spendenkonto</h2>
+            <a href="https://ik.imagekit.io/zmt/pdf/Rechnung%20Spendenkonto.pdf" target="_blank" rel="noopener">IBAN: CH 20 0900 0000 6184 2154 0</a>
+            <a href="https://ik.imagekit.io/zmt/pdf/Rechnung%20Spendenkonto.pdf" target="_blank" rel="noopener">zurich - meets - tanzania</a>
+            <a href="https://ik.imagekit.io/zmt/pdf/Rechnung%20Spendenkonto.pdf" target="_blank" rel="noopener">8049 Zürich</a>
+        </div>
+    </div>
+    <p class="copyright">Copyright &copy; 2025 zurich - meets - tanzania | Alle Rechte vorbehalten</p>
+</footer>

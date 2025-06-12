@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-navigation',
-  imports: [],
-  templateUrl: './navigation.component.html',
-  styleUrl: './navigation.component.scss'
+    selector: "app-navigation",
+    imports: [],
+    templateUrl: "./navigation.component.html",
+    styleUrl: "./navigation.component.scss",
 })
-export class NavigationComponent {
-
-}
+export class NavigationComponent {}

@@ -1,0 +1,11 @@
+:root {
+    --font-ratio: 1.414;
+    --basic-margin: 10vh 5vw;
+    --header-height: 80px;
+}
+
+@media screen and (min-width: 1200px) {
+    :root {
+        --header-height: 140px;
+    }
+}

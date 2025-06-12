@@ -1,0 +1,21 @@
+@mixin primary-button {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 1vw;
+    margin: 0 0.75vw;
+    box-sizing: border-box;
+    font-weight: 600;
+    font-size: 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.05em;
+    color: var(--text-50);
+    background-color: var(--secondary-500);
+    border: none;
+
+    &:hover {
+        background-color: var(--secondary-400);
+    }
+}

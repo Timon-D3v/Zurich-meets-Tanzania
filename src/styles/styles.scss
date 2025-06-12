@@ -1,1 +1,109 @@
+@use "./index";
 @use "./font.scss";
+@use "./colors.scss";
+
+*,
+*::before,
+*::after {
+    transition:
+        color 0.2s,
+        background-color 0.2s;
+}
+
+*::selection,
+*::marker {
+    /* This is the color secondary-500 with a lower opacity */
+    background-color: #f27c0dcc;
+}
+
+body {
+    margin: 0;
+    color: var(--text-950);
+    background-color: var(--background-50);
+    scroll-behavior: smooth;
+}
+
+p,
+a,
+li,
+ul,
+ol,
+label,
+input,
+input::placeholder,
+select,
+option {
+    font-family: "Titillium Web", sans-serif;
+    color: var(--text-950);
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Teko", monospace;
+    color: var(--text-950);
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+img[src$=".svg"] {
+    filter: invert(var(--darkmode));
+}
+
+img::selection {
+    background-color: transparent;
+}
+
+.invisible,
+.hidden {
+    display: none !important;
+}
+
+.title {
+    text-align: center;
+    margin: 0;
+    font-size: 2.75em;
+    text-decoration: underline;
+    padding: 0 5vw;
+}
+
+.title ~ *:not(p.text) {
+    margin-top: 5vh !important;
+}
+
+.text {
+    text-align: left;
+    word-break: normal;
+    word-wrap: break-word;
+    margin: 5vh 5vw;
+    padding: 0;
+}
+
+@media screen and (max-width: 260px) {
+    /* 
+    This is very small. 
+    Only small fixes
+    */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    a,
+    span,
+    button {
+        word-wrap: break-word;
+    }
+
+    .w-260 {
+        display: block;
+    }
+}

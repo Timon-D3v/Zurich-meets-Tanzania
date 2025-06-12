@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { HeaderComponent } from "./header.component";
+import { ThemeSwitchComponent } from "./theme-switch.component";
 
-describe("HeaderComponent", () => {
-    let component: HeaderComponent;
-    let fixture: ComponentFixture<HeaderComponent>;
+describe("ThemeSwitchComponent", () => {
+    let component: ThemeSwitchComponent;
+    let fixture: ComponentFixture<ThemeSwitchComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HeaderComponent],
+            imports: [ThemeSwitchComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(HeaderComponent);
+        fixture = TestBed.createComponent(ThemeSwitchComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

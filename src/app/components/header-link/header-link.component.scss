@@ -1,0 +1,35 @@
+@use "../../../styles/index" as *;
+
+.navigator {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 30px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 3px;
+    }
+
+    &:hover::after,
+    &.active::after {
+        background-color: var(--text-950);
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .navigator {
+        display: flex;
+    }
+}
