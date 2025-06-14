@@ -1,1 +1,80 @@
-<p>navigation works!</p>
+<nav>
+    <div class="wrapper">
+        <ul class="list">
+            <li>
+                <app-nav-element
+                    [title]="'Verein'"
+                    [linkArray]="[
+                        { href: '/vision', label: 'Vision' },
+                        { href: '/vorstand', label: 'Vorstand' },
+                        { href: '/Wie%20alles%20begann', label: 'Wie alles begann...' },
+                        { href: '/finanzen', label: 'Finanzierung' },
+                        { href: '/erfolgsrechnung', label: 'Erfolgsrechung' },
+                        { href: '/generalversammlung', label: 'Generalversammlung' },
+                        { href: '/statuten', label: 'Statuten' },
+                    ]"
+                ></app-nav-element>
+            </li>
+            <li>
+                <app-nav-element
+                    [title]="'Projekte'"
+                    [withPicture]="true"
+                    [linkArray]="[
+                        { href: '/zurich-meets-tanzania', label: 'zurich meets tanzania' },
+                        { href: '/tanzania-meets-zurich', label: 'tanzania meets zurich' },
+                        { href: '/projects/mbuzi', label: 'Mbuzi' },
+                        { href: '/projects/gynäkologie', label: 'twenty4forty' },
+                        { href: '/projects/meducation', label: 'Meducation' },
+                        { href: '/projects/bajaji', label: 'Bajaji' },
+                        { href: '/projects/kardiologie', label: 'Kardiologie' },
+                        { href: '/projects/chirurgie', label: 'Chirurgie' },
+                    ]"
+                    [pictureArray]="[
+                        { src: '/img/logo.svg', alt: 'Zurich meets Tanzania Logo' },
+                        { src: '/img/logo.svg', alt: 'Tanzania meets Zurich Logo' },
+                        { src: '/img/regular/mbuzi.jpg', alt: 'Mbuzi Logo' },
+                        { src: '/img/regular/twenty4forty.jpg', alt: 'Twenty for Forty Logo' },
+                        { src: '/img/logo.svg', alt: 'Zurich meets Tanzania Logo' },
+                        { src: '/img/regular/bajaji.min.jpg', alt: 'Bajaji Bild' },
+                        { src: '/img/logo.svg', alt: 'Zurich meets Tanzania Logo' },
+                        { src: '/img/logo.svg', alt: 'Zurich meets Tanzania Logo' },
+                    ]"
+                ></app-nav-element>
+            </li>
+            <li>
+                <app-nav-element [title]="'Blogs'" [linkArray]="blogLinks()"></app-nav-element>
+            </li>
+            <li>
+                <app-nav-element [title]="'Bilder'" [linkArray]="galleryLinks()"></app-nav-element>
+            </li>
+            <li>
+                <app-nav-element
+                    [title]="'Weiteres'"
+                    [linkArray]="[
+                        isLoggedIn() ? { href: '/profile', label: 'Mein Konto' } : { href: '/login', label: 'Einloggen' },
+                        isLoggedIn() ? { href: '#', label: 'Ausloggen', onClick: logOut } : { href: '/login?exec=toggleLoginForm', label: 'Registrieren' },
+                        { href: '/team', label: 'Aktuelles Team' },
+                        { href: '/archiv', label: 'Archiv' },
+                        { href: '/tanzania', label: 'Factsheet Tanzania' },
+                        { href: '/contact', label: 'Kontakt' },
+                        { href: UNIKAT_URL, label: 'Shop', external: true },
+                    ]"
+                ></app-nav-element>
+            </li>
+        </ul>
+        <div class="extra-buttons">
+            <a class="header-link" [routerLink]="becomeMemberUrl()">Mitglied werden</a>
+            <a class="header-link" [routerLink]="'/spenden'">Spenden</a>
+            <a class="header-link" [href]="UNIKAT_URL" target="_blank" rel="roopener">Shop</a>
+            <div class="buttons">
+                <button type="button" class="darkmode data-tooltip uiverse" [attr.data-tooltip-content]="currentThemeMode()" id="darkmode3">
+                    <div class="darkmode-placeholder"></div>
+                    <span class="invisible">Turn on Darkmode</span>
+                </button>
+                <a class="data-tooltip uiverse contact" [routerLink]="'/contact'" [attr.data-tooltip-content]="'Kontakt'">
+                    <img class="contact-image" alt="Kontakt" src="/img/svg/personal.svg">
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -19,3 +19,15 @@ export type PublicConfig = {
     INSTAGRAM_URL: string;
     PROGRAMMER_URL: string;
 };
+
+export type NavLink = {
+    href: string;
+    label: string;
+    external?: boolean;
+    onClick?: Function;
+};
+
+export type NavLinkPicture = {
+    src: string;
+    alt: string;
+};

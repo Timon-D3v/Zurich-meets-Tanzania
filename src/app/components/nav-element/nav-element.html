@@ -1,0 +1,16 @@
+<div class="details">
+    <p class="title">{{ title() }}</p>
+    <ul>
+        @for (link of linkArray(); let i = $index; track link.href) {
+        <li [class]="withPicture() ? 'picture' : null" (click)="link?.onClick">
+            @if (withPicture()) {
+            <img [src]="pictureArray()[i].src" [alt]="pictureArray()[i].alt" />
+            } @if (typeof link?.external === 'boolean' && link.external) {
+            <a [href]="link.href" target="_blank" rel="noopener">{{ link.label }}</a>
+            } @else {
+            <a [routerLink]="link.href">{{ link.label }}</a>
+            }
+        </li>
+        }
+    </ul>
+</div>
