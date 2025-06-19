@@ -54,10 +54,16 @@ export async function getBlogWhereTitle(title) {
     let [result] = await pool.query(query, [title]).catch(() => {
         throw new Error("Fehler");
     });
-    if (result == []) throw new Error("Seite nicht vorhanden (404)");
-    result.forEach(object => {
-        object.data = JSON.parse(object.data);
-    });
+
+    if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
+
+    // Somehow it worked before only with paring the data, but right now it just does work without it.
+    // I still want to keep the code here, so that it is easier to debug in the future.
+
+    // result.forEach(object => {
+    //     object.data = JSON.parse(object.data);
+    // });
+
     return result;
 }
 
@@ -282,7 +288,7 @@ export async function getGalleyWhereTitle(title) {
     let [result] = await pool.query(query, [title]).catch(() => {
         throw new Error("Fehler");
     });
-    if (result == []) throw new Error("Seite nicht vorhanden (404)");
+    if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
     result.forEach(object => {
         object.img = JSON.parse(object.img);
     });

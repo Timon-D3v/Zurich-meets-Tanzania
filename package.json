@@ -1,7 +1,7 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "2.2.1",
-  "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\".",
+  "version": "2.2.2",
+  "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
   "license": "ISC",
@@ -26,17 +26,17 @@
     "docker:push": "docker push timond3v/zurich-meets-tanzania-website"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "ejs": "^3.1.9",
-    "express": "^4.18.2",
+    "express": "^5.1.0",
     "express-session": "^1.17.3",
     "imagekit": "^6.0.0",
     "mysql2": "^3.9.8",
     "node-mailjet": "^6.0.5",
-    "stripe": "^15.8.0",
+    "stripe": "^18.2.1",
     "timonjs": "^2.0.5"
   },
   "devDependencies": {

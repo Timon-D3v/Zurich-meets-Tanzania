@@ -926,7 +926,7 @@ app.get("/newsletter/signUp", async (req, res) => {
     }
 });
 
-app.get("/*", (req, res) => {
+app.get("/*splat", (req, res) => {
     let url = req.protocol + "://" + req.get("host");
     res.status(404).render("errors/error404.ejs", {
         env: LOAD_LEVEL,
