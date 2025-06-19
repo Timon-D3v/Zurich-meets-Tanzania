@@ -58,11 +58,12 @@ export async function getBlogWhereTitle(title) {
     if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
 
     // Somehow it worked before only with paring the data, but right now it just does work without it.
-    // I still want to keep the code here, so that it is easier to debug in the future.
 
-    // result.forEach(object => {
-    //     object.data = JSON.parse(object.data);
-    // });
+    result.forEach(object => {
+        if (typeof object.data === "string") {
+            object.data = JSON.parse(object.data);
+        }
+    });
 
     return result;
 }
