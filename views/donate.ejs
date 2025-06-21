@@ -74,11 +74,12 @@
             <form id="scrollToMembership" class="donate-form">
                 <h1 class="donate-title">Mitglied werden</h1>
                 <div class="donate-center">
-                    <div class="donate-amount">
-                        <div class="donate-currency">CHF / Monat</div>
+                    <div class="donate-amount" id="membership-submit-label">
+                        <div class="donate-currency">CHF / Jahr</div>
                         <input type="number" class="donate-number" value="50" disabled="">
                     </div>
                     <button type="submit" id="membership-submit" class="donate-btn hero-cta">Abonnieren</button>
+                    <script>document.getElementById("membership-submit-label").addEventListener("click",()=>{document.getElementById("membership-submit").click()});</script>
                 </div>
             </form>
             <% if (typeof user !== "undefined" && user !== null && user.valid) { %>
