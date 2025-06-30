@@ -22,7 +22,7 @@
  */
 const MEDUCATION = {
     beschreibung: "Das Projekt Meducation, welches 2017 gegründet wurde, sorgt für eine gezielt Aus- und Weiterbildung des örtlichen Personals in Ifisi.",
-    aktualisiert: "Wed Apr 10 2024 09:32:14 GMT+0200 (Mitteleuropäische Sommerzeit)",
+    aktualisiert: "Sun May 25 2025 23:10:43 GMT+0200 (Mitteleuropäische Sommerzeit)",
     titel: "Meducation",
     abs1: "Mit ein Zweck der Gründung unseres Vereins 2017 war es, mit dem gespendeten Geld gezielt die Aus- und Weiterbildung von örtlichem Personal zu fördern.",
     abs2: "Unter dem label «meducation» haben aktuell neun Personen ihre Ausbildung beendet und sind, sofern sie schon vorher am Spital in Ifisi gearbeitet haben, auch dahin zurückgekehrt. Drei Personen sollten dieses, vier nächstes Jahr die Fortbildung abschliessen.",
@@ -41,18 +41,17 @@ const MEDUCATION = {
         ["8.", "Dr. Amos Mboela", "2023", "surgery"],
         ["9.", "Huruma Burton Mwangolela", "2023", "clinical officer"],
         ["10.", "Dr. Martin Mbwile", "2024", "cardiology"],
-		["11.", "Andrea Thadayo", "2024", "clinical officer"],
-		["12.", "David Msomba", "2025", "pediatrics"],
-		["13.", "Samwel John", "2025", "bachelor nursing"],
-		["14.", "Evans Smith", "2025", "bachelor laboratory"],
-		["15.", "Mbonile David", "2025", "pediatry"],
-		
+        ["11.", "Andrea Thadayo", "2024", "clinical officer"],
+        ["12.", "David Msomba", "2025", "pediatrics"],
+        ["13.", "Samwel John", "2025", "bachelor nursing"],
+        ["14.", "Evans Smith", "2025", "bachelor laboratory"],
+        ["15.", "Mbonile David", "2025", "pediatry"],
     ],
     tabelle2: [
         ["Nummer (wird aber nicht berücksichtigt)", "Name", "Abschluss", "Fachrichtung"],
         ["16.", "Ernest Alfred Chambo", "2026", "clinical officer"],
         ["17.", "Thomas Kwesiga", "2027", "internal medicin"],
- 		["18.", "Raheli Saitori", "2027", "bachelor nursing, midwife"],
+        ["18.", "Raheli Saitori", "2027", "bachelor nursing, midwife"],
         ["19.", "Emmanuel Mkonyi", "2028", "internal medicin"],
         ["20.", "Aggrey Komba", "2028", "traumatology"],
         ["21.", "Benatus Nyamahanga", "2028", "bachelor radiology"],

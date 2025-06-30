@@ -54,10 +54,17 @@ export async function getBlogWhereTitle(title) {
     let [result] = await pool.query(query, [title]).catch(() => {
         throw new Error("Fehler");
     });
-    if (result == []) throw new Error("Seite nicht vorhanden (404)");
-    result.forEach(object => {
-        object.data = JSON.parse(object.data);
+
+    if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
+
+    // Somehow it worked before only with paring the data, but right now it just does work without it.
+
+    result.forEach((object) => {
+        if (typeof object.data === "string") {
+            object.data = JSON.parse(object.data);
+        }
     });
+
     return result;
 }
 
@@ -97,7 +104,7 @@ export async function getLastXBlogs(x) {
         throw new Error("Fehler");
     });
     if (result.length !== x) throw new Error("Nicht die gewünschte Anzahl Elemente");
-    result.forEach(object => {
+    result.forEach((object) => {
         object.data = JSON.parse(object.data);
     });
     return result;
@@ -282,8 +289,8 @@ export async function getGalleyWhereTitle(title) {
     let [result] = await pool.query(query, [title]).catch(() => {
         throw new Error("Fehler");
     });
-    if (result == []) throw new Error("Seite nicht vorhanden (404)");
-    result.forEach(object => {
+    if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
+    result.forEach((object) => {
         object.img = JSON.parse(object.img);
     });
     return result;
@@ -475,7 +482,7 @@ export async function getAllNewsletterEmails() {
 export async function getCurrentTeamInfo() {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query).catch(() => []);
-    result.forEach(object => {
+    result.forEach((object) => {
         object.members = JSON.parse(object.members);
     });
     return result[0];
@@ -606,7 +613,7 @@ export async function updateBlogPost(originalName, title, data) {
 export async function getBlogPost(title) {
     let query = "SELECT * FROM `zmt`.`blogs` WHERE title = ?;";
     let [result] = await pool.query(query, [title]);
-    result.forEach(object => {
+    result.forEach((object) => {
         object.data = JSON.parse(object.data);
     });
     return result;
@@ -615,8 +622,14 @@ export async function getBlogPost(title) {
 export async function getLastXBlogPosts(x) {
     let query = "SELECT * FROM `zmt`.`blogs` ORDER BY `id` DESC LIMIT ?;";
     let [result] = await pool.query(query, [x]);
-    result.forEach(object => {
+    result.forEach((object) => {
         object.data = JSON.parse(object.data);
     });
     return result;
+}
+
+export async function saveUnhandledStripeEvent(type, data) {
+    let query = "INSERT INTO `zmt`.`stripe_events` (`type`, `data`) VALUES (?, ?);";
+    await pool.query(query, [type, JSON.stringify(data)]);
+    return true;
 }

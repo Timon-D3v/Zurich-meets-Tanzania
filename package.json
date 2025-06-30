@@ -1,7 +1,17 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "2.2.0",
-  "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\".",
+  "version": "2.3.0",
+  "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
+  "homepage": "https://www.zurich-meets-tanzania.com",
+  "author": "Timon Fiedler",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Timon-D3v/Zurich-meets-Tanzania.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Timon-D3v/Zurich-meets-Tanzania/issues"
+  },
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -15,26 +25,42 @@
     "docker:tag": "docker tag zurich-meets-tanzania-website timond3v/zurich-meets-tanzania-website",
     "docker:push": "docker push timond3v/zurich-meets-tanzania-website"
   },
-  "keywords": [],
-  "author": "Timon Fiedler",
-  "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.1",
-    "ejs": "^3.1.9",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
     "imagekit": "^6.0.0",
-    "mysql2": "^3.9.8",
-    "node-mailjet": "^6.0.5",
-    "stripe": "^15.8.0",
-    "timonjs": "^2.0.5"
+    "mysql2": "^3.14.1",
+    "node-mailjet": "^6.0.8",
+    "stripe": "^18.2.1",
+    "timonjs": "^2.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.1",
     "prettier": "^3.4.2",
     "prettier-plugin-ejs": "^1.0.3"
-  }
+  },
+  "keywords": [
+    "charity",
+    "medical",
+    "tanzania",
+    "zurich",
+    "switzerland",
+    "zurich-meets-tanzania",
+    "non-profit",
+    "ngo",
+    "website",
+    "donate",
+    "nodejs",
+    "express",
+    "full-stack",
+    "blog",
+    "javascript",
+    "css",
+    "ejs"
+  ]
 }

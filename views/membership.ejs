@@ -26,16 +26,16 @@
                 img_path: donate.bild,
                 title: donate.titel,
                 subtitle: "",
-                cta_text: "Spenden",
-                cta_link: "/spenden#scrollToDonate",
+                cta_text: "Abonnieren",
+                cta_link: "/mitglied#scrollToMembership",
                 origin_url
             }) %>
-            <form id="scrollToDonate" class="donate-form">
+            <form id="scrollToDonate" class="donate-form invisible">
                 <h1 class="donate-title">Spenden</h1>
                 <p class="donate-description">Bitte übermittle uns deine Daten über das Formular unten, damit wir dir eine Spendenbescheinigung ausstellen können.</p>
                 <div class="donate-wrapper">
                     <div class="donate-qr-wrapper">
-                        <img src="/img/common/donate-qr-code.png" alt="QR Code Spenden" class="donate-qr">
+                        <img src="/img/common/donate-qr-code.png" alt="QR Code Spenden" class="donate-qr" loading="lazy">
                         <p class="donate-qr-text">
                             CH 20 0900 0000 6184 2154 0<br>
                             zurich - <wbr>meets - <wbr>tanzania<br>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </form>
-            <form id="scrollToMembership" class="donate-form invisible">
+            <form id="scrollToMembership" class="donate-form">
                 <h1 class="donate-title">Mitglied werden</h1>
                 <div class="donate-center">
                     <div class="donate-amount" id="membership-submit-label">
