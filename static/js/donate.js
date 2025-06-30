@@ -5,9 +5,7 @@ const donateUsageType = getElm("donate-usage-type");
 const donateSubmit = getElm("donate-submit");
 const membershipSubmit = getElm("membership-submit");
 
-
-
-membershipSubmit.click(async e => {
+membershipSubmit.click(async (e) => {
     e.preventDefault();
 
     const { link } = await post("/post/getPaymentLink", {
@@ -20,7 +18,7 @@ membershipSubmit.click(async e => {
     return errorNotification("Etwas hat nicht geklappt...");
 });
 
-donateSubmit.click(async e => {
+donateSubmit.click(async (e) => {
     e.preventDefault();
 
     if (donateName.val().trim() === "") return errorNotification("Bitte geben Sie Ihren Namen ein.");

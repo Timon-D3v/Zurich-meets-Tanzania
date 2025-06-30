@@ -70,7 +70,7 @@
         </style>
     </head>
     <body>
-        <% let link_mitglied; if (typeof user !== "undefined" && user !== null && user.valid) { link_mitglied = "/profile?exec=profileMembership" } else { link_mitglied = "/spenden#scrollToMembership"; }; %>
+        <% let link_mitglied; if (typeof user !== "undefined" && user !== null && user.valid) { link_mitglied = "/profile?exec=profileMembership" } else { link_mitglied = "/mitglied#scrollToMembership"; }; %>
         <%- include("./snippets/header.ejs", {
             link_mitglied
         }) %>
@@ -112,7 +112,7 @@
                     });
                     if (res.status !== 200) return alert("Etwas hat nicht geklappt: " + res.message);
                     await alert("Das hat geklappt! Du wirst jetzt nicht mehr Benachrichtigt. (Sie werden automatisch weitergeleitet)");
-                    window.location.href = window.location.origin
+                    window.location.href = window.location.origin;
                 });
             </script>
         </main>

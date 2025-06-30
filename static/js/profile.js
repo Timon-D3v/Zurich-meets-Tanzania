@@ -75,7 +75,7 @@ submit_file.click(async () => {
 
 if (JSON.stringify(get_member) !== "{}") {
     get_member.click(() => {
-        window.location.href = ORIGIN + "/spenden#scrollToMembership";
+        window.location.href = ORIGIN + "/mitglied#scrollToMembership";
     });
 } else {
     getMyBills();

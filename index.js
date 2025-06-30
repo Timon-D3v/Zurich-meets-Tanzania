@@ -595,7 +595,7 @@ app.get("/projects/gyn%C3%A4kologie", (req, res) => {
     });
 });
 
-app.get("/mitglied-und-spenden", (req, res) => res.status(301).redirect("/spenden"));
+app.get("/spenden-und-mitglied", (req, res) => res.status(301).redirect("/spenden"));
 app.get("/donate", (req, res) => res.status(301).redirect("/spenden"));
 app.get("/spenden", (req, res) => {
     res.render("donate.ejs", {
@@ -605,6 +605,22 @@ app.get("/spenden", (req, res) => {
         date: DONATE.datum,
         title: "Spenden",
         desc: "Wir freuen uns sehr, wenn Sie uns etwas spenden wollen. Deshalb gibt es diese Seite. So können Sie uns ganz unkompliziert unterstützen. Vielen Dank!",
+        sitetype: "static",
+        user: req.session.user,
+        donate: DONATE,
+    });
+});
+
+app.get("/mitglied-und-spenden", (req, res) => res.status(301).redirect("/mitglied"));
+app.get("/membership", (req, res) => res.status(301).redirect("/mitglied"));
+app.get("/mitglied", (req, res) => {
+    res.render("membership.ejs", {
+        env: LOAD_LEVEL,
+        url: req.url,
+        origin_url: req.protocol + "://" + req.get("host"),
+        date: DONATE.datum,
+        title: "Mitglied werden",
+        desc: "Wir freuen uns sehr, wenn Sie Mitglied bei uns werden wollen. Deshalb gibt es diese Seite. So können Sie uns ganz unkompliziert unterstützen. Vielen Dank!",
         sitetype: "static",
         user: req.session.user,
         donate: DONATE,
@@ -1455,15 +1471,15 @@ app.post("/post/getPaymentLink", async (req, res) => {
     if (isNaN(req.body.amount)) return res.end();
 
     if (!req.session?.user?.valid) return res.json({
-        link: `${req.protocol}://${req.get("host")}/login?redir=/spenden%23scrollToMembership&exec=error&message=Bitte%20melde%20dich%20mit%20deinem%20Benutzerkonto%20an,%20um%20Mitglied%20zu%20werden.`
-    });
+            link: `${req.protocol}://${req.get("host")}/login?redir=/spenden%23scrollToMembership&exec=error&message=Bitte%20melde%20dich%20mit%20deinem%20Benutzerkonto%20an,%20um%20Mitglied%20zu%20werden.`,
+        });
 
     const key = timon.randomString(256);
 
     payment_keys.push(key);
 
     res.json({
-        link: `${req.protocol}://${req.get("host")}/pay?key=${key}&a=${req.body.amount}&t=${req.body.type}`
+        link: `${req.protocol}://${req.get("host")}/pay?key=${key}&a=${req.body.amount}&t=${req.body.type}`,
     });
 });
 
@@ -1514,7 +1530,11 @@ app.post("/post/stripe/webhook", bodyParser.raw({ type: "application/json" }), a
                 await stripe_i_p_success(_customer_id, pdf, url);
                 break;
             default:
-                console.warn(`Unhandled event type ${event.type}`);
+                console.warn(`Saved event of type: ${event.type}`);
+                await db.saveUnhandledStripeEvent(event.type, event.data.object).catch((error) => {
+                    console.error("Error saving unhandled Stripe event:", error);
+                    sendCriticalErrorMail(error?.message || "Unknown Error", "Stripe Webhook Error:");
+                });
                 break;
         }
     } catch (error) {
@@ -1767,28 +1787,28 @@ app.post("/post/donateForm", async (req, res) => {
         const { name, familyName, email, usageType } = req.body;
 
         if (typeof name !== "string" || typeof familyName !== "string" || typeof email !== "string" || typeof usageType !== "string") return res.json({
-            error: true,
-            massage: "Bitte gib gültige Daten ein."
-        });
+                error: true,
+                massage: "Bitte gib gültige Daten ein.",
+            });
 
         const result = await sendDonationMail(name, familyName, email, usageType);
 
         if (result === 200) return res.json({
-            error: false,
-            message: "Zurich meets Tanzania dankt dir sehr für deine Spende ❤️"
-        });
+                error: false,
+                message: "Zurich meets Tanzania dankt dir sehr für deine Spende ❤️",
+            });
 
         res.json({
             error: true,
-            message: "Etwas ist schief gelaufen. Bitte versuche es später erneut."
+            message: "Etwas ist schief gelaufen. Bitte versuche es später erneut.",
         });
     } catch (error) {
         res.json({
             error: true,
-            message: "Etwas ist schief gelaufen. Bitte versuche es später erneut."
+            message: "Etwas ist schief gelaufen. Bitte versuche es später erneut.",
         });
     }
-})
+});
 
 app.listen(process.env.PORT, process.env.HOST, () => {
     console.log("Server listens on localhost:" + process.env.PORT);

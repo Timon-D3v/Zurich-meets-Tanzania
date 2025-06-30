@@ -2446,11 +2446,11 @@ select.donate-input {
     .donate-wrapper {
         flex-direction: column-reverse;
     }
-    
+
     .donate-form-wrapper {
         flex: 1;
     }
-    
+
     .donate-qr-wrapper {
         flex: 1;
         max-width: 100%;
@@ -2570,11 +2570,11 @@ select.donate-input {
     .donate-wrapper {
         flex-direction: column-reverse;
     }
-    
+
     .donate-form-wrapper {
         flex: 1;
     }
-    
+
     .donate-qr-wrapper {
         flex: 1;
         max-width: 100%;

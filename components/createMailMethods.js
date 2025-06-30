@@ -27,4 +27,3 @@ export function createDonateText(name, familyName, email, usageType) {
     let part2 = `${divider}\n\n${name} möchte für ${usageType} spenden.\n\n${divider}\n${address}\n${divider}\n\n${footer1}\n${footer2}`;
     return `${name} ${familyName} spendete am ${date}: \n${part2}`;
 }
-
