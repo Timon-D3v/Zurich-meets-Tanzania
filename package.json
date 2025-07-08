@@ -1,10 +1,10 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
-  "license": "ISC",
+  "license": "MPL-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Timon-D3v/Zurich-meets-Tanzania.git"
@@ -37,6 +37,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
+    "timonjs": "^2.1.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

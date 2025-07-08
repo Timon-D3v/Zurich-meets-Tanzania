@@ -1,8 +1,11 @@
-import { Component } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { Component, inject } from "@angular/core";
+import { NavigationEnd, NavigationStart, Router, RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./components/header/header.component";
 import { NavigationComponent } from "./components/navigation/navigation.component";
 import { FooterComponent } from "./components/footer/footer.component";
+import { ThemeService } from "./services/theme.service";
+import { timonjs_message } from "timonjs";
+import { filter } from "rxjs";
 
 @Component({
     selector: "app-root",
@@ -10,4 +13,26 @@ import { FooterComponent } from "./components/footer/footer.component";
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.scss",
 })
-export class AppComponent {}
+export class AppComponent {
+    private router = inject(Router);
+
+    private themeService = inject(ThemeService);
+
+    ngOnInit(): void {
+        timonjs_message();
+
+        this.themeService.initTheme();
+
+        const navigationEndPipe = this.router.events.pipe(filter((event): boolean => event instanceof NavigationEnd));
+        const navigationStartPipe = this.router.events.pipe(filter((event): boolean => event instanceof NavigationStart));
+
+        navigationEndPipe.subscribe((): void => {
+            // The part below is called every time the route changes.
+            this.themeService.initTheme();
+        });
+
+        navigationStartPipe.subscribe((): void => {
+            // The part below is called every time the route could change.
+        });
+    }
+}

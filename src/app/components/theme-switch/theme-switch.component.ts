@@ -1,4 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { Component, inject, OnInit, PLATFORM_ID } from "@angular/core";
+import { ThemeService } from "../../services/theme.service";
 
 @Component({
     selector: "app-theme-switch",
@@ -7,7 +9,16 @@ import { Component, OnInit } from "@angular/core";
     styleUrl: "./theme-switch.component.scss",
 })
 export class ThemeSwitchComponent implements OnInit {
+    private platformId = inject(PLATFORM_ID);
+    private themeService = inject(ThemeService);
+
     ngOnInit(): void {
-        console.warn("Theme switching is not implemented yet.");
+        if (!isPlatformBrowser(this.platformId)) return;
+
+        this.themeService.initTheme();
+    }
+
+    toggleTheme(): void {
+        this.themeService.toggleTheme();
     }
 }
