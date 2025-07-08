@@ -4,7 +4,7 @@
   "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
-  "license": "ISC",
+  "license": "MPL-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Timon-D3v/Zurich-meets-Tanzania.git"
