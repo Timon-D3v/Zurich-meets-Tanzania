@@ -1,11 +1,60 @@
 import { AngularNodeAppEngine, createNodeRequestHandler, isMainModule, writeResponseToNodeResponse } from "@angular/ssr/node";
 import express from "express";
+import cors from "cors";
+import session from "express-session";
 import { join } from "node:path";
+import rootRouter from "./router/root.router";
+import { CONFIG } from "./config";
 
 const browserDistFolder = join(import.meta.dirname, "../browser");
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+/**
+ * Set up express configuration
+ */
+app.use(express.urlencoded({
+    extended: true,
+    limit: "10000mb",
+}));
+app.use((req, res, next) => {
+    if (/\/(post|api)\/stripe\/webhook/.test(req.originalUrl)) {
+        next();
+        return;
+    }
+    
+    express.json({
+        limit: "10000mb"
+    })(req, res, next);
+});
+
+/**
+ * Set up session management.
+ * This uses express-session to manage user sessions.
+ */
+app.use(
+    session({
+        secret: CONFIG.SESSION_SECRET || "secret",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: false,
+            maxAge: 432000000,
+        },
+    }),
+);
+
+/**
+ * Enable CORS for all routes.
+ * This allows cross-origin requests, which is useful for APIs and frontend-backend communication.
+ */
+app.use(cors());
+
+/**
+ * Root router serves the entire backend.
+ */
+app.use(rootRouter);
 
 /**
  * Example Express Rest API endpoints can be defined here.

@@ -8,7 +8,7 @@ export const CONFIG: Config = {
     HOST: process.env["HOST"] as string,
     PORT: Number(process.env["PORT"]),
 
-    SESSION_SECRET: process.env["SESSION_SECRET"] as string,
+    SESSION_SECRET: process.env["SESSION_SECRET_KEY"] as string,
 
     MYSQL_HOST: process.env["MYSQL_HOST"] as string,
     MYSQL_PORT: Number(process.env["MYSQL_PORT"]),

@@ -1,3 +1,5 @@
+import { RowDataPacket } from "mysql2";
+
 export type Config = {
     ENV: "dev" | "prod";
     HOST: string;
@@ -18,6 +20,10 @@ export type PublicConfig = {
     FACEBOOK_URL: string;
     INSTAGRAM_URL: string;
     PROGRAMMER_URL: string;
+
+    ERROR: {
+        NO_CONNECTION_TO_DATABASE: string
+    }
 };
 
 export type NavLink = {
@@ -31,3 +37,8 @@ export type NavLinkPicture = {
     src: string;
     alt: string;
 };
+
+export type DatabaseResult = {
+    data: RowDataPacket[] | RowDataPacket | null,
+    error: null | string
+}
