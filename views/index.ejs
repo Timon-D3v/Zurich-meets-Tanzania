@@ -40,11 +40,11 @@
             news.isArchiv = false; %>
             <%- include("./snippets/news.ejs", news) %>
             <a class="news-more special" href="/archiv">Mehr anzeigen</a>
-            <%- include("./snippets/insta.ejs") %>
             <h1 class="title">Terminkalender</h1>
             <ul class="calendar">
                 <%- include("./snippets/calendar.ejs", { events }); %>
             </ul>
+            <%- include("./snippets/insta.ejs") %>
             <h1 class="title">Blogbeiträge</h1>
             <%- include("./snippets/blogCards.ejs", {
                 title: undefined,
