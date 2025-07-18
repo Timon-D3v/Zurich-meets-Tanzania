@@ -2558,6 +2558,10 @@ select.donate-input {
         grid-area: unset;
     }
 
+    .mobile-donation {
+        display: flex;
+    }
+
     .donate-amount {
         width: 90%;
         margin: 20px 5vw;
