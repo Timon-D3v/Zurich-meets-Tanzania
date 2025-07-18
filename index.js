@@ -1340,7 +1340,7 @@ app.post("/post/news", async (req, res) => {
         if (isBase64) {
             if (gallery) {
                 const replaceImageSources = async (options) => {
-                    if (options.tagName === "IMG") {
+                    if (options.tagName === "IMG" && !options.attributes.src.startsWith("https://") && !options.attributes.src.startsWith("http://")) {
                         const result = await imagekitUpload(options.attributes.src, type + "___NEWS___" + timon.randomString(32), "/news/")
                         options.attributes.src = result.path;
                     }
