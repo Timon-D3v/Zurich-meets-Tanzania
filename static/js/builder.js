@@ -80,7 +80,7 @@ on(document, "DOMContentLoaded", () => {
             element.addClass("blog_text");
             element.innerHTML = await prompt("Bitte gib den Text ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
 
-            content.appendChild(element);
+            content.prepend(element);
         });
 
         getElm("add-title").click(async () => {
@@ -88,7 +88,7 @@ on(document, "DOMContentLoaded", () => {
             element.addClass("blog_title");
             element.innerHTML = await prompt("Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
 
-            content.appendChild(element);
+            content.prepend(element);
         });
 
         getElm("add-subtitle").click(async () => {
@@ -96,7 +96,7 @@ on(document, "DOMContentLoaded", () => {
             element.addClass("blog_subtitle");
             element.innerHTML = await prompt("Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
 
-            content.appendChild(element);
+            content.prepend(element);
         });
 
         getElm("add-picture").click(() => addImg("img-only"));
@@ -109,7 +109,7 @@ on(document, "DOMContentLoaded", () => {
             const div = createElm("div");
             div.addClass("blog_line");
 
-            content.append(div);
+            content.prepend(div);
         });
 
         getElm("add-multiple-pictures").click(() => {
@@ -220,7 +220,7 @@ on(document, "DOMContentLoaded", () => {
                 script.innerHTML = scriptContent;
 
                 wrapper.append(mainDiv, nextBtn, prevBtn, ruler, script);
-                content.append(wrapper);
+                content.prepend(wrapper);
             });
 
             input.click();
@@ -406,7 +406,7 @@ on(document, "DOMContentLoaded", () => {
                 element.alt = input.file().name;
                 if (type === "img-only") {
                     element.addClass("blog_img");
-                    content.append(element);
+                    content.prepend(element);
                 } else {
                     const div = createElm("div");
                     div.addClass("blog_half");
@@ -416,7 +416,7 @@ on(document, "DOMContentLoaded", () => {
 
                     div.append(type === "left" ? text : element);
                     div.append(type === "left" ? element : text);
-                    content.append(div);
+                    content.prepend(div);
                 }
             });
 
