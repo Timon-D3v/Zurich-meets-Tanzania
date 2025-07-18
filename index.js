@@ -13,6 +13,7 @@ import path from "path";
 import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { delivApiUpload } from "delivapi-client";
 import { toRealDate } from "./components/toRealDate.js";
 import { sendContactMail, sendCriticalErrorMail, sendDonationMail, sendMailCode, sendNewsletterEmail, sendRecoveryCode, sendRecoveryPassword } from "./components/emailMethods.js";
 import { stripe_c_s_created, stripe_c_s_updated, stripe_c_s_deleted, stripe_i_p_success } from "./components/stripeWebhookActions.js";
@@ -1295,7 +1296,9 @@ app.post("/post/news", async (req, res) => {
     if (req.session?.user?.type !== "admin") return res.json({ error: "501: Forbidden" });
 
     try {
-        const { newsletter, src, html, type, isBase64, pos } = req.body;
+        const { newsletter, src, type, isBase64, pos, gallery } = req.body;
+        let { html } = req.body;
+
         let path = src;
 
         if (newsletter) {
@@ -1329,21 +1332,46 @@ app.post("/post/news", async (req, res) => {
 
             if (text === "") text = "--- Vorschau konnte nicht geladen werden. ---";
 
-            if (text.length > 1000) text = text.slice(0, 1500) + "...";
+            if (text.length > 1500) text = text.slice(0, 1500) + "...";
 
             sendNewsletterEmail(recipients, EMAILS.newsletterSubject, text);
         }
 
         if (isBase64) {
-            const result = await imagekitUpload(src, type + "___NEWS___" + timon.randomString(32), "/news/");
-            path = result.path;
+            if (gallery) {
+                const replaceImageSources = async (options) => {
+                    if (options.tagName === "IMG") {
+                        const result = await imagekitUpload(options.attributes.src, type + "___NEWS___" + timon.randomString(32), "/news/")
+                        options.attributes.src = result.path;
+                    }
+
+                    for (let child of options.children) {
+                        if (child.tagName === "___text___") {
+                            continue;
+                        }
+
+                        child = await replaceImageSources(child);
+                    }
+
+                    return options;
+                }
+
+                html = await replaceImageSources(html);
+                
+                console.log(html);
+
+                path = "UNUSED";
+            } else {
+                const result = await imagekitUpload(src, type + "___NEWS___" + timon.randomString(32), "/news/");
+                path = result.path;
+            }
         }
 
         const result = await db.submitNews(html, type, path, pos, newsletter);
 
-        if (result) return res.json({ ok: true, message: "Das hat geklappt." });
-
-        throw new Error();
+        if (!result) throw new Error("No result from database");
+        
+        res.json({ ok: true, message: "Das hat geklappt." });
     } catch (error) {
         console.error(error);
         res.json({ ok: false, message: "Etwas hat nicht geklappt. Bitte versuche es später erneut." });

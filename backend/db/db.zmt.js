@@ -221,15 +221,17 @@ export async function getNews() {
 }
 
 export async function getXNews(i) {
-    let query = "SELECT * from `zmt`.`news` ORDER BY `id` DESC LIMIT ?;";
-    let [result] = await pool.query(query, [i]).catch((err) => {
-        throw new Error("Something went wrong");
-    });
-    if (result.length === 0) throw new Error("Nothing there");
-    result.forEach((element) => {
-        element.html = JSON.parse(element.html);
-    });
-    return result;
+    try {
+        const [result] = await pool.query(`SELECT * from \`zmt\`.\`news\` ORDER BY \`id\` DESC LIMIT ${i};`)
+
+        if (result.length === 0) throw new Error("Nothing there");
+
+        return result;
+    } catch (error) {
+        console.error(error);
+
+        throw new Error(error.message);
+    }
 }
 
 export async function submitNews(html, type, src, position, newsletter_is_sent) {

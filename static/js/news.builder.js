@@ -53,7 +53,7 @@ on(document, "DOMContentLoaded", () => {
                 element.alt = input.file().name;
                 element.addClass("news-img");
 
-                const position = await prompt("Positionierung des Bildes (links, mitte oder rechts)");
+                const position = await prompt("Positionierung des Bildes ('links', 'mitte' oder 'rechts')");
 
                 switch (position.toLowerCase().trim()) {
                     case "links":
@@ -232,14 +232,35 @@ on(document, "DOMContentLoaded", () => {
 
             json.newsletter = await confirm("Sollte dieser Beitrag als Newsletter verschickt werden? (OK = Ja, Abbrechen = Nein. Die E-Mail kann nur einmal verschickt werden.)");
 
-            json.src = getQuery(".news *:is(img, iframe)").get(0).src;
+            const sourceFile = getQuery(".news *:is(img, iframe)");
+            
+            if (sourceFile.length > 1) {
+                console.info("Multiple pictures");
+
+                json.gallery = true;
+
+                json.src = [];
+
+                sourceFile.forEach(file => json.src.push(file.src));
+            } else if (sourceFile.length === 1) {
+                json.gallery = false;
+
+                json.src = sourceFile.get(0).src;
+            } else {
+                return alert("Es wurde kein Bild oder PDF ausgewählt. Bitte füge ein Bild oder PDF hinzu, bevor du die News speicherst.");
+            }
 
             json.type = null;
             json.isBase64 = false;
 
-            if (json.src.includes("ik.imagekit.io/zmt/pdf/") || json.src.includes(".pdf")) json.type = "iframe";
-            else if (json.src.startsWith("https://") || json.src.startsWith("http://")) json.type = "img";
-            else {
+            if (Array.isArray(json.src)) {
+                json.type = "multiple-img";
+                json.isBase64 = true;
+            } else if (json.src.includes("ik.imagekit.io/zmt/pdf/") || json.src.includes(".pdf")) {
+                json.type = "iframe";
+            } else if (json.src.startsWith("https://") || json.src.startsWith("http://")) {
+                json.type = "img";
+            } else {
                 json.type = "img";
                 json.isBase64 = true;
             }
