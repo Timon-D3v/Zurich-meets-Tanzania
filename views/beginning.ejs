@@ -41,6 +41,10 @@
             <p class="text-beginning"><%- text.abs3 %></p>
             <p class="text-beginning"><%- text.abs4 %></p>
             <p class="text-beginning"><%- text.abs5 %></p>
+            <div class="mobile-donation flex">
+                <a class="cta-btn flex" href="/spenden">Spenden</a>
+                <a class="cta-btn flex" href="<%= link_mitglied %>">Mitglied werden</a>
+            </div>
             <p class="date">Zuletzt aktualisiert am <%= toRealDate(text.datum) %></p>
         </main>
         <%- include("./snippets/footer.ejs", {
