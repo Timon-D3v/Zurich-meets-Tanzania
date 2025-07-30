@@ -1,4 +1,4 @@
-main h1:not(.news-title),
+main h1:not(.news-title, .hero-title),
 main h2,
 main h3,
 main h4,
@@ -7,7 +7,7 @@ main h6 {
     padding: 0 10vw;
 }
 
-main h1:not(.news-title) {
+main h1:not(.news-title, .hero-title) {
     font-size: 25px;
 }
 
@@ -254,17 +254,15 @@ tr:nth-child(even) {
     grid-template-rows: 1fr;
 }
 
-.builder-layout > section::before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: var(--header-height);
-}
-
 .builder-layout > section {
     background-color: var(--background-200);
     padding: 20px;
     box-sizing: border-box;
+    position: fixed;
+    overflow-y: auto;
+    height: calc(100vh - var(--header-height));
+    top: var(--header-height);
+    z-index: 1;
 }
 
 .add-item-btn {
