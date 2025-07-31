@@ -262,7 +262,12 @@ tr:nth-child(even) {
     overflow-y: auto;
     height: calc(100vh - var(--header-height));
     top: var(--header-height);
-    z-index: 1;
+    z-index: 2;
+}
+
+footer {
+    position: relative;
+    z-index: 3;
 }
 
 .add-item-btn {
