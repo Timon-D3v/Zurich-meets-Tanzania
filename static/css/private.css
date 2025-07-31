@@ -299,15 +299,13 @@ tr:nth-child(even) {
 @media screen and (max-width: 749px) {
     .builder-layout {
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: 45vh 1fr; /* Set the sidebar (that is currently at the top) to a fixed height */
     }
 
     .builder-layout > section {
-        position: relative;
         width: 100%;
-        height: auto;
-        max-height: 50vh;
-        top: 0;
+        height: 45vh; /* Set a fixed height */
+        /* Keep the original fixed position and top value of var(--header-height) */
     }
 
     .builder-layout > main {
