@@ -265,6 +265,56 @@ tr:nth-child(even) {
     z-index: 2;
 }
 
+/* Responsive design for builder layout */
+@media screen and (min-width: 1200px) {
+    .builder-layout {
+        grid-template-columns: 400px 1fr;
+    }
+
+    .builder-layout > section {
+        width: 400px;
+    }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1199px) {
+    .builder-layout {
+        grid-template-columns: 350px 1fr;
+    }
+
+    .builder-layout > section {
+        width: 350px;
+    }
+}
+
+@media screen and (min-width: 750px) and (max-width: 999px) {
+    .builder-layout {
+        grid-template-columns: 300px 1fr;
+    }
+
+    .builder-layout > section {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .builder-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
+    .builder-layout > section {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-height: 50vh;
+        top: 0;
+    }
+
+    .builder-layout > main {
+        order: 2;
+    }
+}
+
 footer {
     position: relative;
     z-index: 3;
