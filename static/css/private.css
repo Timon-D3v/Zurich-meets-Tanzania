@@ -307,10 +307,6 @@ tr:nth-child(even) {
         height: 45vh; /* Set a fixed height */
         /* Keep the original fixed position and top value of var(--header-height) */
     }
-
-    .builder-layout > main {
-        order: 2;
-    }
 }
 
 footer {
