@@ -18,7 +18,7 @@
  *
  */
 const EMAILS = {
-    sender_email: "info@timondev.com",
+    sender_email: "info@zurich-meets-tanzania.com",
     sender_name: "zurich meets tanzania",
     anschrift: "___ANREDE___ ___GENDER___ ___NACHNAME___",
     anschrift_html: `<p style="font-size: 18px; color: #070d13; font-family: 'Titillium Web', Helvetica, Arial, sans-serif; display: block; margin-block-start: 0; margin-block-end: 0; margin-inline-start: 0; margin-inline-end: 0; margin: 1em 0; word-wrap: normal; word-break: keep-all; hyphens: auto; -webkit-hyphens: auto;">

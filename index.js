@@ -1357,8 +1357,6 @@ app.post("/post/news", async (req, res) => {
                 }
 
                 html = await replaceImageSources(html);
-                
-                console.log(html);
 
                 path = "UNUSED";
             } else {
