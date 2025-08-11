@@ -10,7 +10,7 @@ router.post("/getLinks/:count", async (req, res): Promise<void> => {
     if (typeof x !== "string" || typeof Number(x) !== "number") {
         res.status(501).json({
             data: null,
-            error: "Please enter valid data."
+            error: "Please enter valid data.",
         });
     }
 

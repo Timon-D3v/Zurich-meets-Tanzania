@@ -1,0 +1,202 @@
+div {
+    position: relative;
+    isolation: isolate;
+}
+
+img {
+    width: 100%;
+    max-height: calc(95vh - var(--header-height));
+    object-fit: cover;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: all 0.25s ease;
+}
+
+h1,
+button {
+    transition: all 0.2s;
+}
+
+h1 {
+    font-size: 90px;
+    font-weight: 600;
+    line-height: 115px;
+    letter-spacing: 1px;
+    box-sizing: border-box;
+    padding: 40px 5vw;
+    margin: 0;
+    text-align: center;
+
+    &::after {
+        display: block;
+        content: "";
+        width: 15vw;
+        height: 10px;
+        background-color: var(--text-950);
+        position: relative;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+    }
+}
+
+p {
+    color: var(--text-950);
+    font-size: calc(100px / (3 * var(--font-ratio)));
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    box-sizing: border-box;
+    margin: 17.5px 15vw;
+}
+
+button {
+    color: var(--text-50);
+    border: none;
+    background-color: var(--secondary-500);
+    box-sizing: border-box;
+    width: 400px;
+    height: 80px;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 20px calc(50% - 200px);
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--secondary-400);
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    div,
+    img {
+        min-height: 800px;
+    }
+
+    h1 {
+        position: absolute;
+        top: 25%;
+        left: 80px;
+        font-size: 100px;
+        font-weight: 700;
+        line-height: 125px;
+        letter-spacing: 2px;
+        padding: 0;
+        transform: translateY(-50%);
+        max-width: 90vw;
+        color: var(--text-50);
+        text-align: left;
+
+        &::after {
+            position: absolute;
+            left: 0;
+            transform: none;
+            top: 100%;
+            width: 7.5vw;
+            margin: 0;
+            background-color: var(--text-50);
+        }
+    }
+
+    p {
+        position: absolute;
+        top: 50%;
+        left: 80px;
+        transform: translateY(-50%);
+        color: var(--text-50);
+        margin: 0;
+        margin-top: 17.5px;
+        max-width: 500px;
+    }
+
+    button {
+        position: absolute;
+        top: 75%;
+        left: 80px;
+        transform: translateY(-50%);
+        margin: 0;
+    }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1199px) {
+    div,
+    img {
+        min-height: 700px;
+    }
+
+    h1 {
+        position: absolute;
+        top: 25%;
+        left: 80px;
+        padding: 0;
+        transform: translateY(-50%);
+        max-width: 90vw;
+        color: var(--text-50);
+        text-align: left;
+
+        &::after {
+            position: absolute;
+            left: 0;
+            transform: none;
+            top: 100%;
+            width: 7.5vw;
+            margin: 0;
+            background-color: var(--text-50);
+        }
+    }
+
+    p {
+        position: absolute;
+        top: 50%;
+        left: 80px;
+        transform: translateY(-50%);
+        color: var(--text-50);
+        margin: 0;
+        margin-top: 17.5px;
+        max-width: 500px;
+    }
+
+    button {
+        position: absolute;
+        top: 75%;
+        left: 80px;
+        transform: translateY(-50%);
+        margin: 0;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    img {
+        filter: brightness(0.75);
+    }
+}
+
+@media screen and (min-width: 575px) and (max-width: 749) {
+    h1 {
+        font-size: 75px;
+        line-height: 100px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    h1 {
+        font-size: 50px;
+        line-height: 50px;
+    }
+
+    button {
+        width: 90%;
+        margin: 20px 5%;
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 260px) {
+    button {
+        height: auto;
+        padding: 10px;
+    }
+}

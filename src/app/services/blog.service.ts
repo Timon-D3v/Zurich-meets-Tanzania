@@ -9,7 +9,7 @@ import { DatabaseResult } from "../..";
 })
 export class BlogService {
     private http = inject(HttpClient);
-    private notificationService = inject(NotificationService)
+    private notificationService = inject(NotificationService);
 
     getBlogsLinks(count: number = 5): Observable<DatabaseResult> {
         const request = this.http.post<DatabaseResult>(`/api/blog/getLinks/${count}`, {});

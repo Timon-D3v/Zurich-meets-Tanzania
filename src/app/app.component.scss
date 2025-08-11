@@ -5,6 +5,7 @@ main {
 
     &::before {
         content: "";
+        display: block;
         height: var(--header-height);
     }
 }

@@ -7,6 +7,6 @@ export const PUBLIC_CONFIG: PublicConfig = {
     PROGRAMMER_URL: "https://www.timondev.com/",
 
     ERROR: {
-        NO_CONNECTION_TO_DATABASE: "Es konnte keine Verbindung mit der Datenbank hergestellt werden. Bitte versuche es später noch einmal."
-    }
+        NO_CONNECTION_TO_DATABASE: "Es konnte keine Verbindung mit der Datenbank hergestellt werden. Bitte versuche es später noch einmal.",
+    },
 };

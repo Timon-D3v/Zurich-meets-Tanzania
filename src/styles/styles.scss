@@ -107,3 +107,9 @@ img::selection {
         display: block;
     }
 }
+
+@media print {
+    nav {
+        display: none;
+    }
+}

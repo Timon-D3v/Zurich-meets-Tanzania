@@ -14,18 +14,20 @@ const angularApp = new AngularNodeAppEngine();
 /**
  * Set up express configuration
  */
-app.use(express.urlencoded({
-    extended: true,
-    limit: "10000mb",
-}));
+app.use(
+    express.urlencoded({
+        extended: true,
+        limit: "10000mb",
+    }),
+);
 app.use((req, res, next) => {
     if (/\/(post|api)\/stripe\/webhook/.test(req.originalUrl)) {
         next();
         return;
     }
-    
+
     express.json({
-        limit: "10000mb"
+        limit: "10000mb",
     })(req, res, next);
 });
 

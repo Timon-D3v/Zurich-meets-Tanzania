@@ -7,6 +7,20 @@ import { BlogService } from "../../services/blog.service";
 import { isPlatformBrowser } from "@angular/common";
 import { NotificationService } from "../../services/notification.service";
 
+class gsapDefaults {
+    x: number | string;
+    y: number | string;
+    duration: number;
+    ease: string;
+
+    constructor(x: number | string, y: number | string) {
+        this.x = x;
+        this.y = y;
+        this.duration = 0.5;
+        this.ease = "power2.inOut";
+    }
+}
+
 @Component({
     selector: "app-navigation",
     imports: [NavElement, RouterLink],
@@ -49,7 +63,7 @@ export class NavigationComponent implements OnInit {
             if (response.error !== null) {
                 console.error(response.error);
                 this.notificationService.error(response.error);
-                return
+                return;
             }
 
             this.blogLinks.set([]);
@@ -57,15 +71,15 @@ export class NavigationComponent implements OnInit {
             response.data?.forEach((element: { title: string }) => {
                 this.blogLinks().push({
                     label: element.title,
-                    href: encodeURIComponent(element.title)
-                })
-            })
+                    href: encodeURIComponent(element.title),
+                });
+            });
 
             this.blogLinks().push({
                 label: "Weitere",
                 href: "",
                 external: true,
-                onClick: () => this.setBlogLinks(count + 5)
+                onClick: () => this.setBlogLinks(count + 5),
             });
         });
     }

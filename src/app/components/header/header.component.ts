@@ -14,7 +14,7 @@ import { RouterLink } from "@angular/router";
 })
 export class HeaderComponent implements OnInit {
     UNIKAT_URL = PUBLIC_CONFIG.UNIKAT_URL;
-    becomeMemberUrl = signal<string>("/spenden#scrollToMembership");
+    becomeMemberUrl = signal<string>("/membership");
 
     ngOnInit(): void {
         console.warn("Header Component needs to have a become member URL");

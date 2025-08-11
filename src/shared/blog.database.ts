@@ -3,12 +3,11 @@ import connection from "./connection.database";
 import { DatabaseResult } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 
-
 /**
  * Retrieves the latest X blog titles from the database, ordered by descending blog ID.
  *
  * @param {number} x - The number of latest blog titles to retrieve.
- * 
+ *
  * @returns {Promise<DatabaseResult>} A promise that resolves to a `DatabaseResult` object containing the blog data or an error.
  *
  * @example
@@ -27,7 +26,7 @@ export async function getLastXBlogTitles(x: number): Promise<DatabaseResult> {
 
         return {
             data: result,
-            error: null
+            error: null,
         };
     } catch (error) {
         if (error instanceof Error) {
@@ -36,7 +35,7 @@ export async function getLastXBlogTitles(x: number): Promise<DatabaseResult> {
 
         return {
             data: null,
-            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE
-        }
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
     }
 }

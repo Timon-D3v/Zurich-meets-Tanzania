@@ -22,8 +22,8 @@ export type PublicConfig = {
     PROGRAMMER_URL: string;
 
     ERROR: {
-        NO_CONNECTION_TO_DATABASE: string
-    }
+        NO_CONNECTION_TO_DATABASE: string;
+    };
 };
 
 export type NavLink = {
@@ -39,6 +39,16 @@ export type NavLinkPicture = {
 };
 
 export type DatabaseResult = {
-    data: RowDataPacket[] | RowDataPacket | null,
-    error: null | string
-}
+    data: RowDataPacket[] | RowDataPacket | null;
+    error: null | string;
+};
+
+export type HeroInformation = {
+    title: string;
+    pictureUrl: string;
+    pictureAlt: string;
+    subtitle?: string;
+    buttonType?: "scroll" | "url";
+    buttonText?: string;
+    buttonLink?: string;
+};
