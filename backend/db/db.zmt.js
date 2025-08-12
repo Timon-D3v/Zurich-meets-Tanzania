@@ -216,7 +216,11 @@ export async function getNews() {
         throw new Error("Something went wrong");
     });
     if (typeof result.id !== "number") throw new Error("Nothing there");
-    result.html = JSON.parse(result.html);
+
+    if (typeof result.html === "string") {
+        result.html = JSON.parse(result.html);
+    }
+
     return result;
 }
 

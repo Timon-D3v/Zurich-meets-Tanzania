@@ -1380,7 +1380,9 @@ app.post("/post/news/update", async (req, res) => {
     if (req.session?.user?.type !== "admin") return res.json({ error: "501: Forbidden" });
 
     try {
-        const { newsletter, src, html, type, isBase64, id, pos } = req.body;
+        const { newsletter, src, type, isBase64, pos, gallery } = req.body;
+        let { html } = req.body;
+
         let path = src;
 
         const news = await db.getNews();
@@ -1449,7 +1451,7 @@ app.post("/post/news/update", async (req, res) => {
             }
         }
 
-        const result = await db.updateNews(html, type, path, pos, id, newsletter || news.newsletter_is_sent);
+        const result = await db.updateNews(html, type, path, pos, news.id, newsletter || news.newsletter_is_sent);
 
         if (result) return res.json({ ok: true, message: "Das hat geklappt." });
 

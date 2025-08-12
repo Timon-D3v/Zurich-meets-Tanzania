@@ -41,13 +41,13 @@
                 <button type="button" class="add-item-btn" id="done">
                     <h1>Abschliessen</h1>
                 </button>
-                <button type="button" class="floating-edit-btn" id="edit-current-element" data-news-is-new="false" data-news-id="<%= news.id %>">
-                    <img src="/img/svg/pen.svg" alt="Bearbeiten" title="Bearbeiten" />
-                </button>
-                <button type="button" class="floating-edit-btn" id="delete-current-element">
-                    <img src="/img/svg/trash.svg" alt="Löschen" title="Löschen" />
-                </button>
             </section>
+            <button type="button" class="floating-edit-btn" id="edit-current-element" data-blog-is-new="true" data-blog-original-name="NONE">
+                <img src="/img/svg/pen.svg" alt="Bearbeiten" title="Bearbeiten" />
+            </button>
+            <button type="button" class="floating-edit-btn" id="delete-current-element">
+                <img src="/img/svg/trash.svg" alt="Löschen" title="Löschen" />
+            </button>
             <main>
                 <%- include("../snippets/news.ejs", news) %>
             </main>
