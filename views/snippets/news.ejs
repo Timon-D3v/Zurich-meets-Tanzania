@@ -1,5 +1,5 @@
 <div class="news news-id-<%= id %>" id="scroll_to_news">
-    <pre id="pre-news-<%= id %>" data-news-id="<%= id %>" class="invisible"><%- JSON.stringify(html) %></pre>
+    <pre id="pre-news-<%= id %>" data-news-id="<%= id %>" class="invisible"><%- typeof html === "string" ? html : JSON.stringify(html) %></pre>
     <%
     function toRealDate (date) {
         date = date.toString();

@@ -1422,8 +1422,31 @@ app.post("/post/news/update", async (req, res) => {
         }
 
         if (isBase64) {
-            const result = await imagekitUpload(src, type + "___NEWS___" + timon.randomString(32), "/news/");
-            path = result.path;
+            if (gallery) {
+                const replaceImageSources = async (options) => {
+                    if (options.tagName === "IMG" && !options.attributes.src.startsWith("https://") && !options.attributes.src.startsWith("http://")) {
+                        const result = await imagekitUpload(options.attributes.src, type + "___NEWS___" + timon.randomString(32), "/news/")
+                        options.attributes.src = result.path;
+                    }
+
+                    for (let child of options.children) {
+                        if (child.tagName === "___text___") {
+                            continue;
+                        }
+
+                        child = await replaceImageSources(child);
+                    }
+
+                    return options;
+                }
+
+                html = await replaceImageSources(html);
+
+                path = "UNUSED";
+            } else {
+                const result = await imagekitUpload(src, type + "___NEWS___" + timon.randomString(32), "/news/");
+                path = result.path;
+            }
         }
 
         const result = await db.updateNews(html, type, path, pos, id, newsletter || news.newsletter_is_sent);
