@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-surgery',
-  imports: [],
-  templateUrl: './surgery.component.html',
-  styleUrl: './surgery.component.scss'
+    selector: "app-surgery",
+    imports: [],
+    templateUrl: "./surgery.component.html",
+    styleUrl: "./surgery.component.scss",
 })
-export class SurgeryComponent {
-
-}
+export class SurgeryComponent {}

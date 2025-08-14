@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-blog-editor',
-  imports: [],
-  templateUrl: './blog-editor.component.html',
-  styleUrl: './blog-editor.component.scss'
+    selector: "app-blog-editor",
+    imports: [],
+    templateUrl: "./blog-editor.component.html",
+    styleUrl: "./blog-editor.component.scss",
 })
-export class BlogEditorComponent {
-
-}
+export class BlogEditorComponent {}

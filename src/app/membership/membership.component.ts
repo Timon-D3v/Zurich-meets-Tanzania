@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-membership',
-  imports: [],
-  templateUrl: './membership.component.html',
-  styleUrl: './membership.component.scss'
+    selector: "app-membership",
+    imports: [],
+    templateUrl: "./membership.component.html",
+    styleUrl: "./membership.component.scss",
 })
-export class MembershipComponent {
-
-}
+export class MembershipComponent {}
