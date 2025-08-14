@@ -1,33 +1,33 @@
 <nav>
     <div class="wrapper">
         <ul class="list">
-            <li>
+            <li class="floating-nav-elements">
                 <app-nav-element
-                    [title]="'Verein'"
+                    [description]="'Verein'"
                     [linkArray]="[
                         { href: '/vision', label: 'Vision' },
-                        { href: '/vorstand', label: 'Vorstand' },
-                        { href: '/Wie%20alles%20begann', label: 'Wie alles begann...' },
-                        { href: '/finanzen', label: 'Finanzierung' },
-                        { href: '/erfolgsrechnung', label: 'Erfolgsrechung' },
-                        { href: '/generalversammlung', label: 'Generalversammlung' },
-                        { href: '/statuten', label: 'Statuten' },
+                        { href: '/executives', label: 'Vorstand' },
+                        { href: '/beginning', label: 'Wie alles begann...' },
+                        { href: '/finances', label: 'Finanzierung' },
+                        { href: '/income-statement', label: 'Erfolgsrechung' },
+                        { href: '/general-meeting', label: 'Generalversammlung' },
+                        { href: '/statutes', label: 'Statuten' },
                     ]"
                 ></app-nav-element>
             </li>
-            <li>
+            <li class="floating-nav-elements">
                 <app-nav-element
-                    [title]="'Projekte'"
+                    [description]="'Projekte'"
                     [withPicture]="true"
                     [linkArray]="[
                         { href: '/zurich-meets-tanzania', label: 'zurich meets tanzania' },
                         { href: '/tanzania-meets-zurich', label: 'tanzania meets zurich' },
-                        { href: '/projects/mbuzi', label: 'Mbuzi' },
-                        { href: '/projects/gynäkologie', label: 'twenty4forty' },
-                        { href: '/projects/meducation', label: 'Meducation' },
-                        { href: '/projects/bajaji', label: 'Bajaji' },
-                        { href: '/projects/kardiologie', label: 'Kardiologie' },
-                        { href: '/projects/chirurgie', label: 'Chirurgie' },
+                        { href: '/mbuzi', label: 'Mbuzi' },
+                        { href: '/gynecology', label: 'twenty4forty' },
+                        { href: '/meducation', label: 'Meducation' },
+                        { href: '/bajaji', label: 'Bajaji' },
+                        { href: '/cardiology', label: 'Kardiologie' },
+                        { href: '/surgery', label: 'Chirurgie' },
                     ]"
                     [pictureArray]="[
                         { src: '/img/logo.svg', alt: 'Zurich meets Tanzania Logo' },
@@ -41,21 +41,21 @@
                     ]"
                 ></app-nav-element>
             </li>
-            <li>
-                <app-nav-element [title]="'Blogs'" [linkArray]="blogLinks()"></app-nav-element>
+            <li class="floating-nav-elements">
+                <app-nav-element [description]="'Blogs'" [linkArray]="blogLinks()"></app-nav-element>
             </li>
-            <li>
-                <app-nav-element [title]="'Bilder'" [linkArray]="galleryLinks()"></app-nav-element>
+            <li class="floating-nav-elements">
+                <app-nav-element [description]="'Bilder'" [linkArray]="galleryLinks()"></app-nav-element>
             </li>
-            <li>
+            <li class="floating-nav-elements">
                 <app-nav-element
-                    [title]="'Weiteres'"
+                    [description]="'Weiteres'"
                     [linkArray]="[
-                        isLoggedIn() ? { href: '/profile', label: 'Mein Konto' } : { href: '/login', label: 'Einloggen' },
-                        isLoggedIn() ? { href: '#', label: 'Ausloggen', onClick: logOut } : { href: '/login?exec=toggleLoginForm', label: 'Registrieren' },
-                        { href: '/team', label: 'Aktuelles Team' },
-                        { href: '/archiv', label: 'Archiv' },
-                        { href: '/tanzania', label: 'Factsheet Tanzania' },
+                        isLoggedIn() ? { href: '/account', label: 'Mein Konto' } : { href: '/login', label: 'Einloggen' },
+                        isLoggedIn() ? { href: '#', label: 'Ausloggen', onClick: logOut } : { href: '/signup', label: 'Registrieren' },
+                        { href: '/current-team', label: 'Aktuelles Team' },
+                        { href: '/archive', label: 'Archiv' },
+                        { href: '/history-tanzania', label: 'Factsheet Tanzania' },
                         { href: '/contact', label: 'Kontakt' },
                         { href: UNIKAT_URL, label: 'Shop', external: true },
                     ]"
@@ -64,7 +64,7 @@
         </ul>
         <div class="extra-buttons">
             <a class="header-link" [routerLink]="becomeMemberUrl()">Mitglied werden</a>
-            <a class="header-link" [routerLink]="'/spenden'">Spenden</a>
+            <a class="header-link" [routerLink]="'/donate'">Spenden</a>
             <a class="header-link" [href]="UNIKAT_URL" target="_blank" rel="roopener">Shop</a>
             <div class="buttons">
                 <button type="button" class="darkmode data-tooltip uiverse" [attr.data-tooltip-content]="currentThemeMode()" id="darkmode3">

@@ -16,6 +16,13 @@ export const routes: Routes = [
 
     // Root routes
     {
+        path: "archive",
+        loadComponent: async () => {
+            const component = await import("./archive/archive.component");
+            return component.ArchiveComponent;
+        },
+    },
+    {
         path: "bajaji",
         loadComponent: async () => {
             const component = await import("./bajaji/bajaji");

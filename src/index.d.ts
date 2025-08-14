@@ -52,3 +52,5 @@ export type HeroInformation = {
     buttonText?: string;
     buttonLink?: string;
 };
+
+export type HeaderNavAnchorWidthArray = [number, number, number, number, number];

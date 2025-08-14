@@ -7,20 +7,6 @@ import { BlogService } from "../../services/blog.service";
 import { isPlatformBrowser } from "@angular/common";
 import { NotificationService } from "../../services/notification.service";
 
-class gsapDefaults {
-    x: number | string;
-    y: number | string;
-    duration: number;
-    ease: string;
-
-    constructor(x: number | string, y: number | string) {
-        this.x = x;
-        this.y = y;
-        this.duration = 0.5;
-        this.ease = "power2.inOut";
-    }
-}
-
 @Component({
     selector: "app-navigation",
     imports: [NavElement, RouterLink],

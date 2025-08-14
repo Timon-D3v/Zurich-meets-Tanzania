@@ -6,10 +6,7 @@ import { Component, input, OnInit } from "@angular/core";
     templateUrl: "./header-link.component.html",
     styleUrl: "./header-link.component.scss",
 })
-export class HeaderLinkComponent implements OnInit {
+export class HeaderLinkComponent {
     type = input<string>("");
-
-    ngOnInit(): void {
-        console.warn("Header link functionality is not implemented yet.");
-    }
+    linkIndex = input.required<number>();
 }

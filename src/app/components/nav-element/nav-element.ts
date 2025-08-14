@@ -9,7 +9,7 @@ import { RouterLink } from "@angular/router";
     styleUrl: "./nav-element.scss",
 })
 export class NavElement {
-    title = input<string>("");
+    description = input<string>("");
     withPicture = input<boolean>(false);
     pictureArray = input<NavLinkPicture[]>([]);
     linkArray = input<NavLink[]>([]);

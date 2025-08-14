@@ -27,11 +27,11 @@
             </div>
         </div>
         <div class="bottom">
-            <app-header-link [type]="'Verein'"></app-header-link>
-            <app-header-link [type]="'Projekte'"></app-header-link>
-            <app-header-link [type]="'Blogs'"></app-header-link>
-            <app-header-link [type]="'Bilder'"></app-header-link>
-            <app-header-link [type]="'Weiteres'"></app-header-link>
+            <app-header-link [type]="'Verein'" (click)="moveNavElement($event)" [linkIndex]="0"></app-header-link>
+            <app-header-link [type]="'Projekte'" (click)="moveNavElement($event)" [linkIndex]="1"></app-header-link>
+            <app-header-link [type]="'Blogs'" (click)="moveNavElement($event)" [linkIndex]="2"></app-header-link>
+            <app-header-link [type]="'Bilder'" (click)="moveNavElement($event)" [linkIndex]="3"></app-header-link>
+            <app-header-link [type]="'Weiteres'" (click)="moveNavElement($event)" [linkIndex]="4"></app-header-link>
             <app-theme-switch></app-theme-switch>
         </div>
     </div>
