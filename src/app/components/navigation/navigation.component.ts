@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
-import { NavElement } from "../nav-element/nav-element";
+import { NavElementComponent } from "../nav-element/nav-element.component";
 import { DatabaseResult, NavLink } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { RouterLink } from "@angular/router";
@@ -9,7 +9,7 @@ import { NotificationService } from "../../services/notification.service";
 
 @Component({
     selector: "app-navigation",
-    imports: [NavElement, RouterLink],
+    imports: [NavElementComponent, RouterLink],
     templateUrl: "./navigation.component.html",
     styleUrl: "./navigation.component.scss",
 })
