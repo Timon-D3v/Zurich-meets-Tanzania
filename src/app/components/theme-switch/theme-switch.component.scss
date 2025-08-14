@@ -31,7 +31,7 @@
     position: absolute;
     background: var(--circle-bg);
     border-radius: inherit;
-    background-image: url("../../../../public/img/svg/sun.svg");
+    background-image: url("../../../../public/svg/sun.svg");
     background-repeat: no-repeat;
     background-position: center center;
     -webkit-transition:
@@ -74,7 +74,7 @@
 
 .uiverse.ui-switch input:checked + .uiverse.slider .uiverse.circle {
     left: calc(100% - var(--circle-diameter));
-    background-image: url("../../../../public/img/svg/moon.svg");
+    background-image: url("../../../../public/svg/moon.svg");
     background-color: rgb(0, 56, 146);
 }
 

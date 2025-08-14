@@ -48,7 +48,7 @@ export class NavigationComponent implements OnInit {
         blogTitles.subscribe((response: DatabaseResult) => {
             if (response.error !== null) {
                 console.error(response.error);
-                this.notificationService.error(response.error);
+                this.notificationService.error("Fehler", response.error);
                 return;
             }
 

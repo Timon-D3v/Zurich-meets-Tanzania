@@ -14,7 +14,7 @@ export class BlogService {
     getBlogsLinks(count: number = 5): Observable<DatabaseResult> {
         const request = this.http.post<DatabaseResult>(`/api/blog/getLinks/${count}`, {});
 
-        this.notificationService.info("Worked");
+        this.notificationService.info("Worked", "With message");
 
         return request;
     }

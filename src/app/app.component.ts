@@ -7,10 +7,11 @@ import { ThemeService } from "./services/theme.service";
 import { timonjs_message } from "timonjs";
 import { filter } from "rxjs";
 import { isPlatformBrowser } from "@angular/common";
+import { NotificationsWrapperComponent } from "./components/notifications-wrapper/notifications-wrapper.component";
 
 @Component({
     selector: "app-root",
-    imports: [RouterOutlet, HeaderComponent, NavigationComponent, FooterComponent],
+    imports: [RouterOutlet, HeaderComponent, NavigationComponent, FooterComponent, NotificationsWrapperComponent],
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.scss",
 })
