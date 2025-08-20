@@ -39,16 +39,6 @@ const ABOUT_US = {
             picture2: true,
         },
         {
-            name: "Dr. Eliane",
-            family_name: "Häusermann",
-            picture: "https://ik.imagekit.io/zmt/users/eliane",
-            job: "Hausärztin, FMH Allgemeine Innere Medizin",
-            motivation:
-                "&gt;&gt; Ich sehe es als meine Verpflichtung als gut ausgebildeter Mensch aus einem der reichten Länder dieser Welt der weniger priviligierten Bevölkerung Hilfsmittel, Wissen und Resourcen weiter zu geben um der wirtschaftlichen und sozialen Ungerechtigkeit und unfairen Verteilung entgegen zu wirken. Dabei geht es weniger um ein humanistischer Akt der Grosszügigkeit sondern um eine notwendige Umverteilung für eine soziale Gerechtigkeit.<br>&gt;&gt; Dabei sollte der klassische humanitäre Weg der direkten Hilfeleistung Schritt für Schritt durch eine indirekte Hilfeleistung im Sinne einer Finanzierung der Aus- und Weiterbildung der lokalen Bevölkerung und somit Erzielen einer nachhaltigen und langfristigen Verbesserung der gesundheitlichen Strukturen des jeweiligen Landes ersetzt werden. Längerfristige Vision ist einen Austausch auf Augenhöhe mit gegenseitiger Achtung und Respektierung der Andersartigkeit, das Zulassen der, auch auf medizinischer Ebene, unterschiedlichen Denk- und Herangehensweise mit bestmöglicher Optimierung der gesellschaftlichen Gesundheit.",
-            position: "Revisorin",
-            picture2: false,
-        },
-        {
             name: "Sara",
             family_name: "Pieretti",
             picture: "https://ik.imagekit.io/zmt/users/sara",
