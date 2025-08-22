@@ -1,0 +1,31 @@
+:root[data-style-namespace="auth"] {
+    --header-height: 80px;
+
+    & footer,
+    & nav {
+        display: none !important;
+    }
+
+    & header {
+        & .small,
+        & .bottom {
+            display: none !important;
+        }
+
+        & .top {
+            --secondary-500: #40b959;
+            --secondary-400: #4ee06b;
+            --text-50: var(--c-text-950);
+            height: 100% !important ;
+        }
+    }
+
+    *::selection,
+    *::marker {
+        background-color: #1f9d39cc;
+    }
+
+    & app-logo .line {
+        font-size: 19.2px !important;
+    }
+}

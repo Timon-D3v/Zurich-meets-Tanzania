@@ -7,12 +7,14 @@ import { DatabaseApiEndpointResponse } from "../..";
 @Injectable({
     providedIn: "root",
 })
-export class BlogService {
+export class GalleryService {
     private http = inject(HttpClient);
     private notificationService = inject(NotificationService);
 
-    getBlogsLinks(count: number = 5): Observable<DatabaseApiEndpointResponse> {
-        const request = this.http.post<DatabaseApiEndpointResponse>(`/api/blog/getLinks/${count}`, {});
+    getGalleryLinks(count: number = 5): Observable<DatabaseApiEndpointResponse> {
+        const request = this.http.post<DatabaseApiEndpointResponse>(`/api/gallery/getLinks/${count}`, {});
+
+        this.notificationService.info("Worked", "With message");
 
         return request;
     }

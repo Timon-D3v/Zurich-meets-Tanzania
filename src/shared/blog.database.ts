@@ -22,7 +22,7 @@ import { PUBLIC_CONFIG } from "../publicConfig";
  */
 export async function getLastXBlogTitles(x: number): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT title from \`zmt\`.\`blogs\` ORDER BY \`id\` DESC LIMIT ${x};`);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`title\` from \`zmt\`.\`blogs\` ORDER BY \`id\` DESC LIMIT ${x};`);
 
         return {
             data: result,

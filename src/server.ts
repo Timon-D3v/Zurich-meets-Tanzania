@@ -1,10 +1,13 @@
 import { AngularNodeAppEngine, createNodeRequestHandler, isMainModule, writeResponseToNodeResponse } from "@angular/ssr/node";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
 import { join } from "node:path";
 import rootRouter from "./router/root.router";
 import { CONFIG } from "./config";
+import { initSession } from "./middleware/init.session.middleware";
+import { PUBLIC_CONFIG } from "./publicConfig";
+import { isAdmin, isLoggedIn } from "./middleware/auth.middleware";
 
 const browserDistFolder = join(import.meta.dirname, "../browser");
 
@@ -20,8 +23,8 @@ app.use(
         limit: "10000mb",
     }),
 );
-app.use((req, res, next) => {
-    if (/\/(post|api)\/stripe\/webhook/.test(req.originalUrl)) {
+app.use((req: Request, res: Response, next: NextFunction) => {
+    if (/\/api\/stripe\/webhook/.test(req.originalUrl)) {
         next();
         return;
     }
@@ -37,7 +40,7 @@ app.use((req, res, next) => {
  */
 app.use(
     session({
-        secret: CONFIG.SESSION_SECRET || "secret",
+        secret: CONFIG.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -46,6 +49,11 @@ app.use(
         },
     }),
 );
+
+/**
+ * Add default session options.
+ */
+app.use(initSession);
 
 /**
  * Enable CORS for all routes.
@@ -59,18 +67,6 @@ app.use(cors());
 app.use(rootRouter);
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
-
-/**
  * Serve static files from /browser
  */
 app.use(
@@ -82,9 +78,19 @@ app.use(
 );
 
 /**
+ * Secure routes that not everyone should have access
+ */
+for (const route of PUBLIC_CONFIG.ROUTES.TYPES.SECURED) {
+    app.use(route, isLoggedIn);
+}
+for (const route of PUBLIC_CONFIG.ROUTES.TYPES.ADMIN) {
+    app.use(route, isAdmin);
+}
+
+/**
  * Handle all other requests by rendering the Angular application.
  */
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
     angularApp
         .handle(req)
         .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))

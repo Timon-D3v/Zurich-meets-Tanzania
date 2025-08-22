@@ -1,5 +1,12 @@
 import { RowDataPacket } from "mysql2";
 
+declare module "express-session" {
+    interface SessionData {
+        user: PrivateUser | null;
+        isLoggedIn: boolean;
+    }
+}
+
 export type Config = {
     ENV: "dev" | "prod";
     HOST: string;
@@ -15,6 +22,12 @@ export type Config = {
     ORIGIN: string;
 };
 
+export type PageDescription = {
+    title: string;
+    description: string;
+    lastUpdated: string;
+};
+
 export type PublicConfig = {
     UNIKAT_URL: string;
     FACEBOOK_URL: string;
@@ -24,12 +37,27 @@ export type PublicConfig = {
     ERROR: {
         NO_CONNECTION_TO_DATABASE: string;
     };
+
+    ROUTES: {
+        TYPES: {
+            AUTH: string[];
+            SECURED: string[];
+            PROJECTS: string[];
+            ADMIN: string[];
+            CONTACT: string[];
+            GENERAL: string[];
+        };
+        TITLES: {
+            [path: `/${string}`]: PageDescription;
+        };
+    };
 };
 
 export type NavLink = {
     href: string;
     label: string;
     external?: boolean;
+    clickable?: boolean;
     onClick?: Function;
 };
 
@@ -62,4 +90,98 @@ export type Notification = {
     closable: boolean;
 };
 
+export type EmailPasswordCombo = {
+    email: string;
+    password: string;
+};
+
 export type NotificationTypes = "neutral" | "success" | "error" | "warn" | "info";
+
+export type HTMLInputTypes = "button" | "checkbox" | "color" | "date" | "datetime" | "datetime-local" | "email" | "file" | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset" | "search" | "submit" | "tel" | "text" | "time" | "url" | "week";
+
+export type HTMLInputAutocompleteOptions =
+    | "on"
+    | "off"
+    | "address-line1"
+    | "address-line2"
+    | "address-line3"
+    | "address-level1"
+    | "address-level2"
+    | "address-level3"
+    | "address-level4"
+    | "street-address"
+    | "country"
+    | "country-name"
+    | "postal-code"
+    | "name"
+    | "additional-name"
+    | "family-name"
+    | "given-name"
+    | "honoric-prefix"
+    | "honoric-suffix"
+    | "nickname"
+    | "organization-title"
+    | "username"
+    | "new-password"
+    | "current-password"
+    | "bday"
+    | "bday-day"
+    | "bday-month"
+    | "bday-year"
+    | "sex"
+    | "one-time-code"
+    | "organization"
+    | "cc-name"
+    | "cc-given-name"
+    | "cc-additional-name"
+    | "cc-family-name"
+    | "cc-number"
+    | "cc-exp"
+    | "cc-exp-month"
+    | "cc-exp-year"
+    | "cc-csc"
+    | "cc-type"
+    | "transaction-currency"
+    | "transaction-amount"
+    | "language"
+    | "url"
+    | "email"
+    | "photo"
+    | "tel"
+    | "tel-country-code"
+    | "tel-national"
+    | "tel-area-code"
+    | "tel-local"
+    | "tel-local-prefix"
+    | "tel-local-suffix"
+    | "tel-extension"
+    | "impp";
+
+export interface ApiEndpointResponse {
+    error: boolean;
+    message: string;
+}
+
+export interface GetPublicUserDetailsApiEndpointResponse extends ApiEndpointResponse {
+    data: PublicUser;
+}
+
+export interface DatabaseApiEndpointResponse extends ApiEndpointResponse {
+    data: DatabaseResult
+}
+
+export interface PublicUser {
+    email: string;
+    name: string;
+    family_name: string;
+    picture: string;
+    phone: string;
+    type: "user" | "member" | "admin";
+    address: string;
+}
+
+export interface PrivateUser extends PublicUser {
+    id: number;
+    username: string; // Deprecated
+    password: string; // Hashed
+}

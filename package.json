@@ -1,7 +1,7 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "3.3.0",
-  "description": "This is the website for the non profit organization \"zuerich - meets - tanzania\".",
+  "version": "3.4.0",
+  "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
   "license": "MPL-2.0",
@@ -34,6 +34,7 @@
     "@angular/platform-server": "^20.0.2",
     "@angular/router": "^20.0.2",
     "@angular/ssr": "^20.0.2",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",

@@ -52,7 +52,7 @@
                     [description]="'Weiteres'"
                     [linkArray]="[
                         isLoggedIn() ? { href: '/account', label: 'Mein Konto' } : { href: '/login', label: 'Einloggen' },
-                        isLoggedIn() ? { href: '#', label: 'Ausloggen', onClick: logOut } : { href: '/signup', label: 'Registrieren' },
+                        isLoggedIn() ? { href: '', label: 'Ausloggen', onClick: logOut.bind(this), clickable: true } : { href: '/signup', label: 'Registrieren' },
                         { href: '/current-team', label: 'Aktuelles Team' },
                         { href: '/archive', label: 'Archiv' },
                         { href: '/history-tanzania', label: 'Factsheet Tanzania' },

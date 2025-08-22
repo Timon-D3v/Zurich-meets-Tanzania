@@ -1,11 +1,13 @@
-import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
+import { Component, effect, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { NavElementComponent } from "../nav-element/nav-element.component";
-import { DatabaseResult, NavLink } from "../../..";
+import { DatabaseApiEndpointResponse, NavLink } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { RouterLink } from "@angular/router";
 import { BlogService } from "../../services/blog.service";
 import { isPlatformBrowser } from "@angular/common";
 import { NotificationService } from "../../services/notification.service";
+import { AuthService } from "../../services/auth.service";
+import { GalleryService } from "../../services/gallery.service";
 
 @Component({
     selector: "app-navigation",
@@ -14,6 +16,12 @@ import { NotificationService } from "../../services/notification.service";
     styleUrl: "./navigation.component.scss",
 })
 export class NavigationComponent implements OnInit {
+    constructor() {
+        effect(() => {
+            this.isLoggedIn.set(this.authService.isLoggedIn());
+        })
+    }
+
     UNIKAT_URL = PUBLIC_CONFIG.UNIKAT_URL;
     blogLinks = signal<NavLink[]>([]);
     galleryLinks = signal<NavLink[]>([]);
@@ -22,51 +30,94 @@ export class NavigationComponent implements OnInit {
     currentThemeMode = signal<"Lightmode" | "Darkmode">("Lightmode");
 
     private blogService = inject(BlogService);
+    private galleryService = inject(GalleryService);
     private notificationService = inject(NotificationService);
+    private authService = inject(AuthService);
+
     private platformId = inject(PLATFORM_ID);
 
     logOut(): void {
-        console.error("Not implemented yet: Log out functionality in the navigation component.");
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
+        this.authService.logout();
     }
 
     ngOnInit(): void {
-        console.warn("Blog links need to be fetched in the navigation component.");
         console.warn("Gallery links need to be fetched in the navigation component.");
-        console.warn("The navigation component should be able to check if the user is logged in.");
-        console.warn("Log out functionality needs to be implemented in the navigation component.");
         console.warn("Nav Component needs to have a become member URL");
         console.warn("Nav component needs to have the current theme mode");
 
         this.setBlogLinks();
+        this.setGalleryLinks();
     }
 
     setBlogLinks(count: number = 5): void {
-        if (!isPlatformBrowser(this.platformId)) return;
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
 
-        const blogTitles = this.blogService.getBlogsLinks();
+        const request = this.blogService.getBlogsLinks(count);
 
-        blogTitles.subscribe((response: DatabaseResult) => {
-            if (response.error !== null) {
-                console.error(response.error);
-                this.notificationService.error("Fehler", response.error);
+        request.subscribe((response: DatabaseApiEndpointResponse) => {
+            if (response.error) {
+                console.error(response.message);
+                this.notificationService.error("Fehler", "Blogs konnten nicht geladen werden, da keine Verbindung zur Datenbank möglich ist.");
                 return;
             }
 
             this.blogLinks.set([]);
 
-            response.data?.forEach((element: { title: string }) => {
+            response.data?.data?.forEach((element: { title: string }) => {
                 this.blogLinks().push({
                     label: element.title,
                     href: encodeURIComponent(element.title),
                 });
             });
 
-            this.blogLinks().push({
-                label: "Weitere",
-                href: "",
-                external: true,
-                onClick: () => this.setBlogLinks(count + 5),
+            if (this.blogLinks().length === count) {
+                this.blogLinks().push({
+                    label: "Weitere",
+                    href: "",
+                    clickable: true,
+                    onClick: () => this.setBlogLinks(count + 5),
+                });
+            }
+        });
+    }
+
+    setGalleryLinks(count: number = 5): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
+        const request = this.galleryService.getGalleryLinks(count);
+
+        request.subscribe((response: DatabaseApiEndpointResponse) => {
+            if (response.error) {
+                console.error(response.message);
+                this.notificationService.error("Fehler", "Galerien konnten nicht geladen werden, da keine Verbindung zur Datenbank möglich ist.");
+                return;
+            }
+
+            this.galleryLinks.set([]);
+
+            response.data?.data?.forEach((element: { title: string }) => {
+                this.galleryLinks().push({
+                    label: element.title,
+                    href: encodeURIComponent(element.title),
+                });
             });
+
+            if (this.galleryLinks().length === count) {
+                this.galleryLinks().push({
+                    label: "Weitere",
+                    href: "",
+                    clickable: true,
+                    onClick: () => this.setGalleryLinks(count + 5),
+                });
+            }
         });
     }
 }

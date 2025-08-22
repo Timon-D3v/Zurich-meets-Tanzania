@@ -19,9 +19,14 @@ ul {
     list-style: square;
 }
 
-a {
+a, p {
     font-size: calc(30px / var(--font-ratio));
     cursor: pointer;
+}
+
+p {
+    text-decoration: underline;
+    margin: 0;
 }
 
 .picture {
@@ -94,7 +99,8 @@ img {
         line-height: 2;
         font-weight: 600;
 
-        & > a {
+        & > a, 
+        & > p {
             font-size: inherit;
         }
     }

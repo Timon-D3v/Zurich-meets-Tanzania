@@ -1,0 +1,23 @@
+:root[data-style-namespace="contact"] {
+    & header {
+        & .top {
+            --secondary-500: var(--accent-500);
+            --secondary-400: var(--accent-600);
+            --text-50: var(--c-text-950);
+        }
+    }
+
+    &[data-theme="dark"] {
+        & header {
+            & .top {
+                --secondary-500: var(--violett);
+                --secondary-400: #4a2984;
+            }
+        }
+    }
+
+    *::selection,
+    *::marker {
+        background-color: #4ab5a3cc;
+    }
+}

@@ -1,0 +1,54 @@
+label {
+    color: var(--dark-green);
+    font-weight: 600;
+    font-family: "Teko", monospace;
+    font-size: x-large;
+    margin-top: 10px;
+}
+
+input {
+    margin-left: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 85%;
+    height: 100%;
+    background-color: transparent;
+    color: var(--c-text-950);
+    font-size: 1.1rem;
+
+    &::placeholder {
+        font-family: "Titillium Web", sans-serif;
+        font-size: 1rem;
+        color: var(--c-text-950);
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+div {
+    border: 1.5px solid #ecedec;
+    border-radius: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    transition: all 0.2s ease-in-out;
+
+    &:focus-within {
+        border: 1.5px solid var(--violett);
+    }
+
+    & img {
+        height: 1.2em;
+    }
+
+    &:has(.file > img) {
+        height: auto;
+    }
+}
+
+img {
+    --darkmode: 0;
+}

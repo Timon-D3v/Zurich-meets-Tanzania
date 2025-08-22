@@ -1,0 +1,46 @@
+@use "../../styles/index" as *;
+
+.wrapper {
+    @include auth-wrapper;
+}
+
+form {
+    @include auth-form;
+}
+
+app-auth-input {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+p {
+    color: var(--c-text-950);
+}
+
+.password-recovery {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 1rem;
+
+    & a {
+        text-align: right;
+        cursor: pointer;
+        color: var(--c-text-950);
+
+        &:hover {
+            color: var(--c-text-800);
+        }
+    }
+}
+
+button {
+    @include form-submit-button;
+}
+
+.toggler {
+    @include auth-toggler;
+}

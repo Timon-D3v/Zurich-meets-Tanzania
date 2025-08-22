@@ -1,1 +1,15 @@
-<p>login works!</p>
+<div class="wrapper">
+    <form>
+        <h1>Login</h1>
+        <app-auth-input [type]="'email'" [label]="'E-Mail'" [placeholder]="'E-Mail eingeben'" [autocomplete]="'email'" [required]="true" [iconSource]="'/svg/personal.svg'" [iconAlt]="'Eine Person'" (valueOutput)="updateEmailInput($event)"></app-auth-input>
+        <app-auth-input [type]="'password'" [label]="'Passwort'" [placeholder]="'Passwort eingeben'" [autocomplete]="'current-password'" [required]="true" [iconSource]="'/svg/lock.svg'" [iconAlt]="'Ein Schloss'" [isPassword]="true" (valueOutput)="updatePasswordInput($event)"></app-auth-input>
+        <div class="password-recovery">
+            <a [routerLink]="'/password-recovery'">Passwort vergessen?</a>
+        </div>
+        <button type="button" (click)="login($event)">{{ submitButtonText() }}</button>
+        <div class="toggler">
+            <p>Noch keine Zugangsdaten?</p>
+            <a [routerLink]="'/signup'">Account erstellen</a>
+        </div>
+    </form>
+</div>

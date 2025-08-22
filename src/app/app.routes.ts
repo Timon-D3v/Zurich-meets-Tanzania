@@ -156,6 +156,13 @@ export const routes: Routes = [
         },
     },
     {
+        path: "password-recovery",
+        loadComponent: async () => {
+            const component = await import("./password-recovery/password-recovery.component");
+            return component.PasswordRecoveryComponent;
+        },
+    },
+    {
         path: "privacy",
         loadComponent: async () => {
             const component = await import("./privacy/privacy.component");

@@ -1,6 +1,8 @@
 @use "./index";
 @use "./font.scss";
 @use "./colors.scss";
+@use "./auth.namespace.scss";
+@use "./contact.namespace.scss";
 
 *,
 *::before,

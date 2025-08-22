@@ -8,6 +8,9 @@ import { timonjs_message } from "timonjs";
 import { filter } from "rxjs";
 import { isPlatformBrowser } from "@angular/common";
 import { NotificationsWrapperComponent } from "./components/notifications-wrapper/notifications-wrapper.component";
+import { PUBLIC_CONFIG } from "../publicConfig";
+import { AuthService } from "./services/auth.service";
+import { StyleNamespaceService } from "./services/style-namespace.service";
 
 @Component({
     selector: "app-root",
@@ -19,6 +22,8 @@ export class AppComponent implements OnInit {
     private router = inject(Router);
 
     private themeService = inject(ThemeService);
+    private authService = inject(AuthService);
+    private styleNamespaceService = inject(StyleNamespaceService);
 
     private platformId = inject(PLATFORM_ID);
 
@@ -36,7 +41,18 @@ export class AppComponent implements OnInit {
 
         navigationEndPipe.subscribe((): void => {
             // The part below is called every time the route changes.
+
+            // Loads the current user theme
             this.themeService.initTheme();
+
+            // Sets the correct style namespace for the current route
+            if (PUBLIC_CONFIG.ROUTES.TYPES.AUTH.includes(this.router.url)) {
+                this.styleNamespaceService.setAuthStyleNamespace();
+            } else if (PUBLIC_CONFIG.ROUTES.TYPES.CONTACT.includes(this.router.url)) {
+                this.styleNamespaceService.setContactStyleNamespace();
+            } else {
+                this.styleNamespaceService.setDefaultStyleNamespace();
+            }
         });
 
         navigationStartPipe.subscribe((): void => {

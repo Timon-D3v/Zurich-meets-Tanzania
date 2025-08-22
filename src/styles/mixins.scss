@@ -19,3 +19,90 @@
         background-color: var(--secondary-400);
     }
 }
+
+@mixin auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    margin: 80px 25%;
+    width: 50%;
+    max-width: 45em;
+    padding: 30px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    background-color: var(--green);
+
+    & h1 {
+        text-align: center;
+        text-transform: uppercase;
+        margin: 0;
+        font-size: 3em;
+        color: var(--c-text-950);
+    }
+
+    @media screen and (max-width: 749px) {
+        width: 100%;
+        max-width: unset;
+    }
+}
+
+@mixin form-submit-button {
+    align-self: flex-end;
+    margin: 20px 0 10px 0;
+    background-color: #151717;
+    border: none;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 10px;
+    height: 50px;
+    width: 100%;
+    cursor: pointer;
+    font-family: "Titillium Web", sans-serif;
+
+    &:hover {
+        background-color: #252727;
+    }
+
+    &:active {
+        background-color: #353737;
+    }
+}
+
+@mixin auth-wrapper {
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-image: url(../../public/stock/jungle.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    overflow-y: auto;
+}
+
+@mixin auth-toggler {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 1em;
+    justify-content: center;
+    align-items: center;
+
+    & > p {
+        color: var(--c-text-950);
+        margin: 0;
+    }
+
+    & > a {
+        background-color: transparent;
+        border: none;
+        color: var(--violett);
+        cursor: pointer;
+        font-size: 1rem;
+        text-decoration: underline;
+    }
+}
