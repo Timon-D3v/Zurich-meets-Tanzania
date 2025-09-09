@@ -1,0 +1,7 @@
+:root:has(nav.mobile-open) {
+    @media screen and (min-width: 750px) and (max-width: 1199px) {
+        main {
+            filter: brightness(75%);
+        }
+    }
+}

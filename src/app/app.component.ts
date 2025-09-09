@@ -12,6 +12,7 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 import { AuthService } from "./services/auth.service";
 import { StyleNamespaceService } from "./services/style-namespace.service";
 import { HeaderService } from "./services/header.service";
+import { NavigationService } from "./services/navigation.service";
 
 @Component({
     selector: "app-root",
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit {
     private authService = inject(AuthService);
     private styleNamespaceService = inject(StyleNamespaceService);
     private headerService = inject(HeaderService);
+    private navigationService = inject(NavigationService);
 
     private platformId = inject(PLATFORM_ID);
 
@@ -43,6 +45,9 @@ export class AppComponent implements OnInit {
 
         navigationEndPipe.subscribe((): void => {
             // The part below is called every time the route changes.
+
+            // Close the mobile nav
+            this.navigationService.closeNavigation();
 
             // Update the user object to bring it up to date
             this.authService.getCurrentUserDetails();

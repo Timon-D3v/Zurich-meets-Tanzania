@@ -12,7 +12,7 @@ export class ThemeSwitchComponent implements OnInit {
     constructor() {
         effect(() => {
             this.currentTheme.set(this.themeService.currentTheme());
-        })
+        });
     }
 
     currentTheme = signal<"dark" | "light">("light");

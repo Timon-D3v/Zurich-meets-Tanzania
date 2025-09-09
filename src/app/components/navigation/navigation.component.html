@@ -1,4 +1,4 @@
-<nav>
+<nav [class]="mobileNavIsOpen() ? 'mobile-open' : null">
     <div class="wrapper">
         <ul class="list">
             <li class="floating-nav-elements">
@@ -63,16 +63,16 @@
             </li>
         </ul>
         <div class="extra-buttons">
-            <a class="header-link" [routerLink]="becomeMemberUrl()">{{ becomeMemberUrl() === "/membership" ? "Mitglied werden" : "Account"}}</a>
+            <a class="header-link" [routerLink]="becomeMemberUrl()">{{ becomeMemberUrl() === "/membership" ? "Mitglied werden" : "Account" }}</a>
             <a class="header-link" [routerLink]="'/donate'">Spenden</a>
             <a class="header-link" [href]="UNIKAT_URL" target="_blank" rel="roopener">Shop</a>
             <div class="buttons">
                 <button type="button" class="darkmode data-tooltip uiverse" [attr.data-tooltip-content]="currentThemeMode() === 'light' ? 'Lightmode' : 'Darkmode'" id="darkmode3" (click)="toggleTheme()">
                     <div class="darkmode-placeholder"></div>
-                    <span class="invisible">Turn on Darkmode</span>
+                    <span class="invisible">{{ `Turn darkmode ${currentThemeMode() === "light" ? "on" : "off"}.` }}</span>
                 </button>
                 <a class="data-tooltip uiverse contact" [routerLink]="'/contact'" [attr.data-tooltip-content]="'Kontakt'">
-                    <img class="contact-image" alt="Kontakt" src="/svg/personal.svg" />
+                    <img class="contact-image" alt="Kontakt" src="/svg/mail.svg" />
                 </a>
             </div>
         </div>

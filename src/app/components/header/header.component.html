@@ -3,7 +3,7 @@
     <div class="navigation">
         <div class="top">
             <div class="large">
-                <a [routerLink]="becomeMemberUrl()" class="button member">{{ becomeMemberUrl() === "/membership" ? "Mitglied werden" : "Account"}}</a>
+                <a [routerLink]="becomeMemberUrl()" class="button member">{{ becomeMemberUrl() === "/membership" ? "Mitglied werden" : "Account" }}</a>
                 <a [routerLink]="'/donate'" class="button donate">Spenden</a>
                 <a [routerLink]="'/contact'" class="button contact">Kontakt</a>
                 <a href="{{ UNIKAT_URL }}" target="_blank" class="button shop">Shop</a>
@@ -16,7 +16,7 @@
                     <img alt="Spenden" src="/svg/spenden.svg" />
                 </a>
                 <a [routerLink]="'/contact'" class="icon contact" title="Kontakt">
-                    <img alt="Kontakt" src="/svg/contact.svg" />
+                    <img alt="Kontakt" src="/svg/mail.svg" />
                 </a>
                 <a href="{{ UNIKAT_URL }}" target="_blank" class="icon shop" title="Shop">
                     <img alt="Shop" src="/svg/shop.svg" />

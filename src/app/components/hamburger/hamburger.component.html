@@ -1,4 +1,4 @@
-<button id="menu" class="hamburger hamburger--spin" type="button">
+<button id="menu" [class]="isOpen() ? 'hamburger hamburger--spin is-active' : 'hamburger hamburger--spin'" type="button" (click)="toggleHamburger()">
     <span class="hamburger-box">
         <span class="hamburger-inner"></span>
     </span>

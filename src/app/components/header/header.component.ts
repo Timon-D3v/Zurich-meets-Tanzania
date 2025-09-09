@@ -29,8 +29,6 @@ export class HeaderComponent implements OnInit, OnDestroy, OnChanges {
     private platformId = inject(PLATFORM_ID);
 
     ngOnInit(): void {
-        console.warn("Header Component needs to have a become member URL");
-
         if (!isPlatformBrowser(this.platformId)) {
             return;
         }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, effect, inject, OnInit, signal } from "@angular/core";
+import { NavigationService } from "../../services/navigation.service";
 
 @Component({
     selector: "app-hamburger",
@@ -6,8 +7,24 @@ import { Component, OnInit } from "@angular/core";
     templateUrl: "./hamburger.component.html",
     styleUrl: "./hamburger.component.scss",
 })
-export class HamburgerComponent implements OnInit {
-    ngOnInit(): void {
-        console.warn("Hamburger menu functionality is not implemented yet.");
+export class HamburgerComponent {
+    constructor() {
+        effect(() =>  {
+            this.isOpen.set(this.navigationService.navigationIsOpen())
+        })
+    }
+
+    isOpen = signal<boolean>(false);
+
+    private navigationService = inject(NavigationService);
+
+    toggleHamburger(): void {
+        this.isOpen.update((value: boolean) => !value);
+
+        if (this.isOpen()) {
+            this.navigationService.openNavigation();
+        } else {
+            this.navigationService.closeNavigation();
+        }
     }
 }

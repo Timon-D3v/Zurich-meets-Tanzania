@@ -1,6 +1,7 @@
 @use "./index";
 @use "./font.scss";
 @use "./colors.scss";
+@use "./global.imports.scss";
 @use "./darkmode.imports.scss";
 @use "./auth.namespace.scss";
 @use "./contact.namespace.scss";

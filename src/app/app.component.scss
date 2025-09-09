@@ -1,7 +1,10 @@
-@use "../styles/index";
-
 main {
     min-height: 100vh;
+    transition:
+        filter 0.5s ease-in-out,
+        color 0.2s,
+        background-color 0.2s;
+    background-color: var(--background-50);
 
     &::before {
         content: "";

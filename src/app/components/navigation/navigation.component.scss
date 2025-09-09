@@ -32,7 +32,7 @@ nav {
 .extra-buttons {
     position: absolute;
     bottom: 0;
-    height: 80px;
+    height: var(--header-height);
     width: 100%;
     background-color: inherit;
     border-top: solid 0.5px rgba(26, 15, 0, 0.2);
@@ -44,9 +44,74 @@ nav {
     gap: 10px;
 }
 
-.contact-image {
+.darkmode,
+.contact {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border: none;
+    background-color: var(--background-400);
+    border-radius: 18.75px;
+    transition: all 0.2s linear;
+    cursor: pointer;
+    -webkit-hyphens: none;
+    hyphens: none;
+
+    &::before,
+    &::after {
+        position: absolute;
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.2s ease;
+    }
+
+    &::before {
+        content: attr(data-tooltip-content);
+        font-size: 15px;
+        font-weight: 600;
+        background-color: var(--text-200);
+        color: var(--text-950);
+        padding: 3px 10px;
+        border-radius: 4px;
+        bottom: calc(100% + 5px);
+        transform: translateY(5px);
+    }
+
+    &::after {
+        content: "";
+        border-top: 5px solid var(--text-200);
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        bottom: calc(100% + 1px);
+        transform: translateY(100%, 5px);
+    }
+
+    &:hover {
+        transform: translateY(-5px);
+
+        &::before,
+        &::after {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+.contact-image,
+.darkmode-placeholder {
     height: 30px;
     width: 30px;
+}
+
+.darkmode-placeholder {
+    background-image: url(../../../../public/svg/sun.svg);
+    filter: invert(var(--not-darkmode)) !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .header-link {
@@ -141,6 +206,11 @@ nav {
         height: calc(100% - 80px);
         left: 100%;
         width: 60%;
+        transition: transform 0.5s ease-in-out;
+
+        &.mobile-open {
+            transform: translateX(-100%);
+        }
     }
 
     .header-link {
@@ -150,6 +220,10 @@ nav {
     .buttons {
         width: 100%;
         height: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
     }
 }
 
@@ -159,6 +233,11 @@ nav {
         height: calc(100% - 80px);
         left: 0;
         width: 100%;
+        transition: transform 0.5s ease-in-out;
+
+        &.mobile-open {
+            transform: translateY(100%);
+        }
     }
 
     .list {
@@ -171,6 +250,15 @@ nav {
         grid-auto-rows: 80px 80px;
         height: 160px;
         grid-gap: 0 3vw;
+    }
+
+    .buttons {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
     }
 }
 
