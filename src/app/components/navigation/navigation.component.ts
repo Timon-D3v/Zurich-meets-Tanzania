@@ -8,6 +8,8 @@ import { isPlatformBrowser } from "@angular/common";
 import { NotificationService } from "../../services/notification.service";
 import { AuthService } from "../../services/auth.service";
 import { GalleryService } from "../../services/gallery.service";
+import { HeaderService } from "../../services/header.service";
+import { ThemeService } from "../../services/theme.service";
 
 @Component({
     selector: "app-navigation",
@@ -19,7 +21,9 @@ export class NavigationComponent implements OnInit {
     constructor() {
         effect(() => {
             this.isLoggedIn.set(this.authService.isLoggedIn());
-        })
+            this.becomeMemberUrl.set(this.headerService.becomeMemberUrl());
+            this.currentThemeMode.set(this.themeService.currentTheme())
+        });
     }
 
     UNIKAT_URL = PUBLIC_CONFIG.UNIKAT_URL;
@@ -27,14 +31,23 @@ export class NavigationComponent implements OnInit {
     galleryLinks = signal<NavLink[]>([]);
     isLoggedIn = signal<boolean>(false);
     becomeMemberUrl = signal<string>("");
-    currentThemeMode = signal<"Lightmode" | "Darkmode">("Lightmode");
+    currentThemeMode = signal<"dark" | "light">("light");
 
     private blogService = inject(BlogService);
     private galleryService = inject(GalleryService);
     private notificationService = inject(NotificationService);
     private authService = inject(AuthService);
+    private headerService = inject(HeaderService);
+    private themeService = inject(ThemeService);
 
     private platformId = inject(PLATFORM_ID);
+
+    ngOnInit(): void {
+        console.warn("Nav component needs to have the current theme mode");
+
+        this.setBlogLinks();
+        this.setGalleryLinks();
+    }
 
     logOut(): void {
         if (!isPlatformBrowser(this.platformId)) {
@@ -42,15 +55,6 @@ export class NavigationComponent implements OnInit {
         }
 
         this.authService.logout();
-    }
-
-    ngOnInit(): void {
-        console.warn("Gallery links need to be fetched in the navigation component.");
-        console.warn("Nav Component needs to have a become member URL");
-        console.warn("Nav component needs to have the current theme mode");
-
-        this.setBlogLinks();
-        this.setGalleryLinks();
     }
 
     setBlogLinks(count: number = 5): void {
@@ -119,5 +123,9 @@ export class NavigationComponent implements OnInit {
                 });
             }
         });
+    }
+
+    toggleTheme(): void {
+        this.themeService.toggleTheme();
     }
 }

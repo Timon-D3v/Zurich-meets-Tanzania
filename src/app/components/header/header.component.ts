@@ -1,10 +1,10 @@
-import { Component, inject, OnChanges, OnDestroy, OnInit, PLATFORM_ID, signal, SimpleChanges } from "@angular/core";
+import { Component, effect, inject, OnChanges, OnDestroy, OnInit, PLATFORM_ID, signal, SimpleChanges } from "@angular/core";
 import { LogoComponent } from "../logo/logo.component";
 import { HamburgerComponent } from "../hamburger/hamburger.component";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { ThemeSwitchComponent } from "../theme-switch/theme-switch.component";
 import { HeaderLinkComponent } from "../header-link/header-link.component";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { HeaderService } from "../../services/header.service";
 import { isPlatformBrowser } from "@angular/common";
 
@@ -15,8 +15,14 @@ import { isPlatformBrowser } from "@angular/common";
     styleUrl: "./header.component.scss",
 })
 export class HeaderComponent implements OnInit, OnDestroy, OnChanges {
+    constructor() {
+        effect(() => {
+            this.becomeMemberUrl.set(this.headerService.becomeMemberUrl());
+        });
+    }
+
     UNIKAT_URL = PUBLIC_CONFIG.UNIKAT_URL;
-    becomeMemberUrl = signal<string>("/membership");
+    becomeMemberUrl = signal<"/membership" | "/account">("/membership");
 
     private headerService = inject(HeaderService);
 

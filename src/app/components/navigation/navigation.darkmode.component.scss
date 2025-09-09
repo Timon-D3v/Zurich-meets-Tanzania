@@ -1,0 +1,13 @@
+:root[data-theme="dark"] app-navigation {
+    @media screen and (max-width: 1200px) {
+        & .floating-nav-elements {
+            -webkit-box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+
+            &.active {
+                -webkit-box-shadow: 0px 1px 10px 1px rgba(255, 255, 255, 0.1);
+                box-shadow: 0px 1px 10px 1px rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+}

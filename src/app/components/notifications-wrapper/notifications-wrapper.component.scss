@@ -17,8 +17,3 @@ div {
     box-sizing: border-box;
     pointer-events: none;
 }
-
-:root[data-theme="dark"] div {
-    --success: #1a9e4e;
-    --warn: #ff7100;
-}

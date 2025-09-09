@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from "@angular/common";
-import { Component, inject, OnInit, PLATFORM_ID } from "@angular/core";
+import { Component, effect, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { ThemeService } from "../../services/theme.service";
 
 @Component({
@@ -9,6 +9,14 @@ import { ThemeService } from "../../services/theme.service";
     styleUrl: "./theme-switch.component.scss",
 })
 export class ThemeSwitchComponent implements OnInit {
+    constructor() {
+        effect(() => {
+            this.currentTheme.set(this.themeService.currentTheme());
+        })
+    }
+
+    currentTheme = signal<"dark" | "light">("light");
+
     private platformId = inject(PLATFORM_ID);
     private themeService = inject(ThemeService);
 

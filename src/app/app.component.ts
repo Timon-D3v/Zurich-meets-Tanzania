@@ -11,6 +11,7 @@ import { NotificationsWrapperComponent } from "./components/notifications-wrappe
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { AuthService } from "./services/auth.service";
 import { StyleNamespaceService } from "./services/style-namespace.service";
+import { HeaderService } from "./services/header.service";
 
 @Component({
     selector: "app-root",
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit {
     private themeService = inject(ThemeService);
     private authService = inject(AuthService);
     private styleNamespaceService = inject(StyleNamespaceService);
+    private headerService = inject(HeaderService);
 
     private platformId = inject(PLATFORM_ID);
 
@@ -41,6 +43,12 @@ export class AppComponent implements OnInit {
 
         navigationEndPipe.subscribe((): void => {
             // The part below is called every time the route changes.
+
+            // Update the user object to bring it up to date
+            this.authService.getCurrentUserDetails();
+
+            // Update the current membership url in the header
+            this.headerService.updateBecomeMemberUrl();
 
             // Loads the current user theme
             this.themeService.initTheme();

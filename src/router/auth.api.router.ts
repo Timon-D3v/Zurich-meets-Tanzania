@@ -81,20 +81,36 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     }
 });
 
-router.get("/getUserDetails", isLoggedIn, (req: Request, res: Response): void => {
+router.get("/getUserDetails", (req: Request, res: Response): void => {
     try {
+        if (req.session.isLoggedIn) {
+            res.json({
+                error: false,
+                message: "Success",
+                data: {
+                    isLoggedIn: req.session.isLoggedIn,
+                    user: {
+                        email: req.session.user?.email,
+                        name: req.session.user?.name,
+                        family_name: req.session.user?.family_name,
+                        address: req.session.user?.address,
+                        phone: req.session.user?.phone,
+                        picture: req.session.user?.picture,
+                        type: req.session.user?.type,
+                    } as PublicUser,
+                },
+            });
+
+            return;
+        }
+
         res.json({
             error: false,
             message: "Success",
             data: {
-                email: req.session.user?.email,
-                name: req.session.user?.name,
-                family_name: req.session.user?.family_name,
-                address: req.session.user?.address,
-                phone: req.session.user?.phone,
-                picture: req.session.user?.picture,
-                type: req.session.user?.type,
-            } as PublicUser,
+                isLoggedIn: false,
+                user: null,
+            },
         });
     } catch (error) {
         console.error(error);
@@ -113,18 +129,17 @@ router.get("/getUserDetails", isLoggedIn, (req: Request, res: Response): void =>
             message: "501: Internal Server Error",
         });
     }
-    
 });
 
 router.post("/logout", (req: Request, res: Response) => {
-    try { 
+    try {
         req.session.isLoggedIn = false;
         req.session.user = null;
 
         res.json({
             error: false,
-            message: "Erfolgreich ausgeloggt."
-        })
+            message: "Erfolgreich ausgeloggt.",
+        });
     } catch (error) {
         console.error(error);
 
@@ -142,6 +157,6 @@ router.post("/logout", (req: Request, res: Response) => {
             message: "501: Internal Server Error",
         });
     }
-})
+});
 
 export default router;

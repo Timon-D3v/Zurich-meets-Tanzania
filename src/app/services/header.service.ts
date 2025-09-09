@@ -1,14 +1,18 @@
 import { isPlatformBrowser } from "@angular/common";
 import { inject, Injectable, PLATFORM_ID, signal } from "@angular/core";
 import { HeaderNavAnchorWidthArray } from "../..";
+import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class HeaderService {
     widths = signal<HeaderNavAnchorWidthArray>([0, 0, 0, 0, 0]);
+    becomeMemberUrl = signal<"/membership" | "/account">("/membership");
 
     readonly ELEMENTS_LENGTH = 5;
+
+    private authService = inject(AuthService);
 
     private platformId = inject(PLATFORM_ID);
 
@@ -34,5 +38,13 @@ export class HeaderService {
         }
 
         nav.style.setProperty("--header-main-logo-width", logoComponent.clientWidth.toString() + "px");
+    }
+
+    updateBecomeMemberUrl(): void {
+        if (this.authService.isLoggedIn() && this.authService.user()?.type !== "user") {
+            this.becomeMemberUrl.set("/account");
+        } else {
+            this.becomeMemberUrl.set("/membership");
+        }
     }
 }

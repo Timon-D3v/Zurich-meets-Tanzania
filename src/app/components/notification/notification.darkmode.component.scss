@@ -1,0 +1,16 @@
+:root[data-theme="dark"] app-notification {
+    & .wrapper img {
+        filter: none !important;
+    }
+
+    & .wrapper.success img {
+        filter: brightness(75%) !important;
+    }
+
+    & .wrapper.warn img {
+        filter: saturate(20) !important;
+    }
+
+    --success: #1a9e4e;
+    --warn: #ff7100;
+}

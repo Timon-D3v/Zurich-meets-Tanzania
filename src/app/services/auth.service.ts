@@ -50,8 +50,8 @@ export class AuthService {
                 return this.getCurrentUserDetails(currentTry + 1);
             }
 
-            this.user.set(response.data);
-            this.isLoggedIn.set(true);
+            this.user.set(response.data.user);
+            this.isLoggedIn.set(response.data.isLoggedIn);
         });
     }
 
@@ -59,8 +59,6 @@ export class AuthService {
         if (!isPlatformBrowser(this.platformId)) {
             throw new Error("Cannot send POST request if current platform is not browser. Current platform: " + this.platformId);
         }
-
-        console.log("Hello worlds")
 
         const request = this.http.post<ApiEndpointResponse>("/api/auth/logout", null);
 

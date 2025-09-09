@@ -163,11 +163,14 @@ export interface ApiEndpointResponse {
 }
 
 export interface GetPublicUserDetailsApiEndpointResponse extends ApiEndpointResponse {
-    data: PublicUser;
+    data: {
+        isLoggedIn: boolean;
+        user: PublicUser;
+    };
 }
 
 export interface DatabaseApiEndpointResponse extends ApiEndpointResponse {
-    data: DatabaseResult
+    data: DatabaseResult;
 }
 
 export interface PublicUser {

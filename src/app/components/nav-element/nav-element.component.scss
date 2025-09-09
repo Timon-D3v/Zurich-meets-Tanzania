@@ -19,7 +19,8 @@ ul {
     list-style: square;
 }
 
-a, p {
+a,
+p {
     font-size: calc(30px / var(--font-ratio));
     cursor: pointer;
 }
@@ -99,7 +100,7 @@ img {
         line-height: 2;
         font-weight: 600;
 
-        & > a, 
+        & > a,
         & > p {
             font-size: inherit;
         }

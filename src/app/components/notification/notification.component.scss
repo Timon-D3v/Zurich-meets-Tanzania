@@ -97,20 +97,3 @@ svg {
         fill: var(--neutral);
     }
 }
-
-:root[data-theme="dark"] {
-    & .wrapper img {
-        filter: none;
-    }
-
-    & .wrapper.success img {
-        filter: brightness(75%);
-    }
-
-    & .wrapper.warn img {
-        filter: saturate(20);
-    }
-
-    --success: #1a9e4e;
-    --warn: #ff7100;
-}

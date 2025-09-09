@@ -4,7 +4,7 @@
  * @author Jonathan Suh @jonsuh
  * @site https://jonsuh.com/hamburgers
  * @link https://github.com/jonsuh/hamburgers
- * Until next Comment
+ * @changed by Timon Fiedler @Timon-D3v
  */
 
 .hamburger {
@@ -31,7 +31,7 @@
 .hamburger.is-active .hamburger-inner,
 .hamburger.is-active .hamburger-inner:after,
 .hamburger.is-active .hamburger-inner:before {
-    background-color: #000;
+    background-color: var(--background-950);
 }
 
 .hamburger-box {
@@ -57,7 +57,7 @@
     transition-duration: 0.15s;
     transition-property: transform;
     border-radius: 4px;
-    background-color: #000;
+    background-color: var(--background-950);
 }
 
 .hamburger-inner:after,

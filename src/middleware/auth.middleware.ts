@@ -6,7 +6,7 @@ export function isLoggedIn(req: Request, res: Response, next: NextFunction): voi
         return;
     }
 
-    if (req.method === "GET") {
+    if (req.method === "GET" && !req.originalUrl.includes("/api")) {
         res.redirect(`/login?redir=${req.originalUrl}`);
     } else {
         res.json({
@@ -23,7 +23,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction): void {
         return;
     }
 
-    if (req.method === "GET") {
+    if (req.method === "GET" && !req.originalUrl.includes("/api")) {
         res.redirect(`/login?redir=${req.originalUrl}`);
     } else {
         res.json({

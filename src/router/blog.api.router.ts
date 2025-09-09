@@ -19,13 +19,13 @@ router.post("/getLinks/:count", async (req: Request, res: Response): Promise<voi
         const response: DatabaseResult = await getLastXBlogTitles(Number(x));
 
         if (typeof response.error === "string") {
-            throw new Error(response.error)
+            throw new Error(response.error);
         }
 
         res.json({
             error: false,
             message: "Success",
-            data: response
+            data: response,
         });
     } catch (error) {
         console.error(error);

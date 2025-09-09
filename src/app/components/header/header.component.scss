@@ -15,11 +15,6 @@ header {
     z-index: 100;
 }
 
-:root[data-theme="dark"] header {
-    -webkit-box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.1);
-    box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.1);
-}
-
 app-logo {
     height: 100%;
     max-height: 140px;
