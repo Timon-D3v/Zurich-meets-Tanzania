@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, signal } from "@angular/core";
 import { NavLink, NavLinkPicture } from "../../..";
 import { RouterLink } from "@angular/router";
 
@@ -13,4 +13,18 @@ export class NavElementComponent {
     withPicture = input<boolean>(false);
     pictureArray = input<NavLinkPicture[]>([]);
     linkArray = input<NavLink[]>([]);
+
+    isOpen = signal<boolean>(false);
+
+    openDetails(): void {
+        this.isOpen.set(true);
+    }
+
+    closeDetails(): void {
+        this.isOpen.set(false);
+    }
+
+    toggleDetails(): void {
+        this.isOpen.update((value: boolean) => !value);
+    }
 }
