@@ -9,10 +9,10 @@
                 <a href="{{ UNIKAT_URL }}" target="_blank" class="button shop">Shop</a>
             </div>
             <div class="medium">
-                <a [routerLink]="becomeMemberUrl()" class="icon member" title="Mitglied werden">
+                <a [routerLink]="becomeMemberUrl()" class="icon member" [title]="becomeMemberUrl() === '/membership' ? 'Mitglied werden' : 'Account'">
                     <img alt="Mitglied werden" src="/svg/member.svg" />
                 </a>
-                <a [routerLink]="'/spenden'" class="icon donate" title="Spenden">
+                <a [routerLink]="'/donate'" class="icon donate" title="Spenden">
                     <img alt="Spenden" src="/svg/spenden.svg" />
                 </a>
                 <a [routerLink]="'/contact'" class="icon contact" title="Kontakt">
