@@ -40,6 +40,7 @@ export type PublicConfig = {
 
     ROUTES: {
         TYPES: {
+            HOME: string[];
             AUTH: string[];
             SECURED: string[];
             PROJECTS: string[];

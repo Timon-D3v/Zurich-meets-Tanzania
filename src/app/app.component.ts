@@ -59,7 +59,9 @@ export class AppComponent implements OnInit {
             this.themeService.initTheme();
 
             // Sets the correct style namespace for the current route
-            if (PUBLIC_CONFIG.ROUTES.TYPES.AUTH.includes(this.router.url)) {
+            if (PUBLIC_CONFIG.ROUTES.TYPES.HOME.includes(this.router.url)) {
+                this.styleNamespaceService.setHomeStyleNamespace();
+            } else if (PUBLIC_CONFIG.ROUTES.TYPES.AUTH.includes(this.router.url)) {
                 this.styleNamespaceService.setAuthStyleNamespace();
             } else if (PUBLIC_CONFIG.ROUTES.TYPES.CONTACT.includes(this.router.url)) {
                 this.styleNamespaceService.setContactStyleNamespace();

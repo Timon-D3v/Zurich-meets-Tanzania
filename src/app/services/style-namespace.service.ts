@@ -7,45 +7,41 @@ import { inject, Injectable, PLATFORM_ID } from "@angular/core";
 export class StyleNamespaceService {
     private platformId = inject(PLATFORM_ID);
 
-    setAuthStyleNamespace(): void {
+    private getRoot(): HTMLElement {
         if (!isPlatformBrowser(this.platformId)) {
-            return;
+            throw new Error("Cannot get the root on server side context.");
         }
 
-        const footer = document.querySelector<HTMLElement>(":root");
+        const root = document.querySelector<HTMLElement>(":root");
 
-        if (footer === null) {
+        if (root === null) {
             throw new Error("Root not found to add style namespace.");
         }
 
-        footer.dataset["styleNamespace"] = "auth";
+        return root;
+    }
+
+    setHomeStyleNamespace(): void {
+        const root = this.getRoot();
+
+        root.dataset["styleNamespace"] = "home";
+    }
+
+    setAuthStyleNamespace(): void {
+        const root = this.getRoot();
+
+        root.dataset["styleNamespace"] = "auth";
     }
 
     setContactStyleNamespace(): void {
-        if (!isPlatformBrowser(this.platformId)) {
-            return;
-        }
+        const root = this.getRoot();
 
-        const footer = document.querySelector<HTMLElement>(":root");
-
-        if (footer === null) {
-            throw new Error("Root not found to add style namespace.");
-        }
-
-        footer.dataset["styleNamespace"] = "contact";
+        root.dataset["styleNamespace"] = "contact";
     }
 
     setDefaultStyleNamespace(): void {
-        if (!isPlatformBrowser(this.platformId)) {
-            return;
-        }
+        const root = this.getRoot();
 
-        const footer = document.querySelector<HTMLElement>(":root");
-
-        if (footer === null) {
-            throw new Error("Root not found to add style namespace.");
-        }
-
-        footer.dataset["styleNamespace"] = "default";
+        root.dataset["styleNamespace"] = "default";
     }
 }

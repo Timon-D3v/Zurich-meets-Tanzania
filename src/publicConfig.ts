@@ -12,6 +12,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
 
     ROUTES: {
         TYPES: {
+            HOME: ["/home", "/"],
             AUTH: ["/login", "/signup", "/password-recovery"],
             SECURED: ["/account"],
             PROJECTS: ["/bajaji", "/cardiology", "/gynecology", "/mbuzi", "/meducation", "/surgery", "/tanzania-meets-zurich", "/zurich-meets-tanzania"],
