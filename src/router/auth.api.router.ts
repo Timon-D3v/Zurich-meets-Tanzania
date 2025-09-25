@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { getUserWithEmail } from "../shared/auth.database";
 import { PrivateUser, PublicUser } from "..";
 import bcrypt from "bcryptjs";
-import { isLoggedIn } from "../middleware/auth.middleware";
+import { PUBLIC_CONFIG } from "../publicConfig";
 
 // Router Serves under /api/auth
 const router = Router();
@@ -26,7 +26,8 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
         const user = await getUserWithEmail(email);
 
         if (user.data === null) {
-            throw new Error(user.error as string);
+            console.error("DEBUG:\n", user.error);
+            throw new Error(PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE);
         }
 
         if (user.data.length === 0) {

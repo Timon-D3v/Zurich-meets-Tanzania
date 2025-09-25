@@ -20,4 +20,7 @@ export const CONFIG: Config = {
     MAILJET_PRIVATE_KEY: process.env["MAILJET_PRIVATE_KEY"] as string,
 
     ORIGIN: process.env["ORIGIN"] as string,
+
+    EMAIL_SENDER_ADDRESS: process.env["EMAIL_SENDER_ADDRESS"] as string,
+    EMAIL_SENDER_NAME: process.env["EMAIL_SENDER_NAME"] as string,
 };

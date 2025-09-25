@@ -1,6 +1,6 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "3.5.4",
+  "version": "3.6.0",
   "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
@@ -40,6 +40,7 @@
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "mysql2": "^3.14.1",
+    "node-mailjet": "^6.0.9",
     "rxjs": "~7.8.0",
     "timonjs": "^2.1.0",
     "tslib": "^2.3.0",

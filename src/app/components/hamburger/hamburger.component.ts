@@ -9,9 +9,9 @@ import { NavigationService } from "../../services/navigation.service";
 })
 export class HamburgerComponent {
     constructor() {
-        effect(() =>  {
-            this.isOpen.set(this.navigationService.navigationIsOpen())
-        })
+        effect(() => {
+            this.isOpen.set(this.navigationService.navigationIsOpen());
+        });
     }
 
     isOpen = signal<boolean>(false);

@@ -15,7 +15,9 @@ form {
         width: 100%;
     }
 
-    & * {
+    & h2,
+    & p,
+    & label {
         color: var(--c-text-50);
     }
 }

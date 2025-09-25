@@ -1,19 +1,20 @@
-<form>
+<form [formGroup]="newsletterSignUpForm" (submit)="onSubmit()">
     <div>
         <h2>Newsletter</h2>
         <p>Bleiben Sie über Zurich meets Tanzania und ähnliche Projekte informiert.</p>
         <div>
             <p class="salutation">Anrede:</p>
-            <input type="checkbox" id="newsletter-anrede-herr" checked="true" />
+            <input type="checkbox" formControlName="isMaleControl" id="newsletter-anrede-herr" (click)="disableIsFemaleCheckbox()" />
             <label for="newsletter-anrede-herr">Herr</label>
-            <input type="checkbox" id="newsletter-anrede-frau" class="second" />
+            <input type="checkbox" formControlName="isFemaleControl" id="newsletter-anrede-frau" class="second" (click)="disableIsMaleCheckbox()" />
             <label for="newsletter-anrede-frau">Frau</label>
         </div>
     </div>
     <div class="wrapper">
-        <input type="text" id="newsletter-vorname" autocomplete="given-name" placeholder="Vorname" class="input" required />
-        <input type="text" id="newsletter-nachname" autocomplete="family-name" placeholder="Nachname" class="input" required />
+        <input type="text" formControlName="firstNameControl" id="newsletter-vorname" autocomplete="given-name" placeholder="Vorname" class="input" required />
+        <input type="text" formControlName="lastNameControl" id="newsletter-nachname" autocomplete="family-name" placeholder="Nachname" class="input" required />
     </div>
-    <input type="email" id="newsletter-email" autocomplete="email" placeholder="E-Mail-Adresse" class="input full" required />
-    <button type="submit" class="submit" id="newsletter-submit">Anmelden</button>
+    <input type="email" formControlName="emailControl" id="newsletter-email" autocomplete="email" placeholder="E-Mail-Adresse" class="input full" required />
+    <button type="submit" class="submit" id="newsletter-submit" [attr.disabled]="submitButtonDisabled() ? true : null">{{ submitButtonText() }}</button>
 </form>
+.

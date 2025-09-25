@@ -180,7 +180,7 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
             const match = Array.from(element.children).some((value: Element) => checkRecursiveIfChildrenAreTheEventTarget(value, target));
 
             return match;
-        }
+        };
 
         if (checkRecursiveIfChildrenAreTheEventTarget(wrapper, event.target) || checkRecursiveIfChildrenAreTheEventTarget(hamburger, event.target)) {
             return;

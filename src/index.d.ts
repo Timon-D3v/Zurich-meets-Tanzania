@@ -20,6 +20,8 @@ export type Config = {
     MAILJET_PUBLIC_KEY: string;
     MAILJET_PRIVATE_KEY: string;
     ORIGIN: string;
+    EMAIL_SENDER_ADDRESS: string;
+    EMAIL_SENDER_NAME: string;
 };
 
 export type PageDescription = {
@@ -51,6 +53,18 @@ export type PublicConfig = {
         TITLES: {
             [path: `/${string}`]: PageDescription;
         };
+    };
+
+    EMAIL: {
+        GREETINGS: (fistName: string, lastName: string, gender: "Herr" | "Frau" | "Divers") => string;
+        GREETINGS_HTML: (greetings: string) => string;
+        REGARDS: string;
+        REGARDS_HTML: string;
+        HEADER: string;
+        FOOTER: string;
+        NEWSLETTER_BODY: (preview: string) => string;
+        NEWSLETTER_BODY_HTML: (preview: string) => string;
+        NEWSLETTER_SUBJECT: string;
     };
 };
 
@@ -174,6 +188,12 @@ export interface DatabaseApiEndpointResponse extends ApiEndpointResponse {
     data: DatabaseResult;
 }
 
+export interface AddToNewsletterListApiEndpointResponse extends ApiEndpointResponse {
+    data: {
+        alreadyLoggedIn: boolean;
+    };
+}
+
 export interface PublicUser {
     email: string;
     name: string;
@@ -188,4 +208,19 @@ export interface PrivateUser extends PublicUser {
     id: number;
     username: string; // Deprecated
     password: string; // Hashed
+}
+
+export type NewsletterSignUpRequest = {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    gender: "Herr" | "Frau" | "Divers";
+    timestamp: number;
+};
+
+export type MailjetAttachment = {
+    ContentType: string;
+    Filename: string;
+    Base64Content: string;
 }
