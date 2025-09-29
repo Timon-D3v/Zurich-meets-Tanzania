@@ -30,48 +30,6 @@
                 cta_link: "/mitglied#scrollToMembership",
                 origin_url
             }) %>
-            <form id="scrollToDonate" class="donate-form invisible">
-                <h1 class="donate-title">Spenden</h1>
-                <p class="donate-description">Bitte übermittle uns deine Daten über das Formular unten, damit wir dir eine Spendenbescheinigung ausstellen können.</p>
-                <div class="donate-wrapper">
-                    <div class="donate-qr-wrapper">
-                        <img src="/img/common/donate-qr-code.png" alt="QR Code Spenden" class="donate-qr" loading="lazy">
-                        <p class="donate-qr-text">
-                            CH 20 0900 0000 6184 2154 0<br>
-                            zurich - <wbr>meets - <wbr>tanzania<br>
-                            8049 Zürich<br>
-                        </p>
-                    </div>
-                    <div class="donate-center donate-form-wrapper">
-                        <div class="donate-name-pair">
-                            <div class="donate-name-pair-inner">
-                                <label class="donate-label" for="donate-name">Name:</label>
-                                <input class="donate-input" type="text" required autocomplete="given-name" id="donate-name">
-                            </div>
-                            <div class="donate-name-pair-inner">
-                                <label class="donate-label" for="donate-family-name">Nachname:</label>
-                                <input class="donate-input" type="text" required autocomplete="family-name" id="donate-family-name">
-                            </div>
-                        </div>
-                        <div class="donate-form-pair">
-                            <label class="donate-label" for="donate-email">E-Mail:</label>
-                            <input class="donate-input" type="email" required autocomplete="email" id="donate-email">
-                        </div>
-                        <div class="donate-form-pair">
-                            <label class="donate-label" for="donate-usage-type">Wähle einen Verwendungszweck:</label>
-                            <select class="donate-input" name="donate-usage-type" id="donate-usage-type">
-                                <option class="donate-option" value="Allgemeine Spende">Allgemeine Spende</option>
-                                <option class="donate-option" value="20f40">20f40</option>
-                                <option class="donate-option" value="Mbuzi">Mbuzi</option>
-                                <option class="donate-option" value="Meducation">Meducation</option>
-                                <option class="donate-option" value="Med. Geräte / Infrastruktur">Med. Geräte / Infrastruktur</option>
-                            </select>
-                        </div>
-                        <button type="submit" id="donate-submit" class="donate-btn hero-cta">Abschicken</button>
-                        <a href="/mitglied#scrollToMembership">Mitglied werden</a>
-                    </div>
-                </div>
-            </form>
             <form id="scrollToMembership" class="donate-form">
                 <h1 class="donate-title">Mitglied werden</h1>
                 <div class="donate-center">
@@ -80,10 +38,10 @@
                         <input type="number" class="donate-number" value="50" disabled="">
                     </div>
                     <button type="submit" id="membership-submit" class="donate-btn hero-cta">Abonnieren</button>
-                    <a href="/spenden#scrollToDonate">Einmalige Spende</a>
                     <script>document.getElementById("membership-submit-label").addEventListener("click",()=>{document.getElementById("membership-submit").click()});</script>
                 </div>
             </form>
+            <a href="/spenden#scrollToDonate" class="membership-navigate-to-donate">Einmalige Spende</a>
             <% if (typeof user !== "undefined" && user !== null && user.valid) { %>
             <div class="invisible">
                 <p id="donate-prefilled-name"><%= user.name %></p>

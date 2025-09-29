@@ -1869,6 +1869,7 @@ nav .mit-bild a {
     display: block;
     transform: none;
     width: auto;
+    max-width: 90%;
     height: auto;
     font-size: 1.5em;
     padding: 0.5em 1em;
@@ -2054,6 +2055,15 @@ select.donate-input {
     width: 100%;
     text-align: center;
     font-size: 1.25rem;
+}
+
+.donate-navigate-to-membership,
+.membership-navigate-to-donate {
+    display: block;
+    width: 100%;
+    position: relative;
+    top: -9vh;
+    text-align: center;
 }
 
 @media screen and (min-width: 1200px) {
