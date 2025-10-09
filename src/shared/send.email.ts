@@ -6,8 +6,8 @@ import { MailjetAttachment } from "..";
 
 const mailjet = new Mailjet({
     apiKey: CONFIG.MAILJET_PUBLIC_KEY,
-    apiSecret: CONFIG.MAILJET_PRIVATE_KEY
-})
+    apiSecret: CONFIG.MAILJET_PRIVATE_KEY,
+});
 
 export async function sendMail(recipientEmail: string, subject: string, text: string, html: string, id: string = randomBytes(64).toString("hex"), files: MailjetAttachment[] = [], isTestMode = false): Promise<LibraryResponse<RequestData> | null> {
     try {
@@ -21,7 +21,7 @@ export async function sendMail(recipientEmail: string, subject: string, text: st
                     To: [
                         {
                             Email: recipientEmail,
-                            Name: recipientEmail
+                            Name: recipientEmail,
                         },
                     ],
                     Subject: subject,
@@ -34,10 +34,10 @@ export async function sendMail(recipientEmail: string, subject: string, text: st
             SandboxMode: isTestMode,
         } as RequestData);
 
-        return request;   
+        return request;
     } catch (error) {
         console.error(error);
 
-        return null
+        return null;
     }
 }

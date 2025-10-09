@@ -9,13 +9,16 @@ import { sendNewsletterSignUpConfirmation } from "../shared/newsletter.email";
 const router = Router();
 
 const GLOBAL_newsletterSignUpRequests: NewsletterSignUpRequest[] = [];
-const GLOBAL_clearOutdatedRequestsInterval = setInterval((): void => {
-    for (let i = 0; i < GLOBAL_newsletterSignUpRequests.length; i++) {
-        if (Date.now() - GLOBAL_newsletterSignUpRequests[0].timestamp > 60 * 60 * 1000) {
-            GLOBAL_newsletterSignUpRequests.shift();
+const GLOBAL_clearOutdatedRequestsInterval = setInterval(
+    (): void => {
+        for (let i = 0; i < GLOBAL_newsletterSignUpRequests.length; i++) {
+            if (Date.now() - GLOBAL_newsletterSignUpRequests[0].timestamp > 60 * 60 * 1000) {
+                GLOBAL_newsletterSignUpRequests.shift();
+            }
         }
-    }
-}, 60 * 60 * 1000); // Every Hour
+    },
+    60 * 60 * 1000,
+); // Every Hour
 
 router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
     try {
@@ -120,9 +123,9 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
                 error: true,
                 message: "Die Bestätigungs-Mail konnte nicht verschickt werden. Bitte versuche es später erneut.",
                 data: {
-                    alreadyLoggedIn: false
-                }
-            } as AddToNewsletterListApiEndpointResponse)
+                    alreadyLoggedIn: false,
+                },
+            } as AddToNewsletterListApiEndpointResponse);
         }
 
         res.json({

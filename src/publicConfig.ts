@@ -1,13 +1,39 @@
 import { PublicConfig } from ".";
 
 export const PUBLIC_CONFIG: PublicConfig = {
+    NAME: "zurich meets tanzania",
+    ORIGIN: "http://localhost:8080",
+
+    THEME_COLOR: "#F27C0D",
+
     UNIKAT_URL: "https://shop.unikat-hoengg.ch/produkte/zurichmeetstanzania-60?d=1",
     FACEBOOK_URL: "https://www.facebook.com/profile.php?id=61577621371823",
     INSTAGRAM_URL: "https://www.instagram.com/zurichmeetstanzania/",
     PROGRAMMER_URL: "https://www.timondev.com/",
 
+    PERSONAS: {
+        CHAIRMAN: {
+            name: "Dr. Stefan Christen",
+            email: "info@zurich-meets-tanzania.com",
+        },
+        SECRETARY: {
+            name: "Sara Pieretti",
+            email: "info@zurich-meets-tanzania.com",
+        },
+        DEVELOPER: {
+            name: "Timon Fiedler",
+            email: "info@timondev.com",
+            website: "https://www.timondev.com",
+            linkedIn: "https://www.linkedin.com/in/timon-fiedler",
+            github: "https://github.com/Timon-D3v/",
+        },
+    },
+
     ERROR: {
         NO_CONNECTION_TO_DATABASE: "Es konnte keine Verbindung mit der Datenbank hergestellt werden. Bitte versuche es später noch einmal.",
+        NO_INTERNET_CONNECTION: "Es konnte keine Verbindung zum Internet hergestellt werden. Bitte versuche es später noch einmal.",
+        NO_CONNECTION_TO_SERVER: "Es konnte keine Verbindung mit dem Server hergestellt werden. Bitte versuche es später noch einmal.",
+        BAD_REQUEST: "Die Anfrage konnte nicht verarbeitet werden, da falsche oder unvollständig Angaben geschickt wurden. Bitte überprüfe deine Daten und versuche es später noch einmal.",
     },
 
     ROUTES: {
@@ -28,6 +54,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
             },
         },
     },
+
     EMAIL: {
         GREETINGS: (fistName: string, lastName: string, gender: "Herr" | "Frau" | "Divers"): string => {
             switch (gender) {

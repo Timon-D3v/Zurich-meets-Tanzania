@@ -13,6 +13,7 @@ import { AuthService } from "./services/auth.service";
 import { StyleNamespaceService } from "./services/style-namespace.service";
 import { HeaderService } from "./services/header.service";
 import { NavigationService } from "./services/navigation.service";
+import { SiteMetadataService } from "./services/site-metadata.service";
 
 @Component({
     selector: "app-root",
@@ -28,11 +29,21 @@ export class AppComponent implements OnInit {
     private styleNamespaceService = inject(StyleNamespaceService);
     private headerService = inject(HeaderService);
     private navigationService = inject(NavigationService);
+    private siteMetadataService = inject(SiteMetadataService);
 
     private platformId = inject(PLATFORM_ID);
 
     ngOnInit(): void {
         timonjs_message();
+
+        // Sets the default metadata
+        this.siteMetadataService.setDefaultMetadata();
+
+        // Sets the robot permissions for the route
+        this.siteMetadataService.updateRobotsSettingsForRoute(this.router.url);
+
+        // Sets the current site title and description before first page load
+        this.siteMetadataService.updateMetadataForRoute(this.router.url);
 
         if (!isPlatformBrowser(this.platformId)) {
             return;
@@ -68,6 +79,12 @@ export class AppComponent implements OnInit {
             } else {
                 this.styleNamespaceService.setDefaultStyleNamespace();
             }
+
+            // Sets the robot permissions for the route
+            this.siteMetadataService.updateRobotsSettingsForRoute(this.router.url);
+
+            // Sets the current metadata for the route
+            this.siteMetadataService.updateMetadataForRoute(this.router.url);
         });
 
         navigationStartPipe.subscribe((): void => {

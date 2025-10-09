@@ -31,13 +31,31 @@ export type PageDescription = {
 };
 
 export type PublicConfig = {
+    NAME: string;
+    ORIGIN: string;
+
+    THEME_COLOR: string;
+
     UNIKAT_URL: string;
     FACEBOOK_URL: string;
     INSTAGRAM_URL: string;
     PROGRAMMER_URL: string;
 
+    PERSONAS: {
+        [position: string]: {
+            name: string;
+            email: string;
+            website?: string;
+            linkedIn?: string;
+            github?: string;
+        };
+    };
+
     ERROR: {
+        BAD_REQUEST: string;
         NO_CONNECTION_TO_DATABASE: string;
+        NO_CONNECTION_TO_SERVER: string;
+        NO_INTERNET_CONNECTION: string;
     };
 
     ROUTES: {
@@ -223,4 +241,4 @@ export type MailjetAttachment = {
     ContentType: string;
     Filename: string;
     Base64Content: string;
-}
+};
