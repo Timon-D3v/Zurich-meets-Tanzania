@@ -22,3 +22,23 @@ export async function getAllNewsletterEmails(): Promise<DatabaseResult> {
         };
     }
 }
+
+export async function addToNewsletterList(email: string, firstName: string, lastName: string, gender: "Herr" | "Frau" | "Divers"): Promise<DatabaseResult> {
+    try {
+        await connection.query(`INSERT INTO \`zmt\`.\`newsletter\` (\`gender\`, \`vorname\`, \`nachname\`, \`email\`) VALUES (?, ?, ?, ?);`, [gender, firstName, lastName, email]);
+
+        return {
+            data: null,
+            error: null,
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}

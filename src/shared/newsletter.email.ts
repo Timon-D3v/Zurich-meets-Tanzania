@@ -7,7 +7,7 @@ export async function sendNewsletterSignUpConfirmation(email: string, id: string
 
     const text = [PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, gender), `Bitte bestätige deine Anmeldung für den Newsletter über diesen Link:\n${link}`, "(Der Link ist 60 Minuten gültig.)", PUBLIC_CONFIG.EMAIL.REGARDS].join("\n\n");
 
-    const html = [PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, gender), `Bitte bestätige deine Anmeldung für den Newsletter über diesen <a href="${link}" target="_blank">Link</a>.`, "(Der Link ist 60 Minuten gültig.)", PUBLIC_CONFIG.EMAIL.REGARDS].join("<br><br>");
+    const html = PUBLIC_CONFIG.EMAIL.HEADER + [PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, gender), `Bitte bestätige deine Anmeldung für den Newsletter über diesen <a href="${link}" target="_blank">Link</a>.`, "(Der Link ist 60 Minuten gültig.)", PUBLIC_CONFIG.EMAIL.REGARDS].join("<br><br>") + PUBLIC_CONFIG.EMAIL.FOOTER;
 
     const request = await sendMail(email, "Anmeldebestätigung Newsletter", text, html, "Newsletter Anmeldung");
 

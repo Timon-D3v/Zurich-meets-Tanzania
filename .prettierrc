@@ -2,6 +2,6 @@
     "tabWidth": 4,
     "useTabs": false,
     "singleQuote": false,
-    "printWidth": 400,
+    "printWidth": 250,
     "quoteProps": "consistent"
 }

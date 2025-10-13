@@ -1,9 +1,10 @@
 import { Request, Response, Router } from "express";
-import { AddToNewsletterListApiEndpointResponse, NewsletterSignUpRequest } from "..";
-import { getAllNewsletterEmails } from "../shared/newsletter.database";
+import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, NewsletterSignUpRequest } from "..";
+import { addToNewsletterList, getAllNewsletterEmails } from "../shared/newsletter.database";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { randomBytes } from "node:crypto";
 import { sendNewsletterSignUpConfirmation } from "../shared/newsletter.email";
+import { RowDataPacket } from "mysql2";
 
 // Router Serves under /api/newsletter
 const router = Router();
@@ -79,7 +80,7 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
             throw new Error(PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE);
         }
 
-        if (allEmails.data.includes(email.trim())) {
+        if (allEmails.data.map((email: RowDataPacket) => email["email"]).includes(email.trim())) {
             res.json({
                 error: false,
                 message: "Du bist schon eingeloggt.",
@@ -106,16 +107,6 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
         const requestId = randomBytes(256).toString("hex");
         const timestamp = Date.now();
 
-        // Add request to the queue
-        GLOBAL_newsletterSignUpRequests.push({
-            id: requestId,
-            email: email.trim(),
-            firstName: lastName.trim(),
-            lastName: lastName.trim(),
-            gender,
-            timestamp,
-        });
-
         const isSent = await sendNewsletterSignUpConfirmation(email.trim(), requestId, firstName, lastName, gender, timestamp);
 
         if (!isSent) {
@@ -127,6 +118,17 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
                 },
             } as AddToNewsletterListApiEndpointResponse);
         }
+
+        // Add request to the queue
+        GLOBAL_newsletterSignUpRequests.push({
+            id: requestId,
+            email: email.trim(),
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            gender,
+            timestamp,
+            used: false
+        });
 
         res.json({
             error: false,
@@ -152,11 +154,91 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
 
         res.status(501).json({
             error: true,
-            message: "501: Internal Server Error",
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: {
                 alreadyLoggedIn: false,
             },
         } as AddToNewsletterListApiEndpointResponse);
+    }
+});
+
+router.post("/confirm", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { firstName, lastName, email, gender, id, timestamp } = req.body;
+
+        if (typeof firstName !== "string" || typeof lastName !== "string" || typeof email !== "string" || typeof gender !== "string" || typeof id !== "string" || typeof timestamp !== "string") {
+            res.json({
+                error: true,
+                message: PUBLIC_CONFIG.ERROR.BAD_REQUEST
+            } as ApiEndpointResponse)
+
+            return;
+        }
+
+        for (let i = 0; i < GLOBAL_newsletterSignUpRequests.length; i++) {
+
+            if (
+                GLOBAL_newsletterSignUpRequests[i].id !== id || 
+                GLOBAL_newsletterSignUpRequests[i].email !== email || 
+                GLOBAL_newsletterSignUpRequests[i].firstName !== firstName || 
+                GLOBAL_newsletterSignUpRequests[i].lastName !== lastName || 
+                GLOBAL_newsletterSignUpRequests[i].gender !== gender || 
+                GLOBAL_newsletterSignUpRequests[i].timestamp !== Number(timestamp)
+            ) {
+                continue;
+            }
+
+            if (GLOBAL_newsletterSignUpRequests[i].used) {
+                res.json({
+                    error: true,
+                    message: "Diese Anfrage wurde schon bearbeitet und du bist wahrscheinlich schon angemeldet. Du kannst dies überprüfen, indem du versuchst dich noch einmal anzumelden."
+                });
+
+                return;
+            }
+
+            const result = await addToNewsletterList(GLOBAL_newsletterSignUpRequests[i].email, GLOBAL_newsletterSignUpRequests[i].firstName, GLOBAL_newsletterSignUpRequests[i].lastName, GLOBAL_newsletterSignUpRequests[i].gender);
+
+            if (result.error === null) {
+                res.json({
+                    error: false,
+                    message: "Erfolgreich für den Newsletter angemeldet."
+                });
+
+                GLOBAL_newsletterSignUpRequests[i].used = true;
+
+                return;
+            }
+
+
+            res.json({
+                error: true,
+                message: result.error
+            } as ApiEndpointResponse)
+
+            return;
+        }
+
+        res.json({
+            error: true,
+            message: "Der Link ist nicht (mehr) gültig. Bitte versuche es noch einmal oder registriere dich erneut."
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message
+            } as ApiEndpointResponse)
+
+            return;
+        }
+
+        res.json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR
+        } as ApiEndpointResponse)
     }
 });
 

@@ -30,6 +30,14 @@ export type PageDescription = {
     lastUpdated: string;
 };
 
+export type MetaPersonas = {
+    name: string;
+    email: string;
+    website?: string;
+    linkedIn?: string;
+    github?: string;
+};
+
 export type PublicConfig = {
     NAME: string;
     ORIGIN: string;
@@ -42,20 +50,15 @@ export type PublicConfig = {
     PROGRAMMER_URL: string;
 
     PERSONAS: {
-        [position: string]: {
-            name: string;
-            email: string;
-            website?: string;
-            linkedIn?: string;
-            github?: string;
-        };
+        [position: string]: MetaPersonas;
     };
 
     ERROR: {
-        BAD_REQUEST: string;
+        INTERNAL_ERROR: string;
         NO_CONNECTION_TO_DATABASE: string;
-        NO_CONNECTION_TO_SERVER: string;
         NO_INTERNET_CONNECTION: string;
+        NO_CONNECTION_TO_SERVER: string;
+        BAD_REQUEST: string;
     };
 
     ROUTES: {
@@ -235,6 +238,7 @@ export type NewsletterSignUpRequest = {
     lastName: string;
     gender: "Herr" | "Frau" | "Divers";
     timestamp: number;
+    used: boolean;
 };
 
 export type MailjetAttachment = {

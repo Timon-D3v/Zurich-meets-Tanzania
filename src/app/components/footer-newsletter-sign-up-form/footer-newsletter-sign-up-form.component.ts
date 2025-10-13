@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { FooterService } from "../../services/footer.service";
 import { NotificationService } from "../../services/notification.service";
@@ -10,7 +10,7 @@ import { AddToNewsletterListApiEndpointResponse } from "../../..";
     templateUrl: "./footer-newsletter-sign-up-form.component.html",
     styleUrl: "./footer-newsletter-sign-up-form.component.scss",
 })
-export class FooterNewsletterSignUpFormComponent implements OnInit {
+export class FooterNewsletterSignUpFormComponent {
     submitButtonText = signal("Anmelden");
     submitButtonDisabled = signal(false);
 
@@ -100,9 +100,5 @@ export class FooterNewsletterSignUpFormComponent implements OnInit {
         this.newsletterSignUpForm.patchValue({
             isFemaleControl: false,
         });
-    }
-
-    ngOnInit(): void {
-        console.warn("Footer newsletter sign up does not work yet");
     }
 }

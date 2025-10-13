@@ -30,6 +30,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
     },
 
     ERROR: {
+        INTERNAL_ERROR: "501: Internal Server Error",
         NO_CONNECTION_TO_DATABASE: "Es konnte keine Verbindung mit der Datenbank hergestellt werden. Bitte versuche es später noch einmal.",
         NO_INTERNET_CONNECTION: "Es konnte keine Verbindung zum Internet hergestellt werden. Bitte versuche es später noch einmal.",
         NO_CONNECTION_TO_SERVER: "Es konnte keine Verbindung mit dem Server hergestellt werden. Bitte versuche es später noch einmal.",

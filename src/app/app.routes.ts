@@ -37,7 +37,7 @@ export const routes: Routes = [
         },
     },
     {
-        path: "blog/*",
+        path: "blog/:name",
         loadComponent: async () => {
             const component = await import("./blog/blog.component");
             return component.BlogComponent;
@@ -86,7 +86,7 @@ export const routes: Routes = [
         },
     },
     {
-        path: "gallery/*",
+        path: "gallery/:name",
         loadComponent: async () => {
             const component = await import("./gallery/gallery.component");
             return component.GalleryComponent;
@@ -149,10 +149,17 @@ export const routes: Routes = [
         },
     },
     {
-        path: "newsletter-sign-out",
+        path: "newsletter/cancel",
         loadComponent: async () => {
             const component = await import("./newsletter-sign-out/newsletter-sign-out.component");
             return component.NewsletterSignOutComponent;
+        },
+    },
+    {
+        path: "newsletter/confirm",
+        loadComponent: async () => {
+            const component = await import("./newsletter-sign-up-confirm/newsletter-sign-up-confirm.component");
+            return component.NewsletterSignUpConfirmComponent;
         },
     },
     {
@@ -241,5 +248,14 @@ export const routes: Routes = [
             return component.DashboardComponent;
         },
         canActivate: [adminGuard],
+    },
+
+    // 404 Page
+    {
+        path: "**",
+        loadComponent: async () => {
+            const component = await import("./page-not-found/page-not-found.component");
+            return component.PageNotFoundComponent;
+        },
     },
 ];

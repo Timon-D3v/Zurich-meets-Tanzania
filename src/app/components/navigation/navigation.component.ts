@@ -103,7 +103,7 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
             response.data?.data?.forEach((element: { title: string }) => {
                 this.blogLinks().push({
                     label: element.title,
-                    href: encodeURIComponent(element.title),
+                    href: "/blog/" + encodeURIComponent(element.title),
                 });
             });
 
@@ -137,7 +137,7 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
             response.data?.data?.forEach((element: { title: string }) => {
                 this.galleryLinks().push({
                     label: element.title,
-                    href: encodeURIComponent(element.title),
+                    href: "/gallery/" + encodeURIComponent(element.title),
                 });
             });
 
