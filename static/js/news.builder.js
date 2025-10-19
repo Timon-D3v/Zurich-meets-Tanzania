@@ -233,7 +233,7 @@ on(document, "DOMContentLoaded", () => {
             json.newsletter = await confirm("Sollte dieser Beitrag als Newsletter verschickt werden? (OK = Ja, Abbrechen = Nein. Die E-Mail kann nur einmal verschickt werden.)");
 
             const sourceFile = getQuery(".news *:is(img, iframe)");
-            
+
             if (sourceFile.length > 1) {
                 console.info("Multiple pictures");
 
@@ -241,7 +241,7 @@ on(document, "DOMContentLoaded", () => {
 
                 json.src = [];
 
-                sourceFile.forEach(file => json.src.push(file.src));
+                sourceFile.forEach((file) => json.src.push(file.src));
             } else if (sourceFile.length === 1) {
                 json.gallery = false;
 

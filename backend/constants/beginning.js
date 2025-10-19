@@ -33,7 +33,7 @@ const BEGINNING = {
     abs2: "Die Anrufe wurden immer häufiger und die Zusammenarbeit mit Missionsarzt Andi intensivierte sich und Christoph beschloss 2012 selbst nach Tanzania zu reisen. Teil seiner Ferienreise: ein kurzer Abstecher im Spital Ifisi. Aus einem geplanten «Abstecher» wurde eine ganze Woche. Er half vor Ort sofort bei Operationen mit.<br>Als Christoph zurück in die Schweiz kam, begeisterte er eine Gruppe von Ärzten und Pflegefachpersonen aus dem Stadtspital Waid für einen weiteren gemeinsamen Einsatz.<br>Darunter sein langjähriger Arbeitskollege und Freund László Veréb-Amolini, der eigentlich nicht mitkommen wollte, da er bereits 2 Pink Floyd Konzerttickets ergattert hatte und doch schaffte es Christoph László zu überzeugen und wenige Wochen später sassen sie gemeinsam im Flieger nach Tanzania.<br>László, mittlerweile pensioniert, ist seit seinem ersten Einsatz 2013 bis heute im ZMT Vorstand und organisiert jedes Jahr die Einsätze.",
     abs3: "Was anfänglich als vor allem chirurgisch, traumatologisch fokussiertes Projekt begann ist heute ein Non-Profit Verein, der sich auf die Ausbildung und Unterstützung des Spital Iifisi in Tanzania mit den Schwerpunkten Anästhesie, Kardiologie, Gynäkologie und Geburtshilfe, Radiologie und Wundbehandlung konzentriert.<br>Der finanzielle Support bei der Ausbildung von medizinischen Fachpersonen (meducation) ist neben den zwei Projekten mbuzi und twenty4forty über die Jahre zu unserem Hauptanliegen geworden.",
     abs4: "Schreiben Sie mit uns die Geschichte von zurich meets tanzania weiter und unterstützen Sie das engagierte Team.",
-    abs5: "Jede Spende zählt!"
+    abs5: "Jede Spende zählt!",
 };
 
 export default BEGINNING;

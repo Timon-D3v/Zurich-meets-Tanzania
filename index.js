@@ -1341,7 +1341,7 @@ app.post("/post/news", async (req, res) => {
             if (gallery) {
                 const replaceImageSources = async (options) => {
                     if (options.tagName === "IMG" && !options.attributes.src.startsWith("https://") && !options.attributes.src.startsWith("http://")) {
-                        const result = await imagekitUpload(options.attributes.src, type + "___NEWS___" + timon.randomString(32), "/news/")
+                        const result = await imagekitUpload(options.attributes.src, type + "___NEWS___" + timon.randomString(32), "/news/");
                         options.attributes.src = result.path;
                     }
 
@@ -1354,7 +1354,7 @@ app.post("/post/news", async (req, res) => {
                     }
 
                     return options;
-                }
+                };
 
                 html = await replaceImageSources(html);
 
@@ -1368,7 +1368,7 @@ app.post("/post/news", async (req, res) => {
         const result = await db.submitNews(html, type, path, pos, newsletter);
 
         if (!result) throw new Error("No result from database");
-        
+
         res.json({ ok: true, message: "Das hat geklappt." });
     } catch (error) {
         console.error(error);
@@ -1427,7 +1427,7 @@ app.post("/post/news/update", async (req, res) => {
             if (gallery) {
                 const replaceImageSources = async (options) => {
                     if (options.tagName === "IMG" && !options.attributes.src.startsWith("https://") && !options.attributes.src.startsWith("http://")) {
-                        const result = await imagekitUpload(options.attributes.src, type + "___NEWS___" + timon.randomString(32), "/news/")
+                        const result = await imagekitUpload(options.attributes.src, type + "___NEWS___" + timon.randomString(32), "/news/");
                         options.attributes.src = result.path;
                     }
 
@@ -1440,7 +1440,7 @@ app.post("/post/news/update", async (req, res) => {
                     }
 
                     return options;
-                }
+                };
 
                 html = await replaceImageSources(html);
 
@@ -1521,9 +1521,11 @@ app.post("/post/gallery/getLinks/:num", async (req, res) => {
 app.post("/post/getPaymentLink", async (req, res) => {
     if (isNaN(req.body.amount)) return res.end();
 
-    if (!req.session?.user?.valid) return res.json({
+    if (!req.session?.user?.valid) {
+        return res.json({
             link: `${req.protocol}://${req.get("host")}/login?redir=/spenden%23scrollToMembership&exec=error&message=Bitte%20melde%20dich%20mit%20deinem%20Benutzerkonto%20an,%20um%20Mitglied%20zu%20werden.`,
         });
+    }
 
     const key = timon.randomString(256);
 
@@ -1837,17 +1839,21 @@ app.post("/post/donateForm", async (req, res) => {
     try {
         const { name, familyName, email, usageType } = req.body;
 
-        if (typeof name !== "string" || typeof familyName !== "string" || typeof email !== "string" || typeof usageType !== "string") return res.json({
+        if (typeof name !== "string" || typeof familyName !== "string" || typeof email !== "string" || typeof usageType !== "string") {
+            return res.json({
                 error: true,
                 massage: "Bitte gib gültige Daten ein.",
             });
+        }
 
         const result = await sendDonationMail(name, familyName, email, usageType);
 
-        if (result === 200) return res.json({
+        if (result === 200) {
+            return res.json({
                 error: false,
                 message: "Zurich meets Tanzania dankt dir sehr für deine Spende ❤️",
             });
+        }
 
         res.json({
             error: true,

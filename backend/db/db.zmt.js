@@ -55,16 +55,13 @@ export async function getBlogWhereTitle(title) {
         throw new Error("Fehler");
     });
 
-    if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
+    if (result.length === 0) {
+        throw new Error("Seite nicht vorhanden (404)");
+    }
 
-    // Somehow it worked before only with parsing the data, but right now it just does work without it.
-    // Note: This is different on MySQL and MariaDB
-
-    result.forEach((object) => {
-        if (typeof object.data === "string") {
-            object.data = JSON.parse(object.data);
-        }
-    });
+    if (typeof result[0].data === "string") {
+        result[0].data = JSON.parse(result[0].data)
+    }
 
     return result;
 }
@@ -105,9 +102,13 @@ export async function getLastXBlogs(x) {
         throw new Error("Fehler");
     });
     if (result.length !== x) throw new Error("Nicht die gewünschte Anzahl Elemente");
-    result.forEach((object) => {
-        object.data = JSON.parse(object.data);
-    });
+
+    for (let i = 0; i < x; i++) {
+        if (typeof result[i].data === "string") {
+            result[i].data = JSON.parse(result[i].data);
+        }
+    }
+
     return result;
 }
 
@@ -227,7 +228,7 @@ export async function getNews() {
 
 export async function getXNews(i) {
     try {
-        const [result] = await pool.query(`SELECT * from \`zmt\`.\`news\` ORDER BY \`id\` DESC LIMIT ${i};`)
+        const [result] = await pool.query(`SELECT * from \`zmt\`.\`news\` ORDER BY \`id\` DESC LIMIT ${i};`);
 
         if (result.length === 0) throw new Error("Nothing there");
 
@@ -296,10 +297,15 @@ export async function getGalleyWhereTitle(title) {
     let [result] = await pool.query(query, [title]).catch(() => {
         throw new Error("Fehler");
     });
-    if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
-    result.forEach((object) => {
-        object.img = JSON.parse(object.img);
-    });
+
+    if (result.length === 0) {
+        throw new Error("Seite nicht vorhanden (404)");
+    }
+
+    if (typeof result[0].img === "string") {
+        result[0].img = JSON.parse(result[0].img);
+    }
+
     return result;
 }
 
@@ -489,11 +495,15 @@ export async function getAllNewsletterEmails() {
 export async function getCurrentTeamInfo() {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query).catch(() => []);
-    result.forEach((object) => {
-        if (typeof object === "string") {
-            object.members = JSON.parse(object.members);
-        }
-    });
+
+    if (result.length === 0) {
+        return [];
+    }
+
+    if (typeof result[0]?.members === "string") {
+        result[0].members = JSON.parse(result[0].members);
+    }
+
     return result[0];
 }
 
@@ -506,33 +516,45 @@ export async function createTeam(date, spruch, desc, img) {
 export async function addTeamMember(user) {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query);
-    let team = [];
+    let team = result[0].members;
+
     if (typeof result[0]?.members === "string") {
         team = JSON.parse(result[0].members);
     }
+
     team.push(user);
+
     query = "UPDATE `zmt`.`team` SET `members` = ? WHERE (`id` = ?);";
     await pool.query(query, [JSON.stringify(team), result[0].id]);
+
     return true;
 }
 
 export async function removeTeamMember(username) {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query);
-    let team = [];
+    let team = result[0].members;
+
     if (typeof result[0]?.members === "string") {
         team = JSON.parse(result[0].members);
     }
+
     let length = team.length;
+
     for (let i = 0; i < team.length; i++) {
         if (team[i].username === username) {
             team.splice(i, 1);
             break;
         }
     }
-    if (length === team.length) return false;
+
+    if (length === team.length) {
+        return false;
+    }
+
     query = "UPDATE `zmt`.`team` SET `members` = ? WHERE (`id` = ?);";
     await pool.query(query, [JSON.stringify(team), result[0].id]);
+
     return true;
 }
 
@@ -622,18 +644,32 @@ export async function updateBlogPost(originalName, title, data) {
 export async function getBlogPost(title) {
     let query = "SELECT * FROM `zmt`.`blogs` WHERE title = ?;";
     let [result] = await pool.query(query, [title]);
-    result.forEach((object) => {
-        object.data = JSON.parse(object.data);
-    });
+
+    if (result.length === 0) {
+        return [];
+    }
+
+    if (typeof result[0].data === "string") {
+        result[0].data = JSON.parse(result[0].data);
+    }
+
     return result;
 }
 
 export async function getLastXBlogPosts(x) {
     let query = "SELECT * FROM `zmt`.`blogs` ORDER BY `id` DESC LIMIT ?;";
     let [result] = await pool.query(query, [x]);
-    result.forEach((object) => {
-        object.data = JSON.parse(object.data);
-    });
+
+    if (result.length !== x) {
+        throw new Error("Not enough items.");
+    }
+
+    for (let i = 0; i < x; i++) {
+        if (typeof result[i].data === "string") {
+            result[i].data = JSON.parse(result[i].data);
+        }
+    }
+
     return result;
 }
 
