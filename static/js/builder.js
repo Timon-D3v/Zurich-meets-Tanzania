@@ -303,6 +303,12 @@ on(document, "DOMContentLoaded", () => {
             if (result) current_element.remove();
         });
 
+        on(document, "keydown", (e) => {
+            if (e.key === "Delete") {
+                delete_btn.click();
+            }
+        });
+
         function elmToJson(element) {
             const options = {
                 tagName: element.tagName,
@@ -355,7 +361,7 @@ on(document, "DOMContentLoaded", () => {
 
         function handleEdit(element) {
             if (element.classList.contains("blog_half")) {
-                element.contentEditable = true;
+                element.contentEditable = true; // Needs to be true to not select the dragged base element again on click in the inner p tag
                 element.querySelector("p").contentEditable = true;
             } else if (element.classList.contains("blog_line")) {
                 alert("Du kannst einen Strich nicht bearbeiten ;)");
@@ -383,7 +389,8 @@ on(document, "DOMContentLoaded", () => {
                 .replace(/\*\*\*([^\*]{1,})\*\*\*/gm, "<b>$1</b>")
                 .replace(/\_\_\_([^\_]{1,})\_\_\_/gm, "<i>$1</i>")
                 .replace(/\+\+\+([^\+]{1,})\+\+\+/gm, "<u>$1</u>")
-                .replace(/\{\[([^\]]+)\]\(([^)]+)\)\}/gm, "<a href='$2' target='_blank'>$1</a>");
+                .replace(/\{\[([^\]]+)\]\(([^)]+)\)\}/gm, "<a href='$2' target='_blank'>$1</a>")
+                .replace(/\n/gm, "<br>"); // Does not need a div inserters
         }
 
         function HTMLToMarkdown(text) {
@@ -391,7 +398,9 @@ on(document, "DOMContentLoaded", () => {
                 .replace(/<b>((?:(?!<\/b>).)+)<\/b>/gm, "***$1***")
                 .replace(/<i>((?:(?!<\/b>).)+)<\/i>/gm, "___$1___")
                 .replace(/<u>((?:(?!<\/b>).)+)<\/u>/gm, "+++$1+++")
-                .replace(/<a href='([^']*)' target='_blank'>(.*?)<\/a>/gm, "{[$2]($1)}");
+                .replace(/<a href='([^']*)' target='_blank'>(.*?)<\/a>/gm, "{[$2]($1)}")
+                .replace(/<div>(.*?)<\/div>/gm, "$1")
+                .replace(/<br>/gm, "\n");
         }
 
         async function addImg(type) {

@@ -57,7 +57,8 @@ export async function getBlogWhereTitle(title) {
 
     if (result.length === 0) throw new Error("Seite nicht vorhanden (404)");
 
-    // Somehow it worked before only with paring the data, but right now it just does work without it.
+    // Somehow it worked before only with parsing the data, but right now it just does work without it.
+    // Note: This is different on MySQL and MariaDB
 
     result.forEach((object) => {
         if (typeof object.data === "string") {
@@ -489,7 +490,9 @@ export async function getCurrentTeamInfo() {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
     let [result] = await pool.query(query).catch(() => []);
     result.forEach((object) => {
-        object.members = JSON.parse(object.members);
+        if (typeof object === "string") {
+            object.members = JSON.parse(object.members);
+        }
     });
     return result[0];
 }
