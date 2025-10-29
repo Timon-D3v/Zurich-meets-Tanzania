@@ -6,16 +6,19 @@ on(document, "DOMContentLoaded", () => {
         const hero_title = getQuery(".hero-title").get(0);
         const hero_subtitle = getQuery(".hero-subtitle").get(0);
         const hero_img = getQuery(".hero-img").get(0);
-        const json = {
-            html: null,
+        const data = {
+            metadata: {
+                title: hero_title.html(),
+                date: Date(),
+                author: "Das ZMT-Team",
+            },
             hero: {
                 title: hero_title.html(),
                 subtitle: hero_subtitle.html(),
-                alt: hero_img.alt,
-                src: hero_img.src,
+                imageUrl: hero_img.alt,
+                imageAlt: hero_img.src,
             },
-            author: "Das ZMT-Team",
-            date: Date(),
+            body: [],
         };
         const sortable = new Draggable.Sortable(content, {
             draggable: "#content > *:not(*[contenteditable='true'])",
@@ -44,9 +47,9 @@ on(document, "DOMContentLoaded", () => {
 
             hero_title.innerHTML = title.trim();
             hero_subtitle.innerHTML = subtitle;
-            json.hero.title = title.trim();
-            json.hero.subtitle = subtitle;
-            json.author = author.trim();
+            data.hero.title = title.trim();
+            data.hero.subtitle = subtitle;
+            data.metadata.author = author.trim();
 
             const result = await confirm("Möchtest du ein Bild für den Blog hinzufügen? Falls ja, wird der Bildschirm gelb. Du musst dann auf den Bildschirm klicken, um ein Bild hochzuladen.");
 
@@ -65,8 +68,8 @@ on(document, "DOMContentLoaded", () => {
 
                 hero_img.src = base64;
                 hero_img.alt = input.file().name;
-                json.hero.src = base64;
-                json.hero.alt = input.file().name;
+                data.hero.imageUrl = base64;
+                data.hero.imageAlt = input.file().name;
 
                 div.remove();
             });
@@ -237,6 +240,8 @@ on(document, "DOMContentLoaded", () => {
 
             wrapper.innerHTML = textContent;
 
+            wrapper.addClass("blog_team");
+
             content.append(wrapper);
         });
 
@@ -245,24 +250,123 @@ on(document, "DOMContentLoaded", () => {
 
             if (!result) return;
 
-            getQuery(".blog_carousel img").forEach((e) => e.removeClass("active"));
-
-            getQuery(".main *").forEach((element) => {
-                if (element.contentEditable === "true") element.contentEditable = false;
-            });
-
-            json.hero.src = hero_img.src.includes("https://ik.imagekit.io/zmt/blog") ? hero_img.src : await hero_img.getImgBase64();
-
             getElm("done").disabled = true;
 
-            json.html = elmToJson(content);
+            data.metadata.date = Date();
 
-            json.date = Date();
+            const main = getQuery("main").get(0);
+
+            const hero = main.getQuery(".hero").get(0);
+
+            const heroTitle = hero.getQuery(".hero-title").get(0);
+
+            data.metadata.title = heroTitle.text();
+            data.hero.title = heroTitle.text();
+
+            const heroSubtitle = hero.getQuery(".hero-subtitle").get(0);
+
+            data.hero.subtitle = heroSubtitle.text();
+
+            const heroImage = hero.getQuery(".hero-img").get(0);
+
+            data.hero.imageUrl = heroImage.src;
+            data.hero.imageAlt = heroImage.alt;
+
+            const content = main.getQuery("#content > *");
+
+            content.forEach((element) => {
+                if (element.hasClass("blog_title")) {
+                    data.body.push({
+                        type: "title",
+                        data: {
+                            text: element.innerHTML,
+                        },
+                    });
+                } else if (element.hasClass("blog_subtitle")) {
+                    data.body.push({
+                        type: "subtitle",
+                        data: {
+                            text: element.innerHTML,
+                        },
+                    });
+                } else if (element.hasClass("blog_text")) {
+                    data.body.push({
+                        type: "paragraph",
+                        data: {
+                            text: element.innerHTML,
+                        },
+                    });
+                } else if (element.hasClass("blog_img")) {
+                    data.body.push({
+                        type: "image",
+                        data: {
+                            imageUrl: element.src,
+                            imageAlt: element.alt,
+                        },
+                    });
+                } else if (element.hasClass("blog_half")) {
+                    const imagePosition = element.hasClass("left") ? "left" : "right";
+
+                    const img = element.getQuery("img").get(0);
+                    const p = element.getQuery("p").get(0);
+
+                    data.body.push({
+                        type: "image-paragraph",
+                        data: {
+                            imagePosition,
+                            text: p.innerHTML,
+                            imageUrl: img.src,
+                            imageAlt: img.alt,
+                        },
+                    });
+                } else if (element.hasClass("blog_line")) {
+                    data.body.push({
+                        type: "line",
+                        data: null,
+                    });
+                } else if (element.hasClass("blog_carousel")) {
+                    const imageElementArray = element.getQuery(".blog_c-main > img");
+
+                    const storage = {
+                        type: "multiple-images",
+                        data: {
+                            imageUrlArray: [],
+                            imageAltArray: [],
+                        },
+                    };
+
+                    imageElementArray.forEach((image) => {
+                        storage.data.imageUrlArray.push(image.src);
+                        storage.data.imageAltArray.push(image.alt);
+                    });
+
+                    data.body.push(storage);
+                } else if (element.hasClass("blog_team")) {
+                    const ul = element.getQuery("ul.team-member").get(0);
+
+                    if (typeof ul === "undefined") {
+                        console.error("No element found.");
+                        return;
+                    }
+
+                    const id = ul.data("data-team-id");
+
+                    data.body.push({
+                        type: "team",
+                        data: {
+                            teamId: isNaN(Number(id)) ? 0 : Number(id),
+                        },
+                    });
+                } else {
+                    console.warn("Unknown element");
+                    alert("Irgendwas ist kaputt gegangen. Überprüfe den Blog nach dem Hochladen noch einmal und melde dich eventuell beim Administrator. (Ein Element wurde nicht erkannt und konnte nicht mitgespeichert werden. Alles andere hat soweit geklappt.)");
+                }
+            });
 
             const url = edit_btn.data("data-blog-is-new") === "true" ? "/post/blog" : "/post/blog/update";
 
             const response = await post(url, {
-                json,
+                json: data,
                 originalName: edit_btn.data("data-blog-original-name"),
             });
 
@@ -419,12 +523,14 @@ on(document, "DOMContentLoaded", () => {
                 } else {
                     const div = createElm("div");
                     div.addClass("blog_half");
+                    console.log(type)
+                    div.addClass(type);
 
                     const text = createElm("p");
                     text.innerHTML = await prompt("Bitte gib den Text ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
 
-                    div.append(type === "left" ? text : element);
                     div.append(type === "left" ? element : text);
+                    div.append(type === "left" ? text : element);
                     content.prepend(div);
                 }
             });

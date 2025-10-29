@@ -21,13 +21,13 @@
         }) %>
         <main>
             <% news.forEach((element, i) => { element.isArchiv = true; %>
-                <%- include("./snippets/news.ejs", element) %>
-                <% if (count > 5 && i === news.length - 5) { %>
-                <div id="scroll_to_last_entry"></div>
+            <%- include("./snippets/news.ejs", element) %>
+            <% if (count > 5 && i === news.length - 5) { %>
+            <div id="scroll_to_last_entry"></div>
             <% }
             }); %>
             <% if (count === news.length) { %>
-                <a class="news-more" href="<%= `/archiv?count=${count + 5}` %>">Weitere</a>
+            <a class="news-more" href="<%= `/archiv?count=${count + 5}` %>">Weitere</a>
             <% }; %>
             <script defer>
                 let count = "<%= count %>";

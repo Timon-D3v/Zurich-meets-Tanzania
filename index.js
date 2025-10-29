@@ -65,7 +65,7 @@ const recovery_code = [];
 
 async function imagekitUpload(base64, name, folder) {
     let res,
-        fileName = name.replace(/[\:\/\\\<\>\{\}\?\(\)\s\@]/g, "_");
+        fileName = name.replace(/[^a-zA-Z0-9\.\-]/g, "_");
     imagekit.upload(
         {
             file: base64,
@@ -720,6 +720,7 @@ app.get("/chunks/team/getCurrentTeam", async (req, res) => {
     const team = await db.getCurrentTeamInfo();
     res.render("./snippets/teamMember.ejs", {
         members: team.members,
+        teamId: team.id
     });
 });
 
@@ -748,16 +749,28 @@ app.get("/blog/:id", async (req, res) => {
     try {
         const [blog] = await db.getBlogWhereTitle(req.params.id);
 
+        for (let i = 0; blog.data.body.length > i; i++) {
+
+            if (blog.data.body[i].type === "team") {
+
+                const { members } = await db.getTeamWithId(blog.data.body[i].data.teamId);
+
+                blog.data.body[i].data.members = members;
+
+            }
+
+        }
+
         res.render("blog.ejs", {
             env: LOAD_LEVEL,
             url: req.url,
             origin_url: req.protocol + "://" + req.get("host"),
-            date: blog.data.date,
-            title: blog.title,
+            date: blog.data.metadata.date,
+            title: blog.data.metadata.title,
             desc: blog.data.hero.subtitle,
             sitetype: "blog",
             user: req.session.user,
-            blog: JSON.stringify(blog.data),
+            blog: blog.data,
         });
     } catch (error) {
         console.error(error);
@@ -772,16 +785,28 @@ app.get("/private/blog/:id", async (req, res) => {
     try {
         const [blog] = await db.getBlogWhereTitle(req.params.id);
 
+        for (let i = 0; blog.data.body.length > i; i++) {
+
+            if (blog.data.body[i].type === "team") {
+
+                const { members } = await db.getTeamWithId(blog.data.body[i].data.teamId);
+
+                blog.data.body[i].data.members = members;
+
+            }
+
+        }
+
         res.render("private/editBlog.ejs", {
             env: LOAD_LEVEL,
             url: req.url,
             origin_url: req.protocol + "://" + req.get("host"),
-            date: blog.data.date,
-            title: blog.title,
+            date: blog.data.metadata.date,
+            title: blog.data.metadata.title,
             desc: blog.data.hero.subtitle,
             sitetype: "private",
             user: req.session.user,
-            blog: JSON.stringify(blog.data),
+            blog: blog.data,
         });
     } catch (error) {
         console.error(error);
@@ -792,7 +817,9 @@ app.get("/private/blog/:id", async (req, res) => {
 app.get("/private/:id", async (req, res) => {
     if (!req.session.user) return res.redirect("/login?redir=/private/" + req.params.id);
     if (req.session.user.type !== "admin") return res.redirect("/");
+
     let url = req.protocol + "://" + req.get("host");
+
     switch (req.params.id) {
         case "management":
             let users = await db.getAllUsers().catch(() => [{ email: "Keine Benutzer gefunden" }]);
@@ -1069,117 +1096,170 @@ app.post("/post/newsletter/check", async (req, res) => {
 });
 
 app.post("/post/blog", async (req, res) => {
-    if (req.session?.user?.type !== "admin") return res.json({ error: "501: Forbidden" });
+    try {
+        
+        if (req.session?.user?.type !== "admin") {
+            res.json({ error: "501: Forbidden" });
 
-    const object = req.body.json;
-    const fileArray = [];
-
-    const saveImg = (obj) => {
-        if (obj.tagName === "IMG") {
-            fileArray.push({
-                id: obj.attributes.id,
-                alt: obj.attributes.alt,
-                base64: obj.attributes.src,
-            });
+            return;
         }
 
-        if (Array.isArray(obj?.children)) {
-            obj.children.forEach((elm) => {
-                saveImg(elm);
+        const data = req.body?.json;
+
+        if (typeof data === "undefined") {
+            res.json({
+                ok: false,
+                message: "Bad Request. Expected key `json` in body."
             });
+
+            return;
         }
-    };
 
-    await saveImg(object.html);
+        if (data.hero.imageUrl.includes("data:") && data.hero.imageUrl.includes("base64")) {
 
-    if (object.hero.src.includes("data:image")) {
-        const { path } = await imagekitUpload(object.hero.src, object.hero.title + `___${timon.randomString(32)}`, "/blog/");
-        object.hero.src = path;
+            const { path } = await imagekitUpload(data.hero.imageUrl, `${data.hero.imageAlt}___${timon.randomString(32)}`, "/blog/");
+
+            data.hero.imageUrl = path;
+
+        }
+
+        for (let i = 0; data.body.length > i; i++) {
+
+            if (
+                ["image", "image-paragraph"].includes(data.body[i].type) && 
+                data.body[i].data.imageUrl.includes("data:") &&
+                data.body[i].data.imageUrl.includes("base64")
+            ) {
+
+                const { path } = await imagekitUpload(data.body[i].data.imageUrl, `${data.body[i].data.imageAlt}___${timon.randomString(32)}`, "/blog/")
+
+                data.body[i].data.imageUrl = path;
+
+            } else if (data.body[i].type === "multiple-images") {
+
+                for (let j = 0; data.body[i].data.imageUrlArray.length > j; j++) {
+
+                    if (data.body[i].data.imageUrlArray[j].includes("data:") && data.body[i].data.imageUrlArray[j].includes("base64")) {
+
+                        const { path } = await imagekitUpload(data.body[i].data.imageUrlArray[j], `${data.body[i].data.imageAltArray[j]}___${timon.randomString(32)}`, "/blog/");
+
+                        data.body[i].data.imageUrlArray[j] = path;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        const result = await db.putBlogPost(data.metadata.title, data);
+
+        if (!result) {
+            res.json({
+                ok: false,
+                message: "Der Blogpost konnte nicht gespeichert werden. Bitte versuche es später erneut."
+            })
+
+            return
+        }
+
+        res.json({ 
+            ok: true, 
+            message: "Das hat geklappt." 
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.json({
+            ok: false, 
+            message: "Etwas hat nicht geklappt. Bitte versuche es später erneut." 
+        });
     }
-
-    let json = JSON.stringify(object);
-
-    for (let i = 0; i < fileArray.length; i++) {
-        if (!fileArray[i].base64.includes("data:image")) continue;
-
-        const { path } = await imagekitUpload(fileArray[i].base64, fileArray[i].alt + "___" + fileArray[i].id, "/blog/");
-
-        const done = json.split("data:")[0];
-        const rest = json.replace(done, "");
-
-        const base64 = rest.split('"')[0];
-        const todo = rest.replace(base64, "");
-
-        json = done + path + todo;
-    }
-
-    const raw = JSON.parse(json);
-
-    const result = await db.putBlogPost(raw.hero.title, raw).catch((err) => {
-        console.error(err);
-        return false;
-    });
-
-    if (result) return res.json({ ok: true, message: "Das hat geklappt." });
-
-    res.json({ ok: false, message: "Etwas hat nicht geklappt. Bitte versuche es später erneut." });
 });
 
 app.post("/post/blog/update", async (req, res) => {
-    if (req.session?.user?.type !== "admin") return res.json({ error: "501: Forbidden" });
+    try {
+        
+        if (req.session?.user?.type !== "admin") {
+            res.json({ error: "501: Forbidden" });
 
-    const object = req.body.json;
-    const fileArray = [];
-
-    const saveImg = (obj) => {
-        if (obj.tagName === "IMG") {
-            fileArray.push({
-                id: obj.attributes.id,
-                alt: obj.attributes.alt,
-                base64: obj.attributes.src,
-            });
+            return;
         }
 
-        if (Array.isArray(obj?.children)) {
-            obj.children.forEach((elm) => {
-                saveImg(elm);
+        const data = req.body?.json;
+        const originalName = req.body?.originalName
+
+        if (typeof data === "undefined" || typeof originalName !== "string" || originalName.trim() === "") {
+            res.json({
+                ok: false,
+                message: "Bad Request. Expected key `json` in body."
             });
+
+            return;
         }
-    };
 
-    await saveImg(object.html);
+        if (data.hero.imageUrl.includes("data:") && data.hero.imageUrl.includes("base64")) {
 
-    if (object.hero.src.includes("data:image")) {
-        const { path } = await imagekitUpload(object.hero.src, object.hero.title + `___${timon.randomString(32)}`, "/blog/");
-        object.hero.src = path;
+            const { path } = await imagekitUpload(data.hero.imageUrl, `${data.hero.imageAlt}___${timon.randomString(32)}`, "/blog/");
+
+            data.hero.imageUrl = path;
+
+        }
+
+        for (let i = 0; data.body.length > i; i++) {
+
+            if (
+                ["image", "image-paragraph"].includes(data.body[i].type) && 
+                data.body[i].data.imageUrl.includes("data:") &&
+                data.body[i].data.imageUrl.includes("base64")
+            ) {
+
+                const { path } = await imagekitUpload(data.body[i].data.imageUrl, `${data.body[i].data.imageAlt}___${timon.randomString(32)}`, "/blog/")
+
+                data.body[i].data.imageUrl = path;
+
+            } else if (data.body[i].type === "multiple-images") {
+
+                for (let j = 0; data.body[i].data.imageUrlArray.length > j; j++) {
+
+                    if (data.body[i].data.imageUrlArray[j].includes("data:") && data.body[i].data.imageUrlArray[j].includes("base64")) {
+
+                        const { path } = await imagekitUpload(data.body[i].data.imageUrlArray[j], `${data.body[i].data.imageAltArray[j]}___${timon.randomString(32)}`, "/blog/");
+
+                        data.body[i].data.imageUrlArray[j] = path;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        const result = await db.updateBlogPost(originalName, data.metadata.title, data);
+
+        if (!result) {
+            res.json({
+                ok: false,
+                message: "Der Blogpost konnte nicht gespeichert werden. Bitte versuche es später erneut."
+            })
+
+            return
+        }
+
+        res.json({ 
+            ok: true, 
+            message: "Das hat geklappt." 
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.json({
+            ok: false, 
+            message: "Etwas hat nicht geklappt. Bitte versuche es später erneut." 
+        });
     }
-
-    let json = JSON.stringify(object);
-
-    for (let i = 0; i < fileArray.length; i++) {
-        if (!fileArray[i].base64.includes("data:image")) continue;
-
-        const { path } = await imagekitUpload(fileArray[i].base64, fileArray[i].alt + "___" + fileArray[i].id, "/blog/");
-
-        const done = json.split("data:")[0];
-        const rest = json.replace(done, "");
-
-        const base64 = rest.split('"')[0];
-        const todo = rest.replace(base64, "");
-
-        json = done + path + todo;
-    }
-
-    const raw = JSON.parse(json);
-
-    const result = await db.updateBlogPost(req.body.originalName, raw.hero.title, raw).catch((err) => {
-        console.error(err);
-        return false;
-    });
-
-    if (result) return res.json({ ok: true, message: "Das hat geklappt." });
-
-    res.json({ ok: false, message: "Etwas hat nicht geklappt. Bitte versuche es später erneut." });
 });
 
 /**
@@ -1211,9 +1291,18 @@ app.post("/post/upload/imagekit", async (req, res) => {
 });
 
 app.post("/post/getAuthorPicture", async (req, res) => {
+    if (req.query?.name === "Das" && req.query?.family_name === "ZMT-Team") {
+        res.json({
+            picture: "/img/logo_zoomed_out.png"
+        });
+
+        return;
+    }
+
     let response = await db.getPictureWithFullName(req.query?.name, req.query?.family_name).catch(() => {
         return "/img/svg/personal.svg";
     });
+
     res.send(response[0]);
 });
 

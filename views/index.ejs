@@ -50,16 +50,16 @@
                 title: undefined,
                 rows: 2,
                 img: [
-                    last4blogs[0].data.hero.src,
-                    last4blogs[1].data.hero.src,
-                    last4blogs[2].data.hero.src,
-                    last4blogs[3].data.hero.src
+                    last4blogs[0].data.hero.imageUrl,
+                    last4blogs[1].data.hero.imageUrl,
+                    last4blogs[2].data.hero.imageUrl,
+                    last4blogs[3].data.hero.imageUrl
                 ],
                 img_alt: [
-                    last4blogs[0].data.hero.alt,
-                    last4blogs[1].data.hero.alt,
-                    last4blogs[2].data.hero.alt,
-                    last4blogs[3].data.hero.alt
+                    last4blogs[0].data.hero.imageAlt,
+                    last4blogs[1].data.hero.imageAlt,
+                    last4blogs[2].data.hero.imageAlt,
+                    last4blogs[3].data.hero.imageAlt
                 ],
                 subtitle: [
                     last4blogs[0].title, 
@@ -77,7 +77,8 @@
             }) %>
             <h1 class="title" id="scroll_to_vorstand">Unser Vorstand</h1>
             <%- include("./snippets/teamMember.ejs", {
-                members: member_list
+                members: member_list,
+                teamId: -1
             }); %>
         </main>
         <%- include("./snippets/footer.ejs", {

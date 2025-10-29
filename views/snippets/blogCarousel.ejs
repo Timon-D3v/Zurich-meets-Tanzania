@@ -1,0 +1,77 @@
+<% const randomId = `id_${Date.now()}_${parseInt(Math.random() * 1000000)}` %>
+<div class="blog_carousel <%= randomId %>">
+    <div class="blog_c-main <%= randomId %>">
+        <% imageUrlArray.forEach((element, index) => { %>
+
+        <img alt="<%= imageAltArray[index] %>" src="<%= element %>" class="image_id_<%= index %> <%= randomId %>" />
+
+        <% }) %>
+    </div>
+
+    <button id="blog_next_button_<%= randomId %>" type="button" class="blog_carousel_next <%= randomId %>"></button>
+    <button id="blog_prev_button_<%= randomId %>" type="button" class="blog_carousel_prev <%= randomId %>"></button>
+
+    <div class="blog_c-ruler <%= randomId %>">
+        <% imageUrlArray.forEach((element, index) => { %>
+
+        <img alt="<%= imageAltArray[index] %>" src="<%= element %>" class="image_id_<%= index %> <%= randomId %>" />
+
+        <% }) %>
+    </div>
+
+    <script type="text/javascript">
+        const imgArray_<%= randomId %> = [
+            <% imageUrlArray.forEach((element, index) => { %>
+
+                getQuery(".image_id_<%= index %>.<%= randomId %>"),
+
+            <% }) %>
+        ];
+
+        let currentImg_<%= randomId %> = 1;
+        imgArray_<%= randomId %>[currentImg_<%= randomId %> - 1].addClass("active");
+
+
+        function next_<%= randomId %>() {
+
+            currentImg_<%= randomId %> + 1 > imgArray_<%= randomId %>.length ?
+            currentImg_<%= randomId %> = 1 :
+            currentImg_<%= randomId %>++;
+            currentImg_<%= randomId %> === 1 ?
+            imgArray_<%= randomId %>[imgArray_<%= randomId %>.length - 1].toggleClass("active") :
+            imgArray_<%= randomId %>[currentImg_<%= randomId %> - 2].toggleClass("active");
+            imgArray_<%= randomId %>[currentImg_<%= randomId %> - 1].toggleClass("active");
+
+        }
+
+
+        function prev_<%= randomId %>() {
+
+            currentImg_<%= randomId %> - 1 === 0 ?
+            currentImg_<%= randomId %> = imgArray_<%= randomId %>.length :
+            currentImg_<%= randomId %>--;
+            currentImg_<%= randomId %> === imgArray_<%= randomId %>.length ?
+            imgArray_<%= randomId %>[0].toggleClass("active") :
+            imgArray_<%= randomId %>[currentImg_<%= randomId %>].toggleClass("active");
+            imgArray_<%= randomId %>[currentImg_<%= randomId %> - 1].toggleClass("active");
+
+        }
+
+        function to_<%= randomId %>(i) {
+
+            imgArray_<%= randomId %>[currentImg_<%= randomId %> - 1].toggleClass("active");
+            imgArray_<%= randomId %>[i - 1].toggleClass("active");
+            currentImg_<%= randomId %> = i;
+
+        }
+
+        getElm("blog_next_button_<%= randomId %>").click(next_<%= randomId %>);
+        getElm("blog_prev_button_<%= randomId %>").click(prev_<%= randomId %>);
+
+        for (let i = 0; i < imgArray_<%= randomId %>.length; i++) {
+
+            imgArray_<%= randomId %>[i].get(1).click(() => to_<%= randomId %>(i + 1));
+
+        };
+    </script>
+</div>

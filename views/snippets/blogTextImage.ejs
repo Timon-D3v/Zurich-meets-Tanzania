@@ -1,0 +1,9 @@
+<div class="blog_half <%= imagePosition %>">
+    <% if (imagePosition === "left") { %>
+    <img src="<%= imageUrl %>" alt="<%= imageAlt %>" />
+    <p><%- text %></p>
+    <% } else { %>
+    <p><%- text %></p>
+    <img src="<%= imageUrl %>" alt="<%= imageAlt %>" />
+    <% } %>
+</div>

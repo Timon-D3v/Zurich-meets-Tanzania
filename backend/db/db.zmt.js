@@ -60,7 +60,7 @@ export async function getBlogWhereTitle(title) {
     }
 
     if (typeof result[0].data === "string") {
-        result[0].data = JSON.parse(result[0].data)
+        result[0].data = JSON.parse(result[0].data);
     }
 
     return result;
@@ -185,7 +185,7 @@ export async function updateProfile(_id, username, password, name, family_name, 
 export async function updateProfilePicture(username, picture) {
     let query = "UPDATE `zmt`.`users` SET `picture` = ? WHERE (`username` = '" + username + "');";
     await pool.query(query, [picture]).catch((err) => {
-        return err, console.error(err);
+        return (err, console.error(err));
     });
     return "No Error";
 }
@@ -455,6 +455,9 @@ export async function deleteLastXPosts(x) {
     return result;
 }
 
+/**
+ * @deprecated
+ */
 export async function mergeBlogs(number, title, description, team, img, alt) {
     try {
         const json = {
@@ -494,7 +497,7 @@ export async function getAllNewsletterEmails() {
 
 export async function getCurrentTeamInfo() {
     let query = "SELECT * FROM `zmt`.`team` ORDER BY `id` DESC LIMIT 1;";
-    let [result] = await pool.query(query).catch(() => []);
+    let [result] = await pool.query(query).catch(() => [[]]);
 
     if (result.length === 0) {
         return [];
@@ -505,6 +508,28 @@ export async function getCurrentTeamInfo() {
     }
 
     return result[0];
+}
+
+export async function getTeamWithId(id) {
+    try {
+        const query = "SELECT `members` FROM `zmt`.`team` WHERE (`id` = ?);";
+
+        const [result] = await pool.query(query, [id]);
+
+        if (result.length === 0) {
+            throw new Error(`No team with id ${id} found.`);
+        }
+
+        if (typeof result[0]?.members === "string") {
+            result[0].members = JSON.parse(result[0].members);
+        }
+
+        return result[0];
+    } catch (error) {
+        console.error(error.message);
+
+        return [];
+    }
 }
 
 export async function createTeam(date, spruch, desc, img) {
@@ -630,15 +655,31 @@ export async function deleteEvent(titel) {
 }
 
 export async function putBlogPost(title, data) {
-    let query = "INSERT INTO `zmt`.`blogs` (`title`, `data`) VALUES (?, ?);";
-    await pool.query(query, [title, JSON.stringify(data)]);
-    return true;
+    try {
+        const query = "INSERT INTO `zmt`.`blogs` (`title`, `data`) VALUES (?, ?);";
+
+        await pool.query(query, [title, JSON.stringify(data)]);
+
+        return true;
+    } catch (error) {
+        console.error(error);
+
+        return false;
+    }
 }
 
 export async function updateBlogPost(originalName, title, data) {
-    let query = "UPDATE `zmt`.`blogs` SET `title` = ?, `data` = ? WHERE (`title` = ?);";
-    await pool.query(query, [title, JSON.stringify(data), originalName]);
-    return true;
+    try {
+        const query = "UPDATE `zmt`.`blogs` SET `title` = ?, `data` = ? WHERE (`title` = ?);";
+
+        await pool.query(query, [title, JSON.stringify(data), originalName]);
+    
+        return true;
+    } catch (error) {
+        console.error(error);
+
+        return false;
+    }   
 }
 
 export async function getBlogPost(title) {

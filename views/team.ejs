@@ -48,6 +48,7 @@
             <p class="text"><%= team.text %></p>
             <%- include("./snippets/teamMember.ejs", {
                 members: team.members
+                teamId: team.id
             }); %>
             <p class="date">Zuletzt aktualisiert am <%= toRealDate(date) %></p>
         </main>

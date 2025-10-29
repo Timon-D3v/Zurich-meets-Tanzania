@@ -34,11 +34,11 @@
                 </button>
                 <button type="button" class="add-item-btn" id="add-text-picture">
                     <h1>Halb Text, Halb Bild</h1>
-                    <p>Bild links</p>
+                    <p>Bild rechts</p>
                 </button>
                 <button type="button" class="add-item-btn" id="add-picture-text">
                     <h1>Halb Bild, Halb Text</h1>
-                    <p>Bild rechts</p>
+                    <p>Bild links</p>
                 </button>
                 <button type="button" class="add-item-btn" id="add-picture">
                     <h1>Bild hinzufügen</h1>
@@ -62,41 +62,64 @@
             <button type="button" class="floating-edit-btn" id="delete-current-element">
                 <img src="/img/svg/trash.svg" alt="Löschen" title="Löschen" />
             </button>
-            <main><% 
-                const jsonBlog = JSON.parse(blog); %>
+            <main>
                 <%- include("../snippets/hero.ejs", {
-                    img_alt: jsonBlog.hero.alt,
-                    img_path: jsonBlog.hero.src,
-                    title: jsonBlog.hero.title,
-                    subtitle: jsonBlog.hero.subtitle,
+                    img_alt: blog.hero.imageAlt,
+                    img_path: blog.hero.imageUrl,
+                    title: blog.hero.title,
+                    subtitle: blog.hero.subtitle,
                     cta_text: "",
                     cta_link: origin_url
                 }) %>
-                <pre class="invisible" id="raw">
-                    <%= blog %>
-                </pre>
-                <script>
-                    function jsonToElm(options) {
-                        const element = document.createElement(options.tagName);
 
-                        for (let attr in options.attributes) {
-                            element.setAttribute(attr, options.attributes[attr]);
-                        }
+                <div id="content">
+                    <% blog.body.forEach((element) => { 
+                        if (element.type === "title") { %>
 
-                        for (let child of options.children) {
-                            if (child.tagName === "___text___") {
-                                element.appendChild(document.createTextNode(child.content));
-                                continue;
-                            }
+                            <h1 class="blog_title"><%- element.data.text %></h1>
 
-                            element.appendChild(jsonToElm(child));
-                        }
+                        <% } else if (element.type === "subtitle") { %>
 
-                        return element;
-                    }
+                            <h2 class="blog_subtitle"><%- element.data.text %></h2>
 
-                    document.querySelector("main").appendChild(jsonToElm(JSON.parse(document.getElementById("raw").innerText).html));
-                </script>
+                        <% } else if (element.type === "paragraph") { %>
+
+                            <div class="blog_text"><%- element.data.text %></div>
+
+                        <% } else if (element.type === "image") { %>
+
+                            <img class="blog_img" src="<%= element.data.imageUrl %>" alt="<%= element.data.imageAlt %>" />
+
+                        <% } else if (element.type === "image-paragraph") { %> 
+                            
+                            <%- include("../snippets/blogTextImage.ejs", { 
+                                imagePosition: element.data.imagePosition, 
+                                imageUrl: element.data.imageUrl, imageAlt: 
+                                element.data.imageAlt, text: 
+                                element.data.text 
+                            }) %> 
+                        
+                        <% } else if (element.type === "line") { %>
+
+                            <div class="blog_line"></div>
+
+                        <% } else if (element.type === "multiple-images") { %>
+
+                            <%- include("../snippets/blogCarousel.ejs", {
+                                imageUrlArray: element.data.imageUrlArray,
+                                imageAltArray: element.data.imageAltArray,
+                            }) %>
+
+                        <% } else if (element.type === "team") { %>
+
+                            <%- include("../snippets/teamMember.ejs", {
+                                members: element.data.members,
+                                teamId: element.data.teamId,
+                            }) %>
+
+                        <% } %>
+                    <% }) %>
+                </div>
             </main>
         </div>
         <%- include("../snippets/footer.ejs", {

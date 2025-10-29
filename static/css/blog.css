@@ -15,6 +15,23 @@
 
 .blog_text {
     padding: 0 10%;
+    font-family: "Titillium Web", sans-serif !important;
+    color: var(--text-950);
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+}
+
+.blog_text * {
+    font-family: "Titillium Web", sans-serif !important;
+    color: var(--text-950) !important;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 }
 
 .blog_img {
