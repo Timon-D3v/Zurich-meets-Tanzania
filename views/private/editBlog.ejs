@@ -84,7 +84,7 @@
 
                         <% } else if (element.type === "paragraph") { %>
 
-                            <div class="blog_text"><%- element.data.text %></div>
+                            <p class="blog_text"><%- element.data.text.replace(/div/g, "span").replace(/\n/g, "<br>") %></p>
 
                         <% } else if (element.type === "image") { %>
 
