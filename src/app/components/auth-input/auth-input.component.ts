@@ -1,6 +1,7 @@
-import { Component, effect, inject, input, output, PLATFORM_ID, signal } from "@angular/core";
+import { Component, computed, effect, inject, input, output, PLATFORM_ID, signal } from "@angular/core";
 import { HTMLInputAutocompleteOptions, HTMLInputTypes } from "../../..";
 import { isPlatformBrowser } from "@angular/common";
+import { randomString } from "timonjs";
 
 @Component({
     selector: "app-auth-input",
@@ -25,6 +26,7 @@ export class AuthInputComponent {
     isPassword = input(false);
     iconSource = input.required<string>();
     iconAlt = input("");
+    inputId = randomString(32);
 
     secondaryIconSrc = signal<"/svg/eye.svg" | "/svg/eye_closed.svg">("/svg/eye.svg");
     inputType = signal(this.type());

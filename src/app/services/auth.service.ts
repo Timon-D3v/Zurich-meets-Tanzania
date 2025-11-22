@@ -4,6 +4,7 @@ import { ApiEndpointResponse, GetPublicUserDetailsApiEndpointResponse, PublicUse
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { NotificationService } from "./notification.service";
+import { Router } from "@angular/router";
 
 @Injectable({
     providedIn: "root",
@@ -16,6 +17,7 @@ export class AuthService {
 
     private http = inject(HttpClient);
     private notificationService = inject(NotificationService);
+    private router = inject(Router);
 
     private platformId = inject(PLATFORM_ID);
 
@@ -39,7 +41,9 @@ export class AuthService {
 
         if (currentTry >= this.MAX_RETRIES) {
             console.error(`Could not get User data ${this.MAX_RETRIES} times. Giving up and logging out.`);
+
             this.notificationService.error("Schwerer Fehler!", "Benutzerdaten konnten nicht geladen werden. Du wirst aus Sicherheitsgründen ausgeloggt.");
+
             this.logout();
         }
 
@@ -71,6 +75,8 @@ export class AuthService {
             this.isLoggedIn.set(false);
 
             this.notificationService.info("Ausgeloggt!", response.message);
+
+            this.router.navigate(["/"]);
         });
     }
 }

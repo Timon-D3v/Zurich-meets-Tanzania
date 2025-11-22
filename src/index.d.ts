@@ -70,9 +70,13 @@ export type PublicConfig = {
             ADMIN: string[];
             CONTACT: string[];
             GENERAL: string[];
+            REDIRECTS: string[];
         };
         TITLES: {
             [path: `/${string}`]: PageDescription;
+        };
+        REDIRECTS: {
+            [path: `/${string}`]: string[];
         };
     };
 

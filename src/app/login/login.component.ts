@@ -1,6 +1,6 @@
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
 import { AuthInputComponent } from "../components/auth-input/auth-input.component";
-import { Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { NotificationService } from "../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
@@ -22,6 +22,7 @@ export class LoginComponent {
     private authService = inject(AuthService);
     private notificationService = inject(NotificationService);
     private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
     private platformId = inject(PLATFORM_ID);
 
@@ -70,7 +71,7 @@ export class LoginComponent {
 
         const response = this.authService.login(userInputs.email, userInputs.password);
 
-        response.subscribe((response: ApiEndpointResponse): void => {
+        response.subscribe(async (response: ApiEndpointResponse): Promise<void> => {
             if (response.error) {
                 this.notificationService.error("Fehler", response.message);
                 this.disabledButton.set(false);
@@ -83,9 +84,36 @@ export class LoginComponent {
 
             this.submitButtonText.set("Eingeloggt");
 
-            console.warn("The LoginComponent does not yet redirect to the location specified in the URL param ?redir=");
-            this.router.navigate(["/"]);
+            this.redirectUserAfterLogin();
         });
+    }
+
+    redirectUserAfterLogin(): void {
+        const queryParams = this.route.snapshot.queryParams;
+
+        if ("redirectUrl" in queryParams) {
+            let retries = 0;
+
+            const redirectInterval = setInterval(() => {
+                console.log(this.authService.user(), this.authService.isLoggedIn());
+
+                if (this.authService.isLoggedIn()) {
+                    clearInterval(redirectInterval);
+
+                    this.router.navigate([queryParams["redirectUrl"]]);
+                } else if (retries === 20) {
+                    clearInterval(redirectInterval);
+
+                    this.router.navigate(["/"]);
+                }
+
+                retries++;
+            }, 100);
+
+            return;
+        }
+
+        this.router.navigate(["/"]);
     }
 
     getUserInputs(): EmailPasswordCombo {
