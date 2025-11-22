@@ -181,11 +181,17 @@ nav {
         }
 
         &:nth-child(4) {
-            left: calc(var(--header-main-logo-width) + 5vw + var(--floating-navigation-activator-width-0) + 3vw + var(--floating-navigation-activator-width-1) + 3vw + var(--floating-navigation-activator-width-2) + 3vw + var(--floating-navigation-activator-width-3) / 2);
+            left: calc(
+                var(--header-main-logo-width) + 5vw + var(--floating-navigation-activator-width-0) + 3vw + var(--floating-navigation-activator-width-1) + 3vw + var(--floating-navigation-activator-width-2) + 3vw +
+                    var(--floating-navigation-activator-width-3) / 2
+            );
         }
 
         &:nth-child(5) {
-            left: calc(var(--header-main-logo-width) + 5vw + var(--floating-navigation-activator-width-0) + 3vw + var(--floating-navigation-activator-width-1) + 3vw + var(--floating-navigation-activator-width-2) + 3vw + var(--floating-navigation-activator-width-3) + 3vw + var(--floating-navigation-activator-width-4) / 2);
+            left: calc(
+                var(--header-main-logo-width) + 5vw + var(--floating-navigation-activator-width-0) + 3vw + var(--floating-navigation-activator-width-1) + 3vw + var(--floating-navigation-activator-width-2) + 3vw +
+                    var(--floating-navigation-activator-width-3) + 3vw + var(--floating-navigation-activator-width-4) / 2
+            );
         }
     }
 

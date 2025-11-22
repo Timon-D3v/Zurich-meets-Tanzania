@@ -30,7 +30,7 @@ export async function addToNewsletterList(email: string, firstName: string, last
         return {
             data: null,
             error: null,
-        }
+        };
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);

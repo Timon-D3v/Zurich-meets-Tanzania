@@ -17,13 +17,17 @@ export class NewsletterSignUpConfirmComponent implements OnInit {
     private newsletterService = inject(NewsletterService);
     private notificationService = inject(NotificationService);
 
-    private platformId = inject(PLATFORM_ID)
+    private platformId = inject(PLATFORM_ID);
 
     ngOnInit(): void {
         if (!isPlatformBrowser(this.platformId)) {
             return;
         }
 
+        this.sendConfirmation();
+    }
+
+    sendConfirmation(): void {
         const params = this.route.snapshot.queryParams;
 
         const request = this.newsletterService.confirmSignUp(params["firstName"] ?? "", params["lastName"] ?? "", params["email"] ?? "", params["gender"] ?? "", params["id"] ?? "", params["timestamp"] ?? "");
@@ -35,7 +39,7 @@ export class NewsletterSignUpConfirmComponent implements OnInit {
                 return;
             }
 
-            this.notificationService.success("Das hat geklappt.", "Du hast dich erfolgreich für den Newsletter angemeldet.")
+            this.notificationService.success("Das hat geklappt.", "Du hast dich erfolgreich für den Newsletter angemeldet.");
         });
     }
 }

@@ -127,7 +127,7 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
             lastName: lastName.trim(),
             gender,
             timestamp,
-            used: false
+            used: false,
         });
 
         res.json({
@@ -169,20 +169,19 @@ router.post("/confirm", async (req: Request, res: Response): Promise<void> => {
         if (typeof firstName !== "string" || typeof lastName !== "string" || typeof email !== "string" || typeof gender !== "string" || typeof id !== "string" || typeof timestamp !== "string") {
             res.json({
                 error: true,
-                message: PUBLIC_CONFIG.ERROR.BAD_REQUEST
-            } as ApiEndpointResponse)
+                message: PUBLIC_CONFIG.ERROR.BAD_REQUEST,
+            } as ApiEndpointResponse);
 
             return;
         }
 
         for (let i = 0; i < GLOBAL_newsletterSignUpRequests.length; i++) {
-
             if (
-                GLOBAL_newsletterSignUpRequests[i].id !== id || 
-                GLOBAL_newsletterSignUpRequests[i].email !== email || 
-                GLOBAL_newsletterSignUpRequests[i].firstName !== firstName || 
-                GLOBAL_newsletterSignUpRequests[i].lastName !== lastName || 
-                GLOBAL_newsletterSignUpRequests[i].gender !== gender || 
+                GLOBAL_newsletterSignUpRequests[i].id !== id ||
+                GLOBAL_newsletterSignUpRequests[i].email !== email ||
+                GLOBAL_newsletterSignUpRequests[i].firstName !== firstName ||
+                GLOBAL_newsletterSignUpRequests[i].lastName !== lastName ||
+                GLOBAL_newsletterSignUpRequests[i].gender !== gender ||
                 GLOBAL_newsletterSignUpRequests[i].timestamp !== Number(timestamp)
             ) {
                 continue;
@@ -191,7 +190,7 @@ router.post("/confirm", async (req: Request, res: Response): Promise<void> => {
             if (GLOBAL_newsletterSignUpRequests[i].used) {
                 res.json({
                     error: true,
-                    message: "Diese Anfrage wurde schon bearbeitet und du bist wahrscheinlich schon angemeldet. Du kannst dies überprüfen, indem du versuchst dich noch einmal anzumelden."
+                    message: "Diese Anfrage wurde schon bearbeitet und du bist wahrscheinlich schon angemeldet. Du kannst dies überprüfen, indem du versuchst dich noch einmal anzumelden.",
                 });
 
                 return;
@@ -202,7 +201,7 @@ router.post("/confirm", async (req: Request, res: Response): Promise<void> => {
             if (result.error === null) {
                 res.json({
                     error: false,
-                    message: "Erfolgreich für den Newsletter angemeldet."
+                    message: "Erfolgreich für den Newsletter angemeldet.",
                 });
 
                 GLOBAL_newsletterSignUpRequests[i].used = true;
@@ -210,18 +209,17 @@ router.post("/confirm", async (req: Request, res: Response): Promise<void> => {
                 return;
             }
 
-
             res.json({
                 error: true,
-                message: result.error
-            } as ApiEndpointResponse)
+                message: result.error,
+            } as ApiEndpointResponse);
 
             return;
         }
 
         res.json({
             error: true,
-            message: "Der Link ist nicht (mehr) gültig. Bitte versuche es noch einmal oder registriere dich erneut."
+            message: "Der Link ist nicht (mehr) gültig. Bitte versuche es noch einmal oder registriere dich erneut.",
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);
@@ -229,16 +227,16 @@ router.post("/confirm", async (req: Request, res: Response): Promise<void> => {
         if (error instanceof Error) {
             res.json({
                 error: true,
-                message: error.message
-            } as ApiEndpointResponse)
+                message: error.message,
+            } as ApiEndpointResponse);
 
             return;
         }
 
         res.json({
             error: true,
-            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR
-        } as ApiEndpointResponse)
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
     }
 });
 

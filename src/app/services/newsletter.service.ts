@@ -27,8 +27,8 @@ export class NewsletterService {
             email,
             gender,
             id,
-            timestamp
-        })
+            timestamp,
+        });
 
         return request;
     }

@@ -45,12 +45,32 @@ export const PUBLIC_CONFIG: PublicConfig = {
             PROJECTS: ["/bajaji", "/cardiology", "/gynecology", "/mbuzi", "/meducation", "/surgery", "/tanzania-meets-zurich", "/zurich-meets-tanzania"],
             ADMIN: ["/admin"],
             CONTACT: ["/contact"],
-            GENERAL: ["/", "/archive", "/beginning", "/blog", "/current-team", "/donate", "/executives", "/finances", "/gallery", "/general-meeting", "/history-tanzania", "/imprint", "/income-statement", "/membership", "/newsletter-sign-out", "/privacy", "/statutes", "/vision"],
+            GENERAL: [
+                "/",
+                "/archive",
+                "/beginning",
+                "/blog",
+                "/current-team",
+                "/donate",
+                "/executives",
+                "/finances",
+                "/gallery",
+                "/general-meeting",
+                "/history-tanzania",
+                "/imprint",
+                "/income-statement",
+                "/membership",
+                "/newsletter-sign-out",
+                "/privacy",
+                "/statutes",
+                "/vision",
+            ],
         },
         TITLES: {
             "/": {
                 title: "Home",
-                description: "Wir sind ein Team von medizinischen Fachleuten aus den verschiedensten Berufsgruppen und Lehren. Eine bunt zusammengemischte Truppe engagierter, hilfsbereiter Leute. Erfahre auf dieser Seite mehr über unser Team, unsere Freunde in Mbalizi und unsere Partner.",
+                description:
+                    "Wir sind ein Team von medizinischen Fachleuten aus den verschiedensten Berufsgruppen und Lehren. Eine bunt zusammengemischte Truppe engagierter, hilfsbereiter Leute. Erfahre auf dieser Seite mehr über unser Team, unsere Freunde in Mbalizi und unsere Partner.",
                 lastUpdated: "Fri Aug 15 2025 16:33:30 GMT+0200 (Mitteleuropäische Sommerzeit)",
             },
         },
@@ -273,7 +293,8 @@ export const PUBLIC_CONFIG: PublicConfig = {
                         </td>
                     </table>
                 </div>`,
-        NEWSLETTER_BODY: (preview: string): string => "\nWir freuen uns Ihnen mitteilen zu können, dass wir Neuigkeiten haben.\nSie können sie sich gerne unter folgendem Link anschauen: https://zurich-meets-tanzania.com/#scroll_to_news\n\nHier ist schon eine kleine Vorschau:\n" + preview,
+        NEWSLETTER_BODY: (preview: string): string =>
+            "\nWir freuen uns Ihnen mitteilen zu können, dass wir Neuigkeiten haben.\nSie können sie sich gerne unter folgendem Link anschauen: https://zurich-meets-tanzania.com/#scroll_to_news\n\nHier ist schon eine kleine Vorschau:\n" + preview,
         NEWSLETTER_BODY_HTML: (preview: string): string => `<p style="
                             font-size: 16px; 
                             color: #070d13; 
