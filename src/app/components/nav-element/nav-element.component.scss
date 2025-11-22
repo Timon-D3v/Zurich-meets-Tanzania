@@ -23,11 +23,20 @@ a,
 p {
     font-size: calc(30px / var(--font-ratio));
     cursor: pointer;
-}
-
-p {
     text-decoration: underline;
     margin: 0;
+
+    &:hover:not(.description) {
+        color: var(--primary-500);
+    }
+
+    &.description {
+        text-decoration: none;
+
+        &:hover {
+            color: #666;
+        }
+    }
 }
 
 .picture {
