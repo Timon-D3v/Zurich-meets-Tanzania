@@ -47,7 +47,8 @@
             <h1 class="title margin-t-5vh w1000 w1200">Der Vorstand</h1>
             <p class="text"><%= vorstand.text %></p>
             <%- include("./snippets/teamMember.ejs", {
-                members: member_list
+                members: member_list,
+                teamId: -1
             }); %>
             <p class="date">Zuletzt aktualisiert am <%= toRealDate(date) %></p>
         </main>
