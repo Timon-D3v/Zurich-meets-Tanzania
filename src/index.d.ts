@@ -228,7 +228,7 @@ export interface ApiEndpointResponse {
 export interface GetPublicUserDetailsApiEndpointResponse extends ApiEndpointResponse {
     data: {
         isLoggedIn: boolean;
-        user: PublicUser;
+        user: PublicUser | null;
     };
 }
 
@@ -239,6 +239,15 @@ export interface DatabaseApiEndpointResponse extends ApiEndpointResponse {
 export interface AddToNewsletterListApiEndpointResponse extends ApiEndpointResponse {
     data: {
         alreadyLoggedIn: boolean;
+    };
+}
+
+export interface ApiEndpointResponseWithRedirect extends ApiEndpointResponse {
+    data: {
+        redirectUrl: string | null
+        queryParams?: {
+            [name: string]: string
+        }
     };
 }
 
@@ -266,6 +275,12 @@ export type NewsletterSignUpRequest = {
     gender: "Herr" | "Frau" | "Divers";
     timestamp: number;
     used: boolean;
+};
+
+export type PasswordRecoveryRequest = {
+    code: string;
+    user: PrivateUser;
+    timestamp: number;
 };
 
 export type MailjetAttachment = {

@@ -40,7 +40,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
     ROUTES: {
         TYPES: {
             HOME: ["/"],
-            AUTH: ["/login", "/signup", "/password-recovery"],
+            AUTH: ["/login", "/signup", "/password-recovery", "/password-recovery-confirm"],
             SECURED: ["/account"],
             PROJECTS: ["/bajaji", "/cardiology", "/gynecology", "/mbuzi", "/meducation", "/surgery", "/tanzania-meets-zurich", "/zurich-meets-tanzania"],
             ADMIN: ["/admin"],
@@ -88,6 +88,12 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 title: "Passwort zurücksetzen",
                 description: "Du hast dein Passwort vergessen? Kein Problem. Nach einem kurzen Sicherheitscheck kannst du dir ganz unkompliziert ein neues zuschicken lassen.",
                 lastUpdated: "Sat Nov 22 2025 23:52:39 GMT+0100 (Mitteleuropäische Normalzeit)",
+            },
+            "/password-recovery-confirm": {
+                title: "Passwort zurücksetzen Bestätigung",
+                description:
+                    "Du hast dein Passwort vergessen? Kein Problem. Nach einem kurzen Sicherheitscheck kannst du dir ganz unkompliziert ein neues zuschicken lassen. (Wenn du auf dieser Seite landest hast du schon einen Bestätigungscode per E-Mail erhalten.)",
+                lastUpdated: "Fri Dec 05 2025 23:43:05 GMT+0100 (Mitteleuropäische Normalzeit)",
             },
             "/account": {
                 title: "Mein Account",
@@ -169,6 +175,11 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 description: "Unser Projekt ist stark abhängig von Spenden. Wir freuen uns über jeden Beitrag mit ganzem Herzen und stellen auch gerne eine Spendenbescheinigung aus. (Bitte melde dich dafür via unserem Kontaktformular)",
                 lastUpdated: "Sat Nov 22 2025 23:40:41 GMT+0100 (Mitteleuropäische Normalzeit)",
             },
+            "/error404": {
+                title: "Nicht gefunden",
+                description: "Diese Seite konnte nicht gefunden werden...",
+                lastUpdated: "Mon Dec 08 2025 18:45:42 GMT+0100 (Mitteleuropäische Normalzeit)"
+            },
             "/executives": {
                 title: "Vorstand",
                 description:
@@ -241,6 +252,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
             "/login": ["/einloggen"],
             "/signup": ["/signUp", "/registrieren"],
             "/password-recovery": ["/password%20recovery"],
+            "/password-recovery-confirm": ["/password%20recovery%20confirm"],
             "/account": ["/me", "/profil", "/profile", "/konto"],
             "/bajaji": ["/projects/bajaji"],
             "/cardiology": ["/kardiologie", "/projects/kardiologie"],
@@ -314,9 +326,22 @@ export const PUBLIC_CONFIG: PublicConfig = {
             -webkit-hyphens: auto;
             hyphens: auto; ">
                 ${greetings}    
-            </p>`,
+            </p><p style="
+            font-size: 15px; 
+            color: #070d13; 
+            font-family: 'Titillium Web', Helvetica, Arial, sans-serif; 
+            display: block;
+            margin-block-start: 0; 
+            margin-block-end: 0; 
+            margin-inline-start: 0; 
+            margin-inline-end: 0; 
+            margin: 1em 0; 
+            word-wrap: normal; 
+            word-break: keep-all; 
+            -webkit-hyphens: auto;
+            hyphens: auto; ">`,
         REGARDS: "\n\nMit freundlichen Grüssen\nzurich meets tanzania",
-        REGARDS_HTML: `<p style="
+        REGARDS_HTML: `</p><p style="
             font-size: 18px; 
             color: #070d13; 
             font-family: 'Titillium Web', Helvetica, Arial, sans-serif; 

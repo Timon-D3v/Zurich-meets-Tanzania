@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from "@angular/common";
 import { inject, Injectable, PLATFORM_ID, signal } from "@angular/core";
-import { ApiEndpointResponse, GetPublicUserDetailsApiEndpointResponse, PublicUser } from "../..";
+import { ApiEndpointResponse, ApiEndpointResponseWithRedirect, GetPublicUserDetailsApiEndpointResponse, PublicUser } from "../..";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { NotificationService } from "./notification.service";
@@ -27,8 +27,8 @@ export class AuthService {
         }
 
         const request = this.http.post<ApiEndpointResponse>("/api/auth/login", {
-            email: email,
-            password: password,
+            email,
+            password,
         });
 
         return request;
@@ -78,5 +78,30 @@ export class AuthService {
 
             this.router.navigate(["/"]);
         });
+    }
+
+    startPasswordRecovery(email: string): Observable<ApiEndpointResponseWithRedirect> {
+        if (!isPlatformBrowser(this.platformId)) {
+            throw new Error("Cannot send POST request if current platform is not browser. Current platform: " + this.platformId);
+        }
+
+        const request = this.http.post<ApiEndpointResponseWithRedirect>("/api/auth/startPasswordRecovery", {
+            email,
+        });
+
+        return request;
+    }
+
+    confirmPasswordRecovery(email: string, code: string): Observable<ApiEndpointResponseWithRedirect> {
+        if (!isPlatformBrowser(this.platformId)) {
+            throw new Error("Cannot send POST request if current platform is not browser. Current platform: " + this.platformId);
+        }
+
+        const request = this.http.post<ApiEndpointResponseWithRedirect>("/api/auth/confirmPasswordRecovery", {
+            email,
+            code
+        });
+
+        return request;
     }
 }

@@ -91,8 +91,6 @@ for (const route of PUBLIC_CONFIG.ROUTES.TYPES.ADMIN) {
  * Loop over the redirect urls.
  */
 for (const [targetUrl, redirectUrls] of Object.entries(PUBLIC_CONFIG.ROUTES.REDIRECTS)) {
-    console.log(targetUrl, redirectUrls);
-
     for (const redirectUrl of redirectUrls) {
         // Add a GET route for each redirect URL
         app.get(redirectUrl, (_req: Request, res: Response): void => {
