@@ -254,6 +254,12 @@ export interface ApiEndpointResponseWithRedirect extends ApiEndpointResponse {
     };
 }
 
+export interface GetThemeApiEndpointResponse extends ApiEndpointResponse {
+    data: {
+        theme: null | "dark" | "light";
+    };
+}
+
 export interface PublicUser {
     email: string;
     name: string;

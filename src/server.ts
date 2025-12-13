@@ -1,6 +1,7 @@
 import { AngularNodeAppEngine, createNodeRequestHandler, isMainModule, writeResponseToNodeResponse } from "@angular/ssr/node";
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
+import compression from "compression";
 import session from "express-session";
 import { join } from "node:path";
 import rootRouter from "./router/root.router";
@@ -60,6 +61,11 @@ app.use(initSession);
  * This allows cross-origin requests, which is useful for APIs and frontend-backend communication.
  */
 app.use(cors());
+
+/**
+ * Enable compression for all routes.
+ */
+app.use(compression());
 
 /**
  * Root router serves the entire backend.
