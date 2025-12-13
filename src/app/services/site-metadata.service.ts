@@ -33,8 +33,8 @@ export class SiteMetadataService {
     updateMetadataForRoute(route: string): void {
         const { title, description, lastUpdated } = this.getMetadataForRoute(route as `/${string}`);
 
-        this.titleService.setTitle(`${title} | ${PUBLIC_CONFIG.NAME}`);
-        this.meta.updateTag({ content: `${title} | ${PUBLIC_CONFIG.NAME}` }, "property='og:title'");
+        this.titleService.setTitle(title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX);
+        this.meta.updateTag({ content: title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX }, "property='og:title'");
 
         this.meta.updateTag({ content: description }, "name='description'");
         this.meta.updateTag({ content: description }, "property='og:description'");
@@ -43,7 +43,7 @@ export class SiteMetadataService {
 
         this.meta.updateTag({ content: lastUpdated }, "name='last-modified'");
 
-        console.log("Title set to:", `${title} | ${PUBLIC_CONFIG.NAME}`);
+        console.log("Title set to:", title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX);
         console.log("Description set to:", description);
     }
 

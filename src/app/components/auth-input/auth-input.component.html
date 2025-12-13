@@ -1,7 +1,16 @@
 <label [for]="inputId">{{ label() }}</label>
 <div>
     <img [src]="iconSource()" [alt]="iconAlt()" />
-    <input [id]="inputId" [type]="inputType()" [autocomplete]="autocomplete()" [placeholder]="placeholder()" [attr.required]="required() ? true : null" [attr.disabled]="disabled() ? true : null" (input)="streamValue($event)" />
+    <input
+        [id]="inputId"
+        [type]="inputType()"
+        [autocomplete]="autocomplete()"
+        [placeholder]="placeholder()"
+        [title]="placeholder()"
+        [attr.required]="required() ? true : null"
+        [attr.disabled]="disabled() ? true : null"
+        (input)="streamValue($event)"
+    />
     @if (isPassword()) {
         <img [src]="secondaryIconSrc()" alt="Ein Auge (Zu oder offen)" (click)="toggleForm()" />
     }

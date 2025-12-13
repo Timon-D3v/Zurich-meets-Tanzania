@@ -40,7 +40,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
     ROUTES: {
         TYPES: {
             HOME: ["/"],
-            AUTH: ["/login", "/signup", "/password-recovery", "/password-recovery-confirm"],
+            AUTH: ["/login", "/signup", "/signup-confirm", "/password-recovery", "/password-recovery-confirm"],
             SECURED: ["/account"],
             PROJECTS: ["/bajaji", "/cardiology", "/gynecology", "/mbuzi", "/meducation", "/surgery", "/tanzania-meets-zurich", "/zurich-meets-tanzania"],
             ADMIN: ["/admin"],
@@ -67,6 +67,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
             ],
             REDIRECTS: ["/shop"],
         },
+        TITLE_SUFFIX: " | zurich-meets-tanzania",
         TITLES: {
             "/": {
                 title: "Home",
@@ -83,6 +84,11 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 title: "Registrieren",
                 description: "Erstelle dir einen ZMT-Account um Mitglied bei zurich meets tanzania zu werden.",
                 lastUpdated: "Sat Nov 22 2025 19:08:30 GMT+0100 (Mitteleuropäische Normalzeit)",
+            },
+            "/signup-confirm": {
+                title: "Registrierung bestätigen",
+                description: "Erstelle dir einen ZMT-Account um Mitglied bei zurich meets tanzania zu werden. Bestätige nun deine E-Mail-Adresse via den Code, den du von uns erhalten hast.",
+                lastUpdated: "Sat Dec 13 2025 14:46:47 GMT+0100 (Mitteleuropäische Normalzeit)",
             },
             "/password-recovery": {
                 title: "Passwort zurücksetzen",
@@ -178,7 +184,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
             "/error404": {
                 title: "Nicht gefunden",
                 description: "Diese Seite konnte nicht gefunden werden...",
-                lastUpdated: "Mon Dec 08 2025 18:45:42 GMT+0100 (Mitteleuropäische Normalzeit)"
+                lastUpdated: "Mon Dec 08 2025 18:45:42 GMT+0100 (Mitteleuropäische Normalzeit)",
             },
             "/executives": {
                 title: "Vorstand",
@@ -250,7 +256,8 @@ export const PUBLIC_CONFIG: PublicConfig = {
         REDIRECTS: {
             "/": ["/home"],
             "/login": ["/einloggen"],
-            "/signup": ["/signUp", "/registrieren"],
+            "/signup": ["/sign-up", "/registrieren", "/sign%20up", "/account-erstellen", "/account%20erstellen"],
+            "/signup-confirm": ["/signup%20confirm"],
             "/password-recovery": ["/password%20recovery"],
             "/password-recovery-confirm": ["/password%20recovery%20confirm"],
             "/account": ["/me", "/profil", "/profile", "/konto"],

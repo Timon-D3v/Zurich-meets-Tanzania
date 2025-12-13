@@ -22,6 +22,8 @@ export type Config = {
     ORIGIN: string;
     EMAIL_SENDER_ADDRESS: string;
     EMAIL_SENDER_NAME: string;
+    DELIVAPI_USER: string;
+    DELIVAPI_KEY: string;
 };
 
 export type PageDescription = {
@@ -72,6 +74,7 @@ export type PublicConfig = {
             GENERAL: string[];
             REDIRECTS: string[];
         };
+        TITLE_SUFFIX: " | zurich-meets-tanzania";
         TITLES: {
             [path: `/${string}`]: PageDescription;
         };
@@ -244,10 +247,10 @@ export interface AddToNewsletterListApiEndpointResponse extends ApiEndpointRespo
 
 export interface ApiEndpointResponseWithRedirect extends ApiEndpointResponse {
     data: {
-        redirectUrl: string | null
+        redirectUrl: string | null;
         queryParams?: {
-            [name: string]: string
-        }
+            [name: string]: string;
+        };
     };
 }
 
@@ -267,6 +270,18 @@ export interface PrivateUser extends PublicUser {
     password: string; // Hashed
 }
 
+export interface NewUser {
+    email: string;
+    password: string;
+    name: string;
+    family_name: string;
+    address: string;
+    postalCode: string;
+    city: string;
+    phone: string;
+    picture: Blob | null;
+}
+
 export type NewsletterSignUpRequest = {
     id: string;
     email: string;
@@ -280,6 +295,21 @@ export type NewsletterSignUpRequest = {
 export type PasswordRecoveryRequest = {
     code: string;
     user: PrivateUser;
+    timestamp: number;
+};
+
+export type SignUpConfirmRequest = {
+    code: string;
+    user: {
+        email: string;
+        password: string;
+        name: string;
+        family_name: string;
+        hasPicture: boolean;
+        pictureFile: Express.Multer.File | undefined;
+        phone: string;
+        address: string;
+    };
     timestamp: number;
 };
 

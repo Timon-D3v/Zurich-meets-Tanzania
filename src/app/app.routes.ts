@@ -13,7 +13,7 @@ export const routes: Routes = [
             const component = await import("./home/home.component");
             return component.HomeComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
 
     // Root routes
@@ -23,7 +23,7 @@ export const routes: Routes = [
             const component = await import("./news-archive/news-archive.component");
             return component.NewsArchiveComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/archive"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/archive"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "bajaji",
@@ -31,7 +31,7 @@ export const routes: Routes = [
             const component = await import("./bajaji/bajaji.component");
             return component.BajajiComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/bajaji"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/bajaji"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "beginning",
@@ -39,14 +39,14 @@ export const routes: Routes = [
             const component = await import("./beginning/beginning.component");
             return component.BeginningComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/beginning"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/beginning"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "blog/:name",
         loadComponent: async () => {
             const component = await import("./blog/blog.component");
             return component.BlogComponent;
-        }
+        },
     },
     {
         path: "cardiology",
@@ -54,7 +54,7 @@ export const routes: Routes = [
             const component = await import("./cardiology/cardiology.component");
             return component.CardiologyComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/cardiology"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/cardiology"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "current-team",
@@ -62,7 +62,7 @@ export const routes: Routes = [
             const component = await import("./current-team/current-team.component");
             return component.CurrentTeamComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/current-team"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/current-team"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "contact",
@@ -70,7 +70,7 @@ export const routes: Routes = [
             const component = await import("./contact/contact.component");
             return component.ContactComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/contact"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/contact"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "donate",
@@ -78,7 +78,7 @@ export const routes: Routes = [
             const component = await import("./donate/donate.component");
             return component.DonateComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/donate"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/donate"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "executives",
@@ -86,7 +86,7 @@ export const routes: Routes = [
             const component = await import("./executives/executives.component");
             return component.ExecutivesComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/executives"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/executives"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "finances",
@@ -94,7 +94,7 @@ export const routes: Routes = [
             const component = await import("./finances/finances.component");
             return component.FinancesComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/finances"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/finances"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "gallery/:name",
@@ -109,7 +109,7 @@ export const routes: Routes = [
             const component = await import("./general-meeting/general-meeting.component");
             return component.GeneralMeetingComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/general-meeting"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/general-meeting"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "gynecology",
@@ -117,7 +117,7 @@ export const routes: Routes = [
             const component = await import("./gynecology/gynecology.component");
             return component.GynecologyComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/gynecology"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/gynecology"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "history-tanzania",
@@ -125,7 +125,7 @@ export const routes: Routes = [
             const component = await import("./history-tanzania/history-tanzania.component");
             return component.HistoryTanzaniaComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/history-tanzania"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/history-tanzania"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "imprint",
@@ -133,7 +133,7 @@ export const routes: Routes = [
             const component = await import("./imprint/imprint.component");
             return component.ImprintComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/imprint"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/imprint"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "income-statement",
@@ -141,7 +141,7 @@ export const routes: Routes = [
             const component = await import("./income-statement/income-statement.component");
             return component.IncomeStatementComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/income-statement"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/income-statement"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "mbuzi",
@@ -149,7 +149,7 @@ export const routes: Routes = [
             const component = await import("./mbuzi/mbuzi.component");
             return component.MbuziComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/mbuzi"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/mbuzi"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "meducation",
@@ -157,7 +157,7 @@ export const routes: Routes = [
             const component = await import("./meducation/meducation.component");
             return component.MeducationComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/meducation"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/meducation"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "membership",
@@ -165,7 +165,7 @@ export const routes: Routes = [
             const component = await import("./membership/membership.component");
             return component.MembershipComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/membership"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/membership"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "newsletter/cancel",
@@ -174,7 +174,7 @@ export const routes: Routes = [
             return component.NewsletterSignOutComponent;
         },
         // TODO: Change either the url newsletter/cancel or the route /newsletter-sign-out
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter-sign-out"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter-sign-out"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "newsletter/confirm",
@@ -183,23 +183,7 @@ export const routes: Routes = [
             return component.NewsletterSignUpConfirmComponent;
         },
         // TODO: Add an entry to the route titles
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter-sign-out"].title
-    },
-    {
-        path: "password-recovery",
-        loadComponent: async () => {
-            const component = await import("./password-recovery/password-recovery.component");
-            return component.PasswordRecoveryComponent;
-        },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/password-recovery"].title
-    },
-    {
-        path: "password-recovery-confirm",
-        loadComponent: async () => {
-            const component = await import("./password-recovery-confirm/password-recovery-confirm.component");
-            return component.PasswordRecoveryConfirmComponent;
-        },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/password-recovery-confirm"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter-sign-out"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "privacy",
@@ -207,7 +191,7 @@ export const routes: Routes = [
             const component = await import("./privacy/privacy.component");
             return component.PrivacyComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/privacy"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/privacy"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "statutes",
@@ -215,7 +199,7 @@ export const routes: Routes = [
             const component = await import("./statutes/statutes.component");
             return component.StatutesComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/statutes"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/statutes"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "surgery",
@@ -223,7 +207,7 @@ export const routes: Routes = [
             const component = await import("./surgery/surgery.component");
             return component.SurgeryComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/surgery"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/surgery"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "tanzania-meets-zurich",
@@ -231,7 +215,7 @@ export const routes: Routes = [
             const component = await import("./tanzania-meets-zurich/tanzania-meets-zurich.component");
             return component.TanzaniaMeetsZurichComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/tanzania-meets-zurich"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/tanzania-meets-zurich"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "vision",
@@ -239,7 +223,7 @@ export const routes: Routes = [
             const component = await import("./vision/vision.component");
             return component.VisionComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/vision"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/vision"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "zurich-meets-tanzania",
@@ -247,7 +231,7 @@ export const routes: Routes = [
             const component = await import("./zurich-meets-tanzania/zurich-meets-tanzania.component");
             return component.ZurichMeetsTanzaniaComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/zurich-meets-tanzania"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/zurich-meets-tanzania"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
 
     // Secured routes
@@ -258,7 +242,7 @@ export const routes: Routes = [
             return component.AccountComponent;
         },
         canActivate: [authGuard],
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/account"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/account"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
 
     // Only for unauthenticated users
@@ -269,7 +253,7 @@ export const routes: Routes = [
             return component.LoginComponent;
         },
         canActivate: [notAuthGuard],
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/login"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/login"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "signup",
@@ -278,7 +262,34 @@ export const routes: Routes = [
             return component.SignupComponent;
         },
         canActivate: [notAuthGuard],
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/signup"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/signup"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+    },
+    {
+        path: "signup-confirm",
+        loadComponent: async () => {
+            const component = await import("./signup-confirm/signup-confirm.component");
+            return component.SignupConfirmComponent;
+        },
+        canActivate: [notAuthGuard],
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/signup-confirm"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+    },
+    {
+        path: "password-recovery",
+        loadComponent: async () => {
+            const component = await import("./password-recovery/password-recovery.component");
+            return component.PasswordRecoveryComponent;
+        },
+        canActivate: [notAuthGuard],
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/password-recovery"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+    },
+    {
+        path: "password-recovery-confirm",
+        loadComponent: async () => {
+            const component = await import("./password-recovery-confirm/password-recovery-confirm.component");
+            return component.PasswordRecoveryConfirmComponent;
+        },
+        canActivate: [notAuthGuard],
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/password-recovery-confirm"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
 
     // Admin routes
@@ -289,7 +300,7 @@ export const routes: Routes = [
             return component.DashboardComponent;
         },
         canActivate: [adminGuard],
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/admin"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/admin"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
 
     // 404 Page
@@ -299,6 +310,6 @@ export const routes: Routes = [
             const component = await import("./page-not-found/page-not-found.component");
             return component.PageNotFoundComponent;
         },
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/error404"].title
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/error404"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
 ];

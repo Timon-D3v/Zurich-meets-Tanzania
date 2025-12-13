@@ -1,0 +1,64 @@
+.label {
+    color: var(--dark-green);
+    font-weight: 600;
+    font-family: "Teko", monospace;
+    font-size: x-large;
+    margin-top: 10px;
+}
+
+input {
+    margin-left: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 85%;
+    height: 100%;
+    background-color: transparent;
+    color: var(--c-text-950);
+    font-size: 1.1rem;
+
+    &::placeholder {
+        font-family: "Titillium Web", sans-serif;
+        font-size: 1rem;
+        color: var(--c-text-950);
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.div {
+    border: 1.5px solid #ecedec;
+    border-radius: 10px;
+    height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    transition: all 0.2s ease-in-out;
+
+    &:focus-within {
+        border: 1.5px solid var(--violett);
+    }
+
+    & img {
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+        font-family:
+            Titillium Web,
+            sans-serif;
+        font-size: 1em;
+        font-weight: 400;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        object-fit: contain;
+        aspect-ratio: 1 / 1;
+        border-radius: 5px;
+    }
+}
+
+img {
+    --darkmode: 0;
+}

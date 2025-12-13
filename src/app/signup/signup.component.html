@@ -1,1 +1,93 @@
-<p>signup works!</p>
+<div class="wrapper">
+    <form (submit)="login($event)">
+        <h1>Registrieren</h1>
+        <app-auth-input
+            [type]="'email'"
+            [label]="'E-Mail'"
+            [placeholder]="'E-Mail eingeben'"
+            [autocomplete]="'email'"
+            [required]="true"
+            [iconSource]="'/svg/personal.svg'"
+            [iconAlt]="'Eine Person'"
+            (valueOutput)="updateEmailInput($event)"
+        ></app-auth-input>
+        <app-auth-input
+            [type]="'password'"
+            [label]="'Passwort'"
+            [placeholder]="'Passwort eingeben'"
+            [autocomplete]="'new-password'"
+            [required]="true"
+            [iconSource]="'/svg/lock.svg'"
+            [iconAlt]="'Ein Schloss'"
+            [isPassword]="true"
+            (valueOutput)="updatePasswordInput($event)"
+        ></app-auth-input>
+        <app-auth-input
+            [type]="'text'"
+            [label]="'Vorname'"
+            [placeholder]="'Vornamen eingeben'"
+            [autocomplete]="'given-name'"
+            [required]="true"
+            [iconSource]="'/svg/text.svg'"
+            [iconAlt]="'Buchstaben'"
+            (valueOutput)="updateFirstNameInput($event)"
+        ></app-auth-input>
+        <app-auth-input
+            [type]="'text'"
+            [label]="'Nachname'"
+            [placeholder]="'Nachnamen eingeben'"
+            [autocomplete]="'family-name'"
+            [required]="true"
+            [iconSource]="'/svg/text.svg'"
+            [iconAlt]="'Buchstaben'"
+            (valueOutput)="updateLastNameInput($event)"
+        ></app-auth-input>
+        <app-auth-input
+            [type]="'text'"
+            [label]="'Adresse'"
+            [placeholder]="'Adresse eingeben'"
+            [autocomplete]="'address-line1'"
+            [required]="true"
+            [iconSource]="'/svg/location.svg'"
+            [iconAlt]="'Ein Standortpin'"
+            (valueOutput)="updateAddressInput($event)"
+        ></app-auth-input>
+        <div class="cluster">
+            <app-auth-input
+                [type]="'text'"
+                [label]="'Postleitzahl'"
+                [placeholder]="'Postleitzahl eingeben'"
+                [autocomplete]="'postal-code'"
+                [required]="true"
+                [iconSource]="'/svg/location.svg'"
+                [iconAlt]="'Ein Standortpin'"
+                (valueOutput)="updatePostalCodeInput($event)"
+            ></app-auth-input>
+            <app-auth-input
+                [type]="'text'"
+                [label]="'Stadt'"
+                [placeholder]="'Stadt eingeben'"
+                [autocomplete]="'address-level2'"
+                [required]="true"
+                [iconSource]="'/svg/location.svg'"
+                [iconAlt]="'Ein Standortpin'"
+                (valueOutput)="updateCityInput($event)"
+            ></app-auth-input>
+        </div>
+        <app-auth-input
+            [type]="'tel'"
+            [label]="'Telefon Nummer (optional)'"
+            [placeholder]="'Telefon Nummer eingeben'"
+            [autocomplete]="'tel'"
+            [iconSource]="'/svg/phone.svg'"
+            [iconAlt]="'Ein Telefon'"
+            (valueOutput)="updatePhoneNumberInput($event)"
+        ></app-auth-input>
+        <app-account-picture-input [imageUrl]="accountPictureUrl()" [imageAlt]="'Dein Profilbild'" (valueOutput)="updateAccountImageInput($event)"></app-account-picture-input>
+        <button type="submit">{{ submitButtonText() }}</button>
+        <div class="toggler">
+            <p>Bereits Mitglied?</p>
+            <a [routerLink]="'/login'">Einloggen</a>
+        </div>
+    </form>
+</div>

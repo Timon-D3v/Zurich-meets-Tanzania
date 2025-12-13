@@ -69,22 +69,25 @@ export class AppComponent implements OnInit {
             // Loads the current user theme
             this.themeService.initTheme();
 
+            // Strips the queryParameters so that the paths can match
+            const currentUrlWithoutParameters = this.router.url.split("?")[0];
+
             // Sets the correct style namespace for the current route
-            if (PUBLIC_CONFIG.ROUTES.TYPES.HOME.includes(this.router.url)) {
+            if (PUBLIC_CONFIG.ROUTES.TYPES.HOME.includes(currentUrlWithoutParameters)) {
                 this.styleNamespaceService.setHomeStyleNamespace();
-            } else if (PUBLIC_CONFIG.ROUTES.TYPES.AUTH.includes(this.router.url)) {
+            } else if (PUBLIC_CONFIG.ROUTES.TYPES.AUTH.includes(currentUrlWithoutParameters)) {
                 this.styleNamespaceService.setAuthStyleNamespace();
-            } else if (PUBLIC_CONFIG.ROUTES.TYPES.CONTACT.includes(this.router.url)) {
+            } else if (PUBLIC_CONFIG.ROUTES.TYPES.CONTACT.includes(currentUrlWithoutParameters)) {
                 this.styleNamespaceService.setContactStyleNamespace();
             } else {
                 this.styleNamespaceService.setDefaultStyleNamespace();
             }
 
             // Sets the robot permissions for the route
-            this.siteMetadataService.updateRobotsSettingsForRoute(this.router.url);
+            this.siteMetadataService.updateRobotsSettingsForRoute(currentUrlWithoutParameters);
 
             // Sets the current metadata for the route
-            this.siteMetadataService.updateMetadataForRoute(this.router.url);
+            this.siteMetadataService.updateMetadataForRoute(currentUrlWithoutParameters);
         });
 
         navigationStartPipe.subscribe((): void => {

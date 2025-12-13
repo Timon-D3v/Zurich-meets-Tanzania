@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from "@angular/common";
 import { inject, Injectable, PLATFORM_ID, signal } from "@angular/core";
-import { ApiEndpointResponse, ApiEndpointResponseWithRedirect, GetPublicUserDetailsApiEndpointResponse, PublicUser } from "../..";
+import { ApiEndpointResponse, ApiEndpointResponseWithRedirect, GetPublicUserDetailsApiEndpointResponse, NewUser, PublicUser } from "../..";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { NotificationService } from "./notification.service";
@@ -29,6 +29,42 @@ export class AuthService {
         const request = this.http.post<ApiEndpointResponse>("/api/auth/login", {
             email,
             password,
+        });
+
+        return request;
+    }
+
+    signUp(user: NewUser): Observable<ApiEndpointResponse> {
+        if (!isPlatformBrowser(this.platformId)) {
+            throw new Error("Cannot send POST request if current platform is not browser. Current platform: " + this.platformId);
+        }
+
+        const formData = new FormData();
+
+        formData.append("email", user.email);
+        formData.append("password", user.password);
+        formData.append("name", user.name);
+        formData.append("family_name", user.family_name);
+        formData.append("address", user.address);
+        formData.append("postalCode", user.postalCode);
+        formData.append("city", user.city);
+        formData.append("phone", user.phone);
+        formData.append("hasPicture", user.picture === null ? "false" : "true");
+        formData.append("picture", user.picture === null ? new Blob([""]) : user.picture);
+
+        const request = this.http.post<ApiEndpointResponse>("/api/auth/signup", formData);
+
+        return request;
+    }
+
+    confirmSingUp(email: string, code: string): Observable<ApiEndpointResponseWithRedirect> {
+        if (!isPlatformBrowser(this.platformId)) {
+            throw new Error("Cannot send POST request if current platform is not browser. Current platform: " + this.platformId);
+        }
+
+        const request = this.http.post<ApiEndpointResponseWithRedirect>("/api/auth/confirmSignUp", {
+            email,
+            code,
         });
 
         return request;
@@ -99,7 +135,7 @@ export class AuthService {
 
         const request = this.http.post<ApiEndpointResponseWithRedirect>("/api/auth/confirmPasswordRecovery", {
             email,
-            code
+            code,
         });
 
         return request;

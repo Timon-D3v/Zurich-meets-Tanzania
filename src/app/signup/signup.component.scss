@@ -1,0 +1,49 @@
+@use "../../styles/index" as *;
+
+.wrapper {
+    @include auth-wrapper;
+}
+
+form {
+    @include auth-form;
+}
+
+app-auth-input,
+app-account-picture-input {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+p {
+    color: var(--c-text-950);
+}
+
+button {
+    @include form-submit-button;
+}
+
+.toggler {
+    @include auth-toggler;
+}
+
+.cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+}
+
+.cluster > app-auth-input {
+    flex: 1;
+    min-width: -webkit-fill-available;
+    min-width: fit-content;
+}
+
+.authLabel {
+    display: block;
+    color: var(--dark-green);
+    font-weight: 600;
+    font-family: "Teko", monospace;
+    font-size: x-large;
+    margin-top: 10px;
+}

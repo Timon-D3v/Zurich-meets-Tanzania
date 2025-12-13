@@ -1,18 +1,18 @@
 import { Component, computed, inject, PLATFORM_ID, Signal, signal } from "@angular/core";
-import { AuthInputComponent } from "../components/auth-input/auth-input.component";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { NotificationService } from "../services/notification.service";
-import { AuthService } from "../services/auth.service";
-import { isPlatformBrowser } from "@angular/common";
+import { AuthInputComponent } from "../components/auth-input/auth-input.component";
 import { ApiEndpointResponseWithRedirect } from "../..";
+import { isPlatformBrowser } from "@angular/common";
+import { AuthService } from "../services/auth.service";
+import { NotificationService } from "../services/notification.service";
 
 @Component({
-    selector: "app-password-recovery-confirm",
-    imports: [AuthInputComponent, RouterLink],
-    templateUrl: "./password-recovery-confirm.component.html",
-    styleUrl: "./password-recovery-confirm.component.scss",
+    selector: "app-signup-confirm",
+    imports: [AuthInputComponent],
+    templateUrl: "./signup-confirm.component.html",
+    styleUrl: "./signup-confirm.component.scss",
 })
-export class PasswordRecoveryConfirmComponent {
+export class SignupConfirmComponent {
     disabledButton = signal(false);
     submitButtonText = signal("Bestätigen");
 
@@ -35,7 +35,7 @@ export class PasswordRecoveryConfirmComponent {
         this.codeInput.set(input);
     }
 
-    recover(event: Event): void {
+    confirm(event: Event): void {
         if (!isPlatformBrowser(this.platformId)) {
             return;
         }
@@ -69,7 +69,7 @@ export class PasswordRecoveryConfirmComponent {
         this.disabledButton.set(true);
         this.submitButtonText.set("Bestätigen...");
 
-        const response = this.authService.confirmPasswordRecovery(email, code);
+        const response = this.authService.confirmSingUp(email, code);
 
         response.subscribe(async (response: ApiEndpointResponseWithRedirect): Promise<void> => {
             if (response.error) {
@@ -91,7 +91,7 @@ export class PasswordRecoveryConfirmComponent {
 
             this.submitButtonText.set("Bestätigt");
 
-            this.router.navigate(["/login"]);
+            this.router.navigate(["/"]);
         });
     }
 }

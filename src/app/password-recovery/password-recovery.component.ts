@@ -64,7 +64,7 @@ export class PasswordRecoveryComponent {
 
                 if (response?.data?.redirectUrl && typeof response.data.redirectUrl === "string") {
                     this.router.navigate([response.data.redirectUrl], {
-                        queryParams: response.data?.queryParams
+                        queryParams: response.data?.queryParams,
                     });
                 }
 

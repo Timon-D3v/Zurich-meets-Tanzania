@@ -23,4 +23,7 @@ export const CONFIG: Config = {
 
     EMAIL_SENDER_ADDRESS: process.env["EMAIL_SENDER_ADDRESS"] as string,
     EMAIL_SENDER_NAME: process.env["EMAIL_SENDER_NAME"] as string,
+
+    DELIVAPI_USER: process.env["DELIVAPI_USER"] as string,
+    DELIVAPI_KEY: process.env["DELIVAPI_KEY"] as string,
 };

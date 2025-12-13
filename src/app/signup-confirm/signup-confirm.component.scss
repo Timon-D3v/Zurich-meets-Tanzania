@@ -21,7 +21,3 @@ p {
 button {
     @include form-submit-button;
 }
-
-.toggler {
-    @include auth-toggler;
-}
