@@ -1,3 +1,4 @@
+import rateLimit from "express-rate-limit";
 import session from "express-session";
 import bodyParser from "body-parser";
 import Mailjet from "node-mailjet";
@@ -58,6 +59,14 @@ const mailjet = new Mailjet({
     apiSecret: process.env.MAILJET_PRIVAT_KEY,
 });
 const stripe = new Stripe(LOAD_LEVEL === "prod" ? process.env.STRIPE_PRIVATE_KEY : process.env.STRIPE_PRIVATE_KEY_TEST);
+const softLimiter = {
+    limit: 100,
+    windowMs: 1000 * 60 * 60,
+};
+const hardLimiter = {
+    limit: 3,
+    windowMs: 1000 * 60 * 60 * 24,
+};
 const payment_keys = [];
 const newsletter_code = [];
 const recovery_code = [];
@@ -627,7 +636,7 @@ app.get("/mitglied", (req, res) => {
     });
 });
 
-app.get("/pay", async (req, res) => {
+app.get("/pay", rateLimit(softLimiter), async (req, res) => {
     const q = req.query;
     const types = ["membership", "onetime"];
     const amount = Number(q.a);
@@ -658,7 +667,7 @@ app.get("/pay", async (req, res) => {
     res.redirect(303, link);
 });
 
-app.get("/return", async (req, res) => {
+app.get("/return", rateLimit(softLimiter), async (req, res) => {
     if (!req.session?.user?.valid) return res.redirect("/login?redir=/spenden");
     try {
         const user_details = await db.getSessionIdWithUserId(req.session.user.id);
@@ -701,7 +710,7 @@ app.get("/return", async (req, res) => {
     res.redirect("/");
 });
 
-app.get("/newsletter/abmelden", (req, res) => {
+app.get("/newsletter/abmelden", rateLimit(softLimiter), (req, res) => {
     res.render("newsletter_abmeldung.ejs", {
         env: LOAD_LEVEL,
         url: req.url,
@@ -714,7 +723,7 @@ app.get("/newsletter/abmelden", (req, res) => {
     });
 });
 
-app.get("/chunks/team/getCurrentTeam", async (req, res) => {
+app.get("/chunks/team/getCurrentTeam", rateLimit(softLimiter), async (req, res) => {
     if (req?.session?.user?.type !== "admin") return res.redirect("/");
     const team = await db.getCurrentTeamInfo();
     res.render("./snippets/teamMember.ejs", {
@@ -724,7 +733,7 @@ app.get("/chunks/team/getCurrentTeam", async (req, res) => {
 });
 
 app.get("/gallery/:id", (req, res) => res.status(301).redirect("/galerie/" + req.params.id));
-app.get("/galerie/:id", async (req, res) => {
+app.get("/galerie/:id", rateLimit(softLimiter), async (req, res) => {
     let result = await db.getGalleyWhereTitle(req.params.id).catch(() => res.redirect("/"));
     result = result?.[0];
     result
@@ -744,7 +753,7 @@ app.get("/galerie/:id", async (req, res) => {
         : res.redirect("/");
 });
 
-app.get("/blog/:id", async (req, res) => {
+app.get("/blog/:id", rateLimit(softLimiter), async (req, res) => {
     try {
         const [blog] = await db.getBlogWhereTitle(req.params.id);
 
@@ -901,7 +910,7 @@ app.get("/private/:id", async (req, res) => {
     }
 });
 
-app.get("/getEvents/:num", async (req, res) => {
+app.get("/getEvents/:num", rateLimit(softLimiter), async (req, res) => {
     const result = await db.getLastXEvents(+req.params.num).catch((err) => {
         if (err) return [{ title: "Keine Events gefunden", date: "2000-01-01" }];
     });
@@ -949,7 +958,7 @@ app.get("/datenschutz", (req, res) => {
     });
 });
 
-app.get("/newsletter/signUp", async (req, res) => {
+app.get("/newsletter/signUp", rateLimit(softLimiter), async (req, res) => {
     try {
         const valid = validateSignUpNewsletter(req.query?.id, req.query?.email, req.query?.name, req.query?.family_name, req.query?.gender);
 
@@ -983,7 +992,7 @@ app.get("/*splat", (req, res) => {
     });
 });
 
-app.post("/post/login", async (req, res) => {
+app.post("/post/login", rateLimit(softLimiter), async (req, res) => {
     let username = req.body.username,
         password = req.body.password,
         error;
@@ -998,7 +1007,7 @@ app.post("/post/login", async (req, res) => {
     } else res.json({ valid: false, type: "undefined", message: error || "Dein Passwort ist falsch." });
 });
 
-app.post("/post/signUp", async (req, res) => {
+app.post("/post/signUp", rateLimit(hardLimiter), async (req, res) => {
     let data = req.body;
 
     if (typeof data?.address !== "string" || typeof data?.email !== "string" || typeof data?.family_name !== "string" || typeof data?.name !== "string" || typeof data?.password !== "string" || typeof data?.picture !== "string") return res.json({ valid: false, message: "Bad Request" });
@@ -1041,7 +1050,7 @@ app.post("/logout", (req, res) => {
     res.status(200).json({ status: 200 });
 });
 
-app.post("/post/newsletter/signUp", async (req, res) => {
+app.post("/post/newsletter/signUp", rateLimit(hardLimiter), async (req, res) => {
     try {
         if (typeof req.body?.gender !== "string" || typeof req.body?.firstName !== "string" || typeof req.body?.lastName !== "string" || typeof req.body?.email !== "string") return res.json({ status: "Bad Request" });
 
@@ -1305,7 +1314,7 @@ app.post("/post/getAuthorPicture", async (req, res) => {
     res.send(response[0]);
 });
 
-app.post("/post/updateProfile", async (req, res) => {
+app.post("/post/updateProfile", rateLimit(hardLimiter), async (req, res) => {
     if (!req.session?.user?.valid) return res.json({ error: "501: Forbidden" });
     let b = req.body;
 
@@ -1327,7 +1336,7 @@ app.post("/post/updateProfile", async (req, res) => {
     res.json({ res: result });
 });
 
-app.post("/post/changePicture", async (req, res) => {
+app.post("/post/changePicture", rateLimit(hardLimiter), async (req, res) => {
     if (!req.session?.user?.valid) return res.json({ error: "501: Forbidden" });
     let path = req.session.user.picture.replace("https://ik.imagekit.io/zmt/users/", "");
     if (req.session.user.picture === "/img/svg/personal.svg") path = req.session.user.username + "_" + timon.randomString(32);
@@ -1556,7 +1565,7 @@ app.post("/post/changeHeroImg", async (req, res) => {
     res.json({ res: status });
 });
 
-app.post("/post/sendMail", async (req, res) => {
+app.post("/post/sendMail", rateLimit(hardLimiter), async (req, res) => {
     const result = await sendContactMail(req.body);
 
     if (result === 200) return res.json({ res: "Die E-Mail wurde erfolgreich verschickt.", status: 200 }).status(200);
@@ -1606,7 +1615,7 @@ app.post("/post/gallery/getLinks/:num", async (req, res) => {
     typeof response !== "string" ? res.json({ title: response }) : res.json({ error: response });
 });
 
-app.post("/post/getPaymentLink", async (req, res) => {
+app.post("/post/getPaymentLink", rateLimit(softLimiter), async (req, res) => {
     if (isNaN(req.body.amount)) return res.end();
 
     if (!req.session?.user?.valid) {
@@ -1832,7 +1841,7 @@ app.post("/post/updateGallery", async (req, res) => {
     return res.json({ status: result });
 });
 
-app.post("/post/recoveryRequest", async (req, res) => {
+app.post("/post/recoveryRequest", rateLimit(hardLimiter), async (req, res) => {
     try {
         const { email } = req.body;
         const user = await db.getAccount(email);
@@ -1923,7 +1932,7 @@ app.post("/post/deleteEvent", async (req, res) => {
     res.json(result);
 });
 
-app.post("/post/donateForm", async (req, res) => {
+app.post("/post/donateForm", rateLimit(hardLimiter), async (req, res) => {
     try {
         const { name, familyName, email, usageType } = req.body;
 

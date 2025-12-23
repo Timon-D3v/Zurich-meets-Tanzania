@@ -54,6 +54,10 @@
                                 <input class="donate-input" type="text" required autocomplete="family-name" id="donate-family-name">
                             </div>
                         </div>
+                        <div class="honey-pot">
+                            <label for="honey-pot" class="honey-pot">Honey Pot</label>
+                            <input type="text" id="honey-pot" class="honey-pot" required value="🍯">
+                        </div>
                         <div class="donate-form-pair">
                             <label class="donate-label" for="donate-email">E-Mail:</label>
                             <input class="donate-input" type="email" required autocomplete="email" id="donate-email">
@@ -98,6 +102,7 @@
                     text-align: center;
                 }
             </style>
+            <style>.honey-pot{display: none !important; visibility: hidden !important;}</style>
             <% if (typeof user !== "undefined" && user !== null && user.valid) { %>
             <div class="invisible">
                 <p id="donate-prefilled-name"><%= user.name %></p>

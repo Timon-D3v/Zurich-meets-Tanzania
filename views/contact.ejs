@@ -27,6 +27,8 @@
                     <input type="text" id="contact-name" autocomplete="given-name" required value="<%= user?.name || "" %>">
                     <label for="contact-family-name">Nachname</label>
                     <input type="text" id="contact-family-name" autocomplete="family-name" required value="<%= user?.family_name || "" %>">
+                    <label for="honey-pot" class="honey-pot">Honey Pot</label>
+                    <input type="text" id="honey-pot" class="honey-pot" required value="🍯">
                 </div>
                 <label for="contact-email">E-Mail</label>
                 <input type="text" id="contact-email" autocomplete="email" required value="<%= user?.email || "" %>">

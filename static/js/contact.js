@@ -6,6 +6,8 @@ getElm("contact-form").on("submit", async (e) => {
     if (getElm("contact-email").val().trim() === "") return errorNotification("Bitte geben Sie Ihre E-Mail-Adresse ein.");
     if (getElm("contact-message").val().trim() === "") return errorNotification("Bitte geben Sie eine Nachricht ein.");
 
+    if (getElm("honey-pot").val() !== "🍯") return errorNotification("Bitte verändere dieses Feld nicht. Es ist ein Honeypot um Bots abzuwehren.");
+
     const result = await post("/post/sendMail", {
         message: getElm("contact-message").val(),
         author_name: getElm("contact-name").val(),

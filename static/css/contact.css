@@ -124,6 +124,11 @@ footer {
     background-color: #4ab5a3cc;
 }
 
+.honey-pot {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 @media screen and (max-width: 575px) {
     .contact-names {
         display: flex;

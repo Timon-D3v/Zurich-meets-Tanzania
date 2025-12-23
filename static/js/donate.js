@@ -26,6 +26,8 @@ donateSubmit.click(async (e) => {
     if (donateEmail.val().trim() === "") return errorNotification("Bitte geben Sie Ihre E-Mail-Adresse ein.");
     if (donateUsageType.val().trim() === "") return errorNotification("Bitte geben Sie den Verwendungszweck ein.");
 
+    if (getElm("honey-pot").val() !== "🍯") return errorNotification("Bitte verändere dieses Feld nicht. Es ist ein Honeypot um Bots abzuwehren.");
+
     const { error, message } = await post("/post/donateForm", {
         name: donateName.val().trim(),
         familyName: donateFamilyName.val().trim(),
