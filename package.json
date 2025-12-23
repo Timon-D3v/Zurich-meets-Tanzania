@@ -1,6 +1,6 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
@@ -27,22 +27,21 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "body-parser": "^2.2.0",
+    "body-parser": "^2.2.1",
     "cors": "^2.8.5",
-    "delivapi-client": "^1.1.0",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "express-session": "^1.18.2",
     "imagekit": "^6.0.0",
-    "mysql2": "^3.15.3",
+    "mysql2": "^3.16.0",
     "node-mailjet": "^6.0.11",
-    "stripe": "^19.2.0",
+    "stripe": "^20.1.0",
     "timonjs": "^2.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.1",
-    "prettier": "^3.6.2",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.7.4",
     "prettier-plugin-ejs": "^1.0.3"
   },
   "keywords": [

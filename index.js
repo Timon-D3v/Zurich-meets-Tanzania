@@ -13,7 +13,6 @@ import path from "path";
 import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { delivApiUpload } from "delivapi-client";
 import { toRealDate } from "./components/toRealDate.js";
 import { sendContactMail, sendCriticalErrorMail, sendDonationMail, sendMailCode, sendNewsletterEmail, sendRecoveryCode, sendRecoveryPassword } from "./components/emailMethods.js";
 import { stripe_c_s_created, stripe_c_s_updated, stripe_c_s_deleted, stripe_i_p_success } from "./components/stripeWebhookActions.js";
@@ -1476,7 +1475,7 @@ app.post("/post/news/update", async (req, res) => {
 
         const news = await db.getNews();
 
-        if (newsletter && !news.newsletter_is_sent) {
+        if (newsletter) {
             const recipients = await db.getAllNewsletterSignUps();
 
             let text = "";
@@ -1940,7 +1939,7 @@ app.post("/post/donateForm", async (req, res) => {
         if (result === 200) {
             return res.json({
                 error: false,
-                message: "Zurich meets Tanzania dankt dir sehr für deine Spende ❤️",
+                message: "Zurich meets Tanzania dankt dir herzlich für deine Spende ❤️",
             });
         }
 

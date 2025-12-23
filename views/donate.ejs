@@ -32,7 +32,7 @@
             }) %>
             <form id="scrollToDonate" class="donate-form">
                 <h1 class="donate-title">Spenden</h1>
-                <p class="donate-description">Bitte übermittle uns deine Daten über das Formular unten, damit wir dir eine Spendenbescheinigung ausstellen können.</p>
+                <p class="donate-description">Benutze den QR-Code oder die IBAN Nummer unten um uns eine Spende zu überweisen.<br>Vielen Dank❤️</p>
                 <div class="donate-wrapper">
                     <div class="donate-qr-wrapper">
                         <img src="/img/common/donate-qr-code.png" alt="QR Code Spenden" class="donate-qr">
@@ -41,6 +41,7 @@
                             zurich - <wbr>meets - <wbr>tanzania<br>
                             8049 Zürich<br>
                         </p>
+                        <button type="button" id="donate-start-stage-2" class="donate-btn hero-cta">Bestätigen</button>
                     </div>
                     <div class="donate-center donate-form-wrapper">
                         <div class="donate-name-pair">
@@ -71,7 +72,32 @@
                     </div>
                 </div>
             </form>
-            <a href="/mitglied#scrollToMembership" class="donate-navigate-to-membership">Mitglied werden</a>
+            <a href="/mitglied#scrollToMembership" class="donate-navigate-to-membership">Oder Mitglied werden?</a>
+            <script defer>
+                const DONATE_formWrapper = getQuery(".donate-form-wrapper")
+                const DONATE_description = getQuery(".donate-description").get(0)
+                const DONATE_startStage2Button = getElm("donate-start-stage-2")
+
+                DONATE_formWrapper.hide();
+
+                DONATE_startStage2Button.click(() => {
+                    getElm("style-to-remove-after-stage-1")?.remove();
+                    DONATE_startStage2Button.hide()
+
+                    DONATE_description.text("Bitte übermittle uns deine Daten über das Formular unten, damit wir dir eine Spendenbescheinigung ausstellen können.")
+
+                    DONATE_formWrapper.flex();
+                })
+            </script>
+            <style id="style-to-remove-after-stage-1">
+                .donate-wrapper {
+                    justify-content: center;
+                }
+
+                .donate-qr-text {
+                    text-align: center;
+                }
+            </style>
             <% if (typeof user !== "undefined" && user !== null && user.valid) { %>
             <div class="invisible">
                 <p id="donate-prefilled-name"><%= user.name %></p>
