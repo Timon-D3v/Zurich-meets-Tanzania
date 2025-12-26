@@ -1,6 +1,7 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 
+import envRouter from "./env.api.router";
 import authRouter from "./auth.api.router";
 import blogRouter from "./blog.api.router";
 import themeRouter from "./theme.api.router";
@@ -22,6 +23,7 @@ router.use(
     }),
 );
 
+router.use("/env", envRouter);
 router.use("/auth", authRouter);
 router.use("/blog", blogRouter);
 router.use("/theme", themeRouter);

@@ -1,18 +1,24 @@
-import { Component, inject, OnInit, PLATFORM_ID } from "@angular/core";
+import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { NewsletterService } from "../services/newsletter.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ApiEndpointResponse } from "../..";
 import { NotificationService } from "../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
+import { HeroComponent } from "../components/hero/hero.component";
 
 @Component({
     selector: "app-newsletter-sign-up-confirm",
-    imports: [],
+    imports: [HeroComponent],
     templateUrl: "./newsletter-sign-up-confirm.component.html",
     styleUrl: "./newsletter-sign-up-confirm.component.scss",
 })
 export class NewsletterSignUpConfirmComponent implements OnInit {
+    heroSubtitle = signal<string>("Du wirst bald weitergeleitet");
+    buttonVisible = signal<boolean>(false);
+    redirectSeconds = signal<number>(10);
+
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
 
     private newsletterService = inject(NewsletterService);
     private notificationService = inject(NotificationService);
@@ -33,13 +39,33 @@ export class NewsletterSignUpConfirmComponent implements OnInit {
         const request = this.newsletterService.confirmSignUp(params["firstName"] ?? "", params["lastName"] ?? "", params["email"] ?? "", params["gender"] ?? "", params["id"] ?? "", params["timestamp"] ?? "");
 
         request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Etwas hat nicht geklappt.", response.message);
+            // if (response.error) {
+            //     this.notificationService.error("Etwas hat nicht geklappt.", response.message);
 
-                return;
-            }
+            //     this.router.navigate(["/"]);
+
+            //     return;
+            // }
 
             this.notificationService.success("Das hat geklappt.", "Du hast dich erfolgreich für den Newsletter angemeldet.");
+
+            this.buttonVisible.set(true);
+
+            this.autoRedirect();
         });
+    }
+
+    autoRedirect(): void {
+        if (this.redirectSeconds() === 0) {
+            this.router.navigate(["/"]);
+
+            return;
+        }
+
+        this.heroSubtitle.set(`Du wirst in ${this.redirectSeconds()} Sekunden weitergeleitet...`);
+
+        this.redirectSeconds.update((value) => value - 1);
+
+        setTimeout(() => this.autoRedirect(), 1000);
     }
 }

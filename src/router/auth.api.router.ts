@@ -109,13 +109,13 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
 
 router.post("/signup", multerInstance.single("picture"), async (req: Request, res: Response): Promise<void> => {
     try {
-        const { email, password, name, family_name, address, postalCode, city, phone, hasPicture } = req.body;
+        const { email, password, firstName, lastName, address, postalCode, city, phone, hasPicture } = req.body;
 
         if (
             typeof email !== "string" ||
             typeof password !== "string" ||
-            typeof name !== "string" ||
-            typeof family_name !== "string" ||
+            typeof firstName !== "string" ||
+            typeof lastName !== "string" ||
             typeof address !== "string" ||
             typeof postalCode !== "string" ||
             typeof city !== "string" ||
@@ -125,7 +125,7 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
             throw new Error("Invalid or missing parameter.");
         }
 
-        if (email.trim() === "" || password.trim() === "" || name.trim() === "" || family_name.trim() === "" || address.trim() === "" || postalCode.trim() === "" || city.trim() === "") {
+        if (email.trim() === "" || password.trim() === "" || firstName.trim() === "" || lastName.trim() === "" || address.trim() === "" || postalCode.trim() === "" || city.trim() === "") {
             throw new Error("Invalid parameter found.");
         }
 
@@ -177,8 +177,8 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
             user: {
                 email,
                 password,
-                name,
-                family_name,
+                firstName,
+                lastName,
                 address: `${address}, ${postalCode} ${city}`,
                 phone,
                 hasPicture: hasPicture === "true",
@@ -187,11 +187,11 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
             timestamp: Date.now(),
         });
 
-        const sentSuccessfully = await sendSignUpConfirmationCode(code, email, name, family_name);
+        const sentSuccessfully = await sendSignUpConfirmationCode(code, email, firstName, lastName);
 
         res.json({
             error: !sentSuccessfully,
-            message: sentSuccessfully ? `Bestätigungscode erfolgreich an ${name} ${family_name} über die E-Mail-Adresse '${email}' geschickt.` : PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            message: sentSuccessfully ? `Bestätigungscode erfolgreich an ${firstName} ${lastName} über die E-Mail-Adresse '${email}' geschickt.` : PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);
@@ -296,7 +296,7 @@ router.post("/confirmSignUp", async (req: Request, res: Response) => {
 
         const passwordHash = await bcrypt.hash(request.user.password, 10);
 
-        const result = await createUser(request.user.email, passwordHash, request.user.name, request.user.family_name, request.user.address, request.user.phone, pictureUrl);
+        const result = await createUser(request.user.email, passwordHash, request.user.firstName, request.user.lastName, request.user.address, request.user.phone, pictureUrl);
 
         if (result.error !== null) {
             res.json({
@@ -395,8 +395,8 @@ router.get("/getUserDetails", (req: Request, res: Response): void => {
                     isLoggedIn: req.session.isLoggedIn,
                     user: {
                         email: req.session.user?.email,
-                        name: req.session.user?.name,
-                        family_name: req.session.user?.family_name,
+                        firstName: req.session.user?.firstName,
+                        lastName: req.session.user?.lastName,
                         address: req.session.user?.address,
                         phone: req.session.user?.phone,
                         picture: req.session.user?.picture,
@@ -499,11 +499,11 @@ router.post("/startPasswordRecovery", async (req: Request, res: Response) => {
             timestamp: Date.now(),
         });
 
-        const sentSuccessfully = await sendPasswordRecoveryConfirmationCode(recoveryCode, userData.email, userData.name, userData.family_name);
+        const sentSuccessfully = await sendPasswordRecoveryConfirmationCode(recoveryCode, userData.email, userData.firstName, userData.lastName);
 
         res.json({
             error: !sentSuccessfully,
-            message: sentSuccessfully ? `Bestätigungscode erfolgreich an ${userData.name} ${userData.family_name} über die E-Mail-Adresse '${userData.email}' geschickt.` : PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            message: sentSuccessfully ? `Bestätigungscode erfolgreich an ${userData.firstName} ${userData.lastName} über die E-Mail-Adresse '${userData.email}' geschickt.` : PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: {
                 redirectUrl: "/password-recovery-confirm",
                 queryParams: {
@@ -593,7 +593,7 @@ router.post("/confirmPasswordRecovery", async (req: Request, res: Response) => {
                     return;
                 }
 
-                const sentSuccessfully = await sendNewPassword(newPassword, userData.email, userData.name, userData.family_name);
+                const sentSuccessfully = await sendNewPassword(newPassword, userData.email, userData.firstName, userData.lastName);
 
                 if (sentSuccessfully) {
                     // Delete the request

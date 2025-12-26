@@ -5,7 +5,7 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 
 export async function createDarkmodeEntry(userId: number, darkmode: boolean = false): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`darkmode\` (\`user_id\`, \`darkmode\`) VALUES (?, ?);`, [userId, Number(darkmode)]);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`darkmode\` (\`userId\`, \`darkmode\`) VALUES (?, ?);`, [userId, Number(darkmode)]);
 
         return {
             data: result,

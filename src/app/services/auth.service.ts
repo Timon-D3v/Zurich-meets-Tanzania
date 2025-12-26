@@ -43,8 +43,8 @@ export class AuthService {
 
         formData.append("email", user.email);
         formData.append("password", user.password);
-        formData.append("name", user.name);
-        formData.append("family_name", user.family_name);
+        formData.append("firstName", user.firstName);
+        formData.append("lastName", user.lastName);
         formData.append("address", user.address);
         formData.append("postalCode", user.postalCode);
         formData.append("city", user.city);

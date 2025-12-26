@@ -155,8 +155,8 @@ export class SignupComponent {
         return {
             email: this.emailInput().trim(),
             password: this.passwordInput().trim(),
-            name: this.fistNameInput().trim(),
-            family_name: this.lastNameInput().trim(),
+            firstName: this.fistNameInput().trim(),
+            lastName: this.lastNameInput().trim(),
             address: this.addressInput().trim(),
             postalCode: this.postalCodeInput().trim(),
             city: this.cityInput().trim(),
@@ -181,12 +181,12 @@ export class SignupComponent {
             return false;
         }
 
-        if (user.name === "") {
+        if (user.firstName === "") {
             this.notificationService.error("Leeres Feld", "Bitte gib deinen Vornamen ein.");
             return false;
         }
 
-        if (user.family_name === "") {
+        if (user.lastName === "") {
             this.notificationService.error("Leeres Feld", "Bitte gib deinen Nachnamen ein.");
             return false;
         }

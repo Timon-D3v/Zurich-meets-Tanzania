@@ -2,7 +2,6 @@ import { PublicConfig } from ".";
 
 export const PUBLIC_CONFIG: PublicConfig = {
     NAME: "zurich meets tanzania",
-    ORIGIN: "http://localhost:8080",
 
     THEME_COLOR: "#F27C0D",
 
@@ -10,6 +9,8 @@ export const PUBLIC_CONFIG: PublicConfig = {
     FACEBOOK_URL: "https://www.facebook.com/profile.php?id=61577621371823",
     INSTAGRAM_URL: "https://www.instagram.com/zurichmeetstanzania/",
     PROGRAMMER_URL: "https://www.timondev.com/",
+
+    PRIVACY_PDF_URL: "https://ik.imagekit.io/zmt/pdf/datenschutz/Datenschutzerklaerung.pdf",
 
     PERSONAS: {
         CHAIRMAN: {

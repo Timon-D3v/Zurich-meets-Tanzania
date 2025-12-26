@@ -5,7 +5,7 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 
 export async function getThemeFromUserId(id: number): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`darkmode\` from \`zmt\`.\`darkmode\` WHERE \`user_id\` = ?;`, [id]);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`darkmode\` from \`zmt\`.\`darkmode\` WHERE \`userId\` = ?;`, [id]);
 
         return {
             data: result,
@@ -25,7 +25,7 @@ export async function getThemeFromUserId(id: number): Promise<DatabaseResult> {
 
 export async function setThemeForUserId(isDarkTheme: boolean, id: number): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`darkmode\` SET \`darkmode\` = ? WHERE (\`user_id\` = ?);`, [Number(isDarkTheme), id]);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`darkmode\` SET \`darkmode\` = ? WHERE (\`userId\` = ?);`, [Number(isDarkTheme), id]);
 
         return {
             data: result,

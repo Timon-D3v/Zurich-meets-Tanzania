@@ -1,0 +1,46 @@
+h1 {
+    font-size: 2.5em;
+    padding: 0 5vw;
+    margin: 5vh 0;
+    text-align: center;
+    margin: 0;
+    font-size: 2.75em;
+    text-decoration: underline;
+    padding: 0 5vw;
+}
+
+h2 {
+    margin: 0;
+    font-size: 2em;
+    padding: 0 5vw;
+}
+
+h3 {
+    margin: 0;
+    font-size: 1.5em;
+    padding: 0 5vw;
+}
+
+p {
+    text-align: left;
+    word-break: normal;
+    word-wrap: break-word;
+    margin: 5vh 5vw;
+    padding: 0;
+}
+
+ul {
+    padding-left: 20px;
+    margin: 5vh 5vw;
+}
+
+.download {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.date {
+    padding: 0 5vw;
+    text-align: right;
+    margin: 1em 0;
+}

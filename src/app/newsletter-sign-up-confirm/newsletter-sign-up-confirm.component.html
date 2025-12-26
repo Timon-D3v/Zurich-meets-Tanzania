@@ -1,1 +1,9 @@
-<p>newsletter-sign-up-confirm works!</p>
+<app-hero
+    title="Anmeldung bestätigt"
+    [subtitle]="heroSubtitle()"
+    buttonLink="/"
+    buttonText="Start"
+    [buttonType]="buttonVisible() ? 'url' : undefined"
+    pictureUrl="/stock/erfolgsrechnung.jpg"
+    pictureAlt="Eine Person die einen Vertrag unterschreibt."
+></app-hero>

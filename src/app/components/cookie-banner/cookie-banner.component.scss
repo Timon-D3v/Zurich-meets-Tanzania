@@ -1,0 +1,92 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    position: fixed;
+    bottom: max(3vh, 1rem);
+    right: max(3vh, 1rem);
+    z-index: 1000;
+    border: 1px solid var(--secondary-500);
+    background-color: var(--background-900);
+    border-radius: 0.25rem;
+    overflow: hidden;
+    border-top-width: 3px;
+    padding: 1.25rem;
+    pointer-events: all;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+
+.content {
+    padding-left: 1.25rem;
+}
+
+.close,
+.icon,
+.content {
+    display: block;
+}
+
+img {
+    height: 3rem;
+    width: 3rem;
+    aspect-ratio: 1 / 1;
+}
+
+h2 {
+    line-height: 1;
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-top: 0;
+    color: var(--text-50);
+}
+
+p {
+    margin: 0;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: var(--text-50);
+    max-width: 400px;
+    line-height: 1.2;
+}
+
+a {
+    color: var(--text-50);
+
+    &:hover {
+        color: var(--primary-500);
+    }
+}
+
+button {
+    width: 100%;
+    height: calc(35px + 1vw);
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--c-text-950);
+    border: none;
+    background: linear-gradient(45deg, var(--c-accent-100), var(--c-background-50));
+    border-radius: 3px;
+    transition: all 0.5s ease-in-out;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        filter: saturate(5);
+    }
+
+    &:active {
+        filter: saturate(10);
+    }
+}
+
+svg {
+    height: 1.25rem;
+    width: 1.25rem;
+    padding: 1rem;
+    padding-right: 0;
+    aspect-ratio: 1 / 1;
+    fill: var(--secondary-500);
+    cursor: pointer;
+}

@@ -1,0 +1,18 @@
+<div class="wrapper {{ hidden() ? 'hidden' : '' }}">
+    <div class="icon">
+        <img src="/svg/cookie.svg" alt="Ein Keks" />
+    </div>
+    <div class="content">
+        <h2>Wir benutzen Cookies</h2>
+        <p>
+            <span>Diese Webseite verwendet Cookies, um dir das bestmögliche Erlebnis zu bieten. Wenn du die Cookies akzeptierst, hilfst du mit die Seite besser zu machen. </span>
+            <a [routerLink]="'/privacy'">Mehr erfahren</a>
+        </p>
+        <button type="button" (click)="acceptCookies()">Akzeptieren</button>
+    </div>
+    <div class="close" (click)="rejectCookies()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" part="svg">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+        </svg>
+    </div>
+</div>

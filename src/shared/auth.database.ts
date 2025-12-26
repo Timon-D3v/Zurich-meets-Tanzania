@@ -43,11 +43,11 @@ export async function setNewPassword(email: string, hashedPassword: string): Pro
     }
 }
 
-export async function createUser(email: string, hashedPassword: string, name: string, family_name: string, address: string, phone: string, pictureUrl: string, type: "user" | "member" | "admin" = "user"): Promise<DatabaseResult> {
+export async function createUser(email: string, hashedPassword: string, fistName: string, lastName: string, address: string, phone: string, pictureUrl: string, type: "user" | "member" | "admin" = "user"): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(
-            `INSERT INTO \`zmt\`.\`users\` (\`username\`, \`password\`, \`name\`, \`family_name\`, \`email\`, \`picture\`, \`phone\`, \`type\`, \`address\`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-            [email, hashedPassword, name, family_name, email, pictureUrl, phone, type, address],
+            `INSERT INTO \`zmt\`.\`users\` (\`email\`, \`password\`, \`firstName\`, \`lastName\`, \`phone\`, \`address\`, \`type\`, \`picture\`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+            [email, hashedPassword, fistName, lastName, phone, address, type, pictureUrl],
         );
 
         return {

@@ -26,23 +26,13 @@ export type Config = {
     DELIVAPI_KEY: string;
 };
 
-export type PageDescription = {
-    title: string;
-    description: string;
-    lastUpdated: string;
-};
-
-export type MetaPersonas = {
-    name: string;
-    email: string;
-    website?: string;
-    linkedIn?: string;
-    github?: string;
+export type PublicEnvVariables = {
+    ORIGIN: string | null;
+    ENV: "dev" | "prod" | null;
 };
 
 export type PublicConfig = {
     NAME: string;
-    ORIGIN: string;
 
     THEME_COLOR: string;
 
@@ -50,6 +40,8 @@ export type PublicConfig = {
     FACEBOOK_URL: string;
     INSTAGRAM_URL: string;
     PROGRAMMER_URL: string;
+
+    PRIVACY_PDF_URL: string;
 
     PERSONAS: {
         [position: string]: MetaPersonas;
@@ -94,6 +86,20 @@ export type PublicConfig = {
         NEWSLETTER_BODY_HTML: (preview: string) => string;
         NEWSLETTER_SUBJECT: string;
     };
+};
+
+export type PageDescription = {
+    title: string;
+    description: string;
+    lastUpdated: string;
+};
+
+export type MetaPersonas = {
+    name: string;
+    email: string;
+    website?: string;
+    linkedIn?: string;
+    github?: string;
 };
 
 export type NavLink = {
@@ -262,25 +268,24 @@ export interface GetThemeApiEndpointResponse extends ApiEndpointResponse {
 
 export interface PublicUser {
     email: string;
-    name: string;
-    family_name: string;
-    picture: string;
+    firstName: string;
+    lastName: string;
     phone: string;
-    type: "user" | "member" | "admin";
     address: string;
+    type: "user" | "member" | "admin";
+    picture: string;
 }
 
 export interface PrivateUser extends PublicUser {
     id: number;
-    username: string; // Deprecated
     password: string; // Hashed
 }
 
 export interface NewUser {
     email: string;
     password: string;
-    name: string;
-    family_name: string;
+    firstName: string;
+    lastName: string;
     address: string;
     postalCode: string;
     city: string;
@@ -309,8 +314,8 @@ export type SignUpConfirmRequest = {
     user: {
         email: string;
         password: string;
-        name: string;
-        family_name: string;
+        firstName: string;
+        lastName: string;
         hasPicture: boolean;
         pictureFile: Express.Multer.File | undefined;
         phone: string;

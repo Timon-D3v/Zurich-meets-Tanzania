@@ -26,9 +26,12 @@ export class CookieConsentService {
      * @returns {void}
      */
     acceptCookies(): void {
-        if (!isPlatformBrowser(this.platformId)) return;
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
 
         localStorage.setItem("cookie_consent", "true");
+
         localStorage.setItem(
             "cookie_consent_mode",
             JSON.stringify({
@@ -39,6 +42,7 @@ export class CookieConsentService {
                 security_storage: "granted",
             }),
         );
+
         document.dispatchEvent(this.consentEvent);
     }
 
@@ -56,9 +60,12 @@ export class CookieConsentService {
      * @returns {void}
      */
     rejectCookies(): void {
-        if (!isPlatformBrowser(this.platformId)) return;
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
 
         localStorage.setItem("cookie_consent", "false");
+
         localStorage.setItem(
             "cookie_consent_mode",
             JSON.stringify({
@@ -69,6 +76,7 @@ export class CookieConsentService {
                 security_storage: "granted",
             }),
         );
+
         document.dispatchEvent(this.consentEvent);
     }
 
@@ -79,7 +87,9 @@ export class CookieConsentService {
      *                      If the platform is not a browser, it returns `false`.
      */
     hasAcceptedCookies(): boolean {
-        if (!isPlatformBrowser(this.platformId)) return false;
+        if (!isPlatformBrowser(this.platformId)) {
+            return false;
+        }
 
         return localStorage.getItem("cookie_consent") === "true";
     }
@@ -90,7 +100,9 @@ export class CookieConsentService {
      * @returns {boolean} Returns `true` if the user has rejected cookies, otherwise `false`.
      */
     hasRejectedCookies(): boolean {
-        if (!isPlatformBrowser(this.platformId)) return false;
+        if (!isPlatformBrowser(this.platformId)) {
+            return false;
+        }
 
         return localStorage.getItem("cookie_consent") === "false";
     }
@@ -107,9 +119,13 @@ export class CookieConsentService {
      * @returns {void}
      */
     init(): void {
-        if (!isPlatformBrowser(this.platformId)) return;
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
 
-        if (this.hasAcceptedCookies()) return;
+        if (this.hasAcceptedCookies()) {
+            return;
+        }
 
         localStorage.setItem(
             "cookie_consent_mode",

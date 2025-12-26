@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { PUBLIC_CONFIG } from "../../publicConfig";
 import { PageDescription } from "../..";
 import { Meta, Title } from "@angular/platform-browser";
+import { PublicEnvService } from "./public-env.service";
 
 @Injectable({
     providedIn: "root",
@@ -9,6 +10,8 @@ import { Meta, Title } from "@angular/platform-browser";
 export class SiteMetadataService {
     private meta = inject(Meta);
     private titleService = inject(Title);
+
+    private publicEnvService = inject(PublicEnvService);
 
     getMetadataForRoute(route: string): PageDescription {
         try {
@@ -30,7 +33,9 @@ export class SiteMetadataService {
         }
     }
 
-    updateMetadataForRoute(route: string): void {
+    async updateMetadataForRoute(route: string): Promise<void> {
+        const ORIGIN = await this.publicEnvService.getOrigin();
+
         const { title, description, lastUpdated } = this.getMetadataForRoute(route as `/${string}`);
 
         this.titleService.setTitle(title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX);
@@ -39,7 +44,7 @@ export class SiteMetadataService {
         this.meta.updateTag({ content: description }, "name='description'");
         this.meta.updateTag({ content: description }, "property='og:description'");
 
-        this.meta.updateTag({ content: PUBLIC_CONFIG.ORIGIN + route }, "property='og:url'");
+        this.meta.updateTag({ content: ORIGIN + route }, "property='og:url'");
 
         this.meta.updateTag({ content: lastUpdated }, "name='last-modified'");
 
@@ -60,7 +65,9 @@ export class SiteMetadataService {
         }
     }
 
-    setDefaultMetadata(): void {
+    async setDefaultMetadata(): Promise<void> {
+        const ORIGIN = await this.publicEnvService.getOrigin();
+
         this.meta.updateTag({ content: PUBLIC_CONFIG.PERSONAS["CHAIRMAN"].name }, "name='chairman'");
         this.meta.updateTag({ content: PUBLIC_CONFIG.PERSONAS["CHAIRMAN"].email }, "name='chairman-contact'");
 
@@ -74,7 +81,7 @@ export class SiteMetadataService {
         this.meta.updateTag({ content: PUBLIC_CONFIG.PERSONAS["DEVELOPER"].linkedIn as string }, "name='developer-linkedIn'");
         this.meta.updateTag({ content: PUBLIC_CONFIG.PERSONAS["DEVELOPER"].github as string }, "name='developer-github'");
 
-        this.meta.updateTag({ content: PUBLIC_CONFIG.ORIGIN + "/contact" }, "name='contact-page'");
+        this.meta.updateTag({ content: ORIGIN + "/contact" }, "name='contact-page'");
 
         this.meta.updateTag({ content: PUBLIC_CONFIG.THEME_COLOR }, "name='theme-color'");
     }

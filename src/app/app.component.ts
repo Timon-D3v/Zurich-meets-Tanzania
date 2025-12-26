@@ -14,10 +14,11 @@ import { StyleNamespaceService } from "./services/style-namespace.service";
 import { HeaderService } from "./services/header.service";
 import { NavigationService } from "./services/navigation.service";
 import { SiteMetadataService } from "./services/site-metadata.service";
+import { CookieBannerComponent } from "./components/cookie-banner/cookie-banner.component";
 
 @Component({
     selector: "app-root",
-    imports: [RouterOutlet, HeaderComponent, NavigationComponent, FooterComponent, NotificationsWrapperComponent],
+    imports: [RouterOutlet, HeaderComponent, NavigationComponent, FooterComponent, NotificationsWrapperComponent, CookieBannerComponent],
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.scss",
 })
