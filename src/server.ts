@@ -120,7 +120,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  * The server listens on the port defined by the `PORT` environment variable.
  */
 if (isMainModule(import.meta.url)) {
-    app.listen(CONFIG.PORT, (error) => {
+    app.listen(CONFIG.PORT, CONFIG.HOST, (error) => {
         if (error) {
             throw error;
         }

@@ -1,1 +1,445 @@
-<p>dashboard works!</p>
+<div class="wrapper">
+    <nav>
+        <app-admin-nav-element
+            description="Verwaltung"
+            [linkArray]="[
+                {
+                    href: '#Passwörter',
+                    label: 'Passwörter',
+                    clickable: true,
+                    onClick: generateActivateFunction('passwords'),
+                },
+                {
+                    href: '#Admins-ernennen',
+                    label: ' Admins ernennen',
+                    clickable: true,
+                    onClick: generateActivateFunction('admin-add-admin'),
+                },
+                {
+                    href: '#Admins-entfernen',
+                    label: ' Admins entfernen',
+                    clickable: true,
+                    onClick: generateActivateFunction('admin-remove-admin'),
+                },
+                {
+                    href: '#Account-erstellen',
+                    label: 'Account erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('admin-create-account'),
+                },
+                {
+                    href: '#Homepage-Bild',
+                    label: 'Homepage Bild',
+                    clickable: true,
+                    onClick: generateActivateFunction('homepage-picture'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Unterseiten"
+            [linkArray]="[
+                {
+                    href: '#Vision',
+                    label: 'Vision',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-vision'),
+                },
+                {
+                    href: '#Vorstand',
+                    label: 'Vorstand',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-board'),
+                },
+                {
+                    href: '#Wie-alles-begann…',
+                    label: 'Wie alles begann…',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-beginning'),
+                },
+                {
+                    href: '#Finanzierung',
+                    label: 'Finanzierung',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-finances'),
+                },
+                {
+                    href: '#Erfolgsrechung',
+                    label: 'Erfolgsrechung',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-income-statement'),
+                },
+                {
+                    href: '#Generalversammlung',
+                    label: 'Generalversammlung',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-general-meeting'),
+                },
+                {
+                    href: '#Statuten',
+                    label: 'Statuten',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-statutes'),
+                },
+                {
+                    href: '#zurich-meets-tanzania',
+                    label: 'zurich meets tanzania',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-zurich-meets-tanzania'),
+                },
+                {
+                    href: '#tanzania-meets-zurich',
+                    label: 'tanzania meets zurich',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-tanzania-meets-zurich'),
+                },
+                {
+                    href: '#Mbuzi',
+                    label: 'Mbuzi',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-mbuzi'),
+                },
+                {
+                    href: '#Twenty4Forty',
+                    label: 'Twenty4Forty',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-gynecology'),
+                },
+                {
+                    href: '#Meducation',
+                    label: 'Meducation',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-meducation'),
+                },
+                {
+                    href: '#Bajaji',
+                    label: 'Bajaji',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-bajaji'),
+                },
+                {
+                    href: '#Kardiologie',
+                    label: 'Kardiologie',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-cardiology'),
+                },
+                {
+                    href: '#Chirurgie',
+                    label: 'Chirurgie',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-surgery'),
+                },
+                {
+                    href: '#Factsheet-Tanzania',
+                    label: 'Factsheet Tanzania',
+                    clickable: true,
+                    onClick: generateActivateFunction('edit-static-history'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Blogs"
+            [linkArray]="[
+                {
+                    href: '#Blog-erstellen',
+                    label: 'Blog erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('blog-create-blog'),
+                },
+                {
+                    href: '#Blog-bearbeiten',
+                    label: 'Blog bearbeiten',
+                    clickable: true,
+                    onClick: generateActivateFunction('blog-edit-blog'),
+                },
+                {
+                    href: '#Blog-löschen',
+                    label: 'Blog löschen',
+                    clickable: true,
+                    onClick: generateActivateFunction('blog-delete-blog'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="News"
+            [linkArray]="[
+                {
+                    href: '#News-erstellen',
+                    label: 'News erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('news-create-news'),
+                },
+                {
+                    href: '#News-bearbeiten',
+                    label: 'News bearbeiten',
+                    clickable: true,
+                    onClick: generateActivateFunction('news-edit-news'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Kalender"
+            [linkArray]="[
+                {
+                    href: '#Event-erstellen',
+                    label: 'Event erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('calendar-create-event'),
+                },
+                {
+                    href: '#Event-löschen',
+                    label: 'Event löschen',
+                    clickable: true,
+                    onClick: generateActivateFunction('calendar-delete-event'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Team"
+            [linkArray]="[
+                {
+                    href: '#Team-erstellen',
+                    label: 'Team erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('team-create-team'),
+                },
+                {
+                    href: '#Mitglied-hinzufügen',
+                    label: 'Mitglied hinzufügen',
+                    clickable: true,
+                    onClick: generateActivateFunction('team-add-member'),
+                },
+                {
+                    href: '#Mitglied-entfernen',
+                    label: 'Mitglied entfernen',
+                    clickable: true,
+                    onClick: generateActivateFunction('team-remove-member'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Galerie"
+            [linkArray]="[
+                {
+                    href: '#Galerie-erstellen',
+                    label: 'Galerie erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('gallery-create-gallery'),
+                },
+                {
+                    href: '#Galerie-löschen',
+                    label: 'Galerie löschen',
+                    clickable: true,
+                    onClick: generateActivateFunction('gallery-delete-gallery'),
+                },
+                {
+                    href: '#Bilder-hinzufügen',
+                    label: 'Bilder hinzufügen',
+                    clickable: true,
+                    onClick: generateActivateFunction('gallery-add-images'),
+                },
+                {
+                    href: '#Bilder-entfernen',
+                    label: 'Bilder entfernen',
+                    clickable: true,
+                    onClick: generateActivateFunction('gallery-remove-images'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Mitglieder"
+            [linkArray]="[
+                {
+                    href: '#Mitglied-hinzufügen',
+                    label: 'Mitglied hinzufügen',
+                    clickable: true,
+                    onClick: generateActivateFunction('members-add-manual-member'),
+                },
+                {
+                    href: '#Mitglied-entfernen',
+                    label: 'Mitglied entfernen',
+                    clickable: true,
+                    onClick: generateActivateFunction('members-remove-manual-member'),
+                },
+                {
+                    href: '#Mitgliederliste',
+                    label: 'Mitgliederliste',
+                    clickable: true,
+                    onClick: generateActivateFunction('members-members-list'),
+                },
+                {
+                    href: '#Mitgliederliste-Stripe',
+                    label: 'Mitgliederliste (Stripe)',
+                    clickable: true,
+                    onClick: generateActivateFunction('members-stripe-members-list'),
+                },
+                {
+                    href: '#Mitgliederliste-Manuell',
+                    label: 'Mitgliederliste (Manuell)',
+                    clickable: true,
+                    onClick: generateActivateFunction('members-manual-members-list'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Spenden"
+            [linkArray]="[
+                {
+                    href: '#Spendenverlauf',
+                    label: 'Spendenverlauf',
+                    clickable: true,
+                    onClick: generateActivateFunction('donations-form-entries'),
+                },
+                {
+                    href: '#Spendenbarometer-erstellen',
+                    label: 'Spendenbarometer erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('donations-create-donation-meter'),
+                },
+                {
+                    href: '#Spendenbarometer-entfernen',
+                    label: 'Spendenbarometer entfernen',
+                    clickable: true,
+                    onClick: generateActivateFunction('donations-remove-donation-meter'),
+                },
+                {
+                    href: '#Spendenbarometer-aktualisieren',
+                    label: 'Spendenbarometer aktualisieren',
+                    clickable: true,
+                    onClick: generateActivateFunction('donations-push-donation-meter'),
+                },
+                {
+                    href: '#Shopartikel-erstellen',
+                    label: 'Shopartikel erstellen',
+                    clickable: true,
+                    onClick: generateActivateFunction('donations-create-shop-item'),
+                },
+                {
+                    href: '#Shopartikel-entfernen',
+                    label: 'Shopartikel entfernen',
+                    clickable: true,
+                    onClick: generateActivateFunction('donations-delete-shop-item'),
+                },
+                {
+                    href: '#Spendenliste',
+                    label: 'Spendenliste',
+                    clickable: true,
+                    onClick: generateActivateFunction('donations-all-time-donations-list'),
+                },
+            ]"
+        ></app-admin-nav-element>
+        <app-admin-nav-element
+            description="Statistiken"
+            [linkArray]="[
+                {
+                    href: '#Benutzerliste',
+                    label: 'Benutzerliste',
+                    clickable: true,
+                    onClick: generateActivateFunction('stats-user-list'),
+                },
+                {
+                    href: '#Webseite-Statistik',
+                    label: 'Webseite-Statistik',
+                    clickable: true,
+                    onClick: generateActivateFunction('stats-website-analytics'),
+                },
+            ]"
+        ></app-admin-nav-element>
+    </nav>
+    <section>
+        @if (currentActiveSection() === "passwords") {
+            <app-admin-passwords-page></app-admin-passwords-page>
+        } @else if (currentActiveSection() === "admin-add-admin") {
+            <app-admin-add-admin></app-admin-add-admin>
+        } @else if (currentActiveSection() === "admin-remove-admin") {
+            <app-admin-remove-admin></app-admin-remove-admin>
+        } @else if (currentActiveSection() === "admin-create-account") {
+            <app-admin-create-account></app-admin-create-account>
+        } @else if (currentActiveSection() === "homepage-picture") {
+            <app-admin-homepage-picture-page></app-admin-homepage-picture-page>
+        } @else if (currentActiveSection() === "edit-static-vision") {
+            <app-edit-static-vision></app-edit-static-vision>
+        } @else if (currentActiveSection() === "edit-static-board") {
+            <app-edit-static-board></app-edit-static-board>
+        } @else if (currentActiveSection() === "edit-static-beginning") {
+            <app-edit-static-beginning></app-edit-static-beginning>
+        } @else if (currentActiveSection() === "edit-static-finances") {
+            <app-edit-static-finances></app-edit-static-finances>
+        } @else if (currentActiveSection() === "edit-static-income-statement") {
+            <app-edit-static-income-statement></app-edit-static-income-statement>
+        } @else if (currentActiveSection() === "edit-static-general-meeting") {
+            <app-edit-static-general-meeting></app-edit-static-general-meeting>
+        } @else if (currentActiveSection() === "edit-static-statutes") {
+            <app-edit-static-statutes></app-edit-static-statutes>
+        } @else if (currentActiveSection() === "edit-static-zurich-meets-tanzania") {
+            <app-edit-static-zurich-meets-tanzania></app-edit-static-zurich-meets-tanzania>
+        } @else if (currentActiveSection() === "edit-static-tanzania-meets-zurich") {
+            <app-edit-static-tanzania-meets-zurich></app-edit-static-tanzania-meets-zurich>
+        } @else if (currentActiveSection() === "edit-static-mbuzi") {
+            <app-edit-static-mbuzi></app-edit-static-mbuzi>
+        } @else if (currentActiveSection() === "edit-static-gynecology") {
+            <app-edit-static-gynecology></app-edit-static-gynecology>
+        } @else if (currentActiveSection() === "edit-static-meducation") {
+            <app-edit-static-meducation></app-edit-static-meducation>
+        } @else if (currentActiveSection() === "edit-static-bajaji") {
+            <app-edit-static-bajaji></app-edit-static-bajaji>
+        } @else if (currentActiveSection() === "edit-static-cardiology") {
+            <app-edit-static-cardiology></app-edit-static-cardiology>
+        } @else if (currentActiveSection() === "edit-static-surgery") {
+            <app-edit-static-surgery></app-edit-static-surgery>
+        } @else if (currentActiveSection() === "edit-static-history") {
+            <app-edit-static-history></app-edit-static-history>
+        } @else if (currentActiveSection() === "blog-create-blog") {
+            <app-blog-create-blog></app-blog-create-blog>
+        } @else if (currentActiveSection() === "blog-edit-blog") {
+            <app-blog-edit-blog></app-blog-edit-blog>
+        } @else if (currentActiveSection() === "blog-delete-blog") {
+            <app-blog-delete-blog></app-blog-delete-blog>
+        } @else if (currentActiveSection() === "news-create-news") {
+            <app-news-create-news></app-news-create-news>
+        } @else if (currentActiveSection() === "news-edit-news") {
+            <app-news-edit-news></app-news-edit-news>
+        } @else if (currentActiveSection() === "calendar-create-event") {
+            <app-calendar-create-event></app-calendar-create-event>
+        } @else if (currentActiveSection() === "calendar-delete-event") {
+            <app-calendar-delete-event></app-calendar-delete-event>
+        } @else if (currentActiveSection() === "team-create-team") {
+            <app-team-create-team></app-team-create-team>
+        } @else if (currentActiveSection() === "team-add-member") {
+            <app-team-add-member></app-team-add-member>
+        } @else if (currentActiveSection() === "team-remove-member") {
+            <app-team-remove-member></app-team-remove-member>
+        } @else if (currentActiveSection() === "gallery-create-gallery") {
+            <app-gallery-create-gallery></app-gallery-create-gallery>
+        } @else if (currentActiveSection() === "gallery-delete-gallery") {
+            <app-gallery-delete-gallery></app-gallery-delete-gallery>
+        } @else if (currentActiveSection() === "gallery-add-images") {
+            <app-gallery-add-images></app-gallery-add-images>
+        } @else if (currentActiveSection() === "gallery-remove-images") {
+            <app-gallery-remove-images></app-gallery-remove-images>
+        } @else if (currentActiveSection() === "members-add-manual-member") {
+            <app-members-add-manual-member></app-members-add-manual-member>
+        } @else if (currentActiveSection() === "members-remove-manual-member") {
+            <app-members-remove-manual-member></app-members-remove-manual-member>
+        } @else if (currentActiveSection() === "donations-form-entries") {
+            <app-donations-form-entries></app-donations-form-entries>
+        } @else if (currentActiveSection() === "donations-create-donation-meter") {
+            <app-donations-create-donation-meter></app-donations-create-donation-meter>
+        } @else if (currentActiveSection() === "donations-remove-donation-meter") {
+            <app-donations-remove-donation-meter></app-donations-remove-donation-meter>
+        } @else if (currentActiveSection() === "donations-push-donation-meter") {
+            <app-donations-push-donation-meter></app-donations-push-donation-meter>
+        } @else if (currentActiveSection() === "donations-create-shop-item") {
+            <app-donations-create-shop-item></app-donations-create-shop-item>
+        } @else if (currentActiveSection() === "donations-delete-shop-item") {
+            <app-donations-delete-shop-item></app-donations-delete-shop-item>
+        } @else if (currentActiveSection() === "donations-all-time-donations-list") {
+            <app-donations-all-time-donations-list></app-donations-all-time-donations-list>
+        } @else if (currentActiveSection() === "stats-user-list") {
+            <app-stats-user-list></app-stats-user-list>
+        } @else if (currentActiveSection() === "stats-website-analytics") {
+            <app-stats-website-analytics></app-stats-website-analytics>
+        } @else {
+            <app-admin-unknown-page></app-admin-unknown-page>
+        }
+    </section>
+</div>
