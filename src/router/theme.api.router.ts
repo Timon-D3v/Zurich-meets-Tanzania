@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { ApiEndpointResponse, GetThemeApiEndpointResponse } from "..";
 import { getThemeFromUserId, setThemeForUserId } from "../shared/theme.database";
 
-// Router Serves under /api/theme
+// Router Serves under /api/secured/theme
 const router = Router();
 
 router.get("/get", async (req: Request, res: Response): Promise<void> => {

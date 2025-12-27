@@ -1,349 +1,355 @@
 <div class="wrapper">
     <nav>
-        <app-admin-nav-element
-            description="Verwaltung"
-            [linkArray]="[
-                {
-                    href: '#Passwörter',
-                    label: 'Passwörter',
-                    clickable: true,
-                    onClick: generateActivateFunction('passwords'),
-                },
-                {
-                    href: '#Admins-ernennen',
-                    label: ' Admins ernennen',
-                    clickable: true,
-                    onClick: generateActivateFunction('admin-add-admin'),
-                },
-                {
-                    href: '#Admins-entfernen',
-                    label: ' Admins entfernen',
-                    clickable: true,
-                    onClick: generateActivateFunction('admin-remove-admin'),
-                },
-                {
-                    href: '#Account-erstellen',
-                    label: 'Account erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('admin-create-account'),
-                },
-                {
-                    href: '#Homepage-Bild',
-                    label: 'Homepage Bild',
-                    clickable: true,
-                    onClick: generateActivateFunction('homepage-picture'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Unterseiten"
-            [linkArray]="[
-                {
-                    href: '#Vision',
-                    label: 'Vision',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-vision'),
-                },
-                {
-                    href: '#Vorstand',
-                    label: 'Vorstand',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-board'),
-                },
-                {
-                    href: '#Wie-alles-begann…',
-                    label: 'Wie alles begann…',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-beginning'),
-                },
-                {
-                    href: '#Finanzierung',
-                    label: 'Finanzierung',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-finances'),
-                },
-                {
-                    href: '#Erfolgsrechung',
-                    label: 'Erfolgsrechung',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-income-statement'),
-                },
-                {
-                    href: '#Generalversammlung',
-                    label: 'Generalversammlung',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-general-meeting'),
-                },
-                {
-                    href: '#Statuten',
-                    label: 'Statuten',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-statutes'),
-                },
-                {
-                    href: '#zurich-meets-tanzania',
-                    label: 'zurich meets tanzania',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-zurich-meets-tanzania'),
-                },
-                {
-                    href: '#tanzania-meets-zurich',
-                    label: 'tanzania meets zurich',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-tanzania-meets-zurich'),
-                },
-                {
-                    href: '#Mbuzi',
-                    label: 'Mbuzi',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-mbuzi'),
-                },
-                {
-                    href: '#Twenty4Forty',
-                    label: 'Twenty4Forty',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-gynecology'),
-                },
-                {
-                    href: '#Meducation',
-                    label: 'Meducation',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-meducation'),
-                },
-                {
-                    href: '#Bajaji',
-                    label: 'Bajaji',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-bajaji'),
-                },
-                {
-                    href: '#Kardiologie',
-                    label: 'Kardiologie',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-cardiology'),
-                },
-                {
-                    href: '#Chirurgie',
-                    label: 'Chirurgie',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-surgery'),
-                },
-                {
-                    href: '#Factsheet-Tanzania',
-                    label: 'Factsheet Tanzania',
-                    clickable: true,
-                    onClick: generateActivateFunction('edit-static-history'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Blogs"
-            [linkArray]="[
-                {
-                    href: '#Blog-erstellen',
-                    label: 'Blog erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('blog-create-blog'),
-                },
-                {
-                    href: '#Blog-bearbeiten',
-                    label: 'Blog bearbeiten',
-                    clickable: true,
-                    onClick: generateActivateFunction('blog-edit-blog'),
-                },
-                {
-                    href: '#Blog-löschen',
-                    label: 'Blog löschen',
-                    clickable: true,
-                    onClick: generateActivateFunction('blog-delete-blog'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="News"
-            [linkArray]="[
-                {
-                    href: '#News-erstellen',
-                    label: 'News erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('news-create-news'),
-                },
-                {
-                    href: '#News-bearbeiten',
-                    label: 'News bearbeiten',
-                    clickable: true,
-                    onClick: generateActivateFunction('news-edit-news'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Kalender"
-            [linkArray]="[
-                {
-                    href: '#Event-erstellen',
-                    label: 'Event erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('calendar-create-event'),
-                },
-                {
-                    href: '#Event-löschen',
-                    label: 'Event löschen',
-                    clickable: true,
-                    onClick: generateActivateFunction('calendar-delete-event'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Team"
-            [linkArray]="[
-                {
-                    href: '#Team-erstellen',
-                    label: 'Team erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('team-create-team'),
-                },
-                {
-                    href: '#Mitglied-hinzufügen',
-                    label: 'Mitglied hinzufügen',
-                    clickable: true,
-                    onClick: generateActivateFunction('team-add-member'),
-                },
-                {
-                    href: '#Mitglied-entfernen',
-                    label: 'Mitglied entfernen',
-                    clickable: true,
-                    onClick: generateActivateFunction('team-remove-member'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Galerie"
-            [linkArray]="[
-                {
-                    href: '#Galerie-erstellen',
-                    label: 'Galerie erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('gallery-create-gallery'),
-                },
-                {
-                    href: '#Galerie-löschen',
-                    label: 'Galerie löschen',
-                    clickable: true,
-                    onClick: generateActivateFunction('gallery-delete-gallery'),
-                },
-                {
-                    href: '#Bilder-hinzufügen',
-                    label: 'Bilder hinzufügen',
-                    clickable: true,
-                    onClick: generateActivateFunction('gallery-add-images'),
-                },
-                {
-                    href: '#Bilder-entfernen',
-                    label: 'Bilder entfernen',
-                    clickable: true,
-                    onClick: generateActivateFunction('gallery-remove-images'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Mitglieder"
-            [linkArray]="[
-                {
-                    href: '#Mitglied-hinzufügen',
-                    label: 'Mitglied hinzufügen',
-                    clickable: true,
-                    onClick: generateActivateFunction('members-add-manual-member'),
-                },
-                {
-                    href: '#Mitglied-entfernen',
-                    label: 'Mitglied entfernen',
-                    clickable: true,
-                    onClick: generateActivateFunction('members-remove-manual-member'),
-                },
-                {
-                    href: '#Mitgliederliste',
-                    label: 'Mitgliederliste',
-                    clickable: true,
-                    onClick: generateActivateFunction('members-members-list'),
-                },
-                {
-                    href: '#Mitgliederliste-Stripe',
-                    label: 'Mitgliederliste (Stripe)',
-                    clickable: true,
-                    onClick: generateActivateFunction('members-stripe-members-list'),
-                },
-                {
-                    href: '#Mitgliederliste-Manuell',
-                    label: 'Mitgliederliste (Manuell)',
-                    clickable: true,
-                    onClick: generateActivateFunction('members-manual-members-list'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Spenden"
-            [linkArray]="[
-                {
-                    href: '#Spendenverlauf',
-                    label: 'Spendenverlauf',
-                    clickable: true,
-                    onClick: generateActivateFunction('donations-form-entries'),
-                },
-                {
-                    href: '#Spendenbarometer-erstellen',
-                    label: 'Spendenbarometer erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('donations-create-donation-meter'),
-                },
-                {
-                    href: '#Spendenbarometer-entfernen',
-                    label: 'Spendenbarometer entfernen',
-                    clickable: true,
-                    onClick: generateActivateFunction('donations-remove-donation-meter'),
-                },
-                {
-                    href: '#Spendenbarometer-aktualisieren',
-                    label: 'Spendenbarometer aktualisieren',
-                    clickable: true,
-                    onClick: generateActivateFunction('donations-push-donation-meter'),
-                },
-                {
-                    href: '#Shopartikel-erstellen',
-                    label: 'Shopartikel erstellen',
-                    clickable: true,
-                    onClick: generateActivateFunction('donations-create-shop-item'),
-                },
-                {
-                    href: '#Shopartikel-entfernen',
-                    label: 'Shopartikel entfernen',
-                    clickable: true,
-                    onClick: generateActivateFunction('donations-delete-shop-item'),
-                },
-                {
-                    href: '#Spendenliste',
-                    label: 'Spendenliste',
-                    clickable: true,
-                    onClick: generateActivateFunction('donations-all-time-donations-list'),
-                },
-            ]"
-        ></app-admin-nav-element>
-        <app-admin-nav-element
-            description="Statistiken"
-            [linkArray]="[
-                {
-                    href: '#Benutzerliste',
-                    label: 'Benutzerliste',
-                    clickable: true,
-                    onClick: generateActivateFunction('stats-user-list'),
-                },
-                {
-                    href: '#Webseite-Statistik',
-                    label: 'Webseite-Statistik',
-                    clickable: true,
-                    onClick: generateActivateFunction('stats-website-analytics'),
-                },
-            ]"
-        ></app-admin-nav-element>
+        <div class="mobileTopbar">
+            <h2>Admin Dashboard</h2>
+            <button type="button" [class]="mobileNavOpen() ? 'open' : null" (click)="toggleMobileNav()"></button>
+        </div>
+        <aside [class]="mobileNavOpen() ? 'open' : null">
+            <app-admin-nav-element
+                description="Verwaltung"
+                [linkArray]="[
+                    {
+                        href: '#Passwörter',
+                        label: 'Passwörter',
+                        clickable: true,
+                        onClick: generateActivateFunction('passwords'),
+                    },
+                    {
+                        href: '#Admins-ernennen',
+                        label: ' Admins ernennen',
+                        clickable: true,
+                        onClick: generateActivateFunction('admin-add-admin'),
+                    },
+                    {
+                        href: '#Admins-entfernen',
+                        label: ' Admins entfernen',
+                        clickable: true,
+                        onClick: generateActivateFunction('admin-remove-admin'),
+                    },
+                    {
+                        href: '#Account-erstellen',
+                        label: 'Account erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('admin-create-account'),
+                    },
+                    {
+                        href: '#Homepage-Bild',
+                        label: 'Homepage Bild',
+                        clickable: true,
+                        onClick: generateActivateFunction('homepage-picture'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Unterseiten"
+                [linkArray]="[
+                    {
+                        href: '#Vision',
+                        label: 'Vision',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-vision'),
+                    },
+                    {
+                        href: '#Vorstand',
+                        label: 'Vorstand',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-board'),
+                    },
+                    {
+                        href: '#Wie-alles-begann…',
+                        label: 'Wie alles begann…',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-beginning'),
+                    },
+                    {
+                        href: '#Finanzierung',
+                        label: 'Finanzierung',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-finances'),
+                    },
+                    {
+                        href: '#Erfolgsrechung',
+                        label: 'Erfolgsrechung',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-income-statement'),
+                    },
+                    {
+                        href: '#Generalversammlung',
+                        label: 'Generalversammlung',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-general-meeting'),
+                    },
+                    {
+                        href: '#Statuten',
+                        label: 'Statuten',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-statutes'),
+                    },
+                    {
+                        href: '#zurich-meets-tanzania',
+                        label: 'zurich meets tanzania',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-zurich-meets-tanzania'),
+                    },
+                    {
+                        href: '#tanzania-meets-zurich',
+                        label: 'tanzania meets zurich',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-tanzania-meets-zurich'),
+                    },
+                    {
+                        href: '#Mbuzi',
+                        label: 'Mbuzi',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-mbuzi'),
+                    },
+                    {
+                        href: '#Twenty4Forty',
+                        label: 'Twenty4Forty',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-gynecology'),
+                    },
+                    {
+                        href: '#Meducation',
+                        label: 'Meducation',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-meducation'),
+                    },
+                    {
+                        href: '#Bajaji',
+                        label: 'Bajaji',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-bajaji'),
+                    },
+                    {
+                        href: '#Kardiologie',
+                        label: 'Kardiologie',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-cardiology'),
+                    },
+                    {
+                        href: '#Chirurgie',
+                        label: 'Chirurgie',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-surgery'),
+                    },
+                    {
+                        href: '#Factsheet-Tanzania',
+                        label: 'Factsheet Tanzania',
+                        clickable: true,
+                        onClick: generateActivateFunction('edit-static-history'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Blogs"
+                [linkArray]="[
+                    {
+                        href: '#Blog-erstellen',
+                        label: 'Blog erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('blog-create-blog'),
+                    },
+                    {
+                        href: '#Blog-bearbeiten',
+                        label: 'Blog bearbeiten',
+                        clickable: true,
+                        onClick: generateActivateFunction('blog-edit-blog'),
+                    },
+                    {
+                        href: '#Blog-löschen',
+                        label: 'Blog löschen',
+                        clickable: true,
+                        onClick: generateActivateFunction('blog-delete-blog'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="News"
+                [linkArray]="[
+                    {
+                        href: '#News-erstellen',
+                        label: 'News erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('news-create-news'),
+                    },
+                    {
+                        href: '#News-bearbeiten',
+                        label: 'News bearbeiten',
+                        clickable: true,
+                        onClick: generateActivateFunction('news-edit-news'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Kalender"
+                [linkArray]="[
+                    {
+                        href: '#Event-erstellen',
+                        label: 'Event erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('calendar-create-event'),
+                    },
+                    {
+                        href: '#Event-löschen',
+                        label: 'Event löschen',
+                        clickable: true,
+                        onClick: generateActivateFunction('calendar-delete-event'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Team"
+                [linkArray]="[
+                    {
+                        href: '#Team-erstellen',
+                        label: 'Team erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('team-create-team'),
+                    },
+                    {
+                        href: '#Mitglied-hinzufügen',
+                        label: 'Mitglied hinzufügen',
+                        clickable: true,
+                        onClick: generateActivateFunction('team-add-member'),
+                    },
+                    {
+                        href: '#Mitglied-entfernen',
+                        label: 'Mitglied entfernen',
+                        clickable: true,
+                        onClick: generateActivateFunction('team-remove-member'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Galerie"
+                [linkArray]="[
+                    {
+                        href: '#Galerie-erstellen',
+                        label: 'Galerie erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('gallery-create-gallery'),
+                    },
+                    {
+                        href: '#Galerie-löschen',
+                        label: 'Galerie löschen',
+                        clickable: true,
+                        onClick: generateActivateFunction('gallery-delete-gallery'),
+                    },
+                    {
+                        href: '#Bilder-hinzufügen',
+                        label: 'Bilder hinzufügen',
+                        clickable: true,
+                        onClick: generateActivateFunction('gallery-add-images'),
+                    },
+                    {
+                        href: '#Bilder-entfernen',
+                        label: 'Bilder entfernen',
+                        clickable: true,
+                        onClick: generateActivateFunction('gallery-remove-images'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Mitglieder"
+                [linkArray]="[
+                    {
+                        href: '#Mitglied-hinzufügen',
+                        label: 'Mitglied hinzufügen',
+                        clickable: true,
+                        onClick: generateActivateFunction('members-add-manual-member'),
+                    },
+                    {
+                        href: '#Mitglied-entfernen',
+                        label: 'Mitglied entfernen',
+                        clickable: true,
+                        onClick: generateActivateFunction('members-remove-manual-member'),
+                    },
+                    {
+                        href: '#Mitgliederliste',
+                        label: 'Mitgliederliste',
+                        clickable: true,
+                        onClick: generateActivateFunction('members-members-list'),
+                    },
+                    {
+                        href: '#Mitgliederliste-Stripe',
+                        label: 'Mitgliederliste (Stripe)',
+                        clickable: true,
+                        onClick: generateActivateFunction('members-stripe-members-list'),
+                    },
+                    {
+                        href: '#Mitgliederliste-Manuell',
+                        label: 'Mitgliederliste (Manuell)',
+                        clickable: true,
+                        onClick: generateActivateFunction('members-manual-members-list'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Spenden"
+                [linkArray]="[
+                    {
+                        href: '#Spendenverlauf',
+                        label: 'Spendenverlauf',
+                        clickable: true,
+                        onClick: generateActivateFunction('donations-form-entries'),
+                    },
+                    {
+                        href: '#Spendenbarometer-erstellen',
+                        label: 'Spendenbarometer erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('donations-create-donation-meter'),
+                    },
+                    {
+                        href: '#Spendenbarometer-entfernen',
+                        label: 'Spendenbarometer entfernen',
+                        clickable: true,
+                        onClick: generateActivateFunction('donations-remove-donation-meter'),
+                    },
+                    {
+                        href: '#Spendenbarometer-aktualisieren',
+                        label: 'Spendenbarometer aktualisieren',
+                        clickable: true,
+                        onClick: generateActivateFunction('donations-push-donation-meter'),
+                    },
+                    {
+                        href: '#Shopartikel-erstellen',
+                        label: 'Shopartikel erstellen',
+                        clickable: true,
+                        onClick: generateActivateFunction('donations-create-shop-item'),
+                    },
+                    {
+                        href: '#Shopartikel-entfernen',
+                        label: 'Shopartikel entfernen',
+                        clickable: true,
+                        onClick: generateActivateFunction('donations-delete-shop-item'),
+                    },
+                    {
+                        href: '#Spendenliste',
+                        label: 'Spendenliste',
+                        clickable: true,
+                        onClick: generateActivateFunction('donations-all-time-donations-list'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+            <app-admin-nav-element
+                description="Statistiken"
+                [linkArray]="[
+                    {
+                        href: '#Benutzerliste',
+                        label: 'Benutzerliste',
+                        clickable: true,
+                        onClick: generateActivateFunction('stats-user-list'),
+                    },
+                    {
+                        href: '#Webseite-Statistik',
+                        label: 'Webseite-Statistik',
+                        clickable: true,
+                        onClick: generateActivateFunction('stats-website-analytics'),
+                    },
+                ]"
+            ></app-admin-nav-element>
+        </aside>
     </nav>
     <section>
         @if (currentActiveSection() === "passwords") {

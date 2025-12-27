@@ -4,9 +4,12 @@ import rateLimit from "express-rate-limit";
 import envRouter from "./env.api.router";
 import authRouter from "./auth.api.router";
 import blogRouter from "./blog.api.router";
-import themeRouter from "./theme.api.router";
 import galleryRouter from "./gallery.api.router";
 import newsletterRouter from "./newsletter.router";
+
+import securedRouter from "./secured.router";
+
+import { isLoggedIn } from "../middleware/auth.middleware";
 
 // Router Serves under /api
 const router = Router();
@@ -26,8 +29,10 @@ router.use(
 router.use("/env", envRouter);
 router.use("/auth", authRouter);
 router.use("/blog", blogRouter);
-router.use("/theme", themeRouter);
 router.use("/gallery", galleryRouter);
 router.use("/newsletter", newsletterRouter);
+
+// Secured Routes
+router.use("/secured", isLoggedIn, securedRouter);
 
 export default router;

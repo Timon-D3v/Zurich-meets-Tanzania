@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
 import { AdminNavElementComponent } from "../components/admin-nav-element/admin-nav-element.component";
 import { AdminUnknownPageComponent } from "../components/admin-unknown-page/admin-unknown-page.component";
 import { AdminPasswordsPageComponent } from "../components/admin-passwords-page/admin-passwords-page.component";
@@ -47,6 +47,7 @@ import { TeamCreateTeamComponent } from "../components/team-create-team/team-cre
 import { CalendarDeleteEventComponent } from "../components/calendar-delete-event/calendar-delete-event.component";
 import { CalendarCreateEventComponent } from "../components/calendar-create-event/calendar-create-event.component";
 import { NewsEditNewsComponent } from "../components/news-edit-news/news-edit-news.component";
+import { isPlatformBrowser } from "@angular/common";
 
 @Component({
     selector: "app-dashboard",
@@ -105,20 +106,37 @@ import { NewsEditNewsComponent } from "../components/news-edit-news/news-edit-ne
 })
 export class DashboardComponent {
     currentActiveSection = signal<string>("stats-website-analytics");
+    mobileNavOpen = signal<boolean>(false);
+
+    private platformId = inject(PLATFORM_ID);
 
     generateActivateFunction(section: string): Function {
         const _this = this;
 
-        const fn = () => {
+        const activationFunction = () => {
             _this.activate(section);
         };
 
-        return fn;
+        return activationFunction;
     }
 
     activate(section: string): void {
         this.currentActiveSection.set(section);
 
-        console.log(section);
+        // Close the mobile nav after selecting an item
+        this.mobileNavOpen.set(false);
+
+        // Scroll to the top of the page
+        if (isPlatformBrowser(this.platformId)) {
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: "smooth",
+            });
+        }
+    }
+
+    toggleMobileNav(): void {
+        this.mobileNavOpen.update((value) => !value);
     }
 }

@@ -11,19 +11,39 @@ export type Config = {
     ENV: "dev" | "prod";
     HOST: string;
     PORT: number;
+
     SESSION_SECRET: string;
+
     MYSQL_HOST: string;
     MYSQL_PORT: number;
     MYSQL_USER: string;
     MYSQL_PASSWORD: string;
     MYSQL_SCHEMA: string;
+
     MAILJET_PUBLIC_KEY: string;
     MAILJET_PRIVATE_KEY: string;
+
     ORIGIN: string;
+
     EMAIL_SENDER_ADDRESS: string;
     EMAIL_SENDER_NAME: string;
+
     DELIVAPI_USER: string;
     DELIVAPI_KEY: string;
+
+    PASSWORD_GOOGLE_ACCOUNT: string;
+    PASSWORD_IMAGEKIT_ACCOUNT: string;
+    PASSWORD_STRIPE_ACCOUNT: string;
+    PASSWORD_MAILJET_ACCOUNT: string;
+    PASSWORD_INFOMANIAK_ACCOUNT: string;
+
+    EMAIL_GOOGLE_ACCOUNT: string;
+    EMAIL_IMAGEKIT_ACCOUNT: string;
+    EMAIL_INFOMANIAK_ACCOUNT: string;
+    EMAIL_STRIPE_ACCOUNT: string;
+    EMAIL_MAILJET_ACCOUNT: string;
+
+    TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_ACCOUNT: string;
 };
 
 export type PublicEnvVariables = {
@@ -266,6 +286,10 @@ export interface GetThemeApiEndpointResponse extends ApiEndpointResponse {
     };
 }
 
+export interface GetPasswordsApiEndpointResponse extends ApiEndpointResponse {
+    data: LoginInformation[];
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -328,4 +352,12 @@ export type MailjetAttachment = {
     ContentType: string;
     Filename: string;
     Base64Content: string;
+};
+
+export type LoginInformation = {
+    websiteUrl: string;
+    websiteLabel: string;
+    username: string;
+    password: string;
+    twoFactorSecret?: string;
 };

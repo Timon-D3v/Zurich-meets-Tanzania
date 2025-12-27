@@ -89,6 +89,15 @@ export class AppComponent implements OnInit {
 
             // Sets the current metadata for the route
             this.siteMetadataService.updateMetadataForRoute(currentUrlWithoutParameters);
+
+            // Scroll to the top of the page
+            if (isPlatformBrowser(this.platformId)) {
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: "smooth",
+                });
+            }
         });
 
         navigationStartPipe.subscribe((): void => {

@@ -1,0 +1,13 @@
+:root[data-theme="dark"] app-dashboard {
+    & nav {
+        -webkit-box-shadow: 1px 0px 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 1px 0px 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    @media screen and (max-width: 600px) {
+        & .mobileTopbar {
+            -webkit-box-shadow: 0px 1px 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0px 1px 1px 0 rgba(255, 255, 255, 0.1);
+        }
+    }
+}

@@ -49,7 +49,7 @@ export class ThemeService {
             return;
         }
 
-        const request = this.http.post<ApiEndpointResponse>("/api/theme/set", {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/theme/set", {
             theme,
         });
 
@@ -103,7 +103,7 @@ export class ThemeService {
             return null;
         }
 
-        const response = await lastValueFrom(this.http.get<GetThemeApiEndpointResponse>("/api/theme/get"));
+        const response = await lastValueFrom(this.http.get<GetThemeApiEndpointResponse>("/api/secured/theme/get"));
 
         return response.data.theme;
     }

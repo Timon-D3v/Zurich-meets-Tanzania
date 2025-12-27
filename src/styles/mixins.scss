@@ -107,3 +107,30 @@
         text-decoration: underline;
     }
 }
+
+@mixin default-table {
+    overflow-x: auto;
+
+    & table {
+        border-collapse: collapse;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 5vh 5vw;
+        width: calc(100% - 10vw);
+
+        & tr {
+            background-color: #b3b1af;
+
+            &:nth-child(even) {
+                background-color: #ddd;
+            }
+
+            & td,
+            & th {
+                border: 1px solid var(--text-950);
+                color: var(--text-950);
+                padding: 8px;
+                text-align: left;
+            }
+        }
+    }
+}
