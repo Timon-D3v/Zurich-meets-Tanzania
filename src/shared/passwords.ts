@@ -37,7 +37,7 @@ export const PASSWORDS: LoginInformation[] = [
         websiteUrl: "https://dashboard.stripe.com/",
         username: CONFIG.EMAIL_STRIPE_ACCOUNT,
         password: CONFIG.PASSWORD_STRIPE_ACCOUNT,
-        twoFactorSecret: "Timon Fragen"
+        twoFactorSecret: "Timon Fragen",
     },
     {
         websiteLabel: "Stripe Dashboard (Nur Anzeigen)",

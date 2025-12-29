@@ -25,10 +25,10 @@ export async function getAllNewsletterEmails(): Promise<DatabaseResult> {
 
 export async function addToNewsletterList(email: string, firstName: string, lastName: string, gender: "Herr" | "Frau" | "Divers"): Promise<DatabaseResult> {
     try {
-        await connection.query(`INSERT INTO \`zmt\`.\`newsletter\` (\`gender\`, \`firstName\`, \`lastName\`, \`email\`) VALUES (?, ?, ?, ?);`, [gender, firstName, lastName, email]);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`newsletter\` (\`gender\`, \`firstName\`, \`lastName\`, \`email\`) VALUES (?, ?, ?, ?);`, [gender, firstName, lastName, email]);
 
         return {
-            data: null,
+            data: result,
             error: null,
         };
     } catch (error) {

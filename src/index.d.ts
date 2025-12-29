@@ -138,8 +138,11 @@ export type NavLinkPicture = {
 };
 
 export type DatabaseResult = {
-    data: RowDataPacket[] | RowDataPacket | null;
-    error: null | string;
+    data: RowDataPacket[] | RowDataPacket;
+    error: null;
+} | {
+    data: null;
+    error: string;
 };
 
 export type HeroInformation = {

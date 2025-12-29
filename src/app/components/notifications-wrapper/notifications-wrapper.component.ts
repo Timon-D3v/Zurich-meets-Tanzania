@@ -70,7 +70,9 @@ export class NotificationsWrapperComponent implements OnInit, OnDestroy {
     createComponent(): ComponentRef<NotificationComponent> | undefined {
         const component = NotificationComponent;
 
-        return this.viewComponent()?.createComponent(component);
+        return this.viewComponent()?.createComponent(component, {
+            index: 0,
+        });
     }
 
     /**

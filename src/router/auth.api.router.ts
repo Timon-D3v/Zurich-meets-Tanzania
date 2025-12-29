@@ -1,5 +1,4 @@
 import { Request, Response, Router } from "express";
-import { createUser, getUserWithEmail, setNewPassword } from "../shared/auth.database";
 import { ApiEndpointResponse, GetPublicUserDetailsApiEndpointResponse, ApiEndpointResponseWithRedirect, PasswordRecoveryRequest, PrivateUser, PublicUser, SignUpConfirmRequest } from "..";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "node:crypto";
@@ -9,6 +8,7 @@ import multerInstance from "../shared/instance.multer";
 import { delivApiUpload } from "delivapi-client";
 import { CONFIG } from "../config";
 import { createDarkmodeEntry } from "../shared/darkmode.database";
+import { createUser, getUserWithEmail, setNewPassword } from "../shared/user.database";
 
 // Router Serves under /api/auth
 const router = Router();

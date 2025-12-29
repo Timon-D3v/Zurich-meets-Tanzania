@@ -14,6 +14,7 @@
     color: var(--text-50);
     background-color: var(--secondary-500);
     border: none;
+    cursor: pointer;
 
     &:hover {
         background-color: var(--secondary-400);
@@ -131,6 +132,56 @@
                 padding: 8px;
                 text-align: left;
             }
+        }
+    }
+}
+
+@mixin default-table-darkmode {
+    @include default-table;
+
+    & table tr {
+        background-color: #575655 !important;
+
+        &:nth-child(even) {
+            background-color: #7c7c7c !important;
+        }
+    }
+}
+
+@mixin admin-label {
+    font-size: large;
+    font-weight: 700;
+    display: block;
+    margin: 10px 5%;
+    color: var(--text-950);
+    width: 90%;
+
+    & + input {
+        background-color: inherit;
+        box-sizing: border-box;
+        color: var(--text-950);
+        font-size: large;
+        height: 2.5em;
+        border: 2px solid var(--background-950);
+        outline: none;
+        padding: 0.5em 2em;
+        transition: all 0.25s linear;
+        display: block;
+        width: 90%;
+        margin: 10px 5%;
+
+        &:focus,
+        &:focus-visible,
+        &:focus-within {
+            border-color: var(--violett);
+        }
+
+        &.invalid {
+            border-color: var(--error);
+        }
+
+        &.valid {
+            border-color: var(--green);
         }
     }
 }

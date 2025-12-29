@@ -25,7 +25,9 @@ export class FooterNewsletterSignUpFormComponent {
     private footerService = inject(FooterService);
     private notificationService = inject(NotificationService);
 
-    onSubmit(): void {
+    onSubmit(event: Event): void {
+        event.preventDefault();
+
         const firstName = this.newsletterSignUpForm.value.firstNameControl;
         const lastName = this.newsletterSignUpForm.value.lastNameControl;
         const email = this.newsletterSignUpForm.value.emailControl;
