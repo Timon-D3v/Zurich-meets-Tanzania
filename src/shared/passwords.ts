@@ -33,11 +33,18 @@ export const PASSWORDS: LoginInformation[] = [
         password: CONFIG.PASSWORD_INFOMANIAK_ACCOUNT,
     },
     {
-        websiteLabel: "Stripe Dashboard",
+        websiteLabel: "Stripe Dashboard (Admin)",
         websiteUrl: "https://dashboard.stripe.com/",
         username: CONFIG.EMAIL_STRIPE_ACCOUNT,
         password: CONFIG.PASSWORD_STRIPE_ACCOUNT,
-        twoFactorSecret: CONFIG.TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_ACCOUNT,
+        twoFactorSecret: "Timon Fragen"
+    },
+    {
+        websiteLabel: "Stripe Dashboard (Nur Anzeigen)",
+        websiteUrl: "https://dashboard.stripe.com/",
+        username: CONFIG.EMAIL_STRIPE_READONLY_ACCOUNT,
+        password: CONFIG.PASSWORD_STRIPE_READONLY_ACCOUNT,
+        twoFactorSecret: CONFIG.TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_READONLY_ACCOUNT,
     },
     {
         websiteLabel: "Mailjet Account",
