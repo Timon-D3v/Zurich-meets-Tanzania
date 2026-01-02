@@ -137,13 +137,15 @@ export type NavLinkPicture = {
     alt: string;
 };
 
-export type DatabaseResult = {
-    data: RowDataPacket[] | RowDataPacket;
-    error: null;
-} | {
-    data: null;
-    error: string;
-};
+export type DatabaseResult =
+    | {
+          data: RowDataPacket[] | RowDataPacket;
+          error: null;
+      }
+    | {
+          data: null;
+          error: string;
+      };
 
 export type HeroInformation = {
     title: string;

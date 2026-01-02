@@ -24,4 +24,15 @@ export class AdminManagementService {
 
         return request;
     }
+
+    createUser(email: string, firstName: string, lastName: string, address: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/createUser", {
+            email,
+            firstName,
+            lastName,
+            address,
+        });
+
+        return request;
+    }
 }

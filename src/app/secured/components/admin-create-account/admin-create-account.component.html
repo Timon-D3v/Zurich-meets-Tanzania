@@ -1,1 +1,16 @@
-<p>admin-create-account works!</p>
+<form [formGroup]="createUserForm" (submit)="onSubmit($event)">
+    <h2>Account erstellen</h2>
+    <p>
+        Hier kannst du einen Account für eine andere Person erstellen. Du kannst die E-Mail-Adresse der Person eingeben und ihr wird ein Passwort zugeschickt. Wenn diese Person keine E-Mail-Adresse hat, kannst du auch eine temporäre E-Mail-Adresse
+        verwenden. Eine gute Webseite dafür ist <a href="https://10minutemail.com/" target="_blank" rel="noopener">10minutemail.com</a>.
+    </p>
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" placeholder="E-Mail-Adresse eingeben" required formControlName="emailControl" />
+    <label for="firstName">Vorname</label>
+    <input type="text" id="firstName" placeholder="Vornamen eingeben" required formControlName="firstNameControl" />
+    <label for="lastName">Nachname</label>
+    <input type="text" id="lastName" placeholder="Nachnamen eingeben" required formControlName="lastNameControl" />
+    <label for="address">Adresse (Strasse 01, CH-8001 Zürich)</label>
+    <input type="text" id="address" placeholder="Vollständige Adresse eingeben" required formControlName="addressControl" />
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

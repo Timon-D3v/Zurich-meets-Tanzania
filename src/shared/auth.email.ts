@@ -76,3 +76,28 @@ export async function sendSignUpConfirmationCode(code: string, email: string, fi
 
     return request !== null && request.response.status === 200;
 }
+
+export async function sendPasswordFromAdmin(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
+    const text = [
+        PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, "Divers"),
+        `Es wurde ein Account bei www.zurich-meets-tanzania.com für dich erstellt. Dein Passwort lautet:`,
+        password,
+        `Falls du das nicht wolltest, kontaktiere bitte einen Administrator unter ${CONFIG.ORIGIN}/contact \n(Aus Sicherheitsgründen empfehlen wir, das Passwort nach dem ersten Login sofort unter 'Mein Account' zu ändern.)`,
+        PUBLIC_CONFIG.EMAIL.REGARDS,
+    ].join("\n\n");
+
+    const html =
+        PUBLIC_CONFIG.EMAIL.HEADER +
+        [
+            PUBLIC_CONFIG.EMAIL.GREETINGS_HTML(PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, "Divers")),
+            `Es wurde ein Account bei Zurich meets Tanzania für dich erstellt. Dein Passwort lautet:`,
+            password,
+            `Falls du das nicht wolltest, kontaktiere bitte einen Administrator unter ${CONFIG.ORIGIN}/contact <br>(Aus Sicherheitsgründen empfehlen wir, das Passwort nach dem ersten Login sofort unter 'Mein Account' zu ändern.)`,
+            PUBLIC_CONFIG.EMAIL.REGARDS_HTML,
+        ].join("<br><br>") +
+        PUBLIC_CONFIG.EMAIL.FOOTER;
+
+    const request = await sendMail(email, "Account erstellen?", text, html, "Signup Confirmation Code");
+
+    return request !== null && request.response.status === 200;
+}

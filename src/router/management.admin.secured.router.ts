@@ -2,8 +2,12 @@ import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { ApiEndpointResponse, GetPasswordsApiEndpointResponse, PrivateUser } from "../index.js";
 import { PASSWORDS } from "../shared/passwords";
-import { getUserWithEmail, setUserType } from "../shared/user.database";
+import { createUser, getUserWithEmail, setUserType } from "../shared/user.database";
 import { getMemberWithEmail } from "../shared/member.database";
+import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
+import { createDarkmodeEntry } from "../shared/darkmode.database";
+import { sendPasswordFromAdmin } from "../shared/auth.email";
 
 // Router Serves under /api/secured/admin/management
 const router = Router();
@@ -133,6 +137,94 @@ router.post("/removeAdmin", async (req: Request, res: Response): Promise<void> =
         res.json({
             error: false,
             message: "Dem Benutzer wurden erfolgreich die Admin-Rechte entzogen.",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/createUser", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email, firstName, lastName, address } = req.body;
+
+        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+            throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
+        }
+
+        if (typeof firstName !== "string" || firstName.trim() === "") {
+            throw new Error("Bitte gib einen gültigen Vornamen ein.");
+        }
+
+        if (typeof lastName !== "string" || lastName.trim() === "") {
+            throw new Error("Bitte gib einen gültigen Nachnamen ein.");
+        }
+
+        if (typeof address !== "string" || address.trim() === "") {
+            throw new Error("Bitte gib eine gültige Adresse ein.");
+        }
+
+        const userList = await getUserWithEmail(email);
+
+        if (userList.error !== null) {
+            throw new Error(userList.error);
+        }
+
+        if (userList.data.length !== 0) {
+            throw new Error(`Es gibt bereits einen Account mit der E-Mail-Adresse '${email}'. Bitte benutze eine andere E-Mail-Adresse.`);
+        }
+
+        const password = randomBytes(10).toString("hex");
+
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        const result = await createUser(email, passwordHash, firstName, lastName, address, "Keine Nummer", "/svg/personal.svg");
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        const databaseResult = await getUserWithEmail(email);
+
+        if (databaseResult.error !== null) {
+            throw new Error(databaseResult.error);
+        }
+
+        const user: PrivateUser = databaseResult.data[0];
+
+        const darkmodeResult = await createDarkmodeEntry(user.id);
+
+        if (darkmodeResult.error !== null) {
+            throw new Error(
+                darkmodeResult.error +
+                    " \nDas Benutzerkonto wurde aber erfolgreich erstellt. Allerdings wurde keine Darkmode-Einstellung angelegt und die E-Mail mit dem Passwort wurde nicht gesendet. Das Passwort lautet: " +
+                    password +
+                    ". Bitte teile dies dem Benutzer mit.",
+            );
+        }
+
+        const sentSuccessfully = await sendPasswordFromAdmin(password, email, firstName, lastName);
+
+        if (!sentSuccessfully) {
+            throw new Error("Das Benutzerkonto wurde erfolgreich erstellt. Allerdings wurde die E-Mail mit dem Passwort nicht gesendet. Das Passwort lautet: " + password + ". Bitte teile dies dem Benutzer mit.");
+        }
+
+        res.json({
+            error: false,
+            message: `Der Benutzer mit der E-Mail "${email}" wurde erfolgreich erstellt. Das Passwort wurde an diese E-Mail-Adresse gesendet.`,
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);
