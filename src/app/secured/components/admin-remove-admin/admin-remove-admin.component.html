@@ -1,1 +1,10 @@
-<p>admin-remove-admin works!</p>
+<form [formGroup]="removeAdminForm" (submit)="onSubmit($event)">
+    <h2>Admin entfernen</h2>
+    <p>
+        Gib eine E-Mail-Adresse ein um ihm seine Admin-Rechte zu entziehen. Sobald jemand Admin-Rechte verliert, kann er nicht mehr auf alle administrativen Funktionen zugreifen. Das heisst unter anderem, dass er keinen Zugriff mehr auf die
+        Verwaltungsseite hat, auf der du dich gerade befindest.
+    </p>
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" placeholder="E-Mail-Adresse eingeben" required formControlName="emailControl" />
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

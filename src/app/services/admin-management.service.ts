@@ -16,4 +16,12 @@ export class AdminManagementService {
 
         return request;
     }
+
+    removeAdmin(email: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/removeAdmin", {
+            email,
+        });
+
+        return request;
+    }
 }

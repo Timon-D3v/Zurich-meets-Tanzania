@@ -104,7 +104,6 @@ CREATE TABLE IF NOT EXISTS `zmt`.`members` (
     `periodStartTime` BIGINT NOT NULL,
     `periodEndTime` BIGINT NOT NULL,
     `subscriptionStartTime` BIGINT NOT NULL,
-    `isAdmin` TINYINT NOT NULL DEFAULT 0,
     PRIMARY KEY (`memberId`),
     UNIQUE INDEX `members_user_id_UNIQUE` (`userId` ASC) VISIBLE
 )

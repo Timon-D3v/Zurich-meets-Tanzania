@@ -68,7 +68,7 @@ export async function setNewPassword(email: string, hashedPassword: string): Pro
 
 export async function setUserType(email: string, type: "user" | "member" | "admin"): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`users\` SET \`type\` = ? WHERE (\`email\` = ?);`, [type, email]);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`users\` SET \`type\` = ? WHERE \`email\` = ?;`, [type, email]);
 
         return {
             data: result,
