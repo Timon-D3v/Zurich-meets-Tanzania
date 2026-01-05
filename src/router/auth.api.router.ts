@@ -141,11 +141,11 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
             throw new Error("Invalid parameter 'phone'");
         }
 
-        if (hasPicture === "true" && req.file === null) {
+        if (hasPicture === "true" && typeof req.file === "undefined") {
             throw new Error("Invalid file uploaded.");
         }
 
-        if (hasPicture === "true" && !["image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico"].includes(req.file?.mimetype || "")) {
+        if (hasPicture === "true" && !["application/octet-stream", "image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico"].includes(req.file?.mimetype || "")) {
             throw new Error("Invalid mimetype of uploaded file.");
         }
 

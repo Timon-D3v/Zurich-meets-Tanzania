@@ -35,4 +35,16 @@ export class AdminManagementService {
 
         return request;
     }
+
+    changeHomepagePicture(blob: Blob): Observable<ApiEndpointResponse> {
+        const formData = new FormData();
+
+        console.log("Blob in service:\n", blob);
+
+        formData.append("picture", blob);
+
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/changeHomepagePicture", formData);
+
+        return request;
+    }
 }

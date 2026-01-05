@@ -8,6 +8,9 @@ import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import { createDarkmodeEntry } from "../shared/darkmode.database";
 import { sendPasswordFromAdmin } from "../shared/auth.email";
+import multerInstance from "../shared/instance.multer";
+import { delivApiUpdateFile } from "delivapi-client";
+import { CONFIG } from "../config";
 
 // Router Serves under /api/secured/admin/management
 const router = Router();
@@ -225,6 +228,51 @@ router.post("/createUser", async (req: Request, res: Response): Promise<void> =>
         res.json({
             error: false,
             message: `Der Benutzer mit der E-Mail "${email}" wurde erfolgreich erstellt. Das Passwort wurde an diese E-Mail-Adresse gesendet.`,
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/changeHomepagePicture", multerInstance.single("picture"), async (req: Request, res: Response): Promise<void> => {
+    try {
+        const file = req.file;
+
+        if (!file) {
+            throw new Error("Es wurde kein Bild hochgeladen.");
+        }
+
+        const allowedMimeTypes = ["application/octet-stream", "image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico"];
+
+        if (!allowedMimeTypes.includes(file.mimetype)) {
+            throw new Error("Bitte lade eine gültige Bilddatei hoch.");
+        }
+
+        const filename = "7a121"; // This is the test entry for every organization and is always there
+
+        const response = await delivApiUpdateFile(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, filename, file.buffer, file.originalname);
+
+        if (response.error) {
+            throw new Error("Das Bild konnte nicht hochgeladen werden. Bitte versuche es später erneut. Weitere Informationen: " + response.message);
+        }
+
+        res.json({
+            error: false,
+            message: "Das Homepage-Bild wurde erfolgreich aktualisiert.",
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);

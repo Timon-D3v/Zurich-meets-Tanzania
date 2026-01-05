@@ -1,0 +1,72 @@
+@use "../../../../styles/index" as *;
+
+form {
+    padding: 2vh 5vw;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0 10vw;
+}
+
+p {
+    font-size: medium;
+    margin: 1vh 5%;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+input {
+    display: none
+}
+
+label {
+    & > h3 {
+        font-size: x-large;
+        font-weight: 700;
+        display: block;
+        margin: 10px 5%;
+        color: var(--text-950);
+        width: 90%;
+    }
+
+    & > img {
+        background-color: inherit;
+        box-sizing: border-box;
+        color: var(--text-950);
+        font-size: large;
+        border: 2px solid var(--background-950);
+        outline: none;
+        padding: 0.5em 2em;
+        transition: all 0.25s linear;
+        display: block;
+        width: 90%;
+        margin: 10px 5%;
+
+        &:focus,
+        &:focus-visible,
+        &:focus-within {
+            border-color: var(--violett);
+        }
+
+        &.invalid {
+            border-color: var(--error);
+        }
+
+        &.valid {
+            border-color: var(--green);
+        }
+    }
+}
+
+
+button {
+    @include primary-button;
+    margin-top: 3vh;
+    margin-left: auto;
+    margin-right: auto;
+}
