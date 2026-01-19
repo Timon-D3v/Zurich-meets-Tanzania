@@ -297,6 +297,13 @@ export interface GetPasswordsApiEndpointResponse extends ApiEndpointResponse {
     data: LoginInformation[];
 }
 
+export interface GetStaticSiteApiEndpointResponse extends ApiEndpointResponse {
+    data: {
+        site: StaticSite;
+        date: string;
+    } | null;
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -368,3 +375,66 @@ export type LoginInformation = {
     password: string;
     twoFactorSecret?: string;
 };
+
+export type StaticSite = {
+    metadata: {
+        title: string;
+        subtitle: string;
+        author: string;
+        imageUrl: string;
+        imageAlt: string;
+    };
+    data: CustomElements;
+};
+
+export interface CustomElement {
+    type: "title" | "subtitle" | "paragraph" | "image" | "multipleImages" | "imageWithText" | "line" | "currentTeam";
+}
+
+export interface CustomTitleElement extends CustomElement {
+    type: "title";
+    content: string;
+}
+
+export interface CustomSubtitleElement extends CustomElement {
+    type: "subtitle";
+    content: string;
+}
+
+export interface CustomParagraphElement extends CustomElement {
+    type: "paragraph";
+    content: string;
+}
+
+export interface CustomImageElement extends CustomElement {
+    type: "image";
+    imageUrl: string;
+    imageAlt: string;
+}
+
+export interface CustomMultipleImagesElement extends CustomElement {
+    type: "multipleImages";
+    images: {
+        imageUrl: string;
+        imageAlt: string;
+    }[];
+}
+
+export interface CustomImageWithTextElement extends CustomElement {
+    type: "imageWithText";
+    imageUrl: string;
+    imageAlt: string;
+    content: string;
+    sideOfImage: "left" | "right";
+}
+
+export interface CustomLineElement extends CustomElement {
+    type: "line";
+}
+
+export interface CustomCurrentTeamElement extends CustomElement {
+    type: "currentTeam";
+    teamId: number;
+}
+
+export type CustomElements = Array<CustomTitleElement | CustomSubtitleElement | CustomParagraphElement | CustomImageElement | CustomMultipleImagesElement | CustomImageWithTextElement | CustomLineElement | CustomCurrentTeamElement>;

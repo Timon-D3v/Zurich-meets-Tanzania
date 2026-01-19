@@ -5,6 +5,7 @@ import envRouter from "./env.api.router";
 import authRouter from "./auth.api.router";
 import blogRouter from "./blog.api.router";
 import galleryRouter from "./gallery.api.router";
+import subpagesRouter from "./subpages.api.router";
 import newsletterRouter from "./newsletter.router";
 
 import securedRouter from "./secured.router";
@@ -30,6 +31,7 @@ router.use("/env", envRouter);
 router.use("/auth", authRouter);
 router.use("/blog", blogRouter);
 router.use("/gallery", galleryRouter);
+router.use("/subpages", subpagesRouter);
 router.use("/newsletter", newsletterRouter);
 
 // Secured Routes

@@ -1,0 +1,9 @@
+<div class="wrapper">
+    @if (sideOfImage() === "left") {
+        <img [src]="imageUrl()" [alt]="imageAlt()" />
+        <p>{{ content() }}</p>
+    } @else {
+        <p>{{ content() }}</p>
+        <img [src]="imageUrl()" [alt]="imageAlt()" />
+    }
+</div>

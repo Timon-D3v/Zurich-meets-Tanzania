@@ -150,4 +150,15 @@ CREATE TABLE IF NOT EXISTS `zmt`.`team` (
     PRIMARY KEY (`id`),
     UNIQUE INDEX `team_id_UNIQUE` (`id` ASC) VISIBLE
 )
-COMMENT = 'This table holds the current team of zmt';
+COMMENT = 'This table holds the current team of zmt.';
+
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`subpages` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(256) NOT NULL,
+  `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `data` JSON NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `subpages_title_UNIQUE` (`title` ASC) VISIBLE)
+COMMENT = 'This table holds data for all the subpages of the zmt website.';

@@ -21,7 +21,7 @@ p {
 }
 
 input {
-    display: none
+    display: none;
 }
 
 label {
@@ -62,7 +62,6 @@ label {
         }
     }
 }
-
 
 button {
     @include primary-button;

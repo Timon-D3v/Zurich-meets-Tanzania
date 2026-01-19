@@ -1,0 +1,16 @@
+<div class="wrapper">
+    <div class="main">
+        @for (image of images(); track $index) {
+            <img [alt]="image.imageAlt" [src]="image.imageUrl" [class]="currentIndex() === $index ? 'active' : null" />
+        }
+    </div>
+
+    <button type="button" class="next" (click)="nextImage()"></button>
+    <button type="button" class="previous" (click)="previousImage()"></button>
+
+    <div class="ruler">
+        @for (image of images(); track $index) {
+            <img [alt]="image.imageAlt" [src]="image.imageUrl" (click)="setImage($index)" [class]="currentIndex() === $index ? 'active' : null" />
+        }
+    </div>
+</div>

@@ -28,6 +28,44 @@ section > * {
     height: 100%;
 }
 
+.back-button {
+    background: transparent;
+    border: none;
+    color: var(--text-950);
+    position: relative;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    padding: 0.25rem 1.5rem 0.75rem 3rem;
+    cursor: pointer;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0.25rem;
+        left: 0.75rem;
+        transform: rotate(90deg) scale(1.25);
+        filter: invert(var(--not-darkmode));
+        width: 1.5rem;
+        height: 1.5rem;
+        background-image: url(../../../../public/svg/select_arrow.svg);
+    }
+}
+
+.back-button-underline {
+    height: 1px;
+    width: calc(0.5rem + 100% + 0.5rem);
+    transform: translateX(-0.5rem);
+    background-color: var(--background-950);
+    opacity: 0.3;
+    margin-bottom: 0.5rem;
+}
+
+.edit-done-button {
+    @include primary-button;
+    font-size: 1rem;
+    margin: 0.5rem auto;
+}
+
 @media screen and (max-width: 600px) {
     aside {
         position: fixed;
