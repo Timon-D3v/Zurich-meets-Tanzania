@@ -38,6 +38,7 @@ import { EditSiteService } from "../../services/edit-site.service";
 import { NotificationService } from "../../services/notification.service";
 import { SubpagesService } from "../../services/subpages.service";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 
 @Component({
     selector: "app-dashboard",
@@ -523,5 +524,37 @@ export class DashboardComponent implements OnInit {
                 this.siteEdits[this.currentActiveSiteEdit()].set(response.data.site);
             });
         });
+    }
+
+    handleMove(event: CdkDragDrop<string[]>, siteName: StaticSiteNames): void {
+        moveItemInArray(this.siteEdits[siteName]().data, event.previousIndex, event.currentIndex);
+    }
+
+    handleEdit(index: number, siteName: StaticSiteNames): void {
+        alert("Diese Funktion ist noch nicht implementiert.");
+    }
+
+    async handleDelete(index: number, siteName: StaticSiteNames): Promise<void> {
+        const confirmDeletion = await confirm("Möchtest du dieses Element wirklich löschen?");
+
+        if (!confirmDeletion) {
+            return;
+        }
+
+        this.siteEdits[siteName].update((site: StaticSite): StaticSite => {
+            site.data.splice(index, 1);
+
+            return site;
+        });
+    }
+
+    async closeEditSitesNavigation(): Promise<void> {
+        const confirmClose = await confirm("Vergiss nicht deine Arbeit zu speichern. Möchtest du die Seiten-Bearbeitung wirklich verlassen?");
+
+        if (!confirmClose) {
+            return;
+        }
+
+        this.setCurrentActiveNavigation("main");
     }
 }

@@ -351,7 +351,7 @@
                     ]"
                 ></app-admin-nav-element>
             } @else if (currentActiveNavigation() === "edit-sites") {
-                <button type="button" class="back-button" (click)="setCurrentActiveNavigation('main')">Zurück</button>
+                <button type="button" class="back-button" (click)="closeEditSitesNavigation()">Zurück</button>
                 <div class="back-button-underline"></div>
                 <app-admin-nav-element
                     description="Allgemein"
@@ -472,38 +472,32 @@
             <app-admin-create-account></app-admin-create-account>
         } @else if (currentActiveSection() === "homepage-picture") {
             <app-admin-homepage-picture-page></app-admin-homepage-picture-page>
-        } @else if (currentActiveSection() === "edit-static-vision") {
-            <app-edit-static-site [site]="siteEdits['vision']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-board") {
-            <app-edit-static-site [site]="siteEdits['board']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-beginning") {
-            <app-edit-static-site [site]="siteEdits['beginning']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-finances") {
-            <app-edit-static-site [site]="siteEdits['finances']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-income-statement") {
-            <app-edit-static-site [site]="siteEdits['income-statement']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-general-meeting") {
-            <app-edit-static-site [site]="siteEdits['general-meeting']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-statutes") {
-            <app-edit-static-site [site]="siteEdits['statutes']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-zurich-meets-tanzania") {
-            <app-edit-static-site [site]="siteEdits['zurich-meets-tanzania']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-tanzania-meets-zurich") {
-            <app-edit-static-site [site]="siteEdits['tanzania-meets-zurich']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-mbuzi") {
-            <app-edit-static-site [site]="siteEdits['mbuzi']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-gynecology") {
-            <app-edit-static-site [site]="siteEdits['gynecology']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-meducation") {
-            <app-edit-static-site [site]="siteEdits['meducation']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-bajaji") {
-            <app-edit-static-site [site]="siteEdits['bajaji']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-cardiology") {
-            <app-edit-static-site [site]="siteEdits['cardiology']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-surgery") {
-            <app-edit-static-site [site]="siteEdits['surgery']()"></app-edit-static-site>
-        } @else if (currentActiveSection() === "edit-static-history") {
-            <app-edit-static-site [site]="siteEdits['history']()"></app-edit-static-site>
+        } @else if (
+            [
+                "edit-static-vision",
+                "edit-static-board",
+                "edit-static-beginning",
+                "edit-static-finances",
+                "edit-static-income-statement",
+                "edit-static-general-meeting",
+                "edit-static-statutes",
+                "edit-static-zurich-meets-tanzania",
+                "edit-static-tanzania-meets-zurich",
+                "edit-static-mbuzi",
+                "edit-static-gynecology",
+                "edit-static-meducation",
+                "edit-static-bajaji",
+                "edit-static-cardiology",
+                "edit-static-surgery",
+                "edit-static-history",
+            ].includes(currentActiveSection())
+        ) {
+            <app-edit-static-site
+                [site]="siteEdits[currentActiveSiteEdit()]()"
+                (moveOutput)="handleMove($event, currentActiveSiteEdit())"
+                (editOutput)="handleEdit($event, currentActiveSiteEdit())"
+                (deleteOutput)="handleDelete($event, currentActiveSiteEdit())"
+            ></app-edit-static-site>
         } @else if (currentActiveSection() === "blog-create-blog") {
             <app-blog-create-blog></app-blog-create-blog>
         } @else if (currentActiveSection() === "blog-edit-blog") {
