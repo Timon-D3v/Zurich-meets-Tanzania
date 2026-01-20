@@ -64,6 +64,12 @@ export type PublicConfig = {
     PROGRAMMER_URL: string;
 
     PRIVACY_PDF_URL: string;
+    FALLBACK_IMAGE_URL: string;
+
+    STATIC_SITES: {
+        LOADING: (name: StaticSiteNames, imageUrl: string) => StaticSite;
+        ERROR: (name: StaticSiteNames, imageUrl: string, message: string) => StaticSite;
+    };
 
     PERSONAS: {
         [position: string]: MetaPersonas;
@@ -387,6 +393,24 @@ export type StaticSite = {
     data: CustomElements;
 };
 
+export type StaticSiteNames =
+    | "vision"
+    | "board"
+    | "beginning"
+    | "finances"
+    | "income-statement"
+    | "general-meeting"
+    | "statutes"
+    | "zurich-meets-tanzania"
+    | "tanzania-meets-zurich"
+    | "mbuzi"
+    | "gynecology"
+    | "meducation"
+    | "bajaji"
+    | "cardiology"
+    | "surgery"
+    | "history";
+
 export interface CustomElement {
     type: "title" | "subtitle" | "paragraph" | "image" | "multipleImages" | "imageWithText" | "line" | "currentTeam";
 }
@@ -438,3 +462,5 @@ export interface CustomCurrentTeamElement extends CustomElement {
 }
 
 export type CustomElements = Array<CustomTitleElement | CustomSubtitleElement | CustomParagraphElement | CustomImageElement | CustomMultipleImagesElement | CustomImageWithTextElement | CustomLineElement | CustomCurrentTeamElement>;
+
+export type DashboardNavigationOptions = "main" | "edit-sites" | "create-blog" | "edit-blog" | "create-news" | "edit-news";

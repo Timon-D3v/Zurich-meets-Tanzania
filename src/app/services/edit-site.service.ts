@@ -1,5 +1,17 @@
 import { inject, Injectable } from "@angular/core";
-import { ApiEndpointResponse, CustomCurrentTeamElement, CustomImageElement, CustomImageWithTextElement, CustomLineElement, CustomMultipleImagesElement, CustomParagraphElement, CustomSubtitleElement, CustomTitleElement, StaticSite } from "../..";
+import {
+    ApiEndpointResponse,
+    CustomCurrentTeamElement,
+    CustomImageElement,
+    CustomImageWithTextElement,
+    CustomLineElement,
+    CustomMultipleImagesElement,
+    CustomParagraphElement,
+    CustomSubtitleElement,
+    CustomTitleElement,
+    StaticSite,
+    StaticSiteNames,
+} from "../..";
 import { NotificationService } from "./notification.service";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -89,27 +101,7 @@ export class EditSiteService {
         };
     }
 
-    submitSite(
-        siteName:
-            | "vision"
-            | "board"
-            | "beginning"
-            | "finances"
-            | "income-statement"
-            | "general-meeting"
-            | "statutes"
-            | "zurich-meets-tanzania"
-            | "tanzania-meets-zurich"
-            | "mbuzi"
-            | "gynecology"
-            | "meducation"
-            | "bajaji"
-            | "cardiology"
-            | "surgery"
-            | "history",
-        site: StaticSite,
-        images: { url: string; file: File }[],
-    ): Observable<ApiEndpointResponse> {
+    submitSite(siteName: StaticSiteNames, site: StaticSite, images: { url: string; file: File }[]): Observable<ApiEndpointResponse> {
         const formData = new FormData();
 
         const imageNames = images.map((image) => image.url);

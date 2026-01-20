@@ -33,10 +33,11 @@ import { CalendarDeleteEventComponent } from "../components/calendar-delete-even
 import { CalendarCreateEventComponent } from "../components/calendar-create-event/calendar-create-event.component";
 import { NewsEditNewsComponent } from "../components/news-edit-news/news-edit-news.component";
 import { isPlatformBrowser } from "@angular/common";
-import { ApiEndpointResponse, GetStaticSiteApiEndpointResponse, StaticSite } from "../../..";
+import { ApiEndpointResponse, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
 import { EditSiteService } from "../../services/edit-site.service";
 import { NotificationService } from "../../services/notification.service";
 import { SubpagesService } from "../../services/subpages.service";
+import { PUBLIC_CONFIG } from "../../../publicConfig";
 
 @Component({
     selector: "app-dashboard",
@@ -80,14 +81,10 @@ import { SubpagesService } from "../../services/subpages.service";
 })
 export class DashboardComponent implements OnInit {
     currentActiveSection = signal<string>("stats-website-analytics");
-    currentActiveNavigation = signal<"main" | "edit-sites" | "create-blog" | "edit-blog" | "create-news" | "edit-news">("main");
-    currentActiveSiteEdit = signal<
-        "vision" | "board" | "beginning" | "finances" | "income-statement" | "general-meeting" | "statutes" | "zurich-meets-tanzania" | "tanzania-meets-zurich" | "mbuzi" | "gynecology" | "meducation" | "bajaji" | "cardiology" | "surgery" | "history"
-    >("vision");
+    currentActiveNavigation = signal<DashboardNavigationOptions>("main");
+    currentActiveSiteEdit = signal<StaticSiteNames>("vision");
     mobileNavOpen = signal<boolean>(false);
     submitSiteEditButton = signal<string>("Abschliessen");
-
-    private readonly FALLBACK_IMAGE_URL = "/backup/fallback.png";
 
     private editSiteService = inject(EditSiteService);
     private subpagesService = inject(SubpagesService);
@@ -150,25 +147,7 @@ export class DashboardComponent implements OnInit {
         const surgeryRequest = this.subpagesService.getStaticSite("surgery");
         const historyRequest = this.subpagesService.getStaticSite("history");
 
-        const generateSubscriptionHandler = (
-            siteName:
-                | "vision"
-                | "board"
-                | "beginning"
-                | "finances"
-                | "income-statement"
-                | "general-meeting"
-                | "statutes"
-                | "zurich-meets-tanzania"
-                | "tanzania-meets-zurich"
-                | "mbuzi"
-                | "gynecology"
-                | "meducation"
-                | "bajaji"
-                | "cardiology"
-                | "surgery"
-                | "history",
-        ) => {
+        const generateSubscriptionHandler = (siteName: StaticSiteNames) => {
             return (response: GetStaticSiteApiEndpointResponse) => {
                 if (response.error || response.data === null) {
                     this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${siteName}' konnte nicht geladen werden: ` + response.message);
@@ -180,7 +159,7 @@ export class DashboardComponent implements OnInit {
                             title: "Fehler beim Laden der Seite",
                             subtitle: "",
                             author: "",
-                            imageAlt: this.FALLBACK_IMAGE_URL,
+                            imageAlt: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
                             imageUrl: "",
                         },
                     });
@@ -211,7 +190,7 @@ export class DashboardComponent implements OnInit {
         historyRequest.subscribe(generateSubscriptionHandler("history"));
     }
 
-    generateActivateFunction(section: string, navigation: "main" | "edit-sites" | "create-blog" | "edit-blog" | "create-news" | "edit-news" = "main"): Function {
+    generateActivateFunction(section: string, navigation: DashboardNavigationOptions = "main"): Function {
         const _this = this;
 
         const activationFunction = () => {
@@ -219,25 +198,7 @@ export class DashboardComponent implements OnInit {
             _this.setCurrentActiveNavigation(navigation);
 
             if (_this.currentActiveSection().startsWith("edit-static-")) {
-                _this.currentActiveSiteEdit.set(
-                    section.replace("edit-static-", "") as
-                        | "vision"
-                        | "board"
-                        | "beginning"
-                        | "finances"
-                        | "income-statement"
-                        | "general-meeting"
-                        | "statutes"
-                        | "zurich-meets-tanzania"
-                        | "tanzania-meets-zurich"
-                        | "mbuzi"
-                        | "gynecology"
-                        | "meducation"
-                        | "bajaji"
-                        | "cardiology"
-                        | "surgery"
-                        | "history",
-                );
+                _this.currentActiveSiteEdit.set(section.replace("edit-static-", "") as StaticSiteNames);
             }
         };
 
@@ -260,7 +221,7 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    setCurrentActiveNavigation(navigation: "main" | "edit-sites" | "create-blog" | "edit-blog" | "create-news" | "edit-news"): void {
+    setCurrentActiveNavigation(navigation: DashboardNavigationOptions): void {
         this.currentActiveNavigation.set(navigation);
     }
 
@@ -551,7 +512,7 @@ export class DashboardComponent implements OnInit {
                             title: "Fehler beim Laden der Seite",
                             subtitle: "",
                             author: "",
-                            imageAlt: this.FALLBACK_IMAGE_URL,
+                            imageAlt: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
                             imageUrl: "",
                         },
                     });
@@ -562,17 +523,5 @@ export class DashboardComponent implements OnInit {
                 this.siteEdits[this.currentActiveSiteEdit()].set(response.data.site);
             });
         });
-    }
-
-    editSites_addTitle(): void {
-        console.log("Adding title to site...");
-    }
-
-    editSites_addSubtitle(): void {
-        console.log("Adding subtitle to site...");
-    }
-
-    editSites_addParagraph(): void {
-        console.log("Adding paragraph to site...");
     }
 }

@@ -1,4 +1,4 @@
-import { PublicConfig } from ".";
+import { PublicConfig, StaticSite, StaticSiteNames } from ".";
 
 export const PUBLIC_CONFIG: PublicConfig = {
     NAME: "zurich meets tanzania",
@@ -11,6 +11,48 @@ export const PUBLIC_CONFIG: PublicConfig = {
     PROGRAMMER_URL: "https://www.timondev.com/",
 
     PRIVACY_PDF_URL: "https://ik.imagekit.io/zmt/pdf/datenschutz/Datenschutzerklaerung.pdf",
+    FALLBACK_IMAGE_URL: "/backup/fallback.png",
+
+    STATIC_SITES: {
+        LOADING: (name: StaticSiteNames, imageUrl: string): StaticSite => {
+            return {
+                metadata: {
+                    title: name,
+                    subtitle: "Laden...",
+                    imageUrl,
+                    imageAlt: "Laden...",
+                    author: "Das ZMT-Team",
+                },
+                data: [
+                    {
+                        type: "title",
+                        content: "Laden...",
+                    },
+                ],
+            };
+        },
+        ERROR: (name: StaticSiteNames, imageUrl: string, message: string): StaticSite => {
+            return {
+                metadata: {
+                    title: name,
+                    subtitle: "Fehler beim Laden der Seite",
+                    imageUrl,
+                    imageAlt: "Fehler",
+                    author: "Das ZMT-Team",
+                },
+                data: [
+                    {
+                        type: "title",
+                        content: "Fehler beim Laden der Seite",
+                    },
+                    {
+                        type: "paragraph",
+                        content: `Beim Laden der Seite ist ein Fehler aufgetreten: ${message}\nBitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.`,
+                    },
+                ],
+            };
+        },
+    },
 
     PERSONAS: {
         CHAIRMAN: {
