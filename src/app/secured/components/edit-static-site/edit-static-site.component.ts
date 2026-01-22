@@ -1,5 +1,5 @@
 import { Component, input, output } from "@angular/core";
-import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
+import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from "@angular/cdk/drag-drop";
 import { StaticSite } from "../../../..";
 import { CurrentTeamComponent } from "../../../current-team/current-team.component";
 import { HeroComponent } from "../../../components/hero/hero.component";

@@ -19,6 +19,35 @@
     &:hover {
         background-color: var(--secondary-400);
     }
+
+    &::selection {
+        background-color: var(--accent-500);
+    }
+}
+
+@mixin secondary-button {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 1vw;
+    margin: 0 0.75vw;
+    box-sizing: border-box;
+    font-weight: 600;
+    font-size: 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.05em;
+    color: var(--text-950);
+    border: 2px solid var(--text-950);
+    background-color: var(--background-50);
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    &:hover {
+        border-color: var(--secondary-500);
+        color: var(--secondary-500);
+    }
 }
 
 @mixin auth-form {
@@ -156,7 +185,8 @@
     color: var(--text-950);
     width: 90%;
 
-    & + input {
+    & + input,
+    & + textarea {
         background-color: inherit;
         box-sizing: border-box;
         color: var(--text-950);
@@ -184,4 +214,19 @@
             border-color: var(--green);
         }
     }
+}
+
+@mixin popup-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0c0e0cb3;
+    display: grid;
+    place-items: center;
+    z-index: 10000;
+    box-sizing: border-box;
+    padding: var(--basic-margin);
+    overflow: auto;
 }

@@ -1,0 +1,12 @@
+<div class="popup">
+    <form class="wrapper" [formGroup]="addTitleForm" (submit)="onSubmit($event)">
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+        <label for="title">{{ label() }}</label>
+        <input type="text" id="title" [placeholder]="placeholder()" required formControlName="titleControl" />
+        <button type="submit" class="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>

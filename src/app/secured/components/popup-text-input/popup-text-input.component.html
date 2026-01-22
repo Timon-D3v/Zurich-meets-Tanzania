@@ -1,0 +1,12 @@
+<div class="popup">
+    <form class="wrapper" [formGroup]="addTextForm" (submit)="onSubmit($event)">
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+        <label for="text">{{ label() }}</label>
+        <textarea id="text" [placeholder]="placeholder()" required formControlName="textControl"></textarea>
+        <button type="submit" class="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>

@@ -1,0 +1,20 @@
+<div class="popup">
+    <form class="wrapper" (submit)="onSubmit($event)">
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+        <label for="images" class="text-label">{{ label() }}</label>
+        <input type="file" multiple="true" accept="image/*" id="images" required (change)="onChange($event)"/>
+        <label for="images" class="image-label {{ images().length === 0 ? 'empty' : '' }}" cdkDropList (cdkDropListDropped)="moveElement($event)">
+            @for (image of images(); track $index) {
+                <div class="drag-element" cdkDrag cdkDragBoundary=".image-label">
+                    <img [src]="image.url" [alt]="'Vorschau des Bildes ' + ($index + 1)"  />
+                    <div class="drag-active-element" *cdkDragPreview></div>
+                </div>
+            }
+        </label>
+        <button type="submit" class="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>

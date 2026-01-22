@@ -360,25 +360,25 @@
                             href: '#Blog-Titel',
                             label: 'Blog Titel',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addGeneralTitle'),
+                            onClick: generateSiteEditFunction('editGeneralTitle'),
                         },
                         {
                             href: '#Blog-Untertitel',
                             label: 'Blog Untertitel',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addGeneralSubtitle'),
+                            onClick: generateSiteEditFunction('editGeneralSubtitle'),
                         },
                         {
                             href: '#Blog-Autor',
                             label: 'Blog Autor',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addAuthor'),
+                            onClick: generateSiteEditFunction('editAuthor'),
                         },
                         {
                             href: '#Blog-Titelbild',
                             label: 'Blog Titelbild',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addTitleImage'),
+                            onClick: generateSiteEditFunction('editTitleImage'),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -553,3 +553,17 @@
         }
     </section>
 </div>
+
+@if (titleInputOpen()) {
+    <app-popup-title-input (resultOutput)="handleTitleInputResult($event)" (closeOutput)="closePopup()" [title]="titleInputTitle()" [description]="titleInputDescription()" [label]="titleInputLabel()" [placeholder]="titleInputPlaceholder()"></app-popup-title-input>
+} @else if (textInputOpen()) {
+    <app-popup-text-input (resultOutput)="handleTextInputResult($event)" (closeOutput)="closePopup()"></app-popup-text-input>
+} @else if (imageInputOpen()) {
+    <app-popup-image-input (resultOutput)="handleImageInputResult($event)" (closeOutput)="closePopup()" []></app-popup-image-input>
+} @else if (multipleImagesInputOpen()) {
+    <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-images-input>
+}
+
+@if (confirmInputOpen()) {
+    <app-popup-confirm-input (resultOutput)="handleConfirmInputResult($event)"></app-popup-confirm-input>
+}

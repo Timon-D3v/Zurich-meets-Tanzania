@@ -1,4 +1,11 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { ApiEndpointResponse, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
+import { PUBLIC_CONFIG } from "../../../publicConfig";
+import { EditSiteService } from "../../services/edit-site.service";
+import { NotificationService } from "../../services/notification.service";
+import { SubpagesService } from "../../services/subpages.service";
 import { AdminNavElementComponent } from "../components/admin-nav-element/admin-nav-element.component";
 import { AdminUnknownPageComponent } from "../components/admin-unknown-page/admin-unknown-page.component";
 import { AdminPasswordsPageComponent } from "../components/admin-passwords-page/admin-passwords-page.component";
@@ -32,13 +39,11 @@ import { TeamCreateTeamComponent } from "../components/team-create-team/team-cre
 import { CalendarDeleteEventComponent } from "../components/calendar-delete-event/calendar-delete-event.component";
 import { CalendarCreateEventComponent } from "../components/calendar-create-event/calendar-create-event.component";
 import { NewsEditNewsComponent } from "../components/news-edit-news/news-edit-news.component";
-import { isPlatformBrowser } from "@angular/common";
-import { ApiEndpointResponse, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
-import { EditSiteService } from "../../services/edit-site.service";
-import { NotificationService } from "../../services/notification.service";
-import { SubpagesService } from "../../services/subpages.service";
-import { PUBLIC_CONFIG } from "../../../publicConfig";
-import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { PopupTitleInputComponent } from "../components/popup-title-input/popup-title-input.component";
+import { PopupTextInputComponent } from "../components/popup-text-input/popup-text-input.component";
+import { PopupImageInputComponent } from "../components/popup-image-input/popup-image-input.component";
+import { PopupMultipleImagesInputComponent } from "../components/popup-multiple-images-input/popup-multiple-images-input.component";
+import { PopupConfirmInputComponent } from "../components/popup-confirm-input/popup-confirm-input.component";
 
 @Component({
     selector: "app-dashboard",
@@ -76,6 +81,11 @@ import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
         CalendarDeleteEventComponent,
         CalendarCreateEventComponent,
         NewsEditNewsComponent,
+        PopupTitleInputComponent,
+        PopupTextInputComponent,
+        PopupImageInputComponent,
+        PopupMultipleImagesInputComponent,
+        PopupConfirmInputComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
@@ -84,8 +94,64 @@ export class DashboardComponent implements OnInit {
     currentActiveSection = signal<string>("stats-website-analytics");
     currentActiveNavigation = signal<DashboardNavigationOptions>("main");
     currentActiveSiteEdit = signal<StaticSiteNames>("vision");
+    currentActionToPerform = signal<"addTitle" | "addSubtitle" | "addParagraph" | "addImage" | "addMultipleImages" | "addImageWithText" | "addLine" | "addCurrentTeam" | "editTitle" | "editSubtitle" | "editParagraph" | "editGeneralTitle" | "editGeneralSubtitle" | "editAuthor" | "editTitleImage" | "editImage" | "editMultipleImages" | "editImageWithText"
+>(
+        "addTitle",
+    );
     mobileNavOpen = signal<boolean>(false);
     submitSiteEditButton = signal<string>("Abschliessen");
+
+    titleInputOpen = signal(false);
+    textInputOpen = signal(false);
+    imageInputOpen = signal(false);
+    multipleImagesInputOpen = signal(false);
+
+    confirmInputOpen = signal(false);
+
+    INPUT_CONTENT_DEFAULT = {
+        TITLE: {
+            title: "Titel eingeben:",
+            description: "Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.",
+            label: "Titel:",
+            placeholder: "Titel eingeben",
+        },
+        SUBTITLE: {
+            title: "Untertitel eingeben:",
+            description: "Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.",
+            label: "Untertitel:",
+            placeholder: "Untertitel eingeben",
+        },
+        GENERAL_TITLE: {
+            title: "Seitentitel eingeben:",
+            description: "Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.",
+            label: "Seitentitel:",
+            placeholder: "Seitentitel eingeben",
+        },
+        GENERAL_SUBTITLE: {
+            title: "Seiten Untertitel eingeben:",
+            description: "Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.",
+            label: "Seiten Untertitel:",
+            placeholder: "Seiten Untertitel eingeben",
+        },
+        AUTHOR: {
+            title: "Autor eingeben:",
+            description: "Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.",
+            label: "Autor:",
+            placeholder: "Autor eingeben",
+        },
+    };
+
+    titleInputTitle = signal<string>("");
+    titleInputDescription = signal<string>("");
+    titleInputLabel = signal<string>("");
+    titleInputPlaceholder = signal<string>("");
+
+    confirmInputTitle = signal<string>("");
+    confirmInputDescription = signal<string>("");
+    confirmInputButtonText = signal<string>("");
+    cancelInputButtonText = signal<string>("");
+
+    titleInputContent = signal<{ title: string; placeholder: string; description: string; label: string }>({ title: "", placeholder: "", description: "", label: "" });
 
     private editSiteService = inject(EditSiteService);
     private subpagesService = inject(SubpagesService);
@@ -231,7 +297,7 @@ export class DashboardComponent implements OnInit {
     }
 
     generateSiteEditFunction(
-        type: "addTitle" | "addSubtitle" | "addParagraph" | "addGeneralTitle" | "addGeneralSubtitle" | "addAuthor" | "addTitleImage" | "addImage" | "addMultipleImages" | "addImageWithText" | "addLine" | "addCurrentTeam",
+        type: "addTitle" | "addSubtitle" | "addParagraph" | "editGeneralTitle" | "editGeneralSubtitle" | "editAuthor" | "editTitleImage" | "addImage" | "addMultipleImages" | "addImageWithText" | "addLine" | "addCurrentTeam",
     ): Function {
         const _this = this;
 
@@ -241,99 +307,59 @@ export class DashboardComponent implements OnInit {
                 return;
             }
 
+            _this.currentActionToPerform.set(type);
+
+            // Change this to a switch in the future
             if (type === "addTitle") {
-                const content = await prompt("Titel eingeben:");
+                _this.titleInputOpen.set(true);
 
-                if (!content) {
-                    _this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-                    return;
-                }
-
-                const element = _this.editSiteService.addTitle(content);
-
-                _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                    site.data.unshift(element);
-
-                    return site;
-                });
+                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.TITLE.title);
+                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.TITLE.description);
+                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.TITLE.label);
+                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.TITLE.placeholder);
 
                 return;
             } else if (type === "addSubtitle") {
-                const content = await prompt("Untertitel eingeben:");
+                _this.titleInputOpen.set(true);
 
-                if (!content) {
-                    _this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-                    return;
-                }
-
-                const element = _this.editSiteService.addSubtitle(content);
-
-                _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                    site.data.unshift(element);
-
-                    return site;
-                });
+                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.title);
+                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.description);
+                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.label);
+                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.placeholder);
 
                 return;
             } else if (type === "addParagraph") {
-                const content = await prompt("Text eingeben:");
-
-                if (!content) {
-                    _this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-                    return;
-                }
-
-                const element = _this.editSiteService.addParagraph(content);
-                _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                    site.data.unshift(element);
-
-                    return site;
-                });
+                _this.textInputOpen.set(true);
 
                 return;
-            } else if (type === "addGeneralTitle") {
-                const content = await prompt("Seitentitel eingeben:");
+            } else if (type === "editGeneralTitle") {
+                _this.titleInputOpen.set(true);
 
-                if (!content) {
-                    _this.notificationService.info("Leere Eingabe", "Der Seitentitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
-                    return;
-                }
-
-                _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                    site.metadata.title = content;
-
-                    return site;
-                });
+                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.title);
+                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.description);
+                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.label);
+                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.placeholder);
 
                 return;
-            } else if (type === "addGeneralSubtitle") {
-                const content = await prompt("Seiten Untertitel eingeben:");
+            } else if (type === "editGeneralSubtitle") {
+                _this.titleInputOpen.set(true);
 
-                // Allow empty subtitle
-
-                _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                    site.metadata.subtitle = content ? content : "";
-
-                    return site;
-                });
+                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.title);
+                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.description);
+                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.label);
+                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.placeholder);
 
                 return;
-            } else if (type === "addAuthor") {
-                const content = await prompt("Autor eingeben:");
+            } else if (type === "editAuthor") {
+                _this.titleInputOpen.set(true);
 
-                if (!content) {
-                    _this.notificationService.info("Leere Eingabe", "Der Autor wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
-                    return;
-                }
-
-                _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                    site.metadata.author = content;
-
-                    return site;
-                });
+                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.title);
+                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.description);
+                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.label);
+                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.placeholder);
 
                 return;
-            } else if (type === "addTitleImage") {
+            } else if (type === "editTitleImage") {
                 const input = document.createElement("input");
 
                 input.type = "file";
@@ -556,5 +582,233 @@ export class DashboardComponent implements OnInit {
         }
 
         this.setCurrentActiveNavigation("main");
+    }
+
+    async closePopup(): Promise<void> {
+        const yes = await confirm("Möchtest du das Popup wirklich schließen? Alle ungespeicherten Änderungen gehen verloren.");
+
+        if (!yes) {
+            return;
+        }
+
+        this.titleInputOpen.set(false);
+        this.textInputOpen.set(false);
+        this.imageInputOpen.set(false);
+        this.multipleImagesInputOpen.set(false);
+    }
+
+    closePopupWithoutConfirmation(): void {
+        this.titleInputOpen.set(false);
+        this.textInputOpen.set(false);
+        this.imageInputOpen.set(false);
+        this.multipleImagesInputOpen.set(false);
+    }
+
+    addTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editSiteService.addTitle(content);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data.unshift(element);
+
+            return site;
+        });
+    }
+
+    editTitle(content: string): void {
+    }
+
+    addSubtitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editSiteService.addSubtitle(content);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data.unshift(element);
+
+            return site;
+        });
+    }
+
+    editSubtitle(content: string): void {
+    }
+
+    editGeneralTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Seitentitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.metadata.title = content;
+
+            return site;
+        });
+    }
+
+    editGeneralSubtitle(content: string): void {
+        // Allow empty subtitle
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.metadata.subtitle = content ? content : "";
+
+            return site;
+        });
+    }
+
+    editAuthor(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Autor wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.metadata.author = content;
+
+            return site;
+        });
+    }
+
+    addParagraph(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editSiteService.addParagraph(content);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data.unshift(element);
+
+            return site;
+        });
+    }
+
+    editParagraph(content: string): void {}
+
+    addImageWithTextPart1(content: string): void {} // add the content to a cache variable and open the image input popup
+
+    editImageWithTextPart1(content: string): void {}
+
+    addImageWithTextPart2(file: { file: File, url: string}): void {} // get the content from the cache variable and add the element
+
+    editImageWithTextPart2(file: { file: File, url: string}): void {}
+
+    addImage(file: { file: File, url: string}): void {}
+
+    editImage(file: { file: File, url: string}): void {}
+
+    addMultipleImages(files: { file: File, url: string }[]): void {}
+
+    editMultipleImages(files: { file: File, url: string }[]): void {}
+
+    handleTitleInputResult(content: string): void {
+        this.titleInputOpen.set(false);
+
+        switch (this.currentActionToPerform()) {
+            case "addTitle":
+                this.addTitle(content);
+                break;
+            case "editTitle":
+                this.editTitle(content);
+                break;
+            case "addSubtitle":
+                this.addSubtitle(content);
+                break;
+            case "editSubtitle":
+                this.editSubtitle(content);
+                break;
+            case "editGeneralTitle":
+                this.editGeneralTitle(content);
+                break;
+            case "editGeneralSubtitle":
+                this.editGeneralSubtitle(content);
+                break;
+            case "editAuthor":
+                this.editAuthor(content);
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
+    handleTextInputResult(content: string): void {
+        this.textInputOpen.set(false);
+
+        switch (this.currentActionToPerform()) {
+            case "addParagraph":
+                this.addParagraph(content);
+                break;
+            case "editParagraph":
+                this.editParagraph(content);
+                break;
+            case "addImageWithText":
+                this.addImageWithTextPart1(content);
+                break;
+            case "editImageWithText":
+                this.editImageWithTextPart1(content);
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
+    handleImageInputResult(file: { file: File | null, url: string}): void {
+        this.imageInputOpen.set(false);
+
+        if (file.file === null) {
+            this.notificationService.info("Kein Bild ausgewählt", "Bitte wähle ein Bild aus, um diese Funktion zu nutzen.");
+
+            return;
+        }
+
+        switch (this.currentActionToPerform()) {
+            case "addParagraph":
+                this.addImage(file as { file: File, url: string});
+                break;
+            case "editParagraph":
+                this.editImage(file as { file: File, url: string});
+                break;
+            case "addImageWithText":
+                this.addImageWithTextPart2(file as { file: File, url: string});
+                break;
+            case "editImageWithText":
+                this.editImageWithTextPart2(file as { file: File, url: string});
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
+    handleMultipleImagesInputResult(files: { file: File, url: string }[]): void {
+        this.multipleImagesInputOpen.set(false);
+
+        switch (this.currentActionToPerform()) {
+            case "addParagraph":
+                this.addMultipleImages(files);
+                break;
+            case "editParagraph":
+                this.editMultipleImages(files);
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
+    handleConfirmInputResult(confirmed: boolean): void {
+        this.confirmInputOpen.set(false);
+
+        // make this subscribeable
     }
 }

@@ -10,6 +10,10 @@ router.get("/:env", (req: Request, res: Response): void => {
     try {
         const { env } = req.params;
 
+        if (typeof env !== "string" || env.length === 0) {
+            throw new Error("No env variable provided.");
+        }
+
         const allowedEnvVariables: PublicEnvVariables = {
             ORIGIN: CONFIG.ORIGIN,
             ENV: CONFIG.ENV,
