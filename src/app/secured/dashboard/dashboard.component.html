@@ -555,7 +555,14 @@
 </div>
 
 @if (titleInputOpen()) {
-    <app-popup-title-input (resultOutput)="handleTitleInputResult($event)" (closeOutput)="closePopup()" [title]="titleInputTitle()" [description]="titleInputDescription()" [label]="titleInputLabel()" [placeholder]="titleInputPlaceholder()"></app-popup-title-input>
+    <app-popup-title-input
+        (resultOutput)="handleTitleInputResult($event)"
+        (closeOutput)="closePopup()"
+        [title]="titleInputTitle()"
+        [description]="titleInputDescription()"
+        [label]="titleInputLabel()"
+        [placeholder]="titleInputPlaceholder()"
+    ></app-popup-title-input>
 } @else if (textInputOpen()) {
     <app-popup-text-input (resultOutput)="handleTextInputResult($event)" (closeOutput)="closePopup()"></app-popup-text-input>
 } @else if (imageInputOpen()) {

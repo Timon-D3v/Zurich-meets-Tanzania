@@ -57,4 +57,5 @@ export class PopupTextInputComponent {
     close(): void {
         this.reset();
         this.closeOutput.emit();
-    }}
+    }
+}

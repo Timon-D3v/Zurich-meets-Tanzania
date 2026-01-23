@@ -5,9 +5,7 @@ import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList, moveItemInArray } fr
 
 @Component({
     selector: "app-popup-multiple-images-input",
-    imports: [CdkDragPreview,
-            CdkDropList,
-            CdkDrag],
+    imports: [CdkDragPreview, CdkDropList, CdkDrag],
     templateUrl: "./popup-multiple-images-input.component.html",
     styleUrl: "./popup-multiple-images-input.component.scss",
 })
@@ -71,7 +69,7 @@ export class PopupMultipleImagesInputComponent {
                 images.push({ file, url });
 
                 return images;
-            })
+            });
         }
     }
 

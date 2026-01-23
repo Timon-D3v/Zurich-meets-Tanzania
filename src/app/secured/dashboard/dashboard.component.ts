@@ -94,10 +94,26 @@ export class DashboardComponent implements OnInit {
     currentActiveSection = signal<string>("stats-website-analytics");
     currentActiveNavigation = signal<DashboardNavigationOptions>("main");
     currentActiveSiteEdit = signal<StaticSiteNames>("vision");
-    currentActionToPerform = signal<"addTitle" | "addSubtitle" | "addParagraph" | "addImage" | "addMultipleImages" | "addImageWithText" | "addLine" | "addCurrentTeam" | "editTitle" | "editSubtitle" | "editParagraph" | "editGeneralTitle" | "editGeneralSubtitle" | "editAuthor" | "editTitleImage" | "editImage" | "editMultipleImages" | "editImageWithText"
->(
-        "addTitle",
-    );
+    currentActionToPerform = signal<
+        | "addTitle"
+        | "addSubtitle"
+        | "addParagraph"
+        | "addImage"
+        | "addMultipleImages"
+        | "addImageWithText"
+        | "addLine"
+        | "addCurrentTeam"
+        | "editTitle"
+        | "editSubtitle"
+        | "editParagraph"
+        | "editGeneralTitle"
+        | "editGeneralSubtitle"
+        | "editAuthor"
+        | "editTitleImage"
+        | "editImage"
+        | "editMultipleImages"
+        | "editImageWithText"
+    >("addTitle");
     mobileNavOpen = signal<boolean>(false);
     submitSiteEditButton = signal<string>("Abschliessen");
 
@@ -153,6 +169,8 @@ export class DashboardComponent implements OnInit {
 
     titleInputContent = signal<{ title: string; placeholder: string; description: string; label: string }>({ title: "", placeholder: "", description: "", label: "" });
 
+    textWithImageTextCache = signal<string>("");
+
     private editSiteService = inject(EditSiteService);
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
@@ -197,30 +215,15 @@ export class DashboardComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        const visionRequest = this.subpagesService.getStaticSite("vision");
-        const boardRequest = this.subpagesService.getStaticSite("board");
-        const beginningRequest = this.subpagesService.getStaticSite("beginning");
-        const financesRequest = this.subpagesService.getStaticSite("finances");
-        const incomeStatementRequest = this.subpagesService.getStaticSite("income-statement");
-        const generalMeetingRequest = this.subpagesService.getStaticSite("general-meeting");
-        const statutesRequest = this.subpagesService.getStaticSite("statutes");
-        const zurichMeetsTanzaniaRequest = this.subpagesService.getStaticSite("zurich-meets-tanzania");
-        const tanzaniaMeetsZurichRequest = this.subpagesService.getStaticSite("tanzania-meets-zurich");
-        const mbuziRequest = this.subpagesService.getStaticSite("mbuzi");
-        const gynecologyRequest = this.subpagesService.getStaticSite("gynecology");
-        const meducationRequest = this.subpagesService.getStaticSite("meducation");
-        const bajajiRequest = this.subpagesService.getStaticSite("bajaji");
-        const cardiologyRequest = this.subpagesService.getStaticSite("cardiology");
-        const surgeryRequest = this.subpagesService.getStaticSite("surgery");
-        const historyRequest = this.subpagesService.getStaticSite("history");
+        for (const key in this.siteEdits) {
+            const request = this.subpagesService.getStaticSite(key as StaticSiteNames);
 
-        const generateSubscriptionHandler = (siteName: StaticSiteNames) => {
-            return (response: GetStaticSiteApiEndpointResponse) => {
+            request.subscribe((response: GetStaticSiteApiEndpointResponse) => {
                 if (response.error || response.data === null) {
-                    this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${siteName}' konnte nicht geladen werden: ` + response.message);
+                    this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${key}' konnte nicht geladen werden: ` + response.message);
 
                     // Set a Warning as the sites content
-                    this.siteEdits[siteName].set({
+                    this.siteEdits[key as StaticSiteNames].set({
                         data: [],
                         metadata: {
                             title: "Fehler beim Laden der Seite",
@@ -234,27 +237,10 @@ export class DashboardComponent implements OnInit {
                     return;
                 }
 
-                this.siteEdits[siteName].set(response.data.site);
-                this.siteEditImages[siteName] = [];
-            };
-        };
-
-        visionRequest.subscribe(generateSubscriptionHandler("vision"));
-        boardRequest.subscribe(generateSubscriptionHandler("board"));
-        beginningRequest.subscribe(generateSubscriptionHandler("beginning"));
-        financesRequest.subscribe(generateSubscriptionHandler("finances"));
-        incomeStatementRequest.subscribe(generateSubscriptionHandler("income-statement"));
-        generalMeetingRequest.subscribe(generateSubscriptionHandler("general-meeting"));
-        statutesRequest.subscribe(generateSubscriptionHandler("statutes"));
-        zurichMeetsTanzaniaRequest.subscribe(generateSubscriptionHandler("zurich-meets-tanzania"));
-        tanzaniaMeetsZurichRequest.subscribe(generateSubscriptionHandler("tanzania-meets-zurich"));
-        mbuziRequest.subscribe(generateSubscriptionHandler("mbuzi"));
-        gynecologyRequest.subscribe(generateSubscriptionHandler("gynecology"));
-        meducationRequest.subscribe(generateSubscriptionHandler("meducation"));
-        bajajiRequest.subscribe(generateSubscriptionHandler("bajaji"));
-        cardiologyRequest.subscribe(generateSubscriptionHandler("cardiology"));
-        surgeryRequest.subscribe(generateSubscriptionHandler("surgery"));
-        historyRequest.subscribe(generateSubscriptionHandler("history"));
+                this.siteEdits[key as StaticSiteNames].set(response.data.site);
+                this.siteEditImages[key as StaticSiteNames] = [];
+            });
+        }
     }
 
     generateActivateFunction(section: string, navigation: DashboardNavigationOptions = "main"): Function {
@@ -318,7 +304,6 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.TITLE.label);
                 _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.TITLE.placeholder);
 
-                return;
             } else if (type === "addSubtitle") {
                 _this.titleInputOpen.set(true);
 
@@ -327,11 +312,9 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.label);
                 _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.placeholder);
 
-                return;
-            } else if (type === "addParagraph") {
+            } else if (type === "addParagraph" || type === "addImageWithText") {
                 _this.textInputOpen.set(true);
 
-                return;
             } else if (type === "editGeneralTitle") {
                 _this.titleInputOpen.set(true);
 
@@ -340,7 +323,6 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.label);
                 _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.placeholder);
 
-                return;
             } else if (type === "editGeneralSubtitle") {
                 _this.titleInputOpen.set(true);
 
@@ -349,7 +331,6 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.label);
                 _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.placeholder);
 
-                return;
             } else if (type === "editAuthor") {
                 _this.titleInputOpen.set(true);
 
@@ -358,128 +339,12 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.label);
                 _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.placeholder);
 
-                return;
-            } else if (type === "editTitleImage") {
-                const input = document.createElement("input");
+            } else if (type === "editTitleImage" || type === "addImage") {
+                _this.imageInputOpen.set(true);
 
-                input.type = "file";
-                input.accept = "image/*";
-
-                input.onchange = () => {
-                    if (input.files && input.files[0]) {
-                        const file = input.files[0];
-
-                        const imageUrl = _this.getStaticImageUrl(file);
-
-                        _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                            site.metadata.imageUrl = imageUrl;
-                            site.metadata.imageAlt = file.name;
-
-                            return site;
-                        });
-                    } else {
-                        _this.notificationService.info("Kein Bild ausgewählt", "Bitte wähle ein Bild aus, um diese Funktion zu nutzen.");
-                    }
-                };
-
-                input.click();
-
-                return;
-            } else if (type === "addImage") {
-                const input = document.createElement("input");
-
-                input.type = "file";
-                input.accept = "image/*";
-
-                input.onchange = () => {
-                    if (input.files && input.files[0]) {
-                        const file = input.files[0];
-
-                        const imageUrl = _this.getStaticImageUrl(file);
-                        const element = _this.editSiteService.addImage(imageUrl, file.name);
-
-                        _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                            site.data.unshift(element);
-
-                            return site;
-                        });
-                    } else {
-                        _this.notificationService.info("Kein Bild ausgewählt", "Bitte wähle ein Bild aus, um diese Funktion zu nutzen.");
-                    }
-                };
-
-                input.click();
-
-                return;
             } else if (type === "addMultipleImages") {
-                const input = document.createElement("input");
+                _this.multipleImagesInputOpen.set(true);
 
-                input.type = "file";
-                input.accept = "image/*";
-                input.multiple = true;
-
-                input.onchange = () => {
-                    if (input.files && input.files.length > 1) {
-                        const files = Array.from(input.files);
-
-                        const images: { imageUrl: string; imageAlt: string }[] = [];
-
-                        for (const file of files) {
-                            const imageUrl = _this.getStaticImageUrl(file);
-                            images.push({ imageUrl, imageAlt: file.name });
-                        }
-
-                        const element = _this.editSiteService.addMultipleImages(images);
-
-                        _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                            site.data.unshift(element);
-
-                            return site;
-                        });
-                    } else {
-                        _this.notificationService.info("Mehrere Bilder auswählen", "Bitte wähle mehrere Bilder aus, um diese Funktion zu nutzen.");
-                    }
-                };
-
-                input.click();
-
-                return;
-            } else if (type === "addImageWithText") {
-                const input = document.createElement("input");
-
-                input.type = "file";
-                input.accept = "image/*";
-
-                input.onchange = async () => {
-                    if (input.files && input.files[0]) {
-                        const file = input.files[0];
-
-                        const imageUrl = _this.getStaticImageUrl(file);
-
-                        const content = await prompt("Text zum Bild eingeben:");
-
-                        if (!content) {
-                            _this.notificationService.info("Leere Eingabe", "Der Text zum Bild wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-                            return;
-                        }
-
-                        const shouldImageBePlacedLeft = await confirm("Möchtest du das Bild links oder rechts platzieren?\n(OK = Links / Abbrechen = Rechts)");
-
-                        const element = _this.editSiteService.addImageWithText(imageUrl, file.name, content, shouldImageBePlacedLeft ? "left" : "right");
-
-                        _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                            site.data.unshift(element);
-
-                            return site;
-                        });
-                    } else {
-                        _this.notificationService.info("Kein Bild ausgewählt", "Bitte wähle ein Bild aus, um diese Funktion zu nutzen.");
-                    }
-                };
-
-                input.click();
-
-                return;
             } else if (type === "addLine") {
                 const element = _this.editSiteService.addLine();
 
@@ -489,22 +354,12 @@ export class DashboardComponent implements OnInit {
                     return site;
                 });
 
-                return;
             } else if (type === "addCurrentTeam") {
                 alert("Diese Funktion ist noch nicht implementiert.");
-                return;
             }
         };
 
         return siteEditFunction;
-    }
-
-    getStaticImageUrl(file: File): string {
-        const url = URL.createObjectURL(file);
-
-        this.siteEditImages[this.currentActiveSiteEdit()].push({ url, file });
-
-        return url;
     }
 
     submitSiteEdits(): void {
@@ -557,6 +412,8 @@ export class DashboardComponent implements OnInit {
     }
 
     handleEdit(index: number, siteName: StaticSiteNames): void {
+        console.log(index, siteName);
+
         alert("Diese Funktion ist noch nicht implementiert.");
     }
 
@@ -619,8 +476,7 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editTitle(content: string): void {
-    }
+    editTitle(content: string): void {}
 
     addSubtitle(content: string): void {
         if (!content) {
@@ -637,8 +493,7 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editSubtitle(content: string): void {
-    }
+    editSubtitle(content: string): void {}
 
     editGeneralTitle(content: string): void {
         if (!content) {
@@ -693,21 +548,89 @@ export class DashboardComponent implements OnInit {
 
     editParagraph(content: string): void {}
 
-    addImageWithTextPart1(content: string): void {} // add the content to a cache variable and open the image input popup
+    addImageWithTextPart1(content: string): void {
+        // Add the content to a cache variable and open the image input popup
+
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        this.textWithImageTextCache.set(content);
+
+        this.currentActionToPerform.set("addImageWithText");
+        this.imageInputOpen.set(true);
+    }
 
     editImageWithTextPart1(content: string): void {}
 
-    addImageWithTextPart2(file: { file: File, url: string}): void {} // get the content from the cache variable and add the element
+    async addImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
+        // Get the content from the cache variable and add the element
+        const shouldImageBePlacedLeft = await confirm("Möchtest du das Bild links oder rechts platzieren?\n(OK = Links / Abbrechen = Rechts)");
 
-    editImageWithTextPart2(file: { file: File, url: string}): void {}
+        const element = this.editSiteService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedLeft ? "left" : "right");
 
-    addImage(file: { file: File, url: string}): void {}
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data.unshift(element);
 
-    editImage(file: { file: File, url: string}): void {}
+            return site;
+        });
+    }
 
-    addMultipleImages(files: { file: File, url: string }[]): void {}
+    editImageWithTextPart2(file: { file: File; url: string }): void {}
 
-    editMultipleImages(files: { file: File, url: string }[]): void {}
+    addImage(file: { file: File; url: string }): void {
+        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
+
+        const element = this.editSiteService.addImage(file.url, file.file.name);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data.unshift(element);
+
+            return site;
+        });
+    }
+
+    editImage(file: { file: File; url: string }): void {}
+
+    editGeneralImage(file: { file: File; url: string }): void {
+        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.metadata.imageUrl = file.url;
+            site.metadata.imageAlt = file.file.name;
+
+            return site;
+        });
+    }
+
+    addMultipleImages(files: { file: File; url: string }[]): void {
+        if (files.length === 0) {
+            this.notificationService.info("Keine Bilder ausgewählt", "Bitte wähle mindestens ein Bild aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const images: { imageUrl: string; imageAlt: string }[] = [];
+
+        for (const file of files) {
+            this.siteEditImages[this.currentActiveSiteEdit()].push(file);
+
+            images.push({ 
+                imageUrl: file.url, 
+                imageAlt: file.file.name 
+            });
+        }
+
+        const element = this.editSiteService.addMultipleImages(images);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data.unshift(element);
+
+            return site;
+        });
+    }
+
+    editMultipleImages(files: { file: File; url: string }[]): void {}
 
     handleTitleInputResult(content: string): void {
         this.titleInputOpen.set(false);
@@ -762,7 +685,7 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    handleImageInputResult(file: { file: File | null, url: string}): void {
+    handleImageInputResult(file: { file: File | null; url: string }): void {
         this.imageInputOpen.set(false);
 
         if (file.file === null) {
@@ -772,17 +695,20 @@ export class DashboardComponent implements OnInit {
         }
 
         switch (this.currentActionToPerform()) {
-            case "addParagraph":
-                this.addImage(file as { file: File, url: string});
+            case "addImage":
+                this.addImage(file as { file: File; url: string });
                 break;
-            case "editParagraph":
-                this.editImage(file as { file: File, url: string});
+            case "editImage":
+                this.editImage(file as { file: File; url: string });
                 break;
             case "addImageWithText":
-                this.addImageWithTextPart2(file as { file: File, url: string});
+                this.addImageWithTextPart2(file as { file: File; url: string });
                 break;
             case "editImageWithText":
-                this.editImageWithTextPart2(file as { file: File, url: string});
+                this.editImageWithTextPart2(file as { file: File; url: string });
+                break;
+            case "editTitleImage":
+                this.editGeneralImage(file as { file: File; url: string });
                 break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
@@ -790,14 +716,14 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    handleMultipleImagesInputResult(files: { file: File, url: string }[]): void {
+    handleMultipleImagesInputResult(files: { file: File; url: string }[]): void {
         this.multipleImagesInputOpen.set(false);
 
         switch (this.currentActionToPerform()) {
-            case "addParagraph":
+            case "addMultipleImages":
                 this.addMultipleImages(files);
                 break;
-            case "editParagraph":
+            case "editMultipleImages":
                 this.editMultipleImages(files);
                 break;
             default:
