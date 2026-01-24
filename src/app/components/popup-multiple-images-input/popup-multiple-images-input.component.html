@@ -1,9 +1,12 @@
 <div class="popup" (click)="close()">
     <form class="wrapper" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
         <h2>{{ title() }}</h2>
+
         <p>{{ description() }}</p>
+
         <label for="images" class="text-label">{{ label() }}</label>
         <input type="file" multiple="true" accept="image/*" id="images" (change)="onChange($event)" />
+
         <label for="images" class="image-label {{ images().length === 0 ? 'empty' : '' }}" cdkDropList (cdkDropListDropped)="moveElement($event)">
             @for (image of images(); track $index) {
                 <div class="drag-element" cdkDrag cdkDragBoundary=".image-label">
@@ -12,14 +15,18 @@
                 </div>
             }
         </label>
+
         <div class="additional-options-wrapper">
             <label>
                 Hinzufügen
                 <input type="file" multiple="true" accept="image/*" (change)="addFiles($event)" />
             </label>
-            <button type="button" class="clear-all" (click)="deleteLast()">Letztes entfernen</button>
+
+            <button type="button" (click)="deleteLast()">Letztes entfernen</button>
         </div>
+
         <button type="submit" class="submit">{{ submitButtonText() }}</button>
+
         <button type="button" class="close" (click)="close()">
             <img src="/svg/close.svg" alt="Popup schließen" />
         </button>

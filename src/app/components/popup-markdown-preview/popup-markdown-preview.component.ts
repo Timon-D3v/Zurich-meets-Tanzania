@@ -1,13 +1,15 @@
-import { Component, effect, input, signal } from "@angular/core";
+import { Component, effect, input, output, signal } from "@angular/core";
 
 @Component({
-    selector: "app-custom-paragraph",
+    selector: "app-popup-markdown-preview",
     imports: [],
-    templateUrl: "./custom-paragraph.component.html",
-    styleUrl: "./custom-paragraph.component.scss",
+    templateUrl: "./popup-markdown-preview.component.html",
+    styleUrl: "./popup-markdown-preview.component.scss",
 })
-export class CustomParagraphComponent {
-    content = input.required<string>();
+export class PopupMarkdownPreviewComponent {
+    content = input<string>("Etwas ist passiert, das deine Aufmerksamkeit erfordert.");
+
+    closeOutput = output<void>();
 
     htmlContent = signal<string>("");
 
@@ -35,5 +37,15 @@ export class CustomParagraphComponent {
         html = html.replace(/\!\[(.*?)\]\((.*?)\)/gm, "<a href='$2' target='_blank'>$1</a>");
 
         return html;
+    }
+
+    onSubmit(event: Event): void {
+        event.preventDefault();
+
+        this.close();
+    }
+
+    close(): void {
+        this.closeOutput.emit();
     }
 }

@@ -1,12 +1,41 @@
 <div class="popup" (click)="close()">
     <form class="wrapper" [formGroup]="addTextForm" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
         <h2>{{ title() }}</h2>
-        <p>{{ description() }}</p>
+
+        <p>
+            <span>
+                {{ description() }}
+                <br />
+                <br />
+            </span>
+
+            <span> Die Eingabe unterstützt Markdown-Syntax. Dass heisst, dass du deinen Text formatieren kannst. Eine Vorschau der Formatierung kannst du dir anzeigen lassen, indem du auf den Knopf "Vorschau" klickst. </span>
+            <span> Um eine neue Zeile zu beginnen, drücke einfach die Eingabetaste (Enter). </span>
+            <span>
+                Um einen <a href="https://example.com" target="_blank" rel="noopener noreferrer">Link</a> einzufügen, schreibe nach einem Ausrufezeichen den Text in eckige Klammern gefolgt von der URL in runden Klammern. Beispiel:
+                ![Beispiel-Link](https://example.com)
+            </span>
+            <span> Um Text <strong>fett</strong> zu formatieren, setze ihn zwischen drei Sternchen. Beispiel: ***fetter Text*** </span>
+            <span> Um Text <em>kursiv</em> zu formatieren, setze ihn zwischen drei Unterstrichen. Beispiel: ___kursiver Text___ </span>
+            <span> Um Text zu <u>unterstrichen</u>, setze ihn zwischen drei Plus-Symbole. Beispiel: +++unterstrichener Text+++ </span>
+            (Um Emojis einzufügen, drücke [Windows] + [.])
+        </p>
+
         <label for="text">{{ label() }}</label>
         <textarea id="text" [placeholder]="placeholder()" formControlName="textControl"></textarea>
+
+        <div class="additional-options-wrapper">
+            <button type="button" (click)="showPreview()">Vorschau</button>
+        </div>
+
         <button type="submit" class="submit">{{ submitButtonText() }}</button>
+
         <button type="button" class="close" (click)="close()">
             <img src="/svg/close.svg" alt="Popup schließen" />
         </button>
     </form>
 </div>
+
+@if (previewOpen()) {
+    <app-popup-markdown-preview [content]="previewContent()" (closeOutput)="closePreview()"></app-popup-markdown-preview>
+}

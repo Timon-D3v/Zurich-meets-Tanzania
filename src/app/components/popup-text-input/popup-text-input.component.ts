@@ -1,10 +1,11 @@
-import { Component, effect, inject, input, output } from "@angular/core";
+import { Component, effect, inject, input, output, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NotificationService } from "../../services/notification.service";
+import { PopupMarkdownPreviewComponent } from "../popup-markdown-preview/popup-markdown-preview.component";
 
 @Component({
     selector: "app-popup-text-input",
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, PopupMarkdownPreviewComponent],
     templateUrl: "./popup-text-input.component.html",
     styleUrl: "./popup-text-input.component.scss",
 })
@@ -22,6 +23,9 @@ export class PopupTextInputComponent {
     addTextForm = new FormGroup({
         textControl: new FormControl(""),
     });
+
+    previewOpen = signal<boolean>(false);
+    previewContent = signal<string>("");
 
     private notificationService = inject(NotificationService);
 
@@ -50,7 +54,24 @@ export class PopupTextInputComponent {
     }
 
     close(): void {
-        this.reset();
         this.closeOutput.emit();
+    }
+
+    showPreview(): void {
+        this.previewOpen.set(true);
+
+        const text = this.addTextForm.value.textControl;
+
+        if (typeof text !== "string") {
+            this.notificationService.error("Eingabefehler:", "Der eingegebene Text ist kein Text.");
+
+            return;
+        }
+
+        this.previewContent.set(text);
+    }
+
+    closePreview(): void {
+        this.previewOpen.set(false);
     }
 }

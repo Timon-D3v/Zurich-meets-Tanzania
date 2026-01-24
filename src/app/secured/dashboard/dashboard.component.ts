@@ -234,8 +234,8 @@ export class DashboardComponent implements OnInit {
                             title: "Fehler beim Laden der Seite",
                             subtitle: "",
                             author: "",
-                            imageAlt: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
-                            imageUrl: "",
+                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                            imageAlt: "",
                         },
                     });
 
@@ -402,8 +402,8 @@ export class DashboardComponent implements OnInit {
                             title: "Fehler beim Laden der Seite",
                             subtitle: "",
                             author: "",
-                            imageAlt: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
-                            imageUrl: "",
+                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                            imageAlt: "",
                         },
                     });
 

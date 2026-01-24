@@ -33,17 +33,6 @@ p {
     text-wrap: pretty;
 }
 
-label {
-    @include admin-label;
-
-    & + textarea {
-        padding: 0.5em 1em;
-        transition: height 0s linear;
-        resize: vertical;
-        height: 6lh;
-    }
-}
-
 .submit {
     @include primary-button;
     margin-top: 3vh;
@@ -75,37 +64,6 @@ label {
     }
 }
 
-.additional-options-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-
-    & button {
-        background-color: var(--green);
-        border-radius: 5px;
-        padding: 0.5rem 1rem;
-        color: var(--c-text-50);
-        cursor: pointer;
-        border: none;
-        outline: none;
-        font-size: 1rem;
-        font-weight: bold;
-        letter-spacing: 0.1ch;
-        line-height: 1.5;
-        -webkit-hyphens: auto;
-        hyphens: auto;
-    }
-}
-
-span {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
 @media screen and (max-width: 275px) {
     h2 {
         font-size: 1.5rem;
@@ -121,9 +79,5 @@ span {
 
     .close {
         display: none;
-    }
-
-    label + textarea {
-        padding: 0.5em;
     }
 }

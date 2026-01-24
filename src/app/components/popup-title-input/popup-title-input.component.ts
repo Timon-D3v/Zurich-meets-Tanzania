@@ -50,7 +50,6 @@ export class PopupTitleInputComponent {
     }
 
     close(): void {
-        this.reset();
         this.closeOutput.emit();
     }
 }
