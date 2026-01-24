@@ -3,7 +3,7 @@
         <h2>{{ title() }}</h2>
         <p>{{ description() }}</p>
         <label for="image" class="text-label">{{ label() }}</label>
-        <input type="file" accept="image/*" id="image" required (change)="onChange($event)" />
+        <input type="file" accept="image/*" id="image" (change)="onChange($event)" />
         <label for="image" class="image-label">
             <img [src]="image().url" alt="Vorschau des Bildes" />
         </label>

@@ -1,6 +1,5 @@
 import { Component, effect, inject, input, output, signal } from "@angular/core";
 import { NotificationService } from "../../services/notification.service";
-import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 
 @Component({
@@ -25,12 +24,12 @@ export class PopupMultipleImagesInputComponent {
 
     private notificationService = inject(NotificationService);
 
-    private _updateFormControl = effect(() => {
+    private _updateInputArray = effect(() => {
         this.images.set([]);
 
         for (const image of this.editArray()) {
             this.images.update((images) => {
-                images.push({ file: new File([], ""), url: image.imageUrl });
+                images.push({ file: new File([], image.imageAlt), url: image.imageUrl });
 
                 return images;
             });
@@ -87,5 +86,38 @@ export class PopupMultipleImagesInputComponent {
 
     moveElement(event: CdkDragDrop<string[]>): void {
         moveItemInArray(this.images(), event.previousIndex, event.currentIndex);
+    }
+
+    addFiles(event: Event): void {
+        if (!(event.target instanceof HTMLInputElement)) {
+            return;
+        }
+
+        const inputElement = event.target;
+
+        if (!inputElement.files || inputElement.files.length === 0) {
+            this.notificationService.error("Keine Datei ausgewählt:", "Bitte wähle eine Bilddatei aus.");
+            return;
+        }
+
+        const files = inputElement.files;
+
+        for (const file of files) {
+            const url = URL.createObjectURL(file);
+
+            this.images.update((images) => {
+                images.push({ file, url });
+
+                return images;
+            });
+        }
+    }
+
+    deleteLast(): void {
+        this.images.update((images) => {
+            images.pop();
+
+            return images;
+        });
     }
 }
