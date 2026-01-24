@@ -13,6 +13,7 @@ export class PopupImageInputComponent {
     description = input<string>("Bitte suche ein Bild aus, das du hinzufügen möchtest. Du kannst es auch nachher noch ändern.");
     label = input<string>("Bild:");
     placeholderUrl = input<string>(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
+    submitButtonText = input<string>("Hinzufügen");
 
     resultOutput = output<{ file: File | null; url: string }>();
     closeOutput = output<void>();
@@ -21,9 +22,6 @@ export class PopupImageInputComponent {
         file: null,
         url: this.placeholderUrl(),
     });
-
-    submitButtonDisabled = signal(false);
-    submitButtonText = signal("Hinzufügen");
 
     private notificationService = inject(NotificationService);
 
@@ -34,21 +32,10 @@ export class PopupImageInputComponent {
     onSubmit(event: Event): void {
         event.preventDefault();
 
-        this.submitButtonDisabled.set(true);
-        this.submitButtonText.set("Verarbeiten...");
-
         this.resultOutput.emit(this.image());
-
-        this.reset();
-    }
-
-    reset(): void {
-        this.submitButtonDisabled.set(false);
-        this.submitButtonText.set("Hinzufügen");
     }
 
     close(): void {
-        this.reset();
         this.closeOutput.emit();
     }
 

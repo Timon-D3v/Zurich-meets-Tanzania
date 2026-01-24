@@ -579,7 +579,7 @@
         [description]="titleEditInputDescription()"
         [label]="titleEditInputLabel()"
         [placeholder]="titleEditInputPlaceholder()"
-        ,
+        [submitButtonText]="'Aktualisieren'"
         [value]="titleEditInputValue()"
     ></app-popup-title-input>
 } @else if (textEditInputOpen()) {
@@ -590,7 +590,7 @@
         [description]="textEditInputDescription()"
         [label]="textEditInputLabel()"
         [placeholder]="textEditInputPlaceholder()"
-        ,
+        [submitButtonText]="'Aktualisieren'"
         [value]="textEditInputValue()"
     ></app-popup-text-input>
 } @else if (imageEditInputOpen()) {
@@ -600,6 +600,7 @@
         [title]="imageEditInputTitle()"
         [description]="imageEditInputDescription()"
         [label]="imageEditInputLabel()"
+        [submitButtonText]="'Ersetzen'"
         [placeholderUrl]="imageEditInputPlaceholderUrl()"
     ></app-popup-image-input>
 } @else if (multipleImagesEditInputOpen()) {
@@ -610,6 +611,7 @@
         [description]="multipleImagesEditInputDescription()"
         [label]="multipleImagesEditInputLabel()"
         [editArray]="multipleImagesEditInputValue()"
+        [submitButtonText]="'Aktualisieren'"
     ></app-popup-multiple-images-input>
 }
 

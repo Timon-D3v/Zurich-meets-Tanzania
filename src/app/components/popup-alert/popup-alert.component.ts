@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 
 @Component({
     selector: "app-popup-alert",

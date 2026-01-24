@@ -4,7 +4,7 @@
         <p>{{ description() }}</p>
         <label for="text">{{ label() }}</label>
         <textarea id="text" [placeholder]="placeholder()" formControlName="textControl"></textarea>
-        <button type="submit" class="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+        <button type="submit" class="submit">{{ submitButtonText() }}</button>
         <button type="button" class="close" (click)="close()">
             <img src="/svg/close.svg" alt="Popup schließen" />
         </button>

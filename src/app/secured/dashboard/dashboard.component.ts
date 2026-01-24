@@ -318,28 +318,40 @@ export class DashboardComponent implements OnInit {
             } else if (type === "addParagraph" || type === "addImageWithText") {
                 _this.textInputOpen.set(true);
             } else if (type === "editGeneralTitle") {
-                _this.titleInputOpen.set(true);
+                _this.titleEditInputOpen.set(true);
 
-                _this.titleInputTitle.set("Seitentitel eingeben:");
-                _this.titleInputDescription.set("Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.");
-                _this.titleInputLabel.set("Seitentitel:");
-                _this.titleInputPlaceholder.set("Seitentitel eingeben");
+                _this.titleEditInputTitle.set("Seitentitel eingeben:");
+                _this.titleEditInputDescription.set("Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.");
+                _this.titleEditInputLabel.set("Seitentitel:");
+                _this.titleEditInputPlaceholder.set("Seitentitel eingeben");
+
+                _this.titleEditInputValue.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.title);
             } else if (type === "editGeneralSubtitle") {
-                _this.titleInputOpen.set(true);
+                _this.titleEditInputOpen.set(true);
 
-                _this.titleInputTitle.set("Seiten Untertitel eingeben:");
-                _this.titleInputDescription.set("Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.");
-                _this.titleInputLabel.set("Seiten Untertitel:");
-                _this.titleInputPlaceholder.set("Seiten Untertitel eingeben");
+                _this.titleEditInputTitle.set("Seiten Untertitel eingeben:");
+                _this.titleEditInputDescription.set("Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.");
+                _this.titleEditInputLabel.set("Seiten Untertitel:");
+                _this.titleEditInputPlaceholder.set("Seiten Untertitel eingeben");
+
+                _this.titleEditInputValue.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.subtitle);
             } else if (type === "editAuthor") {
-                _this.titleInputOpen.set(true);
+                _this.titleEditInputOpen.set(true);
 
-                _this.titleInputTitle.set("Autor eingeben:");
-                _this.titleInputDescription.set("Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.");
-                _this.titleInputLabel.set("Autor:");
-                _this.titleInputPlaceholder.set("Autor eingeben");
+                _this.titleEditInputTitle.set("Autor eingeben:");
+                _this.titleEditInputDescription.set("Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.");
+                _this.titleEditInputLabel.set("Autor:");
+                _this.titleEditInputPlaceholder.set("Autor eingeben");
+
+                _this.titleEditInputValue.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.author);
             } else if (type === "editTitleImage" || type === "addImage") {
-                _this.imageInputOpen.set(true);
+                _this.imageEditInputOpen.set(true);
+
+                _this.imageEditInputTitle.set("Titelbild auswählen:");
+                _this.imageEditInputDescription.set("Bitte wähle ein Bild aus, das du als Titelbild verwenden möchtest.");
+                _this.imageEditInputLabel.set("Bild:");
+
+                _this.imageEditInputPlaceholderUrl.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.imageUrl);
             } else if (type === "addMultipleImages") {
                 _this.multipleImagesInputOpen.set(true);
             } else if (type === "addLine") {
@@ -700,12 +712,11 @@ export class DashboardComponent implements OnInit {
 
     async addImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
         // Get the content from the cache variable and add the element
-        const shouldImageBePlacedLeft = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Links", "Rechts", true);
+        const shouldImageBePlacedRight = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Rechts", "Links", true);
 
         this.siteEditImages[this.currentActiveSiteEdit()].push(file);
 
-        const element = this.editSiteService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedLeft ? "left" : "right");
-
+        const element = this.editSiteService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedRight ? "right" : "left");
         this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
             site.data.unshift(element);
 
@@ -722,12 +733,12 @@ export class DashboardComponent implements OnInit {
 
         this.siteEditImages[this.currentActiveSiteEdit()].push(file);
 
-        const shouldImageBePlacedLeft = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Links", "Rechts", true);
+        const shouldImageBePlacedRight = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Rechts", "Links", true);
 
         this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
             (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageUrl = file.url;
             (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageAlt = file.file.name;
-            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedLeft ? "left" : "right";
+            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedRight ? "right" : "left";
 
             return site;
         });

@@ -13,14 +13,12 @@ export class PopupMultipleImagesInputComponent {
     description = input<string>("Bitte suche dir Bilder aus, die du hinzufügen möchtest und bringe sie in die richtige Reihenfolge. Du kannst sie auch nachher noch ändern.");
     label = input<string>("Bilder:");
     editArray = input<{ imageUrl: string; imageAlt: string }[]>([]);
+    submitButtonText = input<string>("Hinzufügen");
 
     resultOutput = output<{ file: File; url: string }[]>();
     closeOutput = output<void>();
 
     images = signal<{ file: File; url: string }[]>([]);
-
-    submitButtonDisabled = signal(false);
-    submitButtonText = signal("Hinzufügen");
 
     private notificationService = inject(NotificationService);
 
@@ -39,21 +37,10 @@ export class PopupMultipleImagesInputComponent {
     onSubmit(event: Event): void {
         event.preventDefault();
 
-        this.submitButtonDisabled.set(true);
-        this.submitButtonText.set("Verarbeiten...");
-
         this.resultOutput.emit(this.images());
-
-        this.reset();
-    }
-
-    reset(): void {
-        this.submitButtonDisabled.set(false);
-        this.submitButtonText.set("Hinzufügen");
     }
 
     close(): void {
-        this.reset();
         this.closeOutput.emit();
     }
 

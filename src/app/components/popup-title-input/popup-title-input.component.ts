@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from "@angular/core";
+import { Component, effect, inject, input, output } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NotificationService } from "../../services/notification.service";
 
@@ -14,12 +14,10 @@ export class PopupTitleInputComponent {
     label = input<string>("Titel:");
     placeholder = input<string>("Titel eingeben");
     value = input<string>("");
+    submitButtonText = input<string>("Hinzufügen");
 
     resultOutput = output<string>();
     closeOutput = output<void>();
-
-    submitButtonDisabled = signal(false);
-    submitButtonText = signal("Hinzufügen");
 
     addTitleForm = new FormGroup({
         titleControl: new FormControl(""),
@@ -34,16 +32,10 @@ export class PopupTitleInputComponent {
     onSubmit(event: Event): void {
         event.preventDefault();
 
-        this.submitButtonDisabled.set(true);
-        this.submitButtonText.set("Verarbeiten...");
-
         const title = this.addTitleForm.value.titleControl;
 
         if (typeof title !== "string") {
             this.notificationService.error("Eingabefehler:", "Der Titel ist kein Text.");
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Hinzufügen");
 
             return;
         }
@@ -55,8 +47,6 @@ export class PopupTitleInputComponent {
 
     reset(): void {
         this.addTitleForm.reset();
-        this.submitButtonDisabled.set(false);
-        this.submitButtonText.set("Hinzufügen");
     }
 
     close(): void {
