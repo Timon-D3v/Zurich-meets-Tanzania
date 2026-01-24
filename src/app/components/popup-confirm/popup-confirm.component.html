@@ -1,9 +1,9 @@
-<div class="popup">
-    <form class="wrapper">
+<div class="popup" (click)="result(false)">
+    <form class="wrapper" (click)="$event.stopPropagation()">
         <h2>{{ title() }}</h2>
         <p>{{ description() }}</p>
         <div class="button-wrapper">
-            <button type="button" class="cancel" (click)="result(false)">{{ cancelButtonText() }}</button>
+            <button type="button" [class]="equalOptions() ? 'confirm' : 'cancel'" (click)="result(false)">{{ cancelButtonText() }}</button>
             <button type="button" class="confirm" (click)="result(true)">{{ confirmButtonText() }}</button>
         </div>
         <button type="button" class="close" (click)="result(false)">

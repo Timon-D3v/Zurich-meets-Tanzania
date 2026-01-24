@@ -37,7 +37,8 @@ label,
 input,
 input::placeholder,
 select,
-option {
+option,
+textarea {
     font-family: "Titillium Web", sans-serif;
     color: var(--text-950);
     -webkit-hyphens: auto;

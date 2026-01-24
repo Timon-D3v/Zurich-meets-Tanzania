@@ -1,5 +1,5 @@
-<div class="popup">
-    <form class="wrapper" (submit)="onSubmit($event)">
+<div class="popup" (click)="close()">
+    <form class="wrapper" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
         <h2>{{ title() }}</h2>
         <p>{{ description() }}</p>
         <label for="image" class="text-label">{{ label() }}</label>

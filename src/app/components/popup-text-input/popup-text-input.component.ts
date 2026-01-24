@@ -1,18 +1,18 @@
 import { Component, effect, inject, input, output, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { NotificationService } from "../../../services/notification.service";
+import { NotificationService } from "../../services/notification.service";
 
 @Component({
-    selector: "app-popup-title-input",
+    selector: "app-popup-text-input",
     imports: [ReactiveFormsModule],
-    templateUrl: "./popup-title-input.component.html",
-    styleUrl: "./popup-title-input.component.scss",
+    templateUrl: "./popup-text-input.component.html",
+    styleUrl: "./popup-text-input.component.scss",
 })
-export class PopupTitleInputComponent {
-    title = input<string>("Titel eingeben:");
-    description = input<string>("Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
-    label = input<string>("Titel:");
-    placeholder = input<string>("Titel eingeben");
+export class PopupTextInputComponent {
+    title = input<string>("Text eingeben:");
+    description = input<string>("Bitte gib den Text ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
+    label = input<string>("Text:");
+    placeholder = input<string>("Text eingeben");
     value = input<string>("");
 
     resultOutput = output<string>();
@@ -21,15 +21,15 @@ export class PopupTitleInputComponent {
     submitButtonDisabled = signal(false);
     submitButtonText = signal("Hinzufügen");
 
-    addTitleForm = new FormGroup({
-        titleControl: new FormControl(""),
+    addTextForm = new FormGroup({
+        textControl: new FormControl(""),
     });
 
     private notificationService = inject(NotificationService);
 
     private _updateFormControl = effect(() => {
-        this.addTitleForm.setValue({ titleControl: this.value() });
-    })
+        this.addTextForm.setValue({ textControl: this.value() });
+    });
 
     onSubmit(event: Event): void {
         event.preventDefault();
@@ -37,10 +37,10 @@ export class PopupTitleInputComponent {
         this.submitButtonDisabled.set(true);
         this.submitButtonText.set("Verarbeiten...");
 
-        const title = this.addTitleForm.value.titleControl;
+        const text = this.addTextForm.value.textControl;
 
-        if (typeof title !== "string") {
-            this.notificationService.error("Eingabefehler:", "Der Titel ist kein Text.");
+        if (typeof text !== "string") {
+            this.notificationService.error("Eingabefehler:", "Der eingegebene Text ist kein Text.");
 
             this.submitButtonDisabled.set(false);
             this.submitButtonText.set("Hinzufügen");
@@ -48,13 +48,13 @@ export class PopupTitleInputComponent {
             return;
         }
 
-        this.resultOutput.emit(title);
+        this.resultOutput.emit(text);
 
         this.reset();
     }
 
     reset(): void {
-        this.addTitleForm.reset();
+        this.addTextForm.reset();
         this.submitButtonDisabled.set(false);
         this.submitButtonText.set("Hinzufügen");
     }

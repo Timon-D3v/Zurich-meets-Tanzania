@@ -1,4 +1,4 @@
-@use "../../../../styles/index" as *;
+@use "../../../styles/index" as *;
 
 .popup {
     @include popup-backdrop;
@@ -51,7 +51,7 @@ input {
     margin: 0 auto;
 
     &.empty {
-        background-image: url(../../../../../public/backup/fallback.png);
+        background-image: url(../../../../public/backup/fallback.png);
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;

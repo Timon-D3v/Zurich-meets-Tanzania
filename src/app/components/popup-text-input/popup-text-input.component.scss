@@ -1,4 +1,4 @@
-@use "../../../../styles/index" as *;
+@use "../../../styles/index" as *;
 
 .popup {
     @include popup-backdrop;
@@ -40,6 +40,7 @@ label {
         padding: 0.5em 1em;
         transition: height 0s linear;
         resize: vertical;
+        height: 6lh;
     }
 }
 

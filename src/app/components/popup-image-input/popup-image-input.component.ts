@@ -1,6 +1,6 @@
 import { Component, effect, inject, input, output, signal } from "@angular/core";
-import { NotificationService } from "../../../services/notification.service";
-import { PUBLIC_CONFIG } from "../../../../publicConfig";
+import { NotificationService } from "../../services/notification.service";
+import { PUBLIC_CONFIG } from "../../../publicConfig";
 
 @Component({
     selector: "app-popup-image-input",
@@ -29,7 +29,7 @@ export class PopupImageInputComponent {
 
     private _updateFormControl = effect(() => {
         this.image.set({ file: new File([], ""), url: this.placeholderUrl() });
-    })
+    });
 
     onSubmit(event: Event): void {
         event.preventDefault();

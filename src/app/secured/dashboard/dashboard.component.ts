@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { Subject, take } from "rxjs";
 import { ApiEndpointResponse, CustomImageWithTextElement, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { EditSiteService } from "../../services/edit-site.service";
@@ -39,11 +40,12 @@ import { TeamCreateTeamComponent } from "../components/team-create-team/team-cre
 import { CalendarDeleteEventComponent } from "../components/calendar-delete-event/calendar-delete-event.component";
 import { CalendarCreateEventComponent } from "../components/calendar-create-event/calendar-create-event.component";
 import { NewsEditNewsComponent } from "../components/news-edit-news/news-edit-news.component";
-import { PopupTitleInputComponent } from "../components/popup-title-input/popup-title-input.component";
-import { PopupTextInputComponent } from "../components/popup-text-input/popup-text-input.component";
-import { PopupImageInputComponent } from "../components/popup-image-input/popup-image-input.component";
-import { PopupMultipleImagesInputComponent } from "../components/popup-multiple-images-input/popup-multiple-images-input.component";
-import { PopupConfirmInputComponent } from "../components/popup-confirm-input/popup-confirm-input.component";
+import { PopupTitleInputComponent } from "../../components/popup-title-input/popup-title-input.component";
+import { PopupTextInputComponent } from "../../components/popup-text-input/popup-text-input.component";
+import { PopupImageInputComponent } from "../../components/popup-image-input/popup-image-input.component";
+import { PopupMultipleImagesInputComponent } from "../../components/popup-multiple-images-input/popup-multiple-images-input.component";
+import { PopupConfirmComponent } from "../../components/popup-confirm/popup-confirm.component";
+import { PopupAlertComponent } from "../../components/popup-alert/popup-alert.component";
 
 @Component({
     selector: "app-dashboard",
@@ -85,7 +87,8 @@ import { PopupConfirmInputComponent } from "../components/popup-confirm-input/po
         PopupTextInputComponent,
         PopupImageInputComponent,
         PopupMultipleImagesInputComponent,
-        PopupConfirmInputComponent,
+        PopupConfirmComponent,
+        PopupAlertComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
@@ -125,6 +128,13 @@ export class DashboardComponent implements OnInit {
     multipleImagesInputOpen = signal(false);
 
     confirmInputOpen = signal(false);
+    confirmInputObservable = new Subject<boolean>();
+
+    alertOpen = signal(false);
+
+    alertTitle = signal<string>("");
+    alertMessage = signal<string>("");
+    alertButtonText = signal<string>("");
 
     titleInputTitle = signal<string>("");
     titleInputDescription = signal<string>("");
@@ -133,8 +143,9 @@ export class DashboardComponent implements OnInit {
 
     confirmInputTitle = signal<string>("");
     confirmInputDescription = signal<string>("");
-    confirmInputButtonText = signal<string>("");
-    cancelInputButtonText = signal<string>("");
+    confirmInputAcceptButtonText = signal<string>("");
+    confirmInputCancelButtonText = signal<string>("");
+    confirmInputEqualOptions = signal<boolean>(false);
 
     titleEditInputOpen = signal(false);
     textEditInputOpen = signal(false);
@@ -161,7 +172,7 @@ export class DashboardComponent implements OnInit {
     multipleImagesEditInputTitle = signal<string>("");
     multipleImagesEditInputDescription = signal<string>("");
     multipleImagesEditInputLabel = signal<string>("");
-    multipleImagesEditInputValue = signal<{ imageUrl: string; imageAlt: string; }[]>([]);
+    multipleImagesEditInputValue = signal<{ imageUrl: string; imageAlt: string }[]>([]);
 
     textWithImageTextCache = signal<string>("");
 
@@ -297,7 +308,6 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputDescription.set("Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
                 _this.titleInputLabel.set("Titel:");
                 _this.titleInputPlaceholder.set("Titel eingeben");
-
             } else if (type === "addSubtitle") {
                 _this.titleInputOpen.set(true);
 
@@ -305,10 +315,8 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputDescription.set("Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
                 _this.titleInputLabel.set("Untertitel:");
                 _this.titleInputPlaceholder.set("Untertitel eingeben");
-
             } else if (type === "addParagraph" || type === "addImageWithText") {
                 _this.textInputOpen.set(true);
-
             } else if (type === "editGeneralTitle") {
                 _this.titleInputOpen.set(true);
 
@@ -316,7 +324,6 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputDescription.set("Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.");
                 _this.titleInputLabel.set("Seitentitel:");
                 _this.titleInputPlaceholder.set("Seitentitel eingeben");
-
             } else if (type === "editGeneralSubtitle") {
                 _this.titleInputOpen.set(true);
 
@@ -324,7 +331,6 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputDescription.set("Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.");
                 _this.titleInputLabel.set("Seiten Untertitel:");
                 _this.titleInputPlaceholder.set("Seiten Untertitel eingeben");
-
             } else if (type === "editAuthor") {
                 _this.titleInputOpen.set(true);
 
@@ -332,13 +338,10 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputDescription.set("Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.");
                 _this.titleInputLabel.set("Autor:");
                 _this.titleInputPlaceholder.set("Autor eingeben");
-
             } else if (type === "editTitleImage" || type === "addImage") {
                 _this.imageInputOpen.set(true);
-
             } else if (type === "addMultipleImages") {
                 _this.multipleImagesInputOpen.set(true);
-
             } else if (type === "addLine") {
                 const element = _this.editSiteService.addLine();
 
@@ -347,9 +350,8 @@ export class DashboardComponent implements OnInit {
 
                     return site;
                 });
-
             } else if (type === "addCurrentTeam") {
-                alert("Diese Funktion ist noch nicht implementiert.");
+                this.showAlert("Fehler", "Diese Funktion ist noch nicht implementiert.", "Verstanden");
             }
         };
 
@@ -489,12 +491,11 @@ export class DashboardComponent implements OnInit {
             default:
                 this.notificationService.error("Unbekanntes Element", "Dieses Element kann nicht bearbeitet werden.");
                 break;
-
         }
     }
 
     async handleDelete(index: number, siteName: StaticSiteNames): Promise<void> {
-        const confirmDeletion = await confirm("Möchtest du dieses Element wirklich löschen?");
+        const confirmDeletion = await this.awaitConfirmation("Löschen bestätigen", "Möchtest du dieses Element wirklich löschen?", "Löschen", "Abbrechen");
 
         if (!confirmDeletion) {
             return;
@@ -508,7 +509,7 @@ export class DashboardComponent implements OnInit {
     }
 
     async closeEditSitesNavigation(): Promise<void> {
-        const confirmClose = await confirm("Vergiss nicht deine Arbeit zu speichern. Möchtest du die Seiten-Bearbeitung wirklich verlassen?");
+        const confirmClose = await this.awaitConfirmation("Verlassen bestätigen", "Vergiss nicht deine Arbeit zu speichern.\nMöchtest du die Seiten-Bearbeitung wirklich verlassen?", "Verlassen", "Abbrechen");
 
         if (!confirmClose) {
             return;
@@ -518,7 +519,7 @@ export class DashboardComponent implements OnInit {
     }
 
     async closePopup(): Promise<void> {
-        const yes = await confirm("Möchtest du das Popup wirklich schließen? Alle ungespeicherten Änderungen gehen verloren.");
+        const yes = await this.awaitConfirmation("Popup schliessen", "Möchtest du das Popup wirklich schliessen? Alle ungespeicherten Änderungen gehen verloren.", "Schliessen", "Abbrechen");
 
         if (!yes) {
             return;
@@ -693,13 +694,13 @@ export class DashboardComponent implements OnInit {
 
         this.currentActionToPerform.set("editImageWithText");
 
-        this.imageEditInputTitle
+        this.imageEditInputTitle;
         this.imageEditInputOpen.set(true);
     }
 
     async addImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
         // Get the content from the cache variable and add the element
-        const shouldImageBePlacedLeft = await confirm("Möchtest du das Bild links oder rechts platzieren?\n(OK = Links / Abbrechen = Rechts)");
+        const shouldImageBePlacedLeft = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Links", "Rechts", true);
 
         this.siteEditImages[this.currentActiveSiteEdit()].push(file);
 
@@ -721,7 +722,7 @@ export class DashboardComponent implements OnInit {
 
         this.siteEditImages[this.currentActiveSiteEdit()].push(file);
 
-        const shouldImageBePlacedLeft = await confirm("Möchtest du das Bild links oder rechts platzieren?\n(OK = Links / Abbrechen = Rechts)");
+        const shouldImageBePlacedLeft = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Links", "Rechts", true);
 
         this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
             (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageUrl = file.url;
@@ -784,9 +785,9 @@ export class DashboardComponent implements OnInit {
         for (const file of files) {
             this.siteEditImages[this.currentActiveSiteEdit()].push(file);
 
-            images.push({ 
-                imageUrl: file.url, 
-                imageAlt: file.file.name 
+            images.push({
+                imageUrl: file.url,
+                imageAlt: file.file.name,
             });
         }
 
@@ -812,9 +813,9 @@ export class DashboardComponent implements OnInit {
                 this.siteEditImages[this.currentActiveSiteEdit()].push(file);
             }
 
-            images.push({ 
-                imageUrl: file.url, 
-                imageAlt: file.file?.name ?? "Keine Bezeichnung" 
+            images.push({
+                imageUrl: file.url,
+                imageAlt: file.file?.name ?? "Keine Bezeichnung",
             });
         }
 
@@ -934,6 +935,34 @@ export class DashboardComponent implements OnInit {
     handleConfirmInputResult(confirmed: boolean): void {
         this.confirmInputOpen.set(false);
 
-        // make this subscribeable
+        this.confirmInputObservable.next(confirmed);
+    }
+
+    async awaitConfirmation(title: string, message: string, accept: string = "Ok", reject: string = "Abbrechen", equalOptions: boolean = false): Promise<boolean> {
+        this.confirmInputOpen.set(true);
+
+        this.confirmInputTitle.set(title);
+        this.confirmInputDescription.set(message);
+        this.confirmInputAcceptButtonText.set(accept);
+        this.confirmInputCancelButtonText.set(reject);
+        this.confirmInputEqualOptions.set(equalOptions);
+
+        return new Promise<boolean>((resolve) => {
+            this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
+                resolve(result || false);
+            });
+        });
+    }
+
+    showAlert(title: string, message: string, buttonText: string = "Schliessen"): void {
+        this.alertOpen.set(true);
+
+        this.alertTitle.set(title);
+        this.alertMessage.set(message);
+        this.alertButtonText.set(buttonText);
+    }
+
+    handleAlertClose(): void {
+        this.alertOpen.set(false);
     }
 }

@@ -1,4 +1,4 @@
-@use "../../../../styles/index" as *;
+@use "../../../styles/index" as *;
 
 .popup {
     @include popup-backdrop;
@@ -31,14 +31,6 @@ p {
     width: 90%;
     text-align: left;
     text-wrap: pretty;
-}
-
-label {
-    @include admin-label;
-
-    & + input {
-        padding: 0.5em 1em;
-    }
 }
 
 .submit {
@@ -87,9 +79,5 @@ label {
 
     .close {
         display: none;
-    }
-
-    label + input {
-        padding: 0.5em;
     }
 }
