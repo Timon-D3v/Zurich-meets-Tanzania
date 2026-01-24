@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from "@angular/core";
+import { Component, effect, inject, input, output, signal } from "@angular/core";
 import { NotificationService } from "../../../services/notification.service";
 import { PUBLIC_CONFIG } from "../../../../publicConfig";
 import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
@@ -12,8 +12,8 @@ import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList, moveItemInArray } fr
 export class PopupMultipleImagesInputComponent {
     title = input<string>("Bilder aussuchen:");
     description = input<string>("Bitte suche dir Bilder aus, die du hinzufügen möchtest und bringe sie in die richtige Reihenfolge. Du kannst sie auch nachher noch ändern.");
-    label = input<string>("Bild:");
-    placeholderUrl = input<string>(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
+    label = input<string>("Bilder:");
+    editArray = input<{ imageUrl: string; imageAlt: string; }[]>([]);
 
     resultOutput = output<{ file: File; url: string }[]>();
     closeOutput = output<void>();
@@ -24,6 +24,18 @@ export class PopupMultipleImagesInputComponent {
     submitButtonText = signal("Hinzufügen");
 
     private notificationService = inject(NotificationService);
+
+    private _updateFormControl = effect(() => {
+        this.images.set([]);
+
+        for (const image of this.editArray()) {
+            this.images.update((images) => {
+                images.push({ file: new File([], ""), url: image.imageUrl });
+
+                return images;
+            });
+        }
+    })
 
     onSubmit(event: Event): void {
         event.preventDefault();

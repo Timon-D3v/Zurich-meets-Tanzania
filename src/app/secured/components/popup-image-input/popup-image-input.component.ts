@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from "@angular/core";
+import { Component, effect, inject, input, output, signal } from "@angular/core";
 import { NotificationService } from "../../../services/notification.service";
 import { PUBLIC_CONFIG } from "../../../../publicConfig";
 
@@ -26,6 +26,10 @@ export class PopupImageInputComponent {
     submitButtonText = signal("Hinzufügen");
 
     private notificationService = inject(NotificationService);
+
+    private _updateFormControl = effect(() => {
+        this.image.set({ file: new File([], ""), url: this.placeholderUrl() });
+    })
 
     onSubmit(event: Event): void {
         event.preventDefault();

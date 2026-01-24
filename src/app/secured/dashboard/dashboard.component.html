@@ -571,6 +571,38 @@
     <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-images-input>
 }
 
+@if (titleEditInputOpen()) {
+    <app-popup-title-input
+        (resultOutput)="handleTitleInputResult($event)"
+        (closeOutput)="closePopup()"
+        [title]="titleEditInputTitle()"
+        [description]="titleEditInputDescription()"
+        [label]="titleEditInputLabel()"
+        [placeholder]="titleEditInputPlaceholder()",
+        [value]="titleEditInputValue()"
+    ></app-popup-title-input>
+} @else if (textEditInputOpen()) {
+    <app-popup-text-input (resultOutput)="handleTextInputResult($event)" (closeOutput)="closePopup()"
+        [title]="textEditInputTitle()"
+        [description]="textEditInputDescription()"
+        [label]="textEditInputLabel()"
+        [placeholder]="textEditInputPlaceholder()",
+        [value]="textEditInputValue()"   
+    ></app-popup-text-input>
+} @else if (imageEditInputOpen()) {
+    <app-popup-image-input (resultOutput)="handleImageInputResult($event)" (closeOutput)="closePopup()" 
+        [title]="imageEditInputTitle()"
+        [description]="imageEditInputDescription()"
+        [label]="imageEditInputLabel()"
+        [placeholderUrl]="imageEditInputPlaceholderUrl()" ></app-popup-image-input>
+} @else if (multipleImagesEditInputOpen()) {
+    <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"
+        [title]="multipleImagesEditInputTitle()"
+        [description]="multipleImagesEditInputDescription()"
+        [label]="multipleImagesEditInputLabel()"
+        [editArray]="multipleImagesEditInputValue()"></app-popup-multiple-images-input>
+}
+
 @if (confirmInputOpen()) {
     <app-popup-confirm-input (resultOutput)="handleConfirmInputResult($event)"></app-popup-confirm-input>
 }

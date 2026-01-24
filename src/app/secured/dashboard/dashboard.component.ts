@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { ApiEndpointResponse, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
+import { ApiEndpointResponse, CustomImageWithTextElement, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { EditSiteService } from "../../services/edit-site.service";
 import { NotificationService } from "../../services/notification.service";
@@ -114,6 +114,8 @@ export class DashboardComponent implements OnInit {
         | "editMultipleImages"
         | "editImageWithText"
     >("addTitle");
+    currentIndexToEdit = signal<number>(-1);
+
     mobileNavOpen = signal<boolean>(false);
     submitSiteEditButton = signal<string>("Abschliessen");
 
@@ -123,39 +125,6 @@ export class DashboardComponent implements OnInit {
     multipleImagesInputOpen = signal(false);
 
     confirmInputOpen = signal(false);
-
-    INPUT_CONTENT_DEFAULT = {
-        TITLE: {
-            title: "Titel eingeben:",
-            description: "Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.",
-            label: "Titel:",
-            placeholder: "Titel eingeben",
-        },
-        SUBTITLE: {
-            title: "Untertitel eingeben:",
-            description: "Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.",
-            label: "Untertitel:",
-            placeholder: "Untertitel eingeben",
-        },
-        GENERAL_TITLE: {
-            title: "Seitentitel eingeben:",
-            description: "Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.",
-            label: "Seitentitel:",
-            placeholder: "Seitentitel eingeben",
-        },
-        GENERAL_SUBTITLE: {
-            title: "Seiten Untertitel eingeben:",
-            description: "Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.",
-            label: "Seiten Untertitel:",
-            placeholder: "Seiten Untertitel eingeben",
-        },
-        AUTHOR: {
-            title: "Autor eingeben:",
-            description: "Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.",
-            label: "Autor:",
-            placeholder: "Autor eingeben",
-        },
-    };
 
     titleInputTitle = signal<string>("");
     titleInputDescription = signal<string>("");
@@ -167,7 +136,32 @@ export class DashboardComponent implements OnInit {
     confirmInputButtonText = signal<string>("");
     cancelInputButtonText = signal<string>("");
 
-    titleInputContent = signal<{ title: string; placeholder: string; description: string; label: string }>({ title: "", placeholder: "", description: "", label: "" });
+    titleEditInputOpen = signal(false);
+    textEditInputOpen = signal(false);
+    imageEditInputOpen = signal(false);
+    multipleImagesEditInputOpen = signal(false);
+
+    titleEditInputTitle = signal<string>("");
+    titleEditInputDescription = signal<string>("");
+    titleEditInputLabel = signal<string>("");
+    titleEditInputPlaceholder = signal<string>("");
+    titleEditInputValue = signal<string>("");
+
+    textEditInputTitle = signal<string>("");
+    textEditInputDescription = signal<string>("");
+    textEditInputLabel = signal<string>("");
+    textEditInputPlaceholder = signal<string>("");
+    textEditInputValue = signal<string>("");
+
+    imageEditInputTitle = signal<string>("");
+    imageEditInputDescription = signal<string>("");
+    imageEditInputLabel = signal<string>("");
+    imageEditInputPlaceholderUrl = signal<string>("");
+
+    multipleImagesEditInputTitle = signal<string>("");
+    multipleImagesEditInputDescription = signal<string>("");
+    multipleImagesEditInputLabel = signal<string>("");
+    multipleImagesEditInputValue = signal<{ imageUrl: string; imageAlt: string; }[]>([]);
 
     textWithImageTextCache = signal<string>("");
 
@@ -299,18 +293,18 @@ export class DashboardComponent implements OnInit {
             if (type === "addTitle") {
                 _this.titleInputOpen.set(true);
 
-                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.TITLE.title);
-                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.TITLE.description);
-                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.TITLE.label);
-                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.TITLE.placeholder);
+                _this.titleInputTitle.set("Titel eingeben:");
+                _this.titleInputDescription.set("Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
+                _this.titleInputLabel.set("Titel:");
+                _this.titleInputPlaceholder.set("Titel eingeben");
 
             } else if (type === "addSubtitle") {
                 _this.titleInputOpen.set(true);
 
-                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.title);
-                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.description);
-                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.label);
-                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.SUBTITLE.placeholder);
+                _this.titleInputTitle.set("Untertitel eingeben:");
+                _this.titleInputDescription.set("Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
+                _this.titleInputLabel.set("Untertitel:");
+                _this.titleInputPlaceholder.set("Untertitel eingeben");
 
             } else if (type === "addParagraph" || type === "addImageWithText") {
                 _this.textInputOpen.set(true);
@@ -318,26 +312,26 @@ export class DashboardComponent implements OnInit {
             } else if (type === "editGeneralTitle") {
                 _this.titleInputOpen.set(true);
 
-                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.title);
-                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.description);
-                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.label);
-                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_TITLE.placeholder);
+                _this.titleInputTitle.set("Seitentitel eingeben:");
+                _this.titleInputDescription.set("Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.");
+                _this.titleInputLabel.set("Seitentitel:");
+                _this.titleInputPlaceholder.set("Seitentitel eingeben");
 
             } else if (type === "editGeneralSubtitle") {
                 _this.titleInputOpen.set(true);
 
-                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.title);
-                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.description);
-                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.label);
-                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.GENERAL_SUBTITLE.placeholder);
+                _this.titleInputTitle.set("Seiten Untertitel eingeben:");
+                _this.titleInputDescription.set("Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.");
+                _this.titleInputLabel.set("Seiten Untertitel:");
+                _this.titleInputPlaceholder.set("Seiten Untertitel eingeben");
 
             } else if (type === "editAuthor") {
                 _this.titleInputOpen.set(true);
 
-                _this.titleInputTitle.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.title);
-                _this.titleInputDescription.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.description);
-                _this.titleInputLabel.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.label);
-                _this.titleInputPlaceholder.set(_this.INPUT_CONTENT_DEFAULT.AUTHOR.placeholder);
+                _this.titleInputTitle.set("Autor eingeben:");
+                _this.titleInputDescription.set("Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.");
+                _this.titleInputLabel.set("Autor:");
+                _this.titleInputPlaceholder.set("Autor eingeben");
 
             } else if (type === "editTitleImage" || type === "addImage") {
                 _this.imageInputOpen.set(true);
@@ -412,9 +406,91 @@ export class DashboardComponent implements OnInit {
     }
 
     handleEdit(index: number, siteName: StaticSiteNames): void {
-        console.log(index, siteName);
+        const elementToEdit = this.siteEdits[siteName]().data[index];
 
-        alert("Diese Funktion ist noch nicht implementiert.");
+        this.currentIndexToEdit.set(index);
+
+        switch (elementToEdit.type) {
+            case "title":
+                this.currentActionToPerform.set("editTitle");
+                this.titleEditInputOpen.set(true);
+
+                this.titleEditInputTitle.set("Titel bearbeiten:");
+                this.titleEditInputDescription.set("Bitte bearbeite den Titel nach Bedarf.");
+                this.titleEditInputLabel.set("Titel:");
+                this.titleEditInputPlaceholder.set("Titel eingeben");
+                this.titleEditInputValue.set(elementToEdit.content);
+
+                break;
+
+            case "subtitle":
+                this.currentActionToPerform.set("editSubtitle");
+                this.titleEditInputOpen.set(true);
+
+                this.titleEditInputTitle.set("Untertitel bearbeiten:");
+                this.titleEditInputDescription.set("Bitte bearbeite den Untertitel nach Bedarf.");
+                this.titleEditInputLabel.set("Untertitel:");
+                this.titleEditInputPlaceholder.set("Untertitel eingeben");
+                this.titleEditInputValue.set(elementToEdit.content);
+
+                break;
+
+            case "paragraph":
+                this.currentActionToPerform.set("editParagraph");
+                this.textEditInputOpen.set(true);
+
+                this.textEditInputTitle.set("Text bearbeiten:");
+                this.textEditInputDescription.set("Bitte bearbeite den Text nach Bedarf.");
+                this.textEditInputLabel.set("Text:");
+                this.textEditInputPlaceholder.set("Text eingeben");
+                this.textEditInputValue.set(elementToEdit.content);
+
+                break;
+
+            case "imageWithText":
+                this.currentActionToPerform.set("editImageWithText");
+                this.textEditInputOpen.set(true);
+
+                this.textEditInputTitle.set("Text bearbeiten:");
+                this.textEditInputDescription.set("Bitte bearbeite den Text nach Bedarf.");
+                this.textEditInputLabel.set("Text:");
+                this.textEditInputPlaceholder.set("Text eingeben");
+                this.textEditInputValue.set(elementToEdit.content);
+
+                this.imageEditInputTitle.set("Bild ändern:");
+                this.imageEditInputDescription.set("Bitte wähle ein neues Bild aus, um das aktuelle zu ersetzen. Wenn du das Bild nicht ändern möchtest, kannst du dieses Fenster einfach schliessen.");
+                this.imageEditInputLabel.set("Bild:");
+                this.imageEditInputPlaceholderUrl.set(elementToEdit.imageUrl);
+
+                break;
+
+            case "image":
+                this.currentActionToPerform.set("editImage");
+                this.imageEditInputOpen.set(true);
+
+                this.imageEditInputTitle.set("Bild ändern:");
+                this.imageEditInputDescription.set("Bitte wähle ein neues Bild aus, um das aktuelle zu ersetzen.");
+                this.imageEditInputLabel.set("Bild:");
+                this.imageEditInputPlaceholderUrl.set(elementToEdit.imageUrl);
+
+                break;
+
+            case "multipleImages":
+                this.currentActionToPerform.set("editMultipleImages");
+                this.multipleImagesEditInputOpen.set(true);
+
+                this.multipleImagesEditInputTitle.set("Bilder ändern:");
+                this.multipleImagesEditInputDescription.set("Bitte wähle neue Bilder aus, um die aktuellen zu ersetzen. Du kannst ausserdem einzelne Bilder hinzufügen oder entfernen oder einfach die Reihenfolge verändern.");
+                this.multipleImagesEditInputLabel.set("Bilder:");
+                this.multipleImagesEditInputValue.set(elementToEdit.images);
+
+                break;
+
+            default:
+                this.notificationService.error("Unbekanntes Element", "Dieses Element kann nicht bearbeitet werden.");
+                break;
+
+        }
     }
 
     async handleDelete(index: number, siteName: StaticSiteNames): Promise<void> {
@@ -448,10 +524,7 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        this.titleInputOpen.set(false);
-        this.textInputOpen.set(false);
-        this.imageInputOpen.set(false);
-        this.multipleImagesInputOpen.set(false);
+        this.closePopupWithoutConfirmation();
     }
 
     closePopupWithoutConfirmation(): void {
@@ -459,6 +532,11 @@ export class DashboardComponent implements OnInit {
         this.textInputOpen.set(false);
         this.imageInputOpen.set(false);
         this.multipleImagesInputOpen.set(false);
+
+        this.titleEditInputOpen.set(false);
+        this.textEditInputOpen.set(false);
+        this.imageEditInputOpen.set(false);
+        this.multipleImagesEditInputOpen.set(false);
     }
 
     addTitle(content: string): void {
@@ -476,7 +554,20 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editTitle(content: string): void {}
+    editTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editSiteService.addTitle(content);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data[this.currentIndexToEdit()] = element;
+
+            return site;
+        });
+    }
 
     addSubtitle(content: string): void {
         if (!content) {
@@ -493,7 +584,20 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editSubtitle(content: string): void {}
+    editSubtitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editSiteService.addSubtitle(content);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data[this.currentIndexToEdit()] = element;
+
+            return site;
+        });
+    }
 
     editGeneralTitle(content: string): void {
         if (!content) {
@@ -546,7 +650,20 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editParagraph(content: string): void {}
+    editParagraph(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editSiteService.addParagraph(content);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data[this.currentIndexToEdit()] = element;
+
+            return site;
+        });
+    }
 
     addImageWithTextPart1(content: string): void {
         // Add the content to a cache variable and open the image input popup
@@ -562,11 +679,29 @@ export class DashboardComponent implements OnInit {
         this.imageInputOpen.set(true);
     }
 
-    editImageWithTextPart1(content: string): void {}
+    editImageWithTextPart1(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).content = content;
+
+            return site;
+        });
+
+        this.currentActionToPerform.set("editImageWithText");
+
+        this.imageEditInputTitle
+        this.imageEditInputOpen.set(true);
+    }
 
     async addImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
         // Get the content from the cache variable and add the element
         const shouldImageBePlacedLeft = await confirm("Möchtest du das Bild links oder rechts platzieren?\n(OK = Links / Abbrechen = Rechts)");
+
+        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
 
         const element = this.editSiteService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedLeft ? "left" : "right");
 
@@ -577,7 +712,25 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editImageWithTextPart2(file: { file: File; url: string }): void {}
+    async editImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
+        if (!file.url.startsWith("blob:")) {
+            this.notificationService.info("Teilweise Veränderung", "Nur der Text wurde aktualisiert. Das Bild nicht, da kein Neues ausgewählt wurde.");
+
+            return;
+        }
+
+        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
+
+        const shouldImageBePlacedLeft = await confirm("Möchtest du das Bild links oder rechts platzieren?\n(OK = Links / Abbrechen = Rechts)");
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageUrl = file.url;
+            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageAlt = file.file.name;
+            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedLeft ? "left" : "right";
+
+            return site;
+        });
+    }
 
     addImage(file: { file: File; url: string }): void {
         this.siteEditImages[this.currentActiveSiteEdit()].push(file);
@@ -591,7 +744,23 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editImage(file: { file: File; url: string }): void {}
+    editImage(file: { file: File; url: string }): void {
+        if (!file.url.startsWith("blob:")) {
+            this.notificationService.info("Keine Veränderung", "Das Bild wurde nicht aktualisiert, da kein neues Bild ausgewählt wurde.");
+
+            return;
+        }
+
+        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
+
+        const element = this.editSiteService.addImage(file.url, file.file.name);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data[this.currentIndexToEdit()] = element;
+
+            return site;
+        });
+    }
 
     editGeneralImage(file: { file: File; url: string }): void {
         this.siteEditImages[this.currentActiveSiteEdit()].push(file);
@@ -630,10 +799,37 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    editMultipleImages(files: { file: File; url: string }[]): void {}
+    editMultipleImages(files: { file: File; url: string }[]): void {
+        if (files.length === 0) {
+            this.notificationService.info("Keine Bilder ausgewählt", "Die Bilder wurden nicht aktualisiert, da keine neuen Bilder ausgewählt wurden. Wenn du die Bilder löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const images: { imageUrl: string; imageAlt: string }[] = [];
+
+        for (const file of files) {
+            if (file.url.startsWith("blob:")) {
+                this.siteEditImages[this.currentActiveSiteEdit()].push(file);
+            }
+
+            images.push({ 
+                imageUrl: file.url, 
+                imageAlt: file.file?.name ?? "Keine Bezeichnung" 
+            });
+        }
+
+        const element = this.editSiteService.addMultipleImages(images);
+
+        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+            site.data[this.currentIndexToEdit()] = element;
+
+            return site;
+        });
+    }
 
     handleTitleInputResult(content: string): void {
         this.titleInputOpen.set(false);
+        this.titleEditInputOpen.set(false);
 
         switch (this.currentActionToPerform()) {
             case "addTitle":
@@ -665,6 +861,7 @@ export class DashboardComponent implements OnInit {
 
     handleTextInputResult(content: string): void {
         this.textInputOpen.set(false);
+        this.textEditInputOpen.set(false);
 
         switch (this.currentActionToPerform()) {
             case "addParagraph":
@@ -687,6 +884,7 @@ export class DashboardComponent implements OnInit {
 
     handleImageInputResult(file: { file: File | null; url: string }): void {
         this.imageInputOpen.set(false);
+        this.imageEditInputOpen.set(false);
 
         if (file.file === null) {
             this.notificationService.info("Kein Bild ausgewählt", "Bitte wähle ein Bild aus, um diese Funktion zu nutzen.");
@@ -718,6 +916,7 @@ export class DashboardComponent implements OnInit {
 
     handleMultipleImagesInputResult(files: { file: File; url: string }[]): void {
         this.multipleImagesInputOpen.set(false);
+        this.multipleImagesEditInputOpen.set(false);
 
         switch (this.currentActionToPerform()) {
             case "addMultipleImages":
