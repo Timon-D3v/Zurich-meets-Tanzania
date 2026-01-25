@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { VisionComponent } from "./vision.component";
+import { StaticSiteComponent } from "./static-site.component";
 
-describe("VisionComponent", () => {
-    let component: VisionComponent;
-    let fixture: ComponentFixture<VisionComponent>;
+describe("StaticSiteComponent", () => {
+    let component: StaticSiteComponent;
+    let fixture: ComponentFixture<StaticSiteComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [VisionComponent],
+            imports: [StaticSiteComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(VisionComponent);
+        fixture = TestBed.createComponent(StaticSiteComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

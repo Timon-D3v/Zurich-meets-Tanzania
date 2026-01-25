@@ -28,18 +28,20 @@ export const routes: Routes = [
     {
         path: "bajaji",
         loadComponent: async () => {
-            const component = await import("./bajaji/bajaji.component");
-            return component.BajajiComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/bajaji"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "bajaji" },
     },
     {
         path: "beginning",
         loadComponent: async () => {
-            const component = await import("./beginning/beginning.component");
-            return component.BeginningComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/beginning"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "beginning" },
     },
     {
         path: "blog/:name",
@@ -51,10 +53,11 @@ export const routes: Routes = [
     {
         path: "cardiology",
         loadComponent: async () => {
-            const component = await import("./cardiology/cardiology.component");
-            return component.CardiologyComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/cardiology"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "cardiology" },
     },
     {
         path: "current-team",
@@ -83,18 +86,20 @@ export const routes: Routes = [
     {
         path: "executives",
         loadComponent: async () => {
-            const component = await import("./executives/executives.component");
-            return component.ExecutivesComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/executives"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "board" },
     },
     {
         path: "finances",
         loadComponent: async () => {
-            const component = await import("./finances/finances.component");
-            return component.FinancesComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/finances"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "finances" },
     },
     {
         path: "gallery/:name",
@@ -106,26 +111,29 @@ export const routes: Routes = [
     {
         path: "general-meeting",
         loadComponent: async () => {
-            const component = await import("./general-meeting/general-meeting.component");
-            return component.GeneralMeetingComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/general-meeting"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "general-meeting" },
     },
     {
         path: "gynecology",
         loadComponent: async () => {
-            const component = await import("./gynecology/gynecology.component");
-            return component.GynecologyComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/gynecology"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "gynecology" },
     },
     {
         path: "history-tanzania",
         loadComponent: async () => {
-            const component = await import("./history-tanzania/history-tanzania.component");
-            return component.HistoryTanzaniaComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/history-tanzania"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "history" },
     },
     {
         path: "imprint",
@@ -138,26 +146,29 @@ export const routes: Routes = [
     {
         path: "income-statement",
         loadComponent: async () => {
-            const component = await import("./income-statement/income-statement.component");
-            return component.IncomeStatementComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/income-statement"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "income-statement" },
     },
     {
         path: "mbuzi",
         loadComponent: async () => {
-            const component = await import("./mbuzi/mbuzi.component");
-            return component.MbuziComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/mbuzi"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "mbuzi" },
     },
     {
         path: "meducation",
         loadComponent: async () => {
-            const component = await import("./meducation/meducation.component");
-            return component.MeducationComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/meducation"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "meducation" },
     },
     {
         path: "membership",
@@ -196,42 +207,47 @@ export const routes: Routes = [
     {
         path: "statutes",
         loadComponent: async () => {
-            const component = await import("./statutes/statutes.component");
-            return component.StatutesComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/statutes"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "statutes" },
     },
     {
         path: "surgery",
         loadComponent: async () => {
-            const component = await import("./surgery/surgery.component");
-            return component.SurgeryComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/surgery"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "surgery" },
     },
     {
         path: "tanzania-meets-zurich",
         loadComponent: async () => {
-            const component = await import("./tanzania-meets-zurich/tanzania-meets-zurich.component");
-            return component.TanzaniaMeetsZurichComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/tanzania-meets-zurich"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "tanzania-meets-zurich" },
     },
     {
         path: "vision",
         loadComponent: async () => {
-            const component = await import("./vision/vision.component");
-            return component.VisionComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/vision"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "vision" },
     },
     {
         path: "zurich-meets-tanzania",
         loadComponent: async () => {
-            const component = await import("./zurich-meets-tanzania/zurich-meets-tanzania.component");
-            return component.ZurichMeetsTanzaniaComponent;
+            const component = await import("./static-site/static-site.component");
+            return component.StaticSiteComponent;
         },
         title: PUBLIC_CONFIG.ROUTES.TITLES["/zurich-meets-tanzania"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { siteName: "zurich-meets-tanzania" },
     },
 
     // Secured routes

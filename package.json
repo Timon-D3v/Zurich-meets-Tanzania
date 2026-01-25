@@ -1,6 +1,6 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "3.11.16",
+  "version": "3.11.17",
   "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
@@ -18,8 +18,8 @@
     "dev": "ng serve --port=8080 --verbose",
     "build": "ng build --verbose",
     "watch": "ng build --watch --configuration development --verbose",
-    "test": "ng test --verbose",
-    "serve:ssr:zurich-meets-tanzania-angular": "node dist/server/server.mjs",
+    "test": "ng test",
+    "serve:ssr": "node dist/server/server.mjs",
     "format": "npx prettier --write \"src/**/*.{ts,html,scss}\"",
     "fmt": "npm run format",
     "prettier": "npx prettier"
