@@ -56,7 +56,7 @@ export class TeamAddMemberComponent {
 
         if (typeof motivation !== "string" || motivation.trim() === "") {
             this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige Motivationsbeschreibung ein.");
-            
+
             this.submitButtonDisabled.set(false);
             this.submitButtonText.set("Hinzufügen");
 

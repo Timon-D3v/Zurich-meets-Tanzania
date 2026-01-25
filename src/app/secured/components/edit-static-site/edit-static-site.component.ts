@@ -1,7 +1,6 @@
 import { Component, input, output } from "@angular/core";
 import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from "@angular/cdk/drag-drop";
 import { StaticSite } from "../../../..";
-import { CurrentTeamComponent } from "../../../current-team/current-team.component";
 import { HeroComponent } from "../../../components/hero/hero.component";
 import { CustomTitleComponent } from "../../../components/custom-title/custom-title.component";
 import { CustomSubtitleComponent } from "../../../components/custom-subtitle/custom-subtitle.component";
@@ -10,12 +9,12 @@ import { CustomImageComponent } from "../../../components/custom-image/custom-im
 import { CustomImageCarouselComponent } from "../../../components/custom-image-carousel/custom-image-carousel.component";
 import { CustomImageWithTextComponent } from "../../../components/custom-image-with-text/custom-image-with-text.component";
 import { CustomLineComponent } from "../../../components/custom-line/custom-line.component";
+import { TeamFromIdComponent } from "../../../components/team-from-id/team-from-id.component";
 
 @Component({
     selector: "app-edit-static-site",
     imports: [
         CdkDragPreview,
-        CurrentTeamComponent,
         HeroComponent,
         CustomTitleComponent,
         CustomSubtitleComponent,
@@ -26,6 +25,7 @@ import { CustomLineComponent } from "../../../components/custom-line/custom-line
         CustomLineComponent,
         CdkDropList,
         CdkDrag,
+        TeamFromIdComponent,
     ],
     templateUrl: "./edit-static-site.component.html",
     styleUrl: "./edit-static-site.component.scss",

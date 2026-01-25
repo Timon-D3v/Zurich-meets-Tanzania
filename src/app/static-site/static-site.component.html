@@ -16,7 +16,7 @@
         } @else if (element.type === "line") {
             <app-custom-line></app-custom-line>
         } @else if (element.type === "currentTeam") {
-            <app-current-team></app-current-team>
+            <app-team-from-id [id]="element.teamId"></app-team-from-id>
         }
     }
     <p class="date">Zuletzt aktualisiert: {{ date() }}</p>

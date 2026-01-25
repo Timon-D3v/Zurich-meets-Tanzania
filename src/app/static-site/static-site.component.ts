@@ -11,14 +11,14 @@ import { CustomImageComponent } from "../components/custom-image/custom-image.co
 import { CustomImageCarouselComponent } from "../components/custom-image-carousel/custom-image-carousel.component";
 import { CustomImageWithTextComponent } from "../components/custom-image-with-text/custom-image-with-text.component";
 import { CustomLineComponent } from "../components/custom-line/custom-line.component";
-import { CurrentTeamComponent } from "../current-team/current-team.component";
+import { TeamFromIdComponent } from "../components/team-from-id/team-from-id.component";
 import { LoadingComponent } from "../components/loading/loading.component";
 import { isPlatformBrowser } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: "app-static-site",
-    imports: [HeroComponent, CustomTitleComponent, CustomSubtitleComponent, CustomParagraphComponent, CustomImageComponent, CustomImageCarouselComponent, CustomImageWithTextComponent, CustomLineComponent, CurrentTeamComponent, LoadingComponent],
+    imports: [HeroComponent, CustomTitleComponent, CustomSubtitleComponent, CustomParagraphComponent, CustomImageComponent, CustomImageCarouselComponent, CustomImageWithTextComponent, CustomLineComponent, LoadingComponent, TeamFromIdComponent],
     templateUrl: "./static-site.component.html",
     styleUrl: "./static-site.component.scss",
 })

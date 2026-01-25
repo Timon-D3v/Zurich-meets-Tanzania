@@ -78,7 +78,7 @@ export async function getCurrentTeam(): Promise<DatabaseResult> {
     }
 }
 
-export async function updateMembers(teamId: number,members: TeamMember[]): Promise<DatabaseResult> {
+export async function updateMembers(teamId: number, members: TeamMember[]): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`team\` SET \`members\` = ?, \`updated\` = CURRENT_TIMESTAMP WHERE (\`id\` = ?);`, [JSON.stringify(members), teamId]);
 

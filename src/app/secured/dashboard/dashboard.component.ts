@@ -2,7 +2,7 @@ import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Subject, take } from "rxjs";
-import { ApiEndpointResponse, CustomImageWithTextElement, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
+import { ApiEndpointResponse, CustomImageWithTextElement, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, GetTeamApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { EditSiteService } from "../../services/edit-site.service";
 import { NotificationService } from "../../services/notification.service";
@@ -46,6 +46,7 @@ import { PopupMultipleImagesInputComponent } from "../../components/popup-multip
 import { PopupConfirmComponent } from "../../components/popup-confirm/popup-confirm.component";
 import { PopupAlertComponent } from "../../components/popup-alert/popup-alert.component";
 import { LoadingComponent } from "../../components/loading/loading.component";
+import { TeamService } from "../../services/team.service";
 
 @Component({
     selector: "app-dashboard",
@@ -176,6 +177,7 @@ export class DashboardComponent implements OnInit {
 
     textWithImageTextCache = signal<string>("");
 
+    private teamService = inject(TeamService);
     private editSiteService = inject(EditSiteService);
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
@@ -363,7 +365,23 @@ export class DashboardComponent implements OnInit {
                     return site;
                 });
             } else if (type === "addCurrentTeam") {
-                this.showAlert("Fehler", "Diese Funktion ist noch nicht implementiert.", "Verstanden");
+                const request = _this.teamService.getCurrentTeam();
+
+                request.subscribe((response: GetTeamApiEndpointResponse) => {
+                    if (response.error || response.data === null) {
+                        _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden: " + response.message);
+
+                        return;
+                    }
+
+                    const element = _this.editSiteService.addCurrentTeam(response.data.id);
+
+                    _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
+                        site.data.unshift(element);
+
+                        return site;
+                    });
+                });
             }
         };
 

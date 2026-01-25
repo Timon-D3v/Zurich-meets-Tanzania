@@ -30,8 +30,6 @@ export class TeamService {
     getTeam(id: number): Observable<GetTeamApiEndpointResponse> {
         const request = this.http.get<GetTeamApiEndpointResponse>(`/api/team/getTeam?id=${id}`);
 
-        throw new Error("Method not implemented yet.");
-
         return request;
     }
 

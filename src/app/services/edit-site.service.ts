@@ -93,11 +93,10 @@ export class EditSiteService {
         };
     }
 
-    addCurrentTeam(): CustomCurrentTeamElement {
-        console.error("Not implemented yet");
+    addCurrentTeam(teamId: number): CustomCurrentTeamElement {
         return {
             type: "currentTeam",
-            teamId: 0,
+            teamId: teamId,
         };
     }
 
