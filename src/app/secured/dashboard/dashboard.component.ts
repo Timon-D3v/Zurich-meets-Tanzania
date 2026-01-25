@@ -8,7 +8,6 @@ import { EditSiteService } from "../../services/edit-site.service";
 import { NotificationService } from "../../services/notification.service";
 import { SubpagesService } from "../../services/subpages.service";
 import { AdminNavElementComponent } from "../components/admin-nav-element/admin-nav-element.component";
-import { AdminUnknownPageComponent } from "../components/admin-unknown-page/admin-unknown-page.component";
 import { AdminPasswordsPageComponent } from "../components/admin-passwords-page/admin-passwords-page.component";
 import { AdminHomepagePicturePageComponent } from "../components/admin-homepage-picture-page/admin-homepage-picture-page.component";
 import { EditStaticSiteComponent } from "../components/edit-static-site/edit-static-site.component";
@@ -46,12 +45,12 @@ import { PopupImageInputComponent } from "../../components/popup-image-input/pop
 import { PopupMultipleImagesInputComponent } from "../../components/popup-multiple-images-input/popup-multiple-images-input.component";
 import { PopupConfirmComponent } from "../../components/popup-confirm/popup-confirm.component";
 import { PopupAlertComponent } from "../../components/popup-alert/popup-alert.component";
+import { LoadingComponent } from "../../components/loading/loading.component";
 
 @Component({
     selector: "app-dashboard",
     imports: [
         AdminNavElementComponent,
-        AdminUnknownPageComponent,
         AdminPasswordsPageComponent,
         AdminHomepagePicturePageComponent,
         EditStaticSiteComponent,
@@ -89,6 +88,7 @@ import { PopupAlertComponent } from "../../components/popup-alert/popup-alert.co
         PopupMultipleImagesInputComponent,
         PopupConfirmComponent,
         PopupAlertComponent,
+        LoadingComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",

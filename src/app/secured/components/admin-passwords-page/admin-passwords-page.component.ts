@@ -1,13 +1,13 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
-import { AdminUnknownPageComponent } from "../admin-unknown-page/admin-unknown-page.component";
 import { GetPasswordsApiEndpointResponse, LoginInformation } from "../../../..";
 import { NotificationService } from "../../../services/notification.service";
 import { HttpClient } from "@angular/common/http";
 import { isPlatformBrowser } from "@angular/common";
+import { LoadingComponent } from "../../../components/loading/loading.component";
 
 @Component({
     selector: "app-admin-passwords-page",
-    imports: [AdminUnknownPageComponent],
+    imports: [LoadingComponent],
     templateUrl: "./admin-passwords-page.component.html",
     styleUrl: "./admin-passwords-page.component.scss",
 })

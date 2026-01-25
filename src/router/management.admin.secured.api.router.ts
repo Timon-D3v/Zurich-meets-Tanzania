@@ -12,6 +12,7 @@ import multerInstance from "../shared/instance.multer";
 import { delivApiUpdateFile, delivApiUpload } from "delivapi-client";
 import { CONFIG } from "../config";
 import { updateStaticSite } from "../shared/subpages.database";
+import { createTeam } from "../shared/team.database";
 
 // Router Serves under /api/secured/admin/management
 const router = Router();
@@ -492,6 +493,58 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
                 failedUploads === 0
                     ? `Die Seite mit id '${siteName}' wurde erfolgreich aktualisiert.`
                     : `Die Seite mit id '${siteName}' wurde aktualisiert, jedoch konnten ${failedUploads}/${files.length} Bilder nicht hochgeladen werden und wurden durch ein Fallback-Bild ersetzt.`,
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/createTeam", multerInstance.single("image"), async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { motto, description } = req.body;
+        const file = req.file;
+
+        if (typeof motto !== "string" || motto.trim() === "") {
+            throw new Error("Bitte gib ein gültiges Motto ein.");
+        }
+
+        if (typeof description !== "string") {
+            throw new Error("Bitte gib eine gültige Beschreibung ein.");
+        }
+
+        if (!file) {
+            throw new Error("Es wurde kein Bild hochgeladen.");
+        }
+
+        const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.mimetype);
+
+        if (response.error) {
+            throw new Error("Das Bild konnte nicht hochgeladen werden. Bitte versuche es später erneut. Weitere Informationen: " + response.message);
+        }
+
+        const result = await createTeam(motto, description, response.url);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: `Das Team mit dem Motto "${motto}" wurde erfolgreich erstellt.`,
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);

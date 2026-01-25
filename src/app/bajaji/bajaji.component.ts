@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { SubpagesService } from "../services/subpages.service";
 import { GetStaticSiteApiEndpointResponse, StaticSite, StaticSiteNames } from "../..";
 import { NotificationService } from "../services/notification.service";
@@ -12,10 +12,12 @@ import { CustomImageCarouselComponent } from "../components/custom-image-carouse
 import { CustomImageWithTextComponent } from "../components/custom-image-with-text/custom-image-with-text.component";
 import { CustomLineComponent } from "../components/custom-line/custom-line.component";
 import { CurrentTeamComponent } from "../current-team/current-team.component";
+import { LoadingComponent } from "../components/loading/loading.component";
+import { isPlatformBrowser } from "@angular/common";
 
 @Component({
     selector: "app-bajaji",
-    imports: [HeroComponent, CustomTitleComponent, CustomSubtitleComponent, CustomParagraphComponent, CustomImageComponent, CustomImageCarouselComponent, CustomImageWithTextComponent, CustomLineComponent, CurrentTeamComponent],
+    imports: [HeroComponent, CustomTitleComponent, CustomSubtitleComponent, CustomParagraphComponent, CustomImageComponent, CustomImageCarouselComponent, CustomImageWithTextComponent, CustomLineComponent, CurrentTeamComponent, LoadingComponent],
     templateUrl: "./bajaji.component.html",
     styleUrl: "./bajaji.component.scss",
 })
@@ -26,7 +28,20 @@ export class BajajiComponent implements OnInit {
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
 
+    private platformId = inject(PLATFORM_ID);
+
     ngOnInit(): void {
+        console.info("Using @defer in BajajiComponent to load site data. Implement this on all subpages.");
+        this.notificationService.info("Work to do", "Using @defer in BajajiComponent to load site data. Implement this on all subpages.", false);
+
+        if (!isPlatformBrowser(this.platformId)) {
+            console.error("Cannot fetch when not in browser context.");
+
+            this.site.set(PUBLIC_CONFIG.STATIC_SITES.ERROR(this.siteName, PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Cannot fetch when not in browser context."));
+
+            return;
+        }
+
         const request = this.subpagesService.getStaticSite(this.siteName);
 
         request.subscribe((response: GetStaticSiteApiEndpointResponse) => {

@@ -14,6 +14,11 @@ export async function getUserWithEmail(email: string): Promise<DatabaseResult> {
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {
@@ -37,6 +42,11 @@ export async function createUser(email: string, hashedPassword: string, fistName
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {
@@ -57,6 +67,11 @@ export async function setNewPassword(email: string, hashedPassword: string): Pro
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {
@@ -77,6 +92,11 @@ export async function setUserType(email: string, type: "user" | "member" | "admi
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {

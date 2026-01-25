@@ -1,0 +1,7 @@
+<ul>
+    @for (member of team(); track $index) {
+        <li>
+            <app-team-member [firstName]="member.firstName" [lastName]="member.lastName" [job]="member.job" [imageUrl]="member.imageUrl" [motivation]="member.motivation"></app-team-member>
+        </li>
+    }
+</ul>

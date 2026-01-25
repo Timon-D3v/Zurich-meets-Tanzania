@@ -310,6 +310,10 @@ export interface GetStaticSiteApiEndpointResponse extends ApiEndpointResponse {
     } | null;
 }
 
+export interface GetTeamApiEndpointResponse extends ApiEndpointResponse {
+    data: Team | null;
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -464,3 +468,20 @@ export interface CustomCurrentTeamElement extends CustomElement {
 export type CustomElements = Array<CustomTitleElement | CustomSubtitleElement | CustomParagraphElement | CustomImageElement | CustomMultipleImagesElement | CustomImageWithTextElement | CustomLineElement | CustomCurrentTeamElement>;
 
 export type DashboardNavigationOptions = "main" | "edit-sites" | "create-blog" | "edit-blog" | "create-news" | "edit-news";
+
+export type Team = {
+    id: number;
+    motto: string;
+    text: string;
+    picture: string;
+    members: TeamMember[];
+    date: string;
+};
+
+export type TeamMember = {
+    firstName: string;
+    lastName: string;
+    job: string;
+    motivation: string;
+    imageUrl: string;
+};

@@ -1,1 +1,23 @@
-<p>team-create-team works!</p>
+<form [formGroup]="createTeamForm" (submit)="onSubmit($event)">
+    <h2>Team erstellen</h2>
+
+    <p>
+        Erstelle das neue Team für den nächsten Einsatz. Beachte allerdings, dass es jeweils nur ein Team geben kann, bei zwei gleichzeitigen Einsätzen müsst ihr euch absprechen, welches Team ihr verwendet.
+        <br />
+        Mitglieder können später hinzugefügt werden.
+    </p>
+
+    <label for="motto">Motto (Leitsatz)</label>
+    <input type="text" id="motto" placeholder="Motto eingeben" required formControlName="mottoControl" />
+
+    <label for="description">Beschreibung (optional)</label>
+    <input type="text" id="description" placeholder="Beschreibung eingeben" formControlName="descriptionControl" />
+
+    <label class="image-label" for="image">
+        <h3>Bild</h3>
+        <img alt="Vorschau" [src]="imagePreview()" />
+    </label>
+    <input type="file" id="image" class="hidden" required (change)="onChange($event)" accept="image/*" />
+
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

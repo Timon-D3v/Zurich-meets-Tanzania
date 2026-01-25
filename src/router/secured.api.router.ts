@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import themeRouter from "./theme.api.router";
+import themeRouter from "./theme.secured.api.router";
 
-import adminRouter from "./admin.secured.router";
+import adminRouter from "./admin.secured.api.router";
 
 import { isAdmin } from "../middleware/auth.middleware";
 

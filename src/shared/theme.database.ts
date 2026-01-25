@@ -14,6 +14,11 @@ export async function getThemeFromUserId(id: number): Promise<DatabaseResult> {
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {
@@ -34,6 +39,11 @@ export async function setThemeForUserId(isDarkTheme: boolean, id: number): Promi
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {

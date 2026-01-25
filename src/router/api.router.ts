@@ -4,11 +4,12 @@ import rateLimit from "express-rate-limit";
 import envRouter from "./env.api.router";
 import authRouter from "./auth.api.router";
 import blogRouter from "./blog.api.router";
+import teamRouter from "./team.api.router";
 import galleryRouter from "./gallery.api.router";
 import subpagesRouter from "./subpages.api.router";
-import newsletterRouter from "./newsletter.router";
+import newsletterRouter from "./newsletter.api.router";
 
-import securedRouter from "./secured.router";
+import securedRouter from "./secured.api.router";
 
 import { isLoggedIn } from "../middleware/auth.middleware";
 
@@ -30,6 +31,7 @@ router.use(
 router.use("/env", envRouter);
 router.use("/auth", authRouter);
 router.use("/blog", blogRouter);
+router.use("/team", teamRouter);
 router.use("/gallery", galleryRouter);
 router.use("/subpages", subpagesRouter);
 router.use("/newsletter", newsletterRouter);

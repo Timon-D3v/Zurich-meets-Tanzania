@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AdminUnknownPageComponent } from "./admin-unknown-page.component";
+import { TeamMemberComponent } from "./team-member.component";
 
-describe("AdminUnknownPageComponent", () => {
-    let component: AdminUnknownPageComponent;
-    let fixture: ComponentFixture<AdminUnknownPageComponent>;
+describe("TeamMemberComponent", () => {
+    let component: TeamMemberComponent;
+    let fixture: ComponentFixture<TeamMemberComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [AdminUnknownPageComponent],
+            imports: [TeamMemberComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(AdminUnknownPageComponent);
+        fixture = TestBed.createComponent(TeamMemberComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

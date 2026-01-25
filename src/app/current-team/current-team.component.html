@@ -1,1 +1,13 @@
-<p>current-team works!</p>
+@defer (when team().id !== -1; prefetch on immediate) {
+    <app-hero [title]="'Unser aktuelles Team'" [subtitle]="team().motto || ''" [pictureUrl]="team().picture || ''" [pictureAlt]="'Ein Bild des aktuellen Teams'"></app-hero>
+
+    <h1 class="title">Unser aktuelles Team</h1>
+
+    @if (team().text !== "") {
+        <p class="text">{{ team().text }}</p>
+    }
+
+    <app-team [team]="team().members"></app-team>
+} @placeholder (minimum 100ms) {
+    <app-loading></app-loading>
+}

@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { ApiEndpointResponse, GetThemeApiEndpointResponse } from "..";
-import { getThemeFromUserId, setThemeForUserId } from "../shared/theme.database";
+import { ApiEndpointResponse, GetThemeApiEndpointResponse } from "../index.js";
+import { getThemeFromUserId, setThemeForUserId } from "../shared/theme.database.js";
 
 // Router Serves under /api/secured/theme
 const router = Router();

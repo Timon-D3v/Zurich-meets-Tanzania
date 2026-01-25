@@ -14,6 +14,11 @@ export async function getMemberWithEmail(userId: number): Promise<DatabaseResult
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {

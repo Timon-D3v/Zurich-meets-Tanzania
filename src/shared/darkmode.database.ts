@@ -14,6 +14,11 @@ export async function createDarkmodeEntry(userId: number, darkmode: boolean = fa
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import adminManagementRouter from "./management.admin.secured.router";
+import adminManagementRouter from "./management.admin.secured.api.router";
 
 // Router Serves under /api/secured/admin
 // To access apis under this router, authentication with admin privilege is required

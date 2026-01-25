@@ -1,0 +1,10 @@
+<div [class]="isOpen() ? 'member open' : 'member'" (click)="toggle()">
+    <div class="preview">
+        <img [alt]="firstName() + ' ' + lastName()" [src]="imageUrl()" />
+        <h3>{{ firstName() }} {{ lastName() }}</h3>
+        <p>{{ job() }}</p>
+    </div>
+    <div class="full">
+        <p class="motivation" (click)="$event.stopPropagation()">{{ motivation() }}</p>
+    </div>
+</div>

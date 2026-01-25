@@ -14,6 +14,11 @@ export async function getAllNewsletterEmails(): Promise<DatabaseResult> {
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {
@@ -34,6 +39,11 @@ export async function addToNewsletterList(email: string, firstName: string, last
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {

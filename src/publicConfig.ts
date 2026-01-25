@@ -23,12 +23,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
                     imageAlt: "Laden...",
                     author: "Das ZMT-Team",
                 },
-                data: [
-                    {
-                        type: "title",
-                        content: "Laden...",
-                    },
-                ],
+                data: [],
             };
         },
         ERROR: (name: StaticSiteNames, imageUrl: string, message: string): StaticSite => {

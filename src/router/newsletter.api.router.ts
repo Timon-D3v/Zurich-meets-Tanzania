@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
-import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, NewsletterSignUpRequest } from "..";
-import { addToNewsletterList, getAllNewsletterEmails } from "../shared/newsletter.database";
-import { PUBLIC_CONFIG } from "../publicConfig";
+import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, NewsletterSignUpRequest } from "../index.js";
+import { addToNewsletterList, getAllNewsletterEmails } from "../shared/newsletter.database.js";
+import { PUBLIC_CONFIG } from "../publicConfig.js";
 import { randomBytes } from "node:crypto";
-import { sendNewsletterSignUpConfirmation } from "../shared/newsletter.email";
+import { sendNewsletterSignUpConfirmation } from "../shared/newsletter.email.js";
 import { RowDataPacket } from "mysql2";
 
 // Router Serves under /api/newsletter
