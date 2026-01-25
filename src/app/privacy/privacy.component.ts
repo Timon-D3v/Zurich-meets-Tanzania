@@ -10,4 +10,6 @@ import { PUBLIC_CONFIG } from "../../publicConfig";
 export class PrivacyComponent {
     readonly pdfUrl = PUBLIC_CONFIG.PRIVACY_PDF_URL;
     readonly pdfDownloadName = "Datenschutzerklärung ZMT.pdf";
+
+    date = new Date(1769351119190).toLocaleString();
 }

@@ -39,8 +39,9 @@ ul {
     cursor: pointer;
 }
 
-.date {
-    padding: 0 5vw;
+p.date {
+    font-size: 0.9rem;
+    color: var(--text-950);
+    padding: 0 1rem;
     text-align: right;
-    margin: 1em 0;
 }

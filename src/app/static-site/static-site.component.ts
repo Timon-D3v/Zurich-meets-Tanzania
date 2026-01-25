@@ -23,8 +23,10 @@ import { ActivatedRoute } from "@angular/router";
     styleUrl: "./static-site.component.scss",
 })
 export class StaticSiteComponent {
-    siteName: StaticSiteNames = "zurich-meets-tanzania";
+    siteName: StaticSiteNames = "zurich-meets-tanzania"; // Default, will be overwritten in ngOnInit
+
     site = signal<StaticSite>(PUBLIC_CONFIG.STATIC_SITES.LOADING(this.siteName, PUBLIC_CONFIG.FALLBACK_IMAGE_URL));
+    date = signal<string>("");
 
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
@@ -35,9 +37,6 @@ export class StaticSiteComponent {
 
     ngOnInit(): void {
         this.siteName = this.route.snapshot.data["siteName"] as StaticSiteNames;
-
-        console.info("Using @defer in StaticSiteComponent to load site data. Implement this on all subpages.");
-        this.notificationService.info("Work to do", "Using @defer in StaticSiteComponent to load site data. Implement this on all subpages.", false);
 
         if (!isPlatformBrowser(this.platformId)) {
             console.error("Cannot fetch when not in browser context.");
@@ -60,6 +59,7 @@ export class StaticSiteComponent {
             }
 
             this.site.set(response.data.site);
+            this.date.set(new Date(response.data.date).toLocaleString());
         });
     }
 }

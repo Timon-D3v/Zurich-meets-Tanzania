@@ -114,7 +114,7 @@ export class EditSiteService {
             formData.append("images", image.file);
         });
 
-        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/updateStaticSite", formData);
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/subpages/updateStaticSite", formData);
 
         return request;
     }

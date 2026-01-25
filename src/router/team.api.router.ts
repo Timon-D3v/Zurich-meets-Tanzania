@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { DatabaseResult, GetTeamApiEndpointResponse } from "../index.js";
+import { DatabaseResult, GetTeamApiEndpointResponse } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig.js";
 import { getCurrentTeam } from "../shared/team.database.js";
 

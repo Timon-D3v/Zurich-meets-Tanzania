@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, NewsletterSignUpRequest } from "../index.js";
+import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, NewsletterSignUpRequest } from "..";
 import { addToNewsletterList, getAllNewsletterEmails } from "../shared/newsletter.database.js";
 import { PUBLIC_CONFIG } from "../publicConfig.js";
 import { randomBytes } from "node:crypto";

@@ -16,7 +16,7 @@ export class TeamService {
         formData.append("description", description);
         formData.append("image", image);
 
-        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/createTeam", formData);
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/createTeam", formData);
 
         return request;
     }
@@ -31,6 +31,18 @@ export class TeamService {
         const request = this.http.get<GetTeamApiEndpointResponse>(`/api/team/getTeam?id=${id}`);
 
         throw new Error("Method not implemented yet.");
+
+        return request;
+    }
+
+    addMember(email: string, job: string, motivation: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/addMember", { email, job, motivation });
+
+        return request;
+    }
+
+    removeMember(email: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/removeMember", { email });
 
         return request;
     }
