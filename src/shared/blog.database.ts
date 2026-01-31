@@ -3,6 +3,46 @@ import connection from "./connection.database";
 import { DatabaseResult } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 
+export async function getBlog(title: string): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * from \`zmt\`.\`blogs\` WHERE \`title\` = ?`, [title]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function getAllBlogs(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * from \`zmt\`.\`blogs\``);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
 /**
  * Retrieves the latest X blog titles from the database, ordered by descending blog ID.
  *
@@ -23,6 +63,26 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 export async function getLastXBlogTitles(x: number): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`title\` from \`zmt\`.\`blogs\` ORDER BY \`id\` DESC LIMIT ${x};`);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function getAllBlogTitles(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`title\` from \`zmt\`.\`blogs\` ORDER BY \`id\` DESC;`);
 
         return {
             data: result,

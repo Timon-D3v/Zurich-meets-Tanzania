@@ -1,20 +1,39 @@
-import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
+import { Component, inject, OnInit, PLATFORM_ID, signal, WritableSignal } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Subject, take } from "rxjs";
-import { ApiEndpointResponse, CustomImageWithTextElement, DashboardNavigationOptions, GetStaticSiteApiEndpointResponse, GetTeamApiEndpointResponse, StaticSite, StaticSiteNames } from "../../..";
+import {
+    ApiEndpointResponse,
+    BlogContent,
+    CustomCurrentTeamElement,
+    CustomElements,
+    CustomImageElement,
+    CustomImageWithTextElement,
+    CustomLineElement,
+    CustomMultipleImagesElement,
+    CustomParagraphElement,
+    CustomSubtitleElement,
+    CustomTitleElement,
+    DashboardNavigationOptions,
+    DatabaseApiEndpointResponse,
+    GetAllBlogsApiEndpointResponse,
+    GetStaticSiteApiEndpointResponse,
+    GetTeamApiEndpointResponse,
+    StaticSite,
+    StaticSiteNames,
+} from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
+import { TeamService } from "../../services/team.service";
+import { BlogService } from "../../services/blog.service";
+import { SubpagesService } from "../../services/subpages.service";
 import { EditSiteService } from "../../services/edit-site.service";
 import { NotificationService } from "../../services/notification.service";
-import { SubpagesService } from "../../services/subpages.service";
 import { AdminNavElementComponent } from "../components/admin-nav-element/admin-nav-element.component";
 import { AdminPasswordsPageComponent } from "../components/admin-passwords-page/admin-passwords-page.component";
 import { AdminHomepagePicturePageComponent } from "../components/admin-homepage-picture-page/admin-homepage-picture-page.component";
 import { EditStaticSiteComponent } from "../components/edit-static-site/edit-static-site.component";
 import { AdminAddAdminComponent } from "../components/admin-add-admin/admin-add-admin.component";
 import { AdminRemoveAdminComponent } from "../components/admin-remove-admin/admin-remove-admin.component";
-import { BlogCreateBlogComponent } from "../components/blog-create-blog/blog-create-blog.component";
-import { BlogEditBlogComponent } from "../components/blog-edit-blog/blog-edit-blog.component";
 import { BlogDeleteBlogComponent } from "../components/blog-delete-blog/blog-delete-blog.component";
 import { NewsCreateNewsComponent } from "../components/news-create-news/news-create-news.component";
 import { MembersRemoveManualMemberComponent } from "../components/members-remove-manual-member/members-remove-manual-member.component";
@@ -43,10 +62,10 @@ import { PopupTitleInputComponent } from "../../components/popup-title-input/pop
 import { PopupTextInputComponent } from "../../components/popup-text-input/popup-text-input.component";
 import { PopupImageInputComponent } from "../../components/popup-image-input/popup-image-input.component";
 import { PopupMultipleImagesInputComponent } from "../../components/popup-multiple-images-input/popup-multiple-images-input.component";
+import { PopupSelectionInputComponent } from "../../components/popup-selection-input/popup-selection-input.component";
 import { PopupConfirmComponent } from "../../components/popup-confirm/popup-confirm.component";
 import { PopupAlertComponent } from "../../components/popup-alert/popup-alert.component";
 import { LoadingComponent } from "../../components/loading/loading.component";
-import { TeamService } from "../../services/team.service";
 
 @Component({
     selector: "app-dashboard",
@@ -57,8 +76,6 @@ import { TeamService } from "../../services/team.service";
         EditStaticSiteComponent,
         AdminAddAdminComponent,
         AdminRemoveAdminComponent,
-        BlogCreateBlogComponent,
-        BlogEditBlogComponent,
         BlogDeleteBlogComponent,
         NewsCreateNewsComponent,
         MembersRemoveManualMemberComponent,
@@ -87,6 +104,7 @@ import { TeamService } from "../../services/team.service";
         PopupTextInputComponent,
         PopupImageInputComponent,
         PopupMultipleImagesInputComponent,
+        PopupSelectionInputComponent,
         PopupConfirmComponent,
         PopupAlertComponent,
         LoadingComponent,
@@ -98,6 +116,7 @@ export class DashboardComponent implements OnInit {
     currentActiveSection = signal<string>("stats-website-analytics");
     currentActiveNavigation = signal<DashboardNavigationOptions>("main");
     currentActiveSiteEdit = signal<StaticSiteNames>("vision");
+    currentActiveBlogEdit = signal<string>("awaitSelection");
     currentActionToPerform = signal<
         | "addTitle"
         | "addSubtitle"
@@ -122,11 +141,13 @@ export class DashboardComponent implements OnInit {
 
     mobileNavOpen = signal<boolean>(false);
     submitSiteEditButton = signal<string>("Abschliessen");
+    submitNewBlogButton = signal<string>("Abschliessen");
 
     titleInputOpen = signal(false);
     textInputOpen = signal(false);
     imageInputOpen = signal(false);
     multipleImagesInputOpen = signal(false);
+    selectionInputOpen = signal(false);
 
     confirmInputOpen = signal(false);
     confirmInputObservable = new Subject<boolean>();
@@ -175,9 +196,18 @@ export class DashboardComponent implements OnInit {
     multipleImagesEditInputLabel = signal<string>("");
     multipleImagesEditInputValue = signal<{ imageUrl: string; imageAlt: string }[]>([]);
 
+    selectionInputTitle = signal<string>("");
+    selectionInputDescription = signal<string>("");
+    selectionInputLabel = signal<string>("");
+    selectionInputPlaceholder = signal<string>("");
+    selectionInputOptions = signal<string[]>([]);
+
     textWithImageTextCache = signal<string>("");
 
+    allEditableBlogs: string[] = [];
+
     private teamService = inject(TeamService);
+    private blogService = inject(BlogService);
     private editSiteService = inject(EditSiteService);
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
@@ -220,6 +250,16 @@ export class DashboardComponent implements OnInit {
         "surgery": [],
         "history": [],
     };
+    blogs: { newBlog: WritableSignal<BlogContent>; existingBlogs: { [key: string]: WritableSignal<BlogContent> } } = {
+        newBlog: signal<BlogContent>({ metadata: { title: "Bearbeite mich :)", subtitle: "", author: "", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "" }, data: [] }),
+        existingBlogs: {
+            awaitSelection: signal<StaticSite>({ metadata: { title: "", subtitle: "", author: "", imageUrl: "", imageAlt: "" }, data: [] }),
+        },
+    };
+    blogImages: { newBlog: { url: string; file: File }[]; existingBlogs: { [key: string]: { url: string; file: File }[] } } = {
+        newBlog: [],
+        existingBlogs: {},
+    };
 
     ngOnInit(): void {
         for (const key in this.siteEdits) {
@@ -248,6 +288,36 @@ export class DashboardComponent implements OnInit {
                 this.siteEditImages[key as StaticSiteNames] = [];
             });
         }
+
+        // Get all existing blog titles for editing
+        const blogsRequest = this.blogService.getAllBlogLinks();
+
+        blogsRequest.subscribe((response: DatabaseApiEndpointResponse) => {
+            if (response.error || response.data?.data === null || !Array.isArray(response.data?.data)) {
+                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
+
+                return;
+            }
+
+            for (const blog of response.data.data) {
+                this.allEditableBlogs.push(blog["title"]);
+            }
+        });
+
+        // Get all blogs for editing
+        const getAllBlogsRequest = this.blogService.getAllBlogs();
+
+        getAllBlogsRequest.subscribe((response: GetAllBlogsApiEndpointResponse) => {
+            if (response.error || response.data === null) {
+                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
+
+                return;
+            }
+
+            for (const blog of response.data) {
+                this.blogs.existingBlogs[blog.title] = signal<BlogContent>(blog.data);
+            }
+        });
     }
 
     generateActivateFunction(section: string, navigation: DashboardNavigationOptions = "main"): Function {
@@ -263,6 +333,27 @@ export class DashboardComponent implements OnInit {
         };
 
         return activationFunction;
+    }
+
+    generateSelectBlogToEditFunction(): Function {
+        const _this = this;
+
+        const activationFunction = () => {
+            _this.selectBlogToEdit();
+            _this.generateActivateFunction("blog-edit-blog", "edit-blog")();
+        };
+
+        return activationFunction;
+    }
+
+    selectBlogToEdit(): void {
+        this.selectionInputOpen.set(true);
+
+        this.selectionInputTitle.set("Blog bearbeiten");
+        this.selectionInputDescription.set("Bitte gib den Titel des Blogs ein, den du bearbeiten möchtest.");
+        this.selectionInputLabel.set("Titel:");
+        this.selectionInputPlaceholder.set("Titel suchen");
+        this.selectionInputOptions.set(this.allEditableBlogs);
     }
 
     activate(section: string): void {
@@ -433,13 +524,32 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    handleMove(event: CdkDragDrop<string[]>, siteName: StaticSiteNames): void {
-        moveItemInArray(this.siteEdits[siteName]().data, event.previousIndex, event.currentIndex);
+    submitNewBlog(): void {
+        this.submitSiteEditButton.set("Speichern...");
+
+        this.showAlert("Funktion nicht implementiert", "Die Funktion zum Erstellen eines neuen Blogs ist noch nicht implementiert.", "OK");
     }
 
-    handleEdit(index: number, siteName: StaticSiteNames): void {
-        const elementToEdit = this.siteEdits[siteName]().data[index];
+    handleUniversalMove(event: CdkDragDrop<string[]>, elementToEdit: CustomElements): void {
+        moveItemInArray(elementToEdit, event.previousIndex, event.currentIndex);
+    }
 
+    handleBlogMove(event: CdkDragDrop<string[]>, blogName: "new-blog" | string): void {
+        if (blogName === "new-blog") {
+            this.handleUniversalMove(event, this.blogs.newBlog().data);
+        } else {
+            this.handleUniversalMove(event, this.blogs.existingBlogs[blogName]().data);
+        }
+    }
+
+    handleSiteEditMove(event: CdkDragDrop<string[]>, siteName: StaticSiteNames): void {
+        this.handleUniversalMove(event, this.siteEdits[siteName]().data);
+    }
+
+    handleUniversalEdit(
+        index: number,
+        elementToEdit: CustomTitleElement | CustomSubtitleElement | CustomParagraphElement | CustomImageElement | CustomMultipleImagesElement | CustomImageWithTextElement | CustomLineElement | CustomCurrentTeamElement,
+    ): void {
         this.currentIndexToEdit.set(index);
 
         switch (elementToEdit.type) {
@@ -524,18 +634,38 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    async handleDelete(index: number, siteName: StaticSiteNames): Promise<void> {
+    handleBlogEdit(index: number, blogName: "new-blog" | string): void {
+        const elementToEdit = blogName === "new-blog" ? this.blogs.newBlog().data[index] : this.blogs.existingBlogs[blogName]().data[index];
+
+        this.handleUniversalEdit(index, elementToEdit);
+    }
+
+    handleSiteEditEdit(index: number, siteName: StaticSiteNames): void {
+        const elementToEdit = this.siteEdits[siteName]().data[index];
+
+        this.handleUniversalEdit(index, elementToEdit);
+    }
+
+    async handleUniversalDelete(index: number, signalToEdit: WritableSignal<BlogContent | StaticSite>): Promise<void> {
         const confirmDeletion = await this.awaitConfirmation("Löschen bestätigen", "Möchtest du dieses Element wirklich löschen?", "Löschen", "Abbrechen");
 
         if (!confirmDeletion) {
             return;
         }
 
-        this.siteEdits[siteName].update((site: StaticSite): StaticSite => {
-            site.data.splice(index, 1);
+        signalToEdit.update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data.splice(index, 1);
 
-            return site;
+            return siteOrBlog;
         });
+    }
+
+    async handleSiteEditDelete(index: number, siteName: StaticSiteNames): Promise<void> {
+        this.handleUniversalDelete(index, this.siteEdits[siteName]);
+    }
+
+    async handleBlogDelete(index: number, blogName: "new-blog" | string): Promise<void> {
+        this.handleUniversalDelete(index, blogName === "new-blog" ? this.blogs.newBlog : this.blogs.existingBlogs[blogName]);
     }
 
     async closeEditSitesNavigation(): Promise<void> {
@@ -568,6 +698,8 @@ export class DashboardComponent implements OnInit {
         this.textEditInputOpen.set(false);
         this.imageEditInputOpen.set(false);
         this.multipleImagesEditInputOpen.set(false);
+
+        this.selectionInputOpen.set(false);
     }
 
     addTitle(content: string): void {
@@ -905,6 +1037,21 @@ export class DashboardComponent implements OnInit {
                 break;
             case "editImageWithText":
                 this.editImageWithTextPart1(content);
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
+    handleSelectionInputResult(selectedOption: string): void {
+        this.selectionInputOpen.set(false);
+
+        console.log("Selected option:", selectedOption);
+
+        switch (this.currentActiveSection()) {
+            case "blog-edit-blog":
+                this.currentActiveBlogEdit.set(selectedOption);
                 break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");

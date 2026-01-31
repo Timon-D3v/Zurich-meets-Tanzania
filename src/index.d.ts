@@ -275,7 +275,7 @@ export interface GetPublicUserDetailsApiEndpointResponse extends ApiEndpointResp
 }
 
 export interface DatabaseApiEndpointResponse extends ApiEndpointResponse {
-    data: DatabaseResult;
+    data: DatabaseResult | null;
 }
 
 export interface AddToNewsletterListApiEndpointResponse extends ApiEndpointResponse {
@@ -312,6 +312,14 @@ export interface GetStaticSiteApiEndpointResponse extends ApiEndpointResponse {
 
 export interface GetTeamApiEndpointResponse extends ApiEndpointResponse {
     data: Team | null;
+}
+
+export interface GetBlogApiEndpointResponse extends ApiEndpointResponse {
+    data: Blog | null;
+}
+
+export interface GetAllBlogsApiEndpointResponse extends ApiEndpointResponse {
+    data: Blog[] | null;
 }
 
 export interface PublicUser {
@@ -484,4 +492,23 @@ export type TeamMember = {
     job: string;
     motivation: string;
     imageUrl: string;
+};
+
+export type Blog = {
+    id: number;
+    title: string;
+    author: string;
+    date: string;
+    data: BlogContent;
+};
+
+export type BlogContent = {
+    metadata: {
+        title: string;
+        subtitle: string;
+        author: string;
+        imageUrl: string;
+        imageAlt: string;
+    };
+    data: CustomElements;
 };

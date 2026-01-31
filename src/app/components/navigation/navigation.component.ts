@@ -89,7 +89,7 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
             return;
         }
 
-        const request = this.blogService.getBlogsLinks(count);
+        const request = this.blogService.getBlogLinks(count);
 
         request.subscribe((response: DatabaseApiEndpointResponse) => {
             if (response.error) {

@@ -149,13 +149,13 @@
                             href: '#Blog-erstellen',
                             label: 'Blog erstellen',
                             clickable: true,
-                            onClick: generateActivateFunction('blog-create-blog'),
+                            onClick: generateActivateFunction('blog-create-blog', 'create-blog'),
                         },
                         {
                             href: '#Blog-bearbeiten',
                             label: 'Blog bearbeiten',
                             clickable: true,
-                            onClick: generateActivateFunction('blog-edit-blog'),
+                            onClick: generateSelectBlogToEditFunction(),
                         },
                         {
                             href: '#Blog-löschen',
@@ -494,14 +494,19 @@
         ) {
             <app-edit-static-site
                 [site]="siteEdits[currentActiveSiteEdit()]()"
-                (moveOutput)="handleMove($event, currentActiveSiteEdit())"
-                (editOutput)="handleEdit($event, currentActiveSiteEdit())"
-                (deleteOutput)="handleDelete($event, currentActiveSiteEdit())"
+                (moveOutput)="handleSiteEditMove($event, currentActiveSiteEdit())"
+                (editOutput)="handleSiteEditEdit($event, currentActiveSiteEdit())"
+                (deleteOutput)="handleSiteEditDelete($event, currentActiveSiteEdit())"
             ></app-edit-static-site>
         } @else if (currentActiveSection() === "blog-create-blog") {
-            <app-blog-create-blog></app-blog-create-blog>
+            <app-edit-static-site [site]="blogs.newBlog()" (moveOutput)="handleBlogMove($event, 'new-blog')" (editOutput)="handleBlogEdit($event, 'new-blog')" (deleteOutput)="handleBlogDelete($event, 'new-blog')"></app-edit-static-site>
         } @else if (currentActiveSection() === "blog-edit-blog") {
-            <app-blog-edit-blog></app-blog-edit-blog>
+            <app-edit-static-site
+                [site]="blogs.existingBlogs[currentActiveBlogEdit()]()"
+                (moveOutput)="handleBlogMove($event, currentActiveBlogEdit())"
+                (editOutput)="handleBlogEdit($event, currentActiveBlogEdit())"
+                (deleteOutput)="handleBlogDelete($event, currentActiveBlogEdit())"
+            ></app-edit-static-site>
         } @else if (currentActiveSection() === "blog-delete-blog") {
             <app-blog-delete-blog></app-blog-delete-blog>
         } @else if (currentActiveSection() === "news-create-news") {
@@ -613,6 +618,18 @@
         [editArray]="multipleImagesEditInputValue()"
         [submitButtonText]="'Aktualisieren'"
     ></app-popup-multiple-images-input>
+}
+
+@if (selectionInputOpen()) {
+    <app-popup-selection-input
+        (resultOutput)="handleSelectionInputResult($event)"
+        (closeOutput)="closePopup()"
+        [title]="selectionInputTitle()"
+        [description]="selectionInputDescription()"
+        [label]="selectionInputLabel()"
+        [placeholder]="selectionInputPlaceholder()"
+        [selectionOptions]="selectionInputOptions()"
+    ></app-popup-selection-input>
 }
 
 @if (confirmInputOpen()) {
