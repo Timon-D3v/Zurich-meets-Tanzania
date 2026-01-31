@@ -17,6 +17,7 @@ import {
     DashboardNavigationOptions,
     DatabaseApiEndpointResponse,
     GetAllBlogsApiEndpointResponse,
+    GetAllStaticSitesApiEndpointResponse,
     GetStaticSiteApiEndpointResponse,
     GetTeamApiEndpointResponse,
     StaticSite,
@@ -262,32 +263,21 @@ export class DashboardComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        for (const key in this.siteEdits) {
-            const request = this.subpagesService.getStaticSite(key as StaticSiteNames);
+        // Get all static sites for editing
+        const staticSitesRequest = this.subpagesService.getAllStaticSites();
 
-            request.subscribe((response: GetStaticSiteApiEndpointResponse) => {
-                if (response.error || response.data === null) {
-                    this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${key}' konnte nicht geladen werden: ` + response.message);
+        staticSitesRequest.subscribe((response: GetAllStaticSitesApiEndpointResponse) => {
+            if (response.error || response.data === null || !Array.isArray(response.data)) {
+                this.notificationService.error("Fehler beim Laden der Seiten", "Die statischen Seiten konnten nicht geladen werden: " + response.message);
 
-                    // Set a Warning as the sites content
-                    this.siteEdits[key as StaticSiteNames].set({
-                        data: [],
-                        metadata: {
-                            title: "Fehler beim Laden der Seite",
-                            subtitle: "",
-                            author: "",
-                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
-                            imageAlt: "",
-                        },
-                    });
+                return;
+            }
 
-                    return;
-                }
-
-                this.siteEdits[key as StaticSiteNames].set(response.data.site);
-                this.siteEditImages[key as StaticSiteNames] = [];
-            });
-        }
+            for (const site of response.data) {
+                this.siteEdits[site.title].set(site.data);
+                this.siteEditImages[site.title] = [];
+            }
+        });
 
         // Get all existing blog titles for editing
         const blogsRequest = this.blogService.getAllBlogLinks();

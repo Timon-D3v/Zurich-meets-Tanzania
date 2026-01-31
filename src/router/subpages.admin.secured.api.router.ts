@@ -1,10 +1,10 @@
 import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { ApiEndpointResponse, StaticSite } from "..";
+import { ApiEndpointResponse, GetAllStaticSitesApiEndpointResponse, StaticSite, StaticSiteStorage } from "..";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpload } from "delivapi-client";
 import { CONFIG } from "../config";
-import { updateStaticSite } from "../shared/subpages.database";
+import { getAllStaticSites, updateStaticSite } from "../shared/subpages.database";
 
 // Router Serves under /api/secured/admin/subpages
 const router = Router();
@@ -224,6 +224,42 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
         } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getAllStaticSites", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const response = await getAllStaticSites();
+
+        if (response.error !== null) {
+            throw new Error(response.error);
+        }
+
+        const staticSiteData = response.data as StaticSiteStorage[];
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: staticSiteData,
+        } as GetAllStaticSitesApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as GetAllStaticSitesApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as GetAllStaticSitesApiEndpointResponse);
     }
 });
 

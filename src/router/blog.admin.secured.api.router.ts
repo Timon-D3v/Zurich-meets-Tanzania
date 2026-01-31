@@ -1,36 +1,26 @@
 import { Request, Response, Router } from "express";
-import { getBlog, getLastXBlogTitles } from "../shared/blog.database";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { Blog, DatabaseApiEndpointResponse, GetBlogApiEndpointResponse } from "..";
+import { Blog, DatabaseApiEndpointResponse, GetAllBlogsApiEndpointResponse } from "..";
+import { getAllBlogs, getAllBlogTitles } from "../shared/blog.database";
 
-// Router Serves under /api/blog
+// Router Serves under /api/secured/admin/blog
 const router = Router();
 
-router.get("/getBlog/:title", async (req: Request, res: Response): Promise<void> => {
+router.get("/getAllBlogs", async (req: Request, res: Response): Promise<void> => {
     try {
-        const title = req.params?.["title"];
-
-        if (typeof title !== "string" || title.trim() === "") {
-            throw new Error("Please use a valid blog title.");
-        }
-
-        const response = await getBlog(title);
+        const response = await getAllBlogs();
 
         if (response.error !== null) {
             throw new Error(response.error);
         }
 
-        if (response.data.length === 0) {
-            throw new Error(`Kein Blog mit dem Titel "${title}" gefunden.`);
-        }
-
-        const blogData = response.data[0] as Blog;
+        const blogData = response.data as Blog[];
 
         res.json({
             error: false,
             message: "Success",
             data: blogData,
-        } as GetBlogApiEndpointResponse);
+        } as GetAllBlogsApiEndpointResponse);
     } catch (error) {
         console.error(error);
 
@@ -39,7 +29,7 @@ router.get("/getBlog/:title", async (req: Request, res: Response): Promise<void>
                 error: true,
                 message: error.message,
                 data: null,
-            } as GetBlogApiEndpointResponse);
+            } as GetAllBlogsApiEndpointResponse);
 
             return;
         }
@@ -48,19 +38,13 @@ router.get("/getBlog/:title", async (req: Request, res: Response): Promise<void>
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: null,
-        } as GetBlogApiEndpointResponse);
+        } as GetAllBlogsApiEndpointResponse);
     }
 });
 
-router.get("/getTitles/:count", async (req: Request, res: Response): Promise<void> => {
+router.get("/getAllTitles", async (req: Request, res: Response): Promise<void> => {
     try {
-        const x = req.params?.["count"];
-
-        if (typeof x !== "string" || typeof Number(x) !== "number" || isNaN(Number(x)) || Number(x) <= 0) {
-            throw new Error("Please use a valid number.");
-        }
-
-        const response = await getLastXBlogTitles(Number(x));
+        const response = await getAllBlogTitles();
 
         if (response.error !== null) {
             throw new Error(response.error);

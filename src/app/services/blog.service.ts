@@ -18,19 +18,19 @@ export class BlogService {
     }
 
     getAllBlogs(): Observable<GetAllBlogsApiEndpointResponse> {
-        const request = this.http.get<GetAllBlogsApiEndpointResponse>(`/api/blog/getAllBlogs`);
+        const request = this.http.get<GetAllBlogsApiEndpointResponse>(`/api/secured/admin/blog/getAllBlogs`);
 
         return request;
     }
 
     getBlogLinks(count: number = 5): Observable<DatabaseApiEndpointResponse> {
-        const request = this.http.get<DatabaseApiEndpointResponse>(`/api/blog/getLinks/${count}`);
+        const request = this.http.get<DatabaseApiEndpointResponse>(`/api/blog/getTitles/${count}`);
 
         return request;
     }
 
     getAllBlogLinks(): Observable<DatabaseApiEndpointResponse> {
-        const request = this.http.get<DatabaseApiEndpointResponse>("/api/blog/getAllLinks");
+        const request = this.http.get<DatabaseApiEndpointResponse>("/api/secured/admin/blog/getAllTitles");
 
         return request;
     }

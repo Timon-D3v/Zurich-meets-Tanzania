@@ -310,6 +310,10 @@ export interface GetStaticSiteApiEndpointResponse extends ApiEndpointResponse {
     } | null;
 }
 
+export interface GetAllStaticSitesApiEndpointResponse extends ApiEndpointResponse {
+    data: StaticSiteStorage[] | null;
+}
+
 export interface GetTeamApiEndpointResponse extends ApiEndpointResponse {
     data: Team | null;
 }
@@ -403,6 +407,13 @@ export type StaticSite = {
         imageAlt: string;
     };
     data: CustomElements;
+};
+
+export type StaticSiteStorage = {
+    id: number;
+    title: StaticSiteNames;
+    data: StaticSite;
+    date: string;
 };
 
 export type StaticSiteNames =
