@@ -523,7 +523,7 @@ on(document, "DOMContentLoaded", () => {
                 } else {
                     const div = createElm("div");
                     div.addClass("blog_half");
-                    console.log(type)
+                    console.log(type);
                     div.addClass(type);
 
                     const text = createElm("p");

@@ -33,7 +33,6 @@ export async function stripe_c_s_updated(subscription_id, period_start, period_e
         const data = [period_start, period_end, status];
 
         if (member.length > 0) {
-            member = member[0];
             const update = [updateMemberPeriodStart, updateMemberPeriodEnd, updateMemberStatus];
 
             data.forEach(async (set, i) => {

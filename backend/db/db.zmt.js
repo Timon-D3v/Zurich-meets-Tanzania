@@ -673,13 +673,13 @@ export async function updateBlogPost(originalName, title, data) {
         const query = "UPDATE `zmt`.`blogs` SET `title` = ?, `data` = ? WHERE (`title` = ?);";
 
         await pool.query(query, [title, JSON.stringify(data), originalName]);
-    
+
         return true;
     } catch (error) {
         console.error(error);
 
         return false;
-    }   
+    }
 }
 
 export async function getBlogPost(title) {

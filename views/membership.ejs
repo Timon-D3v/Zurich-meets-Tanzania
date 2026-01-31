@@ -35,10 +35,14 @@
                 <div class="donate-center">
                     <div class="donate-amount" id="membership-submit-label">
                         <div class="donate-currency">CHF / Jahr</div>
-                        <input type="number" class="donate-number" value="50" disabled="">
+                        <input type="number" class="donate-number" value="50" disabled="" />
                     </div>
                     <button type="submit" id="membership-submit" class="donate-btn hero-cta">Abonnieren</button>
-                    <script>document.getElementById("membership-submit-label").addEventListener("click",()=>{document.getElementById("membership-submit").click()});</script>
+                    <script>
+                        document.getElementById("membership-submit-label").addEventListener("click", () => {
+                            document.getElementById("membership-submit").click();
+                        });
+                    </script>
                 </div>
             </form>
             <a href="/spenden#scrollToDonate" class="membership-navigate-to-donate">Oder einmalige Spende?</a>
