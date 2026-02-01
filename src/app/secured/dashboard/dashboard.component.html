@@ -350,8 +350,8 @@
                         },
                     ]"
                 ></app-admin-nav-element>
-            } @else if (currentActiveNavigation() === "edit-sites") {
-                <button type="button" class="back-button" (click)="closeEditSitesNavigation()">Zurück</button>
+            } @else if (currentActiveNavigation() === "edit-sites" || currentActiveNavigation() === "create-blog" || currentActiveNavigation() === "edit-blog") {
+                <button type="button" class="back-button" (click)="closeEditNavigation()">Zurück</button>
                 <div class="back-button-underline"></div>
                 <app-admin-nav-element
                     description="Allgemein"
@@ -360,25 +360,25 @@
                             href: '#Blog-Titel',
                             label: 'Blog Titel',
                             clickable: true,
-                            onClick: generateSiteEditFunction('editGeneralTitle'),
+                            onClick: generateEditFunction('editGeneralTitle'),
                         },
                         {
                             href: '#Blog-Untertitel',
                             label: 'Blog Untertitel',
                             clickable: true,
-                            onClick: generateSiteEditFunction('editGeneralSubtitle'),
+                            onClick: generateEditFunction('editGeneralSubtitle'),
                         },
                         {
                             href: '#Blog-Autor',
                             label: 'Blog Autor',
                             clickable: true,
-                            onClick: generateSiteEditFunction('editAuthor'),
+                            onClick: generateEditFunction('editAuthor'),
                         },
                         {
                             href: '#Blog-Titelbild',
                             label: 'Blog Titelbild',
                             clickable: true,
-                            onClick: generateSiteEditFunction('editTitleImage'),
+                            onClick: generateEditFunction('editTitleImage'),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -389,19 +389,19 @@
                             href: '#Übertitel',
                             label: 'Übertitel',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addTitle'),
+                            onClick: generateEditFunction('addTitle'),
                         },
                         {
                             href: '#Untertitel',
                             label: 'Untertitel',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addSubtitle'),
+                            onClick: generateEditFunction('addSubtitle'),
                         },
                         {
                             href: '#Paragraf',
                             label: 'Paragraf',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addParagraph'),
+                            onClick: generateEditFunction('addParagraph'),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -412,19 +412,19 @@
                             href: '#Einzelbild',
                             label: 'Einzelbild',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addImage'),
+                            onClick: generateEditFunction('addImage'),
                         },
                         {
                             href: '#Mehrere-Bilder',
                             label: 'Mehrere Bilder',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addMultipleImages'),
+                            onClick: generateEditFunction('addMultipleImages'),
                         },
                         {
                             href: '#Bild-mit-Text',
                             label: 'Bild mit Text',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addImageWithText'),
+                            onClick: generateEditFunction('addImageWithText'),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -435,17 +435,17 @@
                             href: '#Trennlinie',
                             label: 'Trennlinie',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addLine'),
+                            onClick: generateEditFunction('addLine'),
                         },
                         {
                             href: '#Aktuelles-Team',
                             label: 'Aktuelles Team',
                             clickable: true,
-                            onClick: generateSiteEditFunction('addCurrentTeam'),
+                            onClick: generateEditFunction('addCurrentTeam'),
                         },
                     ]"
                 ></app-admin-nav-element>
-                <button type="button" class="edit-done-button" (click)="submitSiteEdits()">{{ submitSiteEditButton() }}</button>
+                <button type="button" class="edit-done-button" (click)="submitEdits()">{{ submitEditsButton() }}</button>
             } @else if (currentActiveNavigation() === "create-blog") {
                 <button type="button" class="back-button" (click)="setCurrentActiveNavigation('main')">Zurück</button>
                 <div class="back-button-underline"></div>
@@ -492,21 +492,11 @@
                 "edit-static-history",
             ].includes(currentActiveSection())
         ) {
-            <app-edit-static-site
-                [site]="siteEdits[currentActiveSiteEdit()]()"
-                (moveOutput)="handleSiteEditMove($event, currentActiveSiteEdit())"
-                (editOutput)="handleSiteEditEdit($event, currentActiveSiteEdit())"
-                (deleteOutput)="handleSiteEditDelete($event, currentActiveSiteEdit())"
-            ></app-edit-static-site>
+            <app-edit-static-site [site]="siteEdits[currentActiveSiteEdit()]()" (moveOutput)="handleMove($event)" (editOutput)="handleEdit($event)" (deleteOutput)="handleDelete($event)"></app-edit-static-site>
         } @else if (currentActiveSection() === "blog-create-blog") {
-            <app-edit-static-site [site]="blogs.newBlog()" (moveOutput)="handleBlogMove($event, 'new-blog')" (editOutput)="handleBlogEdit($event, 'new-blog')" (deleteOutput)="handleBlogDelete($event, 'new-blog')"></app-edit-static-site>
+            <app-edit-static-site [site]="blogs.newBlog()" (moveOutput)="handleMove($event)" (editOutput)="handleEdit($event)" (deleteOutput)="handleDelete($event)"></app-edit-static-site>
         } @else if (currentActiveSection() === "blog-edit-blog") {
-            <app-edit-static-site
-                [site]="blogs.existingBlogs[currentActiveBlogEdit()]()"
-                (moveOutput)="handleBlogMove($event, currentActiveBlogEdit())"
-                (editOutput)="handleBlogEdit($event, currentActiveBlogEdit())"
-                (deleteOutput)="handleBlogDelete($event, currentActiveBlogEdit())"
-            ></app-edit-static-site>
+            <app-edit-static-site [site]="blogs.existingBlogs[currentActiveBlogEdit()]()" (moveOutput)="handleMove($event)" (editOutput)="handleEdit($event)" (deleteOutput)="handleDelete($event)"></app-edit-static-site>
         } @else if (currentActiveSection() === "blog-delete-blog") {
             <app-blog-delete-blog></app-blog-delete-blog>
         } @else if (currentActiveSection() === "news-create-news") {
@@ -571,7 +561,7 @@
 } @else if (textInputOpen()) {
     <app-popup-text-input (resultOutput)="handleTextInputResult($event)" (closeOutput)="closePopup()"></app-popup-text-input>
 } @else if (imageInputOpen()) {
-    <app-popup-image-input (resultOutput)="handleImageInputResult($event)" (closeOutput)="closePopup()" []></app-popup-image-input>
+    <app-popup-image-input (resultOutput)="handleImageInputResult($event)" (closeOutput)="closePopup()"></app-popup-image-input>
 } @else if (multipleImagesInputOpen()) {
     <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-images-input>
 }

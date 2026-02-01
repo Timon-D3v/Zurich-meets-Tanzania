@@ -5,15 +5,7 @@ import { Subject, take } from "rxjs";
 import {
     ApiEndpointResponse,
     BlogContent,
-    CustomCurrentTeamElement,
-    CustomElements,
-    CustomImageElement,
     CustomImageWithTextElement,
-    CustomLineElement,
-    CustomMultipleImagesElement,
-    CustomParagraphElement,
-    CustomSubtitleElement,
-    CustomTitleElement,
     DashboardNavigationOptions,
     DatabaseApiEndpointResponse,
     GetAllBlogsApiEndpointResponse,
@@ -114,6 +106,28 @@ import { LoadingComponent } from "../../components/loading/loading.component";
     styleUrl: "./dashboard.component.scss",
 })
 export class DashboardComponent implements OnInit {
+    /*
+     * ===============================================================
+     *                           GLOBAL
+     * ===============================================================
+     */
+
+    mobileNavOpen = signal<boolean>(false);
+
+    /*
+     * ===============================================================
+     *                      BLOG TITLE LIST
+     * ===============================================================
+     */
+
+    allEditableBlogs: string[] = [];
+
+    /*
+     * ===============================================================
+     *                        ACTIVE SIGNALS
+     * ===============================================================
+     */
+
     currentActiveSection = signal<string>("stats-website-analytics");
     currentActiveNavigation = signal<DashboardNavigationOptions>("main");
     currentActiveSiteEdit = signal<StaticSiteNames>("vision");
@@ -140,20 +154,41 @@ export class DashboardComponent implements OnInit {
     >("addTitle");
     currentIndexToEdit = signal<number>(-1);
 
-    mobileNavOpen = signal<boolean>(false);
-    submitSiteEditButton = signal<string>("Abschliessen");
-    submitNewBlogButton = signal<string>("Abschliessen");
+    /*
+     * ===============================================================
+     *                     SUBMISSION BUTTON
+     * ===============================================================
+     */
+
+    submitEditsButton = signal<string>("Abschliessen");
+
+    /*
+     * ===============================================================
+     *                       OPEN SIGNALS
+     * ===============================================================
+     */
 
     titleInputOpen = signal(false);
     textInputOpen = signal(false);
     imageInputOpen = signal(false);
     multipleImagesInputOpen = signal(false);
     selectionInputOpen = signal(false);
-
     confirmInputOpen = signal(false);
+    alertOpen = signal(false);
+
+    /*
+     * ===============================================================
+     *                         OBSERVABLES
+     * ===============================================================
+     */
+
     confirmInputObservable = new Subject<boolean>();
 
-    alertOpen = signal(false);
+    /*
+     * ===============================================================
+     *                       ALERT INPUTS
+     * ===============================================================
+     */
 
     alertTitle = signal<string>("");
     alertMessage = signal<string>("");
@@ -203,17 +238,19 @@ export class DashboardComponent implements OnInit {
     selectionInputPlaceholder = signal<string>("");
     selectionInputOptions = signal<string[]>([]);
 
+    /*
+     * ===============================================================
+     *                     SHORT TERM CACHE
+     * ===============================================================
+     */
+
     textWithImageTextCache = signal<string>("");
 
-    allEditableBlogs: string[] = [];
-
-    private teamService = inject(TeamService);
-    private blogService = inject(BlogService);
-    private editSiteService = inject(EditSiteService);
-    private subpagesService = inject(SubpagesService);
-    private notificationService = inject(NotificationService);
-
-    private platformId = inject(PLATFORM_ID);
+    /*
+     * ===============================================================
+     *                    STATIC SITES EDIT CACHE
+     * ===============================================================
+     */
 
     siteEdits = {
         "vision": signal<StaticSite>({ metadata: { title: "", subtitle: "", author: "", imageUrl: "", imageAlt: "" }, data: [] }),
@@ -233,6 +270,7 @@ export class DashboardComponent implements OnInit {
         "surgery": signal<StaticSite>({ metadata: { title: "", subtitle: "", author: "", imageUrl: "", imageAlt: "" }, data: [] }),
         "history": signal<StaticSite>({ metadata: { title: "", subtitle: "", author: "", imageUrl: "", imageAlt: "" }, data: [] }),
     };
+
     siteEditImages: { [key: string]: { url: string; file: File }[] } = {
         "vision": [],
         "board": [],
@@ -251,16 +289,50 @@ export class DashboardComponent implements OnInit {
         "surgery": [],
         "history": [],
     };
+
+    /*
+     * ===============================================================
+     *                       BLOG EDIT CACHE
+     * ===============================================================
+     */
+
     blogs: { newBlog: WritableSignal<BlogContent>; existingBlogs: { [key: string]: WritableSignal<BlogContent> } } = {
         newBlog: signal<BlogContent>({ metadata: { title: "Bearbeite mich :)", subtitle: "", author: "", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "" }, data: [] }),
         existingBlogs: {
             awaitSelection: signal<StaticSite>({ metadata: { title: "", subtitle: "", author: "", imageUrl: "", imageAlt: "" }, data: [] }),
         },
     };
+
     blogImages: { newBlog: { url: string; file: File }[]; existingBlogs: { [key: string]: { url: string; file: File }[] } } = {
         newBlog: [],
         existingBlogs: {},
     };
+
+    /*
+     * ===============================================================
+     *                          SERVICES
+     * ===============================================================
+     */
+
+    private teamService = inject(TeamService);
+    private blogService = inject(BlogService);
+    private editSiteService = inject(EditSiteService);
+    private subpagesService = inject(SubpagesService);
+    private notificationService = inject(NotificationService);
+
+    /*
+     * ===============================================================
+     *                         PLATFORM ID
+     * ===============================================================
+     */
+
+    private platformId = inject(PLATFORM_ID);
+
+    /*
+     * ===============================================================
+     *                       GLOBAL FUNCTIONS
+     * ===============================================================
+     */
 
     ngOnInit(): void {
         // Get all static sites for editing
@@ -310,6 +382,70 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    toggleMobileNav(): void {
+        this.mobileNavOpen.update((value) => !value);
+    }
+
+    /*
+     * ===============================================================
+     *                      HELPER FUNCTIONS
+     * ===============================================================
+     */
+
+    async awaitConfirmation(title: string, message: string, accept: string = "Ok", reject: string = "Abbrechen", equalOptions: boolean = false): Promise<boolean> {
+        this.confirmInputOpen.set(true);
+
+        this.confirmInputTitle.set(title);
+        this.confirmInputDescription.set(message);
+        this.confirmInputAcceptButtonText.set(accept);
+        this.confirmInputCancelButtonText.set(reject);
+        this.confirmInputEqualOptions.set(equalOptions);
+
+        return new Promise<boolean>((resolve) => {
+            this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
+                resolve(result || false);
+            });
+        });
+    }
+
+    showAlert(title: string, message: string, buttonText: string = "Schliessen"): void {
+        this.alertOpen.set(true);
+
+        this.alertTitle.set(title);
+        this.alertMessage.set(message);
+        this.alertButtonText.set(buttonText);
+    }
+
+    handleAlertClose(): void {
+        this.alertOpen.set(false);
+    }
+
+    /*
+     * ===============================================================
+     *                     NAVIGATION FUNCTIONS
+     * ===============================================================
+     */
+
+    setCurrentActiveNavigation(navigation: DashboardNavigationOptions): void {
+        this.currentActiveNavigation.set(navigation);
+    }
+
+    activate(section: string): void {
+        this.currentActiveSection.set(section);
+
+        // Close the mobile nav after selecting an item
+        this.mobileNavOpen.set(false);
+
+        // Scroll to the top of the page
+        if (isPlatformBrowser(this.platformId)) {
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: "smooth",
+            });
+        }
+    }
+
     generateActivateFunction(section: string, navigation: DashboardNavigationOptions = "main"): Function {
         const _this = this;
 
@@ -346,136 +482,106 @@ export class DashboardComponent implements OnInit {
         this.selectionInputOptions.set(this.allEditableBlogs);
     }
 
-    activate(section: string): void {
-        this.currentActiveSection.set(section);
+    /*
+     * ===============================================================
+     *                       CLOSE FUNCTIONS
+     * ===============================================================
+     */
 
-        // Close the mobile nav after selecting an item
-        this.mobileNavOpen.set(false);
+    async closeEditNavigation(): Promise<void> {
+        const confirmClose = await this.awaitConfirmation(
+            "Verlassen bestätigen",
+            "Vergiss nicht deine Arbeit zu speichern.\nMöchtest du die aktuelle Seite wirklich verlassen? (Dein Fortschritt wird gespeichert, solange du das Dashboard nicht verlässt oder neu lädst)",
+            "Verlassen",
+            "Abbrechen",
+        );
 
-        // Scroll to the top of the page
-        if (isPlatformBrowser(this.platformId)) {
-            window.scroll({
-                top: 0,
-                left: 0,
-                behavior: "smooth",
-            });
+        if (!confirmClose) {
+            return;
+        }
+
+        this.setCurrentActiveNavigation("main");
+    }
+
+    async closePopup(): Promise<void> {
+        const yes = await this.awaitConfirmation("Popup schliessen", "Möchtest du das Popup wirklich schliessen? Alle ungespeicherten Änderungen gehen verloren.", "Schliessen", "Abbrechen");
+
+        if (!yes) {
+            return;
+        }
+
+        this.closePopupWithoutConfirmation();
+    }
+
+    closePopupWithoutConfirmation(): void {
+        this.titleInputOpen.set(false);
+        this.textInputOpen.set(false);
+        this.imageInputOpen.set(false);
+        this.multipleImagesInputOpen.set(false);
+
+        this.titleEditInputOpen.set(false);
+        this.textEditInputOpen.set(false);
+        this.imageEditInputOpen.set(false);
+        this.multipleImagesEditInputOpen.set(false);
+
+        this.selectionInputOpen.set(false);
+    }
+
+    /*
+     * ===============================================================
+     *                    EDIT HELPER FUNCTION
+     * ===============================================================
+     */
+
+    getCurrentEditSignal(): WritableSignal<StaticSite | BlogContent> {
+        switch (this.currentActiveNavigation()) {
+            case "edit-sites":
+                return this.siteEdits[this.currentActiveSiteEdit()];
+            case "edit-blog":
+                return this.blogs.existingBlogs[this.currentActiveBlogEdit()];
+            case "create-blog":
+                return this.blogs.newBlog;
+            default:
+                throw new Error("Unbekannte Navigation: " + this.currentActiveNavigation());
         }
     }
 
-    setCurrentActiveNavigation(navigation: DashboardNavigationOptions): void {
-        this.currentActiveNavigation.set(navigation);
+    getCurrentImageStorage(): { url: string; file: File }[] {
+        switch (this.currentActiveNavigation()) {
+            case "edit-sites":
+                return this.siteEditImages[this.currentActiveSiteEdit()];
+            case "edit-blog":
+                return this.blogImages.existingBlogs[this.currentActiveBlogEdit()];
+            case "create-blog":
+                return this.blogImages.newBlog;
+            default:
+                throw new Error("Unbekannte Navigation: " + this.currentActiveNavigation());
+        }
     }
 
-    toggleMobileNav(): void {
-        this.mobileNavOpen.update((value) => !value);
-    }
+    /*
+     * ===============================================================
+     *                   SUBMIT EDITS FUNCTIONS
+     * ===============================================================
+     */
 
-    generateSiteEditFunction(
-        type: "addTitle" | "addSubtitle" | "addParagraph" | "editGeneralTitle" | "editGeneralSubtitle" | "editAuthor" | "editTitleImage" | "addImage" | "addMultipleImages" | "addImageWithText" | "addLine" | "addCurrentTeam",
-    ): Function {
-        const _this = this;
-
-        const siteEditFunction = async () => {
-            if (!isPlatformBrowser(_this.platformId)) {
-                console.error("Site editing functions can only be executed in the browser.");
-                return;
-            }
-
-            _this.currentActionToPerform.set(type);
-
-            // Change this to a switch in the future
-            if (type === "addTitle") {
-                _this.titleInputOpen.set(true);
-
-                _this.titleInputTitle.set("Titel eingeben:");
-                _this.titleInputDescription.set("Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
-                _this.titleInputLabel.set("Titel:");
-                _this.titleInputPlaceholder.set("Titel eingeben");
-            } else if (type === "addSubtitle") {
-                _this.titleInputOpen.set(true);
-
-                _this.titleInputTitle.set("Untertitel eingeben:");
-                _this.titleInputDescription.set("Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
-                _this.titleInputLabel.set("Untertitel:");
-                _this.titleInputPlaceholder.set("Untertitel eingeben");
-            } else if (type === "addParagraph" || type === "addImageWithText") {
-                _this.textInputOpen.set(true);
-            } else if (type === "editGeneralTitle") {
-                _this.titleEditInputOpen.set(true);
-
-                _this.titleEditInputTitle.set("Seitentitel eingeben:");
-                _this.titleEditInputDescription.set("Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.");
-                _this.titleEditInputLabel.set("Seitentitel:");
-                _this.titleEditInputPlaceholder.set("Seitentitel eingeben");
-
-                _this.titleEditInputValue.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.title);
-            } else if (type === "editGeneralSubtitle") {
-                _this.titleEditInputOpen.set(true);
-
-                _this.titleEditInputTitle.set("Seiten Untertitel eingeben:");
-                _this.titleEditInputDescription.set("Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.");
-                _this.titleEditInputLabel.set("Seiten Untertitel:");
-                _this.titleEditInputPlaceholder.set("Seiten Untertitel eingeben");
-
-                _this.titleEditInputValue.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.subtitle);
-            } else if (type === "editAuthor") {
-                _this.titleEditInputOpen.set(true);
-
-                _this.titleEditInputTitle.set("Autor eingeben:");
-                _this.titleEditInputDescription.set("Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.");
-                _this.titleEditInputLabel.set("Autor:");
-                _this.titleEditInputPlaceholder.set("Autor eingeben");
-
-                _this.titleEditInputValue.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.author);
-            } else if (type === "editTitleImage" || type === "addImage") {
-                _this.imageEditInputOpen.set(true);
-
-                _this.imageEditInputTitle.set("Titelbild auswählen:");
-                _this.imageEditInputDescription.set("Bitte wähle ein Bild aus, das du als Titelbild verwenden möchtest.");
-                _this.imageEditInputLabel.set("Bild:");
-
-                _this.imageEditInputPlaceholderUrl.set(_this.siteEdits[_this.currentActiveSiteEdit()]().metadata.imageUrl);
-            } else if (type === "addMultipleImages") {
-                _this.multipleImagesInputOpen.set(true);
-            } else if (type === "addLine") {
-                const element = _this.editSiteService.addLine();
-
-                _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                    site.data.unshift(element);
-
-                    return site;
-                });
-            } else if (type === "addCurrentTeam") {
-                const request = _this.teamService.getCurrentTeam();
-
-                request.subscribe((response: GetTeamApiEndpointResponse) => {
-                    if (response.error || response.data === null) {
-                        _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden: " + response.message);
-
-                        return;
-                    }
-
-                    const element = _this.editSiteService.addCurrentTeam(response.data.id);
-
-                    _this.siteEdits[_this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-                        site.data.unshift(element);
-
-                        return site;
-                    });
-                });
-            }
-        };
-
-        return siteEditFunction;
+    submitEdits(): void {
+        if (this.currentActiveNavigation() === "edit-sites") {
+            this.submitSiteEdits();
+        } else if (this.currentActiveNavigation() === "edit-blog") {
+            this.submitBlogEdits();
+        } else if (this.currentActiveNavigation() === "create-blog") {
+            this.submitNewBlog();
+        }
     }
 
     submitSiteEdits(): void {
-        this.submitSiteEditButton.set("Speichern...");
+        this.submitEditsButton.set("Speichern...");
 
         const request = this.editSiteService.submitSite(this.currentActiveSiteEdit(), this.siteEdits[this.currentActiveSiteEdit()](), this.siteEditImages[this.currentActiveSiteEdit()]);
 
         request.subscribe((response: ApiEndpointResponse) => {
-            this.submitSiteEditButton.set("Abschliessen");
+            this.submitEditsButton.set("Abschliessen");
 
             if (response.error) {
                 this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
@@ -515,32 +621,135 @@ export class DashboardComponent implements OnInit {
     }
 
     submitNewBlog(): void {
-        this.submitSiteEditButton.set("Speichern...");
+        this.submitEditsButton.set("Speichern...");
 
         this.showAlert("Funktion nicht implementiert", "Die Funktion zum Erstellen eines neuen Blogs ist noch nicht implementiert.", "OK");
     }
 
-    handleUniversalMove(event: CdkDragDrop<string[]>, elementToEdit: CustomElements): void {
-        moveItemInArray(elementToEdit, event.previousIndex, event.currentIndex);
+    submitBlogEdits(): void {
+        this.submitEditsButton.set("Speichern...");
+
+        this.showAlert("Funktion nicht implementiert", "Die Funktion zum Erstellen eines neuen Blogs ist noch nicht implementiert.", "OK");
     }
 
-    handleBlogMove(event: CdkDragDrop<string[]>, blogName: "new-blog" | string): void {
-        if (blogName === "new-blog") {
-            this.handleUniversalMove(event, this.blogs.newBlog().data);
-        } else {
-            this.handleUniversalMove(event, this.blogs.existingBlogs[blogName]().data);
-        }
+    /*
+     * ===============================================================
+     *              EDIT FUNCTION GENERATOR FUNCTION
+     * ===============================================================
+     */
+
+    generateEditFunction(
+        type: "addTitle" | "addSubtitle" | "addParagraph" | "editGeneralTitle" | "editGeneralSubtitle" | "editAuthor" | "editTitleImage" | "addImage" | "addMultipleImages" | "addImageWithText" | "addLine" | "addCurrentTeam",
+    ): Function {
+        const _this = this;
+
+        const editFunction = async () => {
+            if (!isPlatformBrowser(_this.platformId)) {
+                console.error("Site editing functions can only be executed in the browser.");
+                return;
+            }
+
+            _this.currentActionToPerform.set(type);
+
+            if (type === "addTitle") {
+                _this.titleInputOpen.set(true);
+
+                _this.titleInputTitle.set("Titel eingeben:");
+                _this.titleInputDescription.set("Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
+                _this.titleInputLabel.set("Titel:");
+                _this.titleInputPlaceholder.set("Titel eingeben");
+            } else if (type === "addSubtitle") {
+                _this.titleInputOpen.set(true);
+
+                _this.titleInputTitle.set("Untertitel eingeben:");
+                _this.titleInputDescription.set("Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
+                _this.titleInputLabel.set("Untertitel:");
+                _this.titleInputPlaceholder.set("Untertitel eingeben");
+            } else if (type === "addParagraph" || type === "addImageWithText") {
+                _this.textInputOpen.set(true);
+            } else if (type === "editGeneralTitle") {
+                _this.titleEditInputOpen.set(true);
+
+                _this.titleEditInputTitle.set("Seitentitel eingeben:");
+                _this.titleEditInputDescription.set("Bitte gib den Seitentitel ein, den du für die Seite verwenden möchtest.");
+                _this.titleEditInputLabel.set("Seitentitel:");
+                _this.titleEditInputPlaceholder.set("Seitentitel eingeben");
+
+                _this.titleEditInputValue.set(_this.getCurrentEditSignal()().metadata.title);
+            } else if (type === "editGeneralSubtitle") {
+                _this.titleEditInputOpen.set(true);
+
+                _this.titleEditInputTitle.set("Seiten Untertitel eingeben:");
+                _this.titleEditInputDescription.set("Bitte gib den Seiten Untertitel ein, den du für die Seite verwenden möchtest.");
+                _this.titleEditInputLabel.set("Seiten Untertitel:");
+                _this.titleEditInputPlaceholder.set("Seiten Untertitel eingeben");
+
+                _this.titleEditInputValue.set(_this.getCurrentEditSignal()().metadata.subtitle);
+            } else if (type === "editAuthor") {
+                _this.titleEditInputOpen.set(true);
+
+                _this.titleEditInputTitle.set("Autor eingeben:");
+                _this.titleEditInputDescription.set("Bitte gib deinen Vor- und Nachnamen ein, der als Autor der Seite angezeigt werden soll.");
+                _this.titleEditInputLabel.set("Autor:");
+                _this.titleEditInputPlaceholder.set("Autor eingeben");
+
+                _this.titleEditInputValue.set(_this.getCurrentEditSignal()().metadata.author);
+            } else if (type === "editTitleImage" || type === "addImage") {
+                _this.imageEditInputOpen.set(true);
+
+                _this.imageEditInputTitle.set("Titelbild auswählen:");
+                _this.imageEditInputDescription.set("Bitte wähle ein Bild aus, das du als Titelbild verwenden möchtest.");
+                _this.imageEditInputLabel.set("Bild:");
+
+                _this.imageEditInputPlaceholderUrl.set(_this.getCurrentEditSignal()().metadata.imageUrl);
+            } else if (type === "addMultipleImages") {
+                _this.multipleImagesInputOpen.set(true);
+            } else if (type === "addLine") {
+                const element = _this.editSiteService.addLine();
+
+                _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                    siteOrBlog.data.unshift(element);
+
+                    return siteOrBlog;
+                });
+            } else if (type === "addCurrentTeam") {
+                const request = _this.teamService.getCurrentTeam();
+
+                request.subscribe((response: GetTeamApiEndpointResponse) => {
+                    if (response.error || response.data === null) {
+                        _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden: " + response.message);
+
+                        return;
+                    }
+
+                    const element = _this.editSiteService.addCurrentTeam(response.data.id);
+
+                    _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                        siteOrBlog.data.unshift(element);
+
+                        return siteOrBlog;
+                    });
+                });
+            }
+        };
+
+        return editFunction;
     }
 
-    handleSiteEditMove(event: CdkDragDrop<string[]>, siteName: StaticSiteNames): void {
-        this.handleUniversalMove(event, this.siteEdits[siteName]().data);
+    /*
+     * ===============================================================
+     *           CUSTOM ELEMENTS EDIT HANDLER FUNCTIONS
+     * ===============================================================
+     */
+
+    handleMove(event: CdkDragDrop<string[]>): void {
+        moveItemInArray(this.getCurrentEditSignal()().data, event.previousIndex, event.currentIndex);
     }
 
-    handleUniversalEdit(
-        index: number,
-        elementToEdit: CustomTitleElement | CustomSubtitleElement | CustomParagraphElement | CustomImageElement | CustomMultipleImagesElement | CustomImageWithTextElement | CustomLineElement | CustomCurrentTeamElement,
-    ): void {
+    handleEdit(index: number): void {
         this.currentIndexToEdit.set(index);
+
+        const elementToEdit = this.getCurrentEditSignal()().data[index];
 
         switch (elementToEdit.type) {
             case "title":
@@ -624,360 +833,25 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    handleBlogEdit(index: number, blogName: "new-blog" | string): void {
-        const elementToEdit = blogName === "new-blog" ? this.blogs.newBlog().data[index] : this.blogs.existingBlogs[blogName]().data[index];
-
-        this.handleUniversalEdit(index, elementToEdit);
-    }
-
-    handleSiteEditEdit(index: number, siteName: StaticSiteNames): void {
-        const elementToEdit = this.siteEdits[siteName]().data[index];
-
-        this.handleUniversalEdit(index, elementToEdit);
-    }
-
-    async handleUniversalDelete(index: number, signalToEdit: WritableSignal<BlogContent | StaticSite>): Promise<void> {
+    async handleDelete(index: number): Promise<void> {
         const confirmDeletion = await this.awaitConfirmation("Löschen bestätigen", "Möchtest du dieses Element wirklich löschen?", "Löschen", "Abbrechen");
 
         if (!confirmDeletion) {
             return;
         }
 
-        signalToEdit.update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.splice(index, 1);
 
             return siteOrBlog;
         });
     }
 
-    async handleSiteEditDelete(index: number, siteName: StaticSiteNames): Promise<void> {
-        this.handleUniversalDelete(index, this.siteEdits[siteName]);
-    }
-
-    async handleBlogDelete(index: number, blogName: "new-blog" | string): Promise<void> {
-        this.handleUniversalDelete(index, blogName === "new-blog" ? this.blogs.newBlog : this.blogs.existingBlogs[blogName]);
-    }
-
-    async closeEditSitesNavigation(): Promise<void> {
-        const confirmClose = await this.awaitConfirmation("Verlassen bestätigen", "Vergiss nicht deine Arbeit zu speichern.\nMöchtest du die Seiten-Bearbeitung wirklich verlassen?", "Verlassen", "Abbrechen");
-
-        if (!confirmClose) {
-            return;
-        }
-
-        this.setCurrentActiveNavigation("main");
-    }
-
-    async closePopup(): Promise<void> {
-        const yes = await this.awaitConfirmation("Popup schliessen", "Möchtest du das Popup wirklich schliessen? Alle ungespeicherten Änderungen gehen verloren.", "Schliessen", "Abbrechen");
-
-        if (!yes) {
-            return;
-        }
-
-        this.closePopupWithoutConfirmation();
-    }
-
-    closePopupWithoutConfirmation(): void {
-        this.titleInputOpen.set(false);
-        this.textInputOpen.set(false);
-        this.imageInputOpen.set(false);
-        this.multipleImagesInputOpen.set(false);
-
-        this.titleEditInputOpen.set(false);
-        this.textEditInputOpen.set(false);
-        this.imageEditInputOpen.set(false);
-        this.multipleImagesEditInputOpen.set(false);
-
-        this.selectionInputOpen.set(false);
-    }
-
-    addTitle(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-            return;
-        }
-
-        const element = this.editSiteService.addTitle(content);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data.unshift(element);
-
-            return site;
-        });
-    }
-
-    editTitle(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
-            return;
-        }
-
-        const element = this.editSiteService.addTitle(content);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data[this.currentIndexToEdit()] = element;
-
-            return site;
-        });
-    }
-
-    addSubtitle(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-            return;
-        }
-
-        const element = this.editSiteService.addSubtitle(content);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data.unshift(element);
-
-            return site;
-        });
-    }
-
-    editSubtitle(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
-            return;
-        }
-
-        const element = this.editSiteService.addSubtitle(content);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data[this.currentIndexToEdit()] = element;
-
-            return site;
-        });
-    }
-
-    editGeneralTitle(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Seitentitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
-            return;
-        }
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.metadata.title = content;
-
-            return site;
-        });
-    }
-
-    editGeneralSubtitle(content: string): void {
-        // Allow empty subtitle
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.metadata.subtitle = content ? content : "";
-
-            return site;
-        });
-    }
-
-    editAuthor(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Autor wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
-            return;
-        }
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.metadata.author = content;
-
-            return site;
-        });
-    }
-
-    addParagraph(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-            return;
-        }
-
-        const element = this.editSiteService.addParagraph(content);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data.unshift(element);
-
-            return site;
-        });
-    }
-
-    editParagraph(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
-            return;
-        }
-
-        const element = this.editSiteService.addParagraph(content);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data[this.currentIndexToEdit()] = element;
-
-            return site;
-        });
-    }
-
-    addImageWithTextPart1(content: string): void {
-        // Add the content to a cache variable and open the image input popup
-
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
-            return;
-        }
-
-        this.textWithImageTextCache.set(content);
-
-        this.currentActionToPerform.set("addImageWithText");
-        this.imageInputOpen.set(true);
-    }
-
-    editImageWithTextPart1(content: string): void {
-        if (!content) {
-            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
-            return;
-        }
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).content = content;
-
-            return site;
-        });
-
-        this.currentActionToPerform.set("editImageWithText");
-
-        this.imageEditInputTitle;
-        this.imageEditInputOpen.set(true);
-    }
-
-    async addImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
-        // Get the content from the cache variable and add the element
-        const shouldImageBePlacedRight = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Rechts", "Links", true);
-
-        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
-
-        const element = this.editSiteService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedRight ? "right" : "left");
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data.unshift(element);
-
-            return site;
-        });
-    }
-
-    async editImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
-        if (!file.url.startsWith("blob:")) {
-            this.notificationService.info("Teilweise Veränderung", "Nur der Text wurde aktualisiert. Das Bild nicht, da kein Neues ausgewählt wurde.");
-
-            return;
-        }
-
-        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
-
-        const shouldImageBePlacedRight = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Rechts", "Links", true);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageUrl = file.url;
-            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageAlt = file.file.name;
-            (site.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedRight ? "right" : "left";
-
-            return site;
-        });
-    }
-
-    addImage(file: { file: File; url: string }): void {
-        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
-
-        const element = this.editSiteService.addImage(file.url, file.file.name);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data.unshift(element);
-
-            return site;
-        });
-    }
-
-    editImage(file: { file: File; url: string }): void {
-        if (!file.url.startsWith("blob:")) {
-            this.notificationService.info("Keine Veränderung", "Das Bild wurde nicht aktualisiert, da kein neues Bild ausgewählt wurde.");
-
-            return;
-        }
-
-        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
-
-        const element = this.editSiteService.addImage(file.url, file.file.name);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data[this.currentIndexToEdit()] = element;
-
-            return site;
-        });
-    }
-
-    editGeneralImage(file: { file: File; url: string }): void {
-        this.siteEditImages[this.currentActiveSiteEdit()].push(file);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.metadata.imageUrl = file.url;
-            site.metadata.imageAlt = file.file.name;
-
-            return site;
-        });
-    }
-
-    addMultipleImages(files: { file: File; url: string }[]): void {
-        if (files.length === 0) {
-            this.notificationService.info("Keine Bilder ausgewählt", "Bitte wähle mindestens ein Bild aus, um diese Funktion zu nutzen.");
-            return;
-        }
-
-        const images: { imageUrl: string; imageAlt: string }[] = [];
-
-        for (const file of files) {
-            this.siteEditImages[this.currentActiveSiteEdit()].push(file);
-
-            images.push({
-                imageUrl: file.url,
-                imageAlt: file.file.name,
-            });
-        }
-
-        const element = this.editSiteService.addMultipleImages(images);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data.unshift(element);
-
-            return site;
-        });
-    }
-
-    editMultipleImages(files: { file: File; url: string }[]): void {
-        if (files.length === 0) {
-            this.notificationService.info("Keine Bilder ausgewählt", "Die Bilder wurden nicht aktualisiert, da keine neuen Bilder ausgewählt wurden. Wenn du die Bilder löschen möchtest, benutze bitte die Lösch-Funktion.");
-            return;
-        }
-
-        const images: { imageUrl: string; imageAlt: string }[] = [];
-
-        for (const file of files) {
-            if (file.url.startsWith("blob:")) {
-                this.siteEditImages[this.currentActiveSiteEdit()].push(file);
-            }
-
-            images.push({
-                imageUrl: file.url,
-                imageAlt: file.file?.name ?? "Keine Bezeichnung",
-            });
-        }
-
-        const element = this.editSiteService.addMultipleImages(images);
-
-        this.siteEdits[this.currentActiveSiteEdit()].update((site: StaticSite): StaticSite => {
-            site.data[this.currentIndexToEdit()] = element;
-
-            return site;
-        });
-    }
+    /*
+     * ===============================================================
+     *                    INPUT HANDLER FUNCTIONS
+     * ===============================================================
+     */
 
     handleTitleInputResult(content: string): void {
         this.titleInputOpen.set(false);
@@ -1104,31 +978,310 @@ export class DashboardComponent implements OnInit {
         this.confirmInputObservable.next(confirmed);
     }
 
-    async awaitConfirmation(title: string, message: string, accept: string = "Ok", reject: string = "Abbrechen", equalOptions: boolean = false): Promise<boolean> {
-        this.confirmInputOpen.set(true);
+    /*
+     * ===============================================================
+     *                 ADD CUSTOM ELEMENTS FUNCTIONS
+     * ===============================================================
+     */
 
-        this.confirmInputTitle.set(title);
-        this.confirmInputDescription.set(message);
-        this.confirmInputAcceptButtonText.set(accept);
-        this.confirmInputCancelButtonText.set(reject);
-        this.confirmInputEqualOptions.set(equalOptions);
+    addTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
 
-        return new Promise<boolean>((resolve) => {
-            this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result || false);
-            });
+        const element = this.editSiteService.addTitle(content);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data.unshift(element);
+
+            return siteOrBlog;
         });
     }
 
-    showAlert(title: string, message: string, buttonText: string = "Schliessen"): void {
-        this.alertOpen.set(true);
+    addSubtitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
 
-        this.alertTitle.set(title);
-        this.alertMessage.set(message);
-        this.alertButtonText.set(buttonText);
+        const element = this.editSiteService.addSubtitle(content);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data.unshift(element);
+
+            return siteOrBlog;
+        });
     }
 
-    handleAlertClose(): void {
-        this.alertOpen.set(false);
+    addParagraph(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editSiteService.addParagraph(content);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data.unshift(element);
+
+            return siteOrBlog;
+        });
+    }
+
+    addImage(file: { file: File; url: string }): void {
+        this.getCurrentImageStorage().push(file);
+
+        const element = this.editSiteService.addImage(file.url, file.file.name);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data.unshift(element);
+
+            return siteOrBlog;
+        });
+    }
+
+    addImageWithTextPart1(content: string): void {
+        // Add the content to a cache variable and open the image input popup
+
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        this.textWithImageTextCache.set(content);
+
+        this.currentActionToPerform.set("addImageWithText");
+        this.imageInputOpen.set(true);
+    }
+
+    async addImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
+        // Get the content from the cache variable and add the element
+        const shouldImageBePlacedRight = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Rechts", "Links", true);
+
+        this.getCurrentImageStorage().push(file);
+
+        const element = this.editSiteService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedRight ? "right" : "left");
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data.unshift(element);
+
+            return siteOrBlog;
+        });
+    }
+
+    addMultipleImages(files: { file: File; url: string }[]): void {
+        if (files.length === 0) {
+            this.notificationService.info("Keine Bilder ausgewählt", "Bitte wähle mindestens ein Bild aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const images: { imageUrl: string; imageAlt: string }[] = [];
+
+        for (const file of files) {
+            this.getCurrentImageStorage().push(file);
+
+            images.push({
+                imageUrl: file.url,
+                imageAlt: file.file.name,
+            });
+        }
+
+        const element = this.editSiteService.addMultipleImages(images);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data.unshift(element);
+
+            return siteOrBlog;
+        });
+    }
+
+    /*
+     * ===============================================================
+     *                Edit CUSTOM ELEMENTS FUNCTIONS
+     * ===============================================================
+     */
+
+    editGeneralTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Seitentitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.metadata.title = content;
+
+            return siteOrBlog;
+        });
+    }
+
+    editGeneralSubtitle(content: string): void {
+        // Allow empty subtitle
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.metadata.subtitle = content ? content : "";
+
+            return siteOrBlog;
+        });
+    }
+
+    editGeneralImage(file: { file: File; url: string }): void {
+        this.getCurrentImageStorage().push(file);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.metadata.imageUrl = file.url;
+            siteOrBlog.metadata.imageAlt = file.file.name;
+
+            return siteOrBlog;
+        });
+    }
+
+    editAuthor(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Autor wurde nicht aktualisiert, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.metadata.author = content;
+
+            return siteOrBlog;
+        });
+    }
+
+    editTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editSiteService.addTitle(content);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return siteOrBlog;
+        });
+    }
+
+    editSubtitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editSiteService.addSubtitle(content);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return siteOrBlog;
+        });
+    }
+
+    editParagraph(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editSiteService.addParagraph(content);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return siteOrBlog;
+        });
+    }
+
+    editImage(file: { file: File; url: string }): void {
+        if (!file.url.startsWith("blob:")) {
+            this.notificationService.info("Keine Veränderung", "Das Bild wurde nicht aktualisiert, da kein neues Bild ausgewählt wurde.");
+
+            return;
+        }
+
+        this.getCurrentImageStorage().push(file);
+
+        const element = this.editSiteService.addImage(file.url, file.file.name);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return siteOrBlog;
+        });
+    }
+
+    editImageWithTextPart1(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).content = content;
+
+            return siteOrBlog;
+        });
+
+        this.currentActionToPerform.set("editImageWithText");
+
+        this.imageEditInputOpen.set(true);
+    }
+
+    async editImageWithTextPart2(file: { file: File; url: string }): Promise<void> {
+        if (!file.url.startsWith("blob:")) {
+            const shouldImageBePlacedRight = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Rechts", "Links", true);
+
+            this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedRight ? "right" : "left";
+
+                return siteOrBlog;
+            });
+
+            this.notificationService.info("Teilweise Veränderung", "Nur der Text wurde aktualisiert. Das Bild nicht, da kein Neues ausgewählt wurde.");
+
+            return;
+        }
+
+        this.getCurrentImageStorage().push(file);
+
+        const shouldImageBePlacedRight = await this.awaitConfirmation("Seite wählen", "Möchtest du das Bild links oder rechts platzieren?", "Rechts", "Links", true);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageUrl = file.url;
+            (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageAlt = file.file.name;
+            (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedRight ? "right" : "left";
+
+            return siteOrBlog;
+        });
+    }
+
+    editMultipleImages(files: { file: File; url: string }[]): void {
+        if (files.length === 0) {
+            this.notificationService.info("Keine Bilder ausgewählt", "Die Bilder wurden nicht aktualisiert, da keine neuen Bilder ausgewählt wurden. Wenn du die Bilder löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const images: { imageUrl: string; imageAlt: string }[] = [];
+
+        for (const file of files) {
+            if (file.url.startsWith("blob:")) {
+                this.getCurrentImageStorage().push(file);
+            }
+
+            images.push({
+                imageUrl: file.url,
+                imageAlt: file.file?.name ?? "Keine Bezeichnung",
+            });
+        }
+
+        const element = this.editSiteService.addMultipleImages(images);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return siteOrBlog;
+        });
     }
 }
