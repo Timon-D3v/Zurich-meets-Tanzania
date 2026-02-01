@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { ApiEndpointResponse, Blog, BlogContent, DatabaseApiEndpointResponse, GetAllBlogsApiEndpointResponse } from "..";
-import { createBlog, getAllBlogs, getAllBlogTitles, updateBlog } from "../shared/blog.database";
+import { createBlog, deleteBlog, getAllBlogs, getAllBlogTitles, updateBlog } from "../shared/blog.database";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpload } from "delivapi-client";
 import { CONFIG } from "../config";
@@ -457,6 +457,51 @@ router.post("/updateBlog", multerInstance.array("images"), async (req: Request, 
                 failedUploads === 0
                     ? `Der Blog mit Titel '${blogName}' wurde erfolgreich aktualisiert. (Neuer Titel: '${blog.metadata.title}')`
                     : `Der Blog mit Titel '${blogName}' wurde aktualisiert, jedoch konnten ${failedUploads}/${files.length} Bilder nicht hochgeladen werden und wurden durch ein Fallback-Bild ersetzt. (Neuer Titel: '${blog.metadata.title}')`,
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/deleteBlog", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const blogName = req.body.blogName; // The name of the blog to identify it
+
+        const allBlogTitlesResult = await getAllBlogTitles();
+
+        if (allBlogTitlesResult.error !== null) {
+            throw new Error(allBlogTitlesResult.error);
+        }
+
+        const allBlogTitles = (allBlogTitlesResult.data as { title: string }[]).map((entry) => entry.title);
+
+        if (typeof blogName !== "string" || !allBlogTitles.includes(blogName)) {
+            throw new Error("Es wurde kein Blog mit dem angegebenen Namen gefunden.");
+        }
+
+        const result = await deleteBlog(blogName);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: `Der Blog mit dem Titel '${blogName}' wurde erfolgreich gelöscht.`,
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);

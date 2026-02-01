@@ -65,7 +65,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
                         author: "Das ZMT-Team",
                     },
                     data: [],
-                }
+                },
             };
         },
         ERROR: (name: string, imageUrl: string, message: string): Blog => {
@@ -92,8 +92,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
                             content: `Beim Laden der Seite ist ein Fehler aufgetreten: ${message}\nBitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.`,
                         },
                     ],
-                }
-                
+                },
             };
         },
     },

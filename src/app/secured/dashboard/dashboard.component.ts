@@ -28,7 +28,6 @@ import { AdminHomepagePicturePageComponent } from "../components/admin-homepage-
 import { EditStaticSiteComponent } from "../components/edit-static-site/edit-static-site.component";
 import { AdminAddAdminComponent } from "../components/admin-add-admin/admin-add-admin.component";
 import { AdminRemoveAdminComponent } from "../components/admin-remove-admin/admin-remove-admin.component";
-import { BlogDeleteBlogComponent } from "../components/blog-delete-blog/blog-delete-blog.component";
 import { NewsCreateNewsComponent } from "../components/news-create-news/news-create-news.component";
 import { MembersRemoveManualMemberComponent } from "../components/members-remove-manual-member/members-remove-manual-member.component";
 import { AdminCreateAccountComponent } from "../components/admin-create-account/admin-create-account.component";
@@ -70,7 +69,6 @@ import { LoadingComponent } from "../../components/loading/loading.component";
         EditStaticSiteComponent,
         AdminAddAdminComponent,
         AdminRemoveAdminComponent,
-        BlogDeleteBlogComponent,
         NewsCreateNewsComponent,
         MembersRemoveManualMemberComponent,
         AdminCreateAccountComponent,
@@ -485,6 +483,27 @@ export class DashboardComponent implements OnInit {
 
         this.selectionInputTitle.set("Blog bearbeiten");
         this.selectionInputDescription.set("Bitte gib den Titel des Blogs ein, den du bearbeiten möchtest.");
+        this.selectionInputLabel.set("Titel:");
+        this.selectionInputPlaceholder.set("Titel suchen");
+        this.selectionInputOptions.set(this.allEditableBlogs);
+    }
+
+    generateSelectBlogToDeleteFunction(): Function {
+        const _this = this;
+
+        const activationFunction = () => {
+            _this.selectBlogToDelete();
+            _this.generateActivateFunction("blog-delete-blog")();
+        };
+
+        return activationFunction;
+    }
+
+    selectBlogToDelete(): void {
+        this.selectionInputOpen.set(true);
+
+        this.selectionInputTitle.set("Blog löschen");
+        this.selectionInputDescription.set("Bitte gib den Titel des Blogs ein, den du löschen möchtest.");
         this.selectionInputLabel.set("Titel:");
         this.selectionInputPlaceholder.set("Titel suchen");
         this.selectionInputOptions.set(this.allEditableBlogs);
@@ -1039,6 +1058,9 @@ export class DashboardComponent implements OnInit {
             case "blog-edit-blog":
                 this.currentActiveBlogEdit.set(selectedOption);
                 break;
+            case "blog-delete-blog":
+                this.deleteBlog(selectedOption);
+                break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
                 break;
@@ -1220,7 +1242,7 @@ export class DashboardComponent implements OnInit {
 
     /*
      * ===============================================================
-     *                Edit CUSTOM ELEMENTS FUNCTIONS
+     *                EDIT CUSTOM ELEMENTS FUNCTIONS
      * ===============================================================
      */
 
@@ -1404,6 +1426,46 @@ export class DashboardComponent implements OnInit {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
             return siteOrBlog;
+        });
+    }
+
+    /*
+     * ===============================================================
+     *                    INSTANT USE FUNCTIONS
+     * ===============================================================
+     */
+
+    async deleteBlog(blogName: string): Promise<void> {
+        const confirm = await this.awaitConfirmation("Löschen bestätigen", `Möchtest du den Blog mit Titel '${blogName}' wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`, "Löschen", "Abbrechen");
+
+        if (!confirm) {
+            this.setCurrentActiveNavigation("main");
+            this.currentActiveSection.set("stats-website-analytics");
+
+            return;
+        }
+
+        const request = this.blogService.deleteBlog(blogName);
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            if (response.error) {
+                this.notificationService.error("Fehler beim Löschen", "Der Blog konnte nicht gelöscht werden: " + response.message);
+
+                return;
+            }
+
+            this.notificationService.success("Blog gelöscht", response.message);
+
+            // Refresh the blog titles
+            this.getAllBlogTitles();
+
+            // Reset the current active blog edit if it was the deleted blog
+            if (this.currentActiveBlogEdit() === blogName) {
+                this.currentActiveBlogEdit.set("awaitSelection");
+            }
+
+            this.setCurrentActiveNavigation("main");
+            this.currentActiveSection.set("stats-website-analytics");
         });
     }
 }

@@ -68,4 +68,12 @@ export class BlogService {
 
         return request;
     }
+
+    deleteBlog(blogName: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/blog/deleteBlog", {
+            blogName,
+        });
+
+        return request;
+    }
 }

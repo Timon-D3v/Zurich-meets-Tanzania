@@ -59,7 +59,7 @@ export class BlogComponent implements OnInit {
 
             this.blog.set(response.data);
         });
-    })
+    });
 
     ngOnInit(): void {
         if (typeof this.route.snapshot.params["name"] !== "string") {

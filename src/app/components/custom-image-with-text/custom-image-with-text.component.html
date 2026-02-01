@@ -1,9 +1,9 @@
 <div class="wrapper">
     @if (sideOfImage() === "left") {
         <img [src]="imageUrl()" [alt]="imageAlt()" />
-        <p>{{ content() }}</p>
+        <p [innerHTML]="htmlContent()"></p>
     } @else {
-        <p>{{ content() }}</p>
+        <p [innerHTML]="htmlContent()"></p>
         <img [src]="imageUrl()" [alt]="imageAlt()" />
     }
 </div>

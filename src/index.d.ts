@@ -72,9 +72,9 @@ export type PublicConfig = {
     };
 
     BLOGS: {
-        LOADING: (name: string, imageUrl: string) => Blog,
-        ERROR: (name: string, imageUrl: string, message: string) => Blog,
-    },
+        LOADING: (name: string, imageUrl: string) => Blog;
+        ERROR: (name: string, imageUrl: string, message: string) => Blog;
+    };
 
     PERSONAS: {
         [position: string]: MetaPersonas;
