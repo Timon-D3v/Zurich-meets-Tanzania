@@ -1,4 +1,4 @@
-import { PublicConfig, StaticSite, StaticSiteNames } from ".";
+import { Blog, PublicConfig, StaticSite, StaticSiteNames } from ".";
 
 export const PUBLIC_CONFIG: PublicConfig = {
     NAME: "zurich meets tanzania",
@@ -45,6 +45,55 @@ export const PUBLIC_CONFIG: PublicConfig = {
                         content: `Beim Laden der Seite ist ein Fehler aufgetreten: ${message}\nBitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.`,
                     },
                 ],
+            };
+        },
+    },
+
+    BLOGS: {
+        LOADING: (name: string, imageUrl: string): Blog => {
+            return {
+                id: -1,
+                title: name,
+                author: "Das ZMT-Team",
+                date: new Date().toLocaleString(),
+                data: {
+                    metadata: {
+                        title: name,
+                        subtitle: "Laden...",
+                        imageUrl,
+                        imageAlt: "Laden...",
+                        author: "Das ZMT-Team",
+                    },
+                    data: [],
+                }
+            };
+        },
+        ERROR: (name: string, imageUrl: string, message: string): Blog => {
+            return {
+                id: -2,
+                title: name,
+                author: "Das ZMT-Team",
+                date: new Date().toLocaleString(),
+                data: {
+                    metadata: {
+                        title: name,
+                        subtitle: "Fehler beim Laden der Seite",
+                        imageUrl,
+                        imageAlt: "Fehler",
+                        author: "Das ZMT-Team",
+                    },
+                    data: [
+                        {
+                            type: "title",
+                            content: "Fehler beim Laden der Seite",
+                        },
+                        {
+                            type: "paragraph",
+                            content: `Beim Laden der Seite ist ein Fehler aufgetreten: ${message}\nBitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.`,
+                        },
+                    ],
+                }
+                
             };
         },
     },

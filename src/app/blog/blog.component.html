@@ -1,2 +1,25 @@
-<h1>Current Name:</h1>
-<p>{{ name() }}</p>
+@defer (when blog().data.data.length > 0; prefetch on immediate) {
+    <app-hero [title]="blog().data.metadata.title" [subtitle]="blog().data.metadata.subtitle" [pictureUrl]="blog().data.metadata.imageUrl" [pictureAlt]="blog().data.metadata.imageAlt"></app-hero>
+    @for (element of blog().data.data; track $index) {
+        @if (element.type === "title") {
+            <app-custom-title [content]="element.content"></app-custom-title>
+        } @else if (element.type === "subtitle") {
+            <app-custom-subtitle [content]="element.content"></app-custom-subtitle>
+        } @else if (element.type === "paragraph") {
+            <app-custom-paragraph [content]="element.content"></app-custom-paragraph>
+        } @else if (element.type === "image") {
+            <app-custom-image [imageUrl]="element.imageUrl" [imageAlt]="element.imageAlt"></app-custom-image>
+        } @else if (element.type === "multipleImages") {
+            <app-custom-image-carousel [images]="element.images"></app-custom-image-carousel>
+        } @else if (element.type === "imageWithText") {
+            <app-custom-image-with-text [imageUrl]="element.imageUrl" [imageAlt]="element.imageAlt" [content]="element.content" [sideOfImage]="element.sideOfImage"></app-custom-image-with-text>
+        } @else if (element.type === "line") {
+            <app-custom-line></app-custom-line>
+        } @else if (element.type === "currentTeam") {
+            <app-team-from-id [id]="element.teamId"></app-team-from-id>
+        }
+    }
+    <p class="date">Zuletzt aktualisiert: {{ formatDate(blog().date) }}</p>
+} @placeholder (minimum 100ms) {
+    <app-loading></app-loading>
+}

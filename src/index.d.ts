@@ -71,6 +71,11 @@ export type PublicConfig = {
         ERROR: (name: StaticSiteNames, imageUrl: string, message: string) => StaticSite;
     };
 
+    BLOGS: {
+        LOADING: (name: string, imageUrl: string) => Blog,
+        ERROR: (name: string, imageUrl: string, message: string) => Blog,
+    },
+
     PERSONAS: {
         [position: string]: MetaPersonas;
     };
