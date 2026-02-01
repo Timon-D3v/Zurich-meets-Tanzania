@@ -353,19 +353,7 @@ export class DashboardComponent implements OnInit {
         });
 
         // Get all existing blog titles for editing
-        const blogsRequest = this.blogService.getAllBlogLinks();
-
-        blogsRequest.subscribe((response: DatabaseApiEndpointResponse) => {
-            if (response.error || response.data?.data === null || !Array.isArray(response.data?.data)) {
-                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
-
-                return;
-            }
-
-            for (const blog of response.data.data) {
-                this.allEditableBlogs.push(blog["title"]);
-            }
-        });
+        this.getAllBlogTitles();
 
         // Get all blogs for editing
         const getAllBlogsRequest = this.blogService.getAllBlogs();
@@ -380,6 +368,24 @@ export class DashboardComponent implements OnInit {
             for (const blog of response.data) {
                 this.blogs.existingBlogs[blog.title] = signal<BlogContent>(blog.data);
                 this.blogImages.existingBlogs[blog.title] = [];
+            }
+        });
+    }
+
+    getAllBlogTitles(): void {
+        this.allEditableBlogs = [];
+
+        const blogTitlesRequest = this.blogService.getAllBlogLinks();
+
+        blogTitlesRequest.subscribe((response: DatabaseApiEndpointResponse) => {
+            if (response.error || response.data?.data === null || !Array.isArray(response.data?.data)) {
+                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
+
+                return;
+            }
+
+            for (const blog of response.data.data) {
+                this.allEditableBlogs.push(blog["title"]);
             }
         });
     }
@@ -625,7 +631,59 @@ export class DashboardComponent implements OnInit {
     submitNewBlog(): void {
         this.submitEditsButton.set("Speichern...");
 
-        this.showAlert("Funktion nicht implementiert", "Die Funktion zum Erstellen eines neuen Blogs ist noch nicht implementiert.", "OK");
+        const request = this.blogService.createBlog(this.blogs.newBlog().metadata.title, this.blogs.newBlog(), this.blogImages.newBlog);
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            this.submitEditsButton.set("Abschliessen");
+
+            this.getAllBlogTitles();
+
+            if (response.error) {
+                this.notificationService.error("Fehler beim Erstellen", "Der Blog konnte nicht erstellt werden: " + response.message);
+
+                return;
+            }
+
+            this.notificationService.success("Blog erstellt", response.message);
+
+            const blogName = this.blogs.newBlog().metadata.title;
+
+            // Reset the blogEdits
+            this.currentActiveBlogEdit.set("awaitSelection");
+
+            this.blogImages.newBlog = [];
+            this.blogs.newBlog = signal<BlogContent>({ metadata: { title: "Bearbeite mich :)", subtitle: "", author: "", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "" }, data: [] });
+
+            this.blogImages.existingBlogs[blogName] = [];
+
+            const request = this.blogService.getBlog(blogName);
+
+            request.subscribe((response: GetBlogApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${blogName}' konnte nicht geladen werden: ` + response.message);
+
+                    // Set a Warning as the sites content
+                    this.blogs.existingBlogs[blogName].set({
+                        data: [],
+                        metadata: {
+                            title: "Fehler beim Laden der Seite",
+                            subtitle: "",
+                            author: "",
+                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                            imageAlt: "",
+                        },
+                    });
+
+                    this.currentActiveBlogEdit.set(blogName);
+
+                    return;
+                }
+
+                this.blogs.existingBlogs[blogName] = signal<BlogContent>(response.data.data);
+
+                this.currentActiveBlogEdit.set(blogName);
+            });
+        });
     }
 
     submitBlogEdits(): void {
@@ -635,6 +693,8 @@ export class DashboardComponent implements OnInit {
 
         request.subscribe((response: ApiEndpointResponse) => {
             this.submitEditsButton.set("Abschliessen");
+
+            this.getAllBlogTitles();
 
             if (response.error) {
                 this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
@@ -648,7 +708,7 @@ export class DashboardComponent implements OnInit {
             const oldBlogTitle = this.currentActiveBlogEdit();
             const newBlogTitle = this.blogs.existingBlogs[this.currentActiveBlogEdit()]().metadata.title;
 
-            this.currentActiveBlogEdit.set("awaitSelection")
+            this.currentActiveBlogEdit.set("awaitSelection");
 
             // Delete the existing images array since the blog name might have changed
             delete this.blogImages.existingBlogs[oldBlogTitle];

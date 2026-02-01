@@ -20,7 +20,7 @@ export class SubpagesService {
 
         return request;
     }
-    
+
     updateStaticSite(siteName: StaticSiteNames, site: StaticSite, images: { url: string; file: File }[]): Observable<ApiEndpointResponse> {
         const formData = new FormData();
 

@@ -32,7 +32,25 @@ export class BlogService {
 
         return request;
     }
-        
+
+    createBlog(blogName: string, blog: BlogContent, images: { url: string; file: File }[]): Observable<ApiEndpointResponse> {
+        const formData = new FormData();
+
+        const imageNames = images.map((image) => image.url);
+
+        formData.append("blogName", blogName);
+        formData.append("blog", JSON.stringify(blog));
+        formData.append("imageNames", JSON.stringify(imageNames));
+
+        images.forEach((image) => {
+            formData.append("images", image.file);
+        });
+
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/blog/createBlog", formData);
+
+        return request;
+    }
+
     updateBlog(blogName: string, blog: BlogContent, images: { url: string; file: File }[]): Observable<ApiEndpointResponse> {
         const formData = new FormData();
 
