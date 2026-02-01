@@ -1,15 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { NotificationService } from "./notification.service";
 import { Observable } from "rxjs";
-import { DatabaseApiEndpointResponse, GetAllBlogsApiEndpointResponse, GetBlogApiEndpointResponse } from "../..";
+import { ApiEndpointResponse, BlogContent, DatabaseApiEndpointResponse, GetAllBlogsApiEndpointResponse, GetBlogApiEndpointResponse } from "../..";
 
 @Injectable({
     providedIn: "root",
 })
 export class BlogService {
     private http = inject(HttpClient);
-    private notificationService = inject(NotificationService);
 
     getBlog(title: string): Observable<GetBlogApiEndpointResponse> {
         const request = this.http.get<GetBlogApiEndpointResponse>(`/api/blog/getBlog/${title}`);
@@ -31,6 +29,24 @@ export class BlogService {
 
     getAllBlogLinks(): Observable<DatabaseApiEndpointResponse> {
         const request = this.http.get<DatabaseApiEndpointResponse>("/api/secured/admin/blog/getAllTitles");
+
+        return request;
+    }
+        
+    updateBlog(blogName: string, blog: BlogContent, images: { url: string; file: File }[]): Observable<ApiEndpointResponse> {
+        const formData = new FormData();
+
+        const imageNames = images.map((image) => image.url);
+
+        formData.append("blogName", blogName);
+        formData.append("blog", JSON.stringify(blog));
+        formData.append("imageNames", JSON.stringify(imageNames));
+
+        images.forEach((image) => {
+            formData.append("images", image.file);
+        });
+
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/blog/updateBlog", formData);
 
         return request;
     }

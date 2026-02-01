@@ -49,7 +49,7 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
         }
 
         for (const imageName of imageNames) {
-            if (typeof imageName !== "string" || imageName.trim() === "") {
+            if (typeof imageName !== "string" || imageName.trim() === "") { // The imageName is the URL of the image, so it can't be empty
                 throw new Error("Image names list is not valid.");
             }
         }

@@ -1,6 +1,6 @@
 import { FieldPacket, RowDataPacket } from "mysql2";
 import connection from "./connection.database";
-import { DatabaseResult } from "..";
+import { BlogContent, DatabaseResult } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 
 export async function getBlog(title: string): Promise<DatabaseResult> {
@@ -91,6 +91,31 @@ export async function getAllBlogTitles(): Promise<DatabaseResult> {
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function updateBlog(originalTitle: string, blog: BlogContent): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`blogs\` SET \`title\` = ?, \`author\` = ?, \`data\` = ?, date = CURRENT_TIMESTAMP WHERE (\`title\` = ?);`, [blog.metadata.title, blog.metadata.author, JSON.stringify(blog), originalTitle]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
         }
 
         return {

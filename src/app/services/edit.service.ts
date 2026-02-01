@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
+import { NotificationService } from "./notification.service";
 import {
-    ApiEndpointResponse,
     CustomCurrentTeamElement,
     CustomImageElement,
     CustomImageWithTextElement,
@@ -9,19 +9,13 @@ import {
     CustomParagraphElement,
     CustomSubtitleElement,
     CustomTitleElement,
-    StaticSite,
-    StaticSiteNames,
 } from "../..";
-import { NotificationService } from "./notification.service";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
 
 @Injectable({
     providedIn: "root",
 })
-export class EditSiteService {
+export class EditService {
     private notificationService = inject(NotificationService);
-    private http = inject(HttpClient);
 
     private sanitizeStringWithoutWarning(input: string): string {
         if (input && typeof input === "string" && input.trim() !== "") {
@@ -98,23 +92,5 @@ export class EditSiteService {
             type: "currentTeam",
             teamId: teamId,
         };
-    }
-
-    submitSite(siteName: StaticSiteNames, site: StaticSite, images: { url: string; file: File }[]): Observable<ApiEndpointResponse> {
-        const formData = new FormData();
-
-        const imageNames = images.map((image) => image.url);
-
-        formData.append("siteName", siteName);
-        formData.append("site", JSON.stringify(site));
-        formData.append("imageNames", JSON.stringify(imageNames));
-
-        images.forEach((image) => {
-            formData.append("images", image.file);
-        });
-
-        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/subpages/updateStaticSite", formData);
-
-        return request;
     }
 }

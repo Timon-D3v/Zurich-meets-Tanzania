@@ -10,6 +10,7 @@ import {
     DatabaseApiEndpointResponse,
     GetAllBlogsApiEndpointResponse,
     GetAllStaticSitesApiEndpointResponse,
+    GetBlogApiEndpointResponse,
     GetStaticSiteApiEndpointResponse,
     GetTeamApiEndpointResponse,
     StaticSite,
@@ -18,8 +19,8 @@ import {
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { TeamService } from "../../services/team.service";
 import { BlogService } from "../../services/blog.service";
+import { EditService } from "../../services/edit.service";
 import { SubpagesService } from "../../services/subpages.service";
-import { EditSiteService } from "../../services/edit-site.service";
 import { NotificationService } from "../../services/notification.service";
 import { AdminNavElementComponent } from "../components/admin-nav-element/admin-nav-element.component";
 import { AdminPasswordsPageComponent } from "../components/admin-passwords-page/admin-passwords-page.component";
@@ -316,7 +317,7 @@ export class DashboardComponent implements OnInit {
 
     private teamService = inject(TeamService);
     private blogService = inject(BlogService);
-    private editSiteService = inject(EditSiteService);
+    private editService = inject(EditService);
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
 
@@ -378,6 +379,7 @@ export class DashboardComponent implements OnInit {
 
             for (const blog of response.data) {
                 this.blogs.existingBlogs[blog.title] = signal<BlogContent>(blog.data);
+                this.blogImages.existingBlogs[blog.title] = [];
             }
         });
     }
@@ -578,7 +580,7 @@ export class DashboardComponent implements OnInit {
     submitSiteEdits(): void {
         this.submitEditsButton.set("Speichern...");
 
-        const request = this.editSiteService.submitSite(this.currentActiveSiteEdit(), this.siteEdits[this.currentActiveSiteEdit()](), this.siteEditImages[this.currentActiveSiteEdit()]);
+        const request = this.subpagesService.updateStaticSite(this.currentActiveSiteEdit(), this.siteEdits[this.currentActiveSiteEdit()](), this.siteEditImages[this.currentActiveSiteEdit()]);
 
         request.subscribe((response: ApiEndpointResponse) => {
             this.submitEditsButton.set("Abschliessen");
@@ -629,7 +631,59 @@ export class DashboardComponent implements OnInit {
     submitBlogEdits(): void {
         this.submitEditsButton.set("Speichern...");
 
-        this.showAlert("Funktion nicht implementiert", "Die Funktion zum Erstellen eines neuen Blogs ist noch nicht implementiert.", "OK");
+        const request = this.blogService.updateBlog(this.currentActiveBlogEdit(), this.blogs.existingBlogs[this.currentActiveBlogEdit()](), this.blogImages.existingBlogs[this.currentActiveBlogEdit()]);
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            this.submitEditsButton.set("Abschliessen");
+
+            if (response.error) {
+                this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
+
+                return;
+            }
+
+            this.notificationService.success("Änderungen gespeichert", response.message);
+
+            // Reset the blogEdits
+            const oldBlogTitle = this.currentActiveBlogEdit();
+            const newBlogTitle = this.blogs.existingBlogs[this.currentActiveBlogEdit()]().metadata.title;
+
+            this.currentActiveBlogEdit.set("awaitSelection")
+
+            // Delete the existing images array since the blog name might have changed
+            delete this.blogImages.existingBlogs[oldBlogTitle];
+            delete this.blogs.existingBlogs[oldBlogTitle];
+
+            this.blogImages.existingBlogs[newBlogTitle] = [];
+
+            const request = this.blogService.getBlog(newBlogTitle);
+
+            request.subscribe((response: GetBlogApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${newBlogTitle}' konnte nicht geladen werden: ` + response.message);
+
+                    // Set a Warning as the sites content
+                    this.blogs.existingBlogs[newBlogTitle].set({
+                        data: [],
+                        metadata: {
+                            title: "Fehler beim Laden der Seite",
+                            subtitle: "",
+                            author: "",
+                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                            imageAlt: "",
+                        },
+                    });
+
+                    this.currentActiveBlogEdit.set(newBlogTitle);
+
+                    return;
+                }
+
+                this.blogs.existingBlogs[newBlogTitle] = signal<BlogContent>(response.data.data);
+
+                this.currentActiveBlogEdit.set(newBlogTitle);
+            });
+        });
     }
 
     /*
@@ -667,6 +721,42 @@ export class DashboardComponent implements OnInit {
                 _this.titleInputPlaceholder.set("Untertitel eingeben");
             } else if (type === "addParagraph" || type === "addImageWithText") {
                 _this.textInputOpen.set(true);
+            } else if (type === "addImage") {
+                _this.imageEditInputOpen.set(true);
+
+                _this.imageEditInputTitle.set("Bild auswählen:");
+                _this.imageEditInputDescription.set("Bitte wähle ein Bild aus, dass du verwenden möchtest. Du kannst es auch nachher noch bearbeiten.");
+                _this.imageEditInputLabel.set("Bild:");
+
+                _this.imageEditInputPlaceholderUrl.set(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
+            } else if (type === "addMultipleImages") {
+                _this.multipleImagesInputOpen.set(true);
+            } else if (type === "addLine") {
+                const element = _this.editService.addLine();
+
+                _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                    siteOrBlog.data.unshift(element);
+
+                    return siteOrBlog;
+                });
+            } else if (type === "addCurrentTeam") {
+                const request = _this.teamService.getCurrentTeam();
+
+                request.subscribe((response: GetTeamApiEndpointResponse) => {
+                    if (response.error || response.data === null) {
+                        _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden: " + response.message);
+
+                        return;
+                    }
+
+                    const element = _this.editService.addCurrentTeam(response.data.id);
+
+                    _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                        siteOrBlog.data.unshift(element);
+
+                        return siteOrBlog;
+                    });
+                });
             } else if (type === "editGeneralTitle") {
                 _this.titleEditInputOpen.set(true);
 
@@ -694,7 +784,7 @@ export class DashboardComponent implements OnInit {
                 _this.titleEditInputPlaceholder.set("Autor eingeben");
 
                 _this.titleEditInputValue.set(_this.getCurrentEditSignal()().metadata.author);
-            } else if (type === "editTitleImage" || type === "addImage") {
+            } else if (type === "editTitleImage") {
                 _this.imageEditInputOpen.set(true);
 
                 _this.imageEditInputTitle.set("Titelbild auswählen:");
@@ -702,34 +792,6 @@ export class DashboardComponent implements OnInit {
                 _this.imageEditInputLabel.set("Bild:");
 
                 _this.imageEditInputPlaceholderUrl.set(_this.getCurrentEditSignal()().metadata.imageUrl);
-            } else if (type === "addMultipleImages") {
-                _this.multipleImagesInputOpen.set(true);
-            } else if (type === "addLine") {
-                const element = _this.editSiteService.addLine();
-
-                _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-                    siteOrBlog.data.unshift(element);
-
-                    return siteOrBlog;
-                });
-            } else if (type === "addCurrentTeam") {
-                const request = _this.teamService.getCurrentTeam();
-
-                request.subscribe((response: GetTeamApiEndpointResponse) => {
-                    if (response.error || response.data === null) {
-                        _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden: " + response.message);
-
-                        return;
-                    }
-
-                    const element = _this.editSiteService.addCurrentTeam(response.data.id);
-
-                    _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-                        siteOrBlog.data.unshift(element);
-
-                        return siteOrBlog;
-                    });
-                });
             }
         };
 
@@ -990,7 +1052,7 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        const element = this.editSiteService.addTitle(content);
+        const element = this.editService.addTitle(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.unshift(element);
@@ -1005,7 +1067,7 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        const element = this.editSiteService.addSubtitle(content);
+        const element = this.editService.addSubtitle(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.unshift(element);
@@ -1020,7 +1082,7 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        const element = this.editSiteService.addParagraph(content);
+        const element = this.editService.addParagraph(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.unshift(element);
@@ -1032,7 +1094,7 @@ export class DashboardComponent implements OnInit {
     addImage(file: { file: File; url: string }): void {
         this.getCurrentImageStorage().push(file);
 
-        const element = this.editSiteService.addImage(file.url, file.file.name);
+        const element = this.editService.addImage(file.url, file.file.name);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.unshift(element);
@@ -1061,7 +1123,7 @@ export class DashboardComponent implements OnInit {
 
         this.getCurrentImageStorage().push(file);
 
-        const element = this.editSiteService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedRight ? "right" : "left");
+        const element = this.editService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedRight ? "right" : "left");
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.unshift(element);
@@ -1087,7 +1149,7 @@ export class DashboardComponent implements OnInit {
             });
         }
 
-        const element = this.editSiteService.addMultipleImages(images);
+        const element = this.editService.addMultipleImages(images);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.unshift(element);
@@ -1155,7 +1217,7 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        const element = this.editSiteService.addTitle(content);
+        const element = this.editService.addTitle(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
@@ -1170,7 +1232,7 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        const element = this.editSiteService.addSubtitle(content);
+        const element = this.editService.addSubtitle(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
@@ -1185,7 +1247,7 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        const element = this.editSiteService.addParagraph(content);
+        const element = this.editService.addParagraph(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
@@ -1203,7 +1265,7 @@ export class DashboardComponent implements OnInit {
 
         this.getCurrentImageStorage().push(file);
 
-        const element = this.editSiteService.addImage(file.url, file.file.name);
+        const element = this.editService.addImage(file.url, file.file.name);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
@@ -1276,7 +1338,7 @@ export class DashboardComponent implements OnInit {
             });
         }
 
-        const element = this.editSiteService.addMultipleImages(images);
+        const element = this.editService.addMultipleImages(images);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
