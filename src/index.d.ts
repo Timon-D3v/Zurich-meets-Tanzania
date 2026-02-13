@@ -361,6 +361,14 @@ export interface PrivateUser extends PublicUser {
     password: string; // Hashed
 }
 
+export type NewsletterUser = {
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    gender: "Herr" | "Frau" | "Divers";
+};
+
 export interface NewUser {
     email: string;
     password: string;

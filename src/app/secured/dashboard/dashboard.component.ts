@@ -876,7 +876,33 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    submitNewNews(): void {}
+    async submitNewNews(): Promise<void> {
+        this.submitEditsButton.set("Speichern...");
+
+        const shouldSendNewsletter = await this.awaitConfirmation("Newsletter versenden?", "Möchtest du einen Newsletter an alle Abonnenten versenden, um sie über die neue News zu informieren?", "Ja", "Nein");
+
+        const request = this.newsService.createNews(this.news.newNews().data, this.newsImages.newNews, shouldSendNewsletter);
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            this.submitEditsButton.set("Abschliessen");
+
+            this.getAllNews();
+
+            if (response.error) {
+                this.notificationService.error("Fehler beim Erstellen", "Die News konnten nicht erstellt werden: " + response.message);
+
+                return;
+            }
+
+            this.notificationService.success("News erstellt", response.message);
+
+            // Reset the newsEdits
+            this.currentActiveNewsEdit.set("awaitSelection");
+
+            this.newsImages.newNews = [];
+            this.news.newNews = signal<News>({ id: -1, date: "1900/12/22", data: { type: "image", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "", imagePosition: "center", content: [] } });
+        });
+    }
 
     submitNewsEdits(): void {}
 

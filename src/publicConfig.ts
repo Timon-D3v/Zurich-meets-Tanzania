@@ -699,7 +699,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
                             <br>
                             Hier ist schon eine kleine Vorschau:
                             <br>
-                            ${preview.replaceAll(/\n/, "<br>")}
+                            ${preview.replace(/\n/gm, "<br>")}
                         </p>`,
         NEWSLETTER_SUBJECT: "Es gibt Neuigkeiten!",
     },

@@ -1,6 +1,6 @@
 import { FieldPacket, RowDataPacket } from "mysql2";
 import connection from "./connection.database";
-import { BlogContent, DatabaseResult } from "..";
+import { BlogContent, DatabaseResult, NewsContent } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 
 export async function getNews(id: number): Promise<DatabaseResult> {
@@ -46,6 +46,26 @@ export async function getLatestNews(): Promise<DatabaseResult> {
 export async function getAllNews(): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * from \`zmt\`.\`news\``);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function createNews(newsContent: NewsContent): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`news\` (\`data\`) VALUES (?);`, [JSON.stringify(newsContent)]);
 
         return {
             data: result,

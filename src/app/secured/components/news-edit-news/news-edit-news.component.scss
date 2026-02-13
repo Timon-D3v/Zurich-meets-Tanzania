@@ -37,6 +37,7 @@
 
 .news-iframe {
     height: 65vh;
+    height: -webkit-fill-available;
     width: 100%;
     appearance: none;
     outline: none;
