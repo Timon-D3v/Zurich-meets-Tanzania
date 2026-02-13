@@ -1,0 +1,171 @@
+.wrapper {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    margin: var(--basic-margin);
+    background-color: var(--background-200);
+}
+
+.content {
+    padding: 5%;
+    padding-right: 5vw;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+.news-img {
+    display: block;
+    width: 50%;
+    height: -webkit-fill-available;
+    max-height: 65vh;
+    object-fit: cover;
+    object-position: center;
+
+    &.left {
+        object-position: left;
+    }
+
+    &.right {
+        object-position: right;
+    }
+
+    &.center {
+        object-position: center;
+    }
+}
+
+.news-iframe {
+    height: 65vh;
+    width: 100%;
+    appearance: none;
+    outline: none;
+    border: none;
+}
+
+.news-title {
+    margin: 0;
+    font-size: 3.5rem;
+    line-height: 1;
+    cursor: text;
+
+    &::after {
+        display: block;
+        content: "";
+        width: 10%;
+        height: 5px;
+        background-color: var(--secondary-600);
+        margin: 0.75em 0;
+    }
+}
+
+@media screen and (max-width: 999px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .content {
+        height: auto;
+    }
+
+    .news-img {
+        width: 100%;
+    }
+}
+
+// Styles for the drag and drop part.
+
+.drag-wrapper {
+    cursor: move;
+    transition: background-color 0.25s ease-in-out;
+}
+
+.cdk-drag-placeholder,
+.drag-wrapper:not(:has(.cdk-drag-placeholder)) .drag-element:hover {
+    background-color: #cccccca0;
+}
+
+.drag-element {
+    transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+    position: relative;
+
+    & .edit,
+    & .delete {
+        display: none;
+    }
+
+    &:hover {
+        & .edit,
+        & .delete {
+            display: block;
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            aspect-ratio: 1 / 1;
+            background-color: var(--background-950);
+            box-sizing: border-box;
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background-color 0.25s ease-in-out;
+
+            &:hover {
+                background-color: var(--background-800);
+            }
+
+            &:active {
+                background-color: var(--background-700);
+            }
+
+            & img {
+                filter: invert(var(--not-darkmode));
+                width: 20px;
+                height: 20px;
+                aspect-ratio: 1 / 1;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+
+        & .edit {
+            right: 60px;
+            // background-image: url(../../../../../public/svg/pen.svg);
+        }
+
+        & .delete {
+            right: 20px;
+            // background-image: url(../../../../../public/svg/trash.svg);
+        }
+    }
+}
+
+.drag-active-element {
+    display: block;
+    width: 1px;
+    height: 1px;
+    background-color: transparent;
+    overflow: visible;
+
+    &::before {
+        content: "";
+        position: absolute;
+        display: block;
+        top: -30px;
+        left: -50px;
+        width: 100px;
+        height: 60px;
+        background-color: #cccccca0;
+        border: dotted 3px #999999a0;
+        box-shadow: 0 1px 10px 0 #00000080;
+    }
+}
+
+// .drag-placeholder {
+//     background: #ccc;
+//     border: dotted 3px #999;
+//     min-height: 60px;
+//     transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+// }

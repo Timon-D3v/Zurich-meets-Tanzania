@@ -51,6 +51,7 @@ export type Config = {
 export type PublicEnvVariables = {
     ORIGIN: string | null;
     ENV: "dev" | "prod" | null;
+    DELIVAPI_USER: string | null;
 };
 
 export type PublicConfig = {
@@ -62,6 +63,7 @@ export type PublicConfig = {
     FACEBOOK_URL: string;
     INSTAGRAM_URL: string;
     PROGRAMMER_URL: string;
+    CDN_URL: string;
 
     PRIVACY_PDF_URL: string;
     FALLBACK_IMAGE_URL: string;
@@ -74,6 +76,11 @@ export type PublicConfig = {
     BLOGS: {
         LOADING: (name: string, imageUrl: string) => Blog;
         ERROR: (name: string, imageUrl: string, message: string) => Blog;
+    };
+
+    NEWS: {
+        LOADING: (imageUrl: string) => News;
+        ERROR: (imageUrl: string, message: string) => News;
     };
 
     PERSONAS: {
@@ -331,6 +338,14 @@ export interface GetAllBlogsApiEndpointResponse extends ApiEndpointResponse {
     data: Blog[] | null;
 }
 
+export interface GetNewsApiEndpointResponse extends ApiEndpointResponse {
+    data: News | null;
+}
+
+export interface GetAllNewsApiEndpointResponse extends ApiEndpointResponse {
+    data: News[] | null;
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -493,6 +508,37 @@ export type CustomElements = Array<CustomTitleElement | CustomSubtitleElement | 
 
 export type DashboardNavigationOptions = "main" | "edit-sites" | "create-blog" | "edit-blog" | "create-news" | "edit-news";
 
+export type DashboardEditTypes =
+    | "addTitle"
+    | "addSubtitle"
+    | "addParagraph"
+    | "addImage"
+    | "addMultipleImages"
+    | "addImageWithText"
+    | "addLine"
+    | "addCurrentTeam"
+    | "editTitle"
+    | "editSubtitle"
+    | "editParagraph"
+    | "editGeneralTitle"
+    | "editGeneralSubtitle"
+    | "editAuthor"
+    | "editTitleImage"
+    | "editImage"
+    | "editMultipleImages"
+    | "editImageWithText"
+    | "addNewsImage"
+    | "addNewsPdf"
+    | "addNewsMultipleImages"
+    | "addNewsTitle"
+    | "addNewsSubtitle"
+    | "addNewsParagraph"
+    | "addNewsLine"
+    | "editNewsTitle"
+    | "editNewsSubtitle"
+    | "editNewsParagraph"
+    | "editNewsMultipleImages";
+
 export type Team = {
     id: number;
     motto: string;
@@ -528,3 +574,36 @@ export type BlogContent = {
     };
     data: CustomElements;
 };
+
+export type News = {
+    id: number;
+    date: string;
+    data: NewsContent;
+};
+
+export interface NewsContentBase {
+    type: "image" | "pdf" | "multipleImages";
+    content: CustomElements;
+    imageUrl?: string;
+    imageAlt?: string;
+    imagePosition?: "left" | "center" | "right";
+    pdfUrl?: string;
+}
+
+export interface NewsContentImage extends NewsContentBase {
+    type: "image";
+    imageUrl: string;
+    imageAlt: string;
+    imagePosition: "left" | "center" | "right";
+}
+
+export interface NewsContentPdf extends NewsContentBase {
+    type: "pdf";
+    pdfUrl: string;
+}
+
+export interface NewsContentMultipleImages extends NewsContentBase {
+    type: "multipleImages";
+}
+
+export type NewsContent = NewsContentImage | NewsContentPdf | NewsContentMultipleImages;

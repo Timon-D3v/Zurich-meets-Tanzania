@@ -17,6 +17,7 @@ router.get("/:env", (req: Request, res: Response): void => {
         const allowedEnvVariables: PublicEnvVariables = {
             ORIGIN: CONFIG.ORIGIN,
             ENV: CONFIG.ENV,
+            DELIVAPI_USER: CONFIG.DELIVAPI_USER,
         };
 
         if (!Object.keys(allowedEnvVariables).includes(env)) {

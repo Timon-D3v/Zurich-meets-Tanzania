@@ -172,13 +172,13 @@
                             href: '#News-erstellen',
                             label: 'News erstellen',
                             clickable: true,
-                            onClick: generateActivateFunction('news-create-news'),
+                            onClick: generateActivateFunction('news-create-news', 'create-news'),
                         },
                         {
                             href: '#News-bearbeiten',
                             label: 'News bearbeiten',
                             clickable: true,
-                            onClick: generateActivateFunction('news-edit-news'),
+                            onClick: generateSelectNewsToEditFunction(),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -446,18 +446,67 @@
                     ]"
                 ></app-admin-nav-element>
                 <button type="button" class="edit-done-button" (click)="submitEdits()">{{ submitEditsButton() }}</button>
-            } @else if (currentActiveNavigation() === "create-blog") {
-                <button type="button" class="back-button" (click)="setCurrentActiveNavigation('main')">Zurück</button>
+            } @else if (currentActiveNavigation() === "create-news" || currentActiveNavigation() === "edit-news") {
+                <button type="button" class="back-button" (click)="closeNewsEditNavigation()">Zurück</button>
                 <div class="back-button-underline"></div>
-            } @else if (currentActiveNavigation() === "edit-blog") {
-                <button type="button" class="back-button" (click)="setCurrentActiveNavigation('main')">Zurück</button>
-                <div class="back-button-underline"></div>
-            } @else if (currentActiveNavigation() === "create-news") {
-                <button type="button" class="back-button" (click)="setCurrentActiveNavigation('main')">Zurück</button>
-                <div class="back-button-underline"></div>
-            } @else if (currentActiveNavigation() === "edit-news") {
-                <button type="button" class="back-button" (click)="setCurrentActiveNavigation('main')">Zurück</button>
-                <div class="back-button-underline"></div>
+                <app-admin-nav-element
+                    description="Allgemein"
+                    [linkArray]="[
+                        {
+                            href: '#Bild-hinzufügen',
+                            label: 'Bild hinzufügen',
+                            clickable: true,
+                            onClick: generateEditFunction('addNewsImage'),
+                        },
+                        {
+                            href: '#PDF-hinzufügen',
+                            label: 'PDF hinzufügen',
+                            clickable: true,
+                            onClick: generateEditFunction('addNewsPdf'),
+                        },
+                        {
+                            href: '#Mehrere-Bilder-hinzufügen',
+                            label: 'Mehrere Bilder hinzufügen',
+                            clickable: true,
+                            onClick: generateEditFunction('addNewsMultipleImages'),
+                        },
+                    ]"
+                ></app-admin-nav-element>
+                <app-admin-nav-element
+                    description="Text"
+                    [linkArray]="[
+                        {
+                            href: '#Übertitel',
+                            label: 'Übertitel',
+                            clickable: true,
+                            onClick: generateEditFunction('addNewsTitle'),
+                        },
+                        {
+                            href: '#Untertitel',
+                            label: 'Untertitel',
+                            clickable: true,
+                            onClick: generateEditFunction('addNewsSubtitle'),
+                        },
+                        {
+                            href: '#Paragraf',
+                            label: 'Paragraf',
+                            clickable: true,
+                            onClick: generateEditFunction('addNewsParagraph'),
+                        },
+                    ]"
+                ></app-admin-nav-element>
+                <app-admin-nav-element
+                    description="Weiteres"
+                    [linkArray]="[
+                        {
+                            href: '#Trennlinie',
+                            label: 'Trennlinie',
+                            clickable: true,
+                            onClick: generateEditFunction('addNewsLine'),
+                        },
+                    ]"
+                ></app-admin-nav-element>
+                <button type="button" class="edit-done-button" (click)="submitEdits()">{{ submitEditsButton() }}</button>
             }
         </aside>
     </nav>
@@ -500,9 +549,9 @@
         } @else if (currentActiveSection() === "blog-delete-blog") {
             <app-loading></app-loading>
         } @else if (currentActiveSection() === "news-create-news") {
-            <app-news-create-news></app-news-create-news>
+            <app-news-edit-news [newsTitle]="'Aktuell:'" [news]="news.newNews()" (moveOutput)="handleNewsMove($event)" (editOutput)="handleNewsEdit($event)" (deleteOutput)="handleNewsDelete($event)"></app-news-edit-news>
         } @else if (currentActiveSection() === "news-edit-news") {
-            <app-news-edit-news></app-news-edit-news>
+            <app-news-edit-news [news]="news.existingNews[currentActiveNewsEdit()]()" (moveOutput)="handleNewsMove($event)" (editOutput)="handleNewsEdit($event)" (deleteOutput)="handleNewsDelete($event)"></app-news-edit-news>
         } @else if (currentActiveSection() === "calendar-create-event") {
             <app-calendar-create-event></app-calendar-create-event>
         } @else if (currentActiveSection() === "calendar-delete-event") {
@@ -562,6 +611,8 @@
     <app-popup-text-input (resultOutput)="handleTextInputResult($event)" (closeOutput)="closePopup()"></app-popup-text-input>
 } @else if (imageInputOpen()) {
     <app-popup-image-input (resultOutput)="handleImageInputResult($event)" (closeOutput)="closePopup()"></app-popup-image-input>
+} @else if (fileInputOpen()) {
+    <app-popup-file-input [accept]="fileInputAccept()" (resultOutput)="handleFileInputResult($event)" (closeOutput)="closePopup()"></app-popup-file-input>
 } @else if (multipleImagesInputOpen()) {
     <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-images-input>
 }

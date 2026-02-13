@@ -1,0 +1,98 @@
+@use "../../../styles/index" as *;
+
+.popup {
+    @include popup-backdrop;
+}
+
+.wrapper {
+    max-width: 800px;
+    width: auto;
+    height: auto;
+    background-color: var(--background-50);
+    color: var(--text-950);
+    border-radius: 16px;
+    padding: 2.5rem 1.5rem;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 0 7.5px #c7cdd180;
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0;
+    margin-top: 0;
+}
+
+p {
+    font-size: medium;
+    margin: 1vh 5%;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+input[type="file"] {
+    display: none !important;
+}
+
+label {
+    @include admin-label;
+
+    & + input {
+        padding: 0.5em 1em;
+        width: 100%;
+        margin: 0;
+        pointer-events: none;
+    }
+}
+
+.submit {
+    @include primary-button;
+    margin-top: 3vh;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.close {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+
+    & > img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        aspect-ratio: 1 / 1;
+        object-position: center;
+        filter: invert(var(--darkmode));
+    }
+}
+
+@media screen and (max-width: 275px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: small;
+    }
+
+    .submit {
+        font-size: 15px;
+    }
+
+    .close {
+        display: none;
+    }
+}

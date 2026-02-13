@@ -6,13 +6,16 @@ import {
     ApiEndpointResponse,
     BlogContent,
     CustomImageWithTextElement,
+    DashboardEditTypes,
     DashboardNavigationOptions,
     DatabaseApiEndpointResponse,
     GetAllBlogsApiEndpointResponse,
+    GetAllNewsApiEndpointResponse,
     GetAllStaticSitesApiEndpointResponse,
     GetBlogApiEndpointResponse,
     GetStaticSiteApiEndpointResponse,
     GetTeamApiEndpointResponse,
+    News,
     StaticSite,
     StaticSiteNames,
 } from "../../..";
@@ -28,7 +31,6 @@ import { AdminHomepagePicturePageComponent } from "../components/admin-homepage-
 import { EditStaticSiteComponent } from "../components/edit-static-site/edit-static-site.component";
 import { AdminAddAdminComponent } from "../components/admin-add-admin/admin-add-admin.component";
 import { AdminRemoveAdminComponent } from "../components/admin-remove-admin/admin-remove-admin.component";
-import { NewsCreateNewsComponent } from "../components/news-create-news/news-create-news.component";
 import { MembersRemoveManualMemberComponent } from "../components/members-remove-manual-member/members-remove-manual-member.component";
 import { AdminCreateAccountComponent } from "../components/admin-create-account/admin-create-account.component";
 import { StatsWebsiteAnalyticsComponent } from "../components/stats-website-analytics/stats-website-analytics.component";
@@ -59,6 +61,8 @@ import { PopupSelectionInputComponent } from "../../components/popup-selection-i
 import { PopupConfirmComponent } from "../../components/popup-confirm/popup-confirm.component";
 import { PopupAlertComponent } from "../../components/popup-alert/popup-alert.component";
 import { LoadingComponent } from "../../components/loading/loading.component";
+import { NewsService } from "../../services/news.service";
+import { PopupFileInputComponent } from "../../components/popup-file-input/popup-file-input.component";
 
 @Component({
     selector: "app-dashboard",
@@ -69,7 +73,6 @@ import { LoadingComponent } from "../../components/loading/loading.component";
         EditStaticSiteComponent,
         AdminAddAdminComponent,
         AdminRemoveAdminComponent,
-        NewsCreateNewsComponent,
         MembersRemoveManualMemberComponent,
         AdminCreateAccountComponent,
         StatsWebsiteAnalyticsComponent,
@@ -100,6 +103,7 @@ import { LoadingComponent } from "../../components/loading/loading.component";
         PopupConfirmComponent,
         PopupAlertComponent,
         LoadingComponent,
+        PopupFileInputComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
@@ -120,6 +124,7 @@ export class DashboardComponent implements OnInit {
      */
 
     allEditableBlogs: string[] = [];
+    allEditableNews: string[] = [];
 
     /*
      * ===============================================================
@@ -131,26 +136,8 @@ export class DashboardComponent implements OnInit {
     currentActiveNavigation = signal<DashboardNavigationOptions>("main");
     currentActiveSiteEdit = signal<StaticSiteNames>("vision");
     currentActiveBlogEdit = signal<string>("awaitSelection");
-    currentActionToPerform = signal<
-        | "addTitle"
-        | "addSubtitle"
-        | "addParagraph"
-        | "addImage"
-        | "addMultipleImages"
-        | "addImageWithText"
-        | "addLine"
-        | "addCurrentTeam"
-        | "editTitle"
-        | "editSubtitle"
-        | "editParagraph"
-        | "editGeneralTitle"
-        | "editGeneralSubtitle"
-        | "editAuthor"
-        | "editTitleImage"
-        | "editImage"
-        | "editMultipleImages"
-        | "editImageWithText"
-    >("addTitle");
+    currentActiveNewsEdit = signal<string>("awaitSelection");
+    currentActionToPerform = signal<DashboardEditTypes>("addTitle");
     currentIndexToEdit = signal<number>(-1);
 
     /*
@@ -170,6 +157,7 @@ export class DashboardComponent implements OnInit {
     titleInputOpen = signal(false);
     textInputOpen = signal(false);
     imageInputOpen = signal(false);
+    fileInputOpen = signal(false);
     multipleImagesInputOpen = signal(false);
     selectionInputOpen = signal(false);
     confirmInputOpen = signal(false);
@@ -182,6 +170,7 @@ export class DashboardComponent implements OnInit {
      */
 
     confirmInputObservable = new Subject<boolean>();
+    selectionInputObservable = new Subject<string>();
 
     /*
      * ===============================================================
@@ -236,6 +225,8 @@ export class DashboardComponent implements OnInit {
     selectionInputLabel = signal<string>("");
     selectionInputPlaceholder = signal<string>("");
     selectionInputOptions = signal<string[]>([]);
+
+    fileInputAccept = signal<string>("*");
 
     /*
      * ===============================================================
@@ -309,12 +300,31 @@ export class DashboardComponent implements OnInit {
 
     /*
      * ===============================================================
+     *                       NEWS EDIT CACHE
+     * ===============================================================
+     */
+
+    news: { newNews: WritableSignal<News>; existingNews: { [key: string]: WritableSignal<News> } } = {
+        newNews: signal<News>({ id: -1, date: "1900/12/22", data: { type: "image", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "", imagePosition: "center", content: [] } }),
+        existingNews: {
+            awaitSelection: signal<News>({ id: -2, date: "1900/12/22", data: { type: "image", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "", imagePosition: "center", content: [] } }),
+        },
+    };
+
+    newsImages: { newNews: { url: string; file: File }[]; existingNews: { [key: string]: { url: string; file: File }[] } } = {
+        newNews: [],
+        existingNews: {},
+    };
+
+    /*
+     * ===============================================================
      *                          SERVICES
      * ===============================================================
      */
 
     private teamService = inject(TeamService);
     private blogService = inject(BlogService);
+    private newsService = inject(NewsService);
     private editService = inject(EditService);
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
@@ -368,6 +378,9 @@ export class DashboardComponent implements OnInit {
                 this.blogImages.existingBlogs[blog.title] = [];
             }
         });
+
+        // Get all news for editing
+        this.getAllNews();
     }
 
     getAllBlogTitles(): void {
@@ -384,6 +397,41 @@ export class DashboardComponent implements OnInit {
 
             for (const blog of response.data.data) {
                 this.allEditableBlogs.push(blog["title"]);
+            }
+        });
+    }
+
+    getAllNews(): void {
+        this.allEditableNews = [];
+
+        const newsRequest = this.newsService.getAllNews();
+
+        newsRequest.subscribe((response: GetAllNewsApiEndpointResponse) => {
+            if (response.error || response.data === null || !Array.isArray(response.data)) {
+                this.notificationService.error("Fehler beim Laden der News", "Die News konnten nicht geladen werden: " + response.message);
+
+                return;
+            }
+
+            const getNewsName = (news: News, round = 0): string => {
+                const date = new Date(news["date"]).toLocaleDateString();
+
+                const newsName = round === 0 ? date : `${date} (${round})`;
+
+                if (this.allEditableNews.includes(newsName)) {
+                    return getNewsName(news, round + 1);
+                }
+
+                return newsName;
+            };
+
+            for (const news of response.data) {
+                const newsName = getNewsName(news);
+
+                this.allEditableNews.push(newsName);
+
+                this.news.existingNews[newsName] = signal<News>(news);
+                this.newsImages.existingNews[newsName] = [];
             }
         });
     }
@@ -410,6 +458,22 @@ export class DashboardComponent implements OnInit {
         return new Promise<boolean>((resolve) => {
             this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
                 resolve(result || false);
+            });
+        });
+    }
+
+    async awaitSelection(options: string[], title: string, message: string, label: string, placeholder: string): Promise<string> {
+        this.selectionInputOpen.set(true);
+
+        this.selectionInputTitle.set(title);
+        this.selectionInputDescription.set(message);
+        this.selectionInputLabel.set(label);
+        this.selectionInputPlaceholder.set(placeholder);
+        this.selectionInputOptions.set(options);
+
+        return new Promise<string>((resolve) => {
+            this.selectionInputObservable.pipe(take(1)).subscribe((result) => {
+                resolve(result);
             });
         });
     }
@@ -509,6 +573,27 @@ export class DashboardComponent implements OnInit {
         this.selectionInputOptions.set(this.allEditableBlogs);
     }
 
+    generateSelectNewsToEditFunction(): Function {
+        const _this = this;
+
+        const activationFunction = () => {
+            _this.selectNewsToEdit();
+            _this.generateActivateFunction("news-edit-news", "edit-news")();
+        };
+
+        return activationFunction;
+    }
+
+    selectNewsToEdit(): void {
+        this.selectionInputOpen.set(true);
+
+        this.selectionInputTitle.set("News bearbeiten");
+        this.selectionInputDescription.set("Bitte gib das Datum der News ein, die du bearbeiten möchtest.");
+        this.selectionInputLabel.set("Datum:");
+        this.selectionInputPlaceholder.set("Datum suchen");
+        this.selectionInputOptions.set(this.allEditableNews);
+    }
+
     /*
      * ===============================================================
      *                       CLOSE FUNCTIONS
@@ -530,6 +615,10 @@ export class DashboardComponent implements OnInit {
         this.setCurrentActiveNavigation("main");
     }
 
+    closeNewsEditNavigation(): void {
+        this.closeEditNavigation();
+    }
+
     async closePopup(): Promise<void> {
         const yes = await this.awaitConfirmation("Popup schliessen", "Möchtest du das Popup wirklich schliessen? Alle ungespeicherten Änderungen gehen verloren.", "Schliessen", "Abbrechen");
 
@@ -544,6 +633,7 @@ export class DashboardComponent implements OnInit {
         this.titleInputOpen.set(false);
         this.textInputOpen.set(false);
         this.imageInputOpen.set(false);
+        this.fileInputOpen.set(false);
         this.multipleImagesInputOpen.set(false);
 
         this.titleEditInputOpen.set(false);
@@ -573,14 +663,29 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    getCurrentNewsEditSignal(): WritableSignal<News> {
+        switch (this.currentActiveNavigation()) {
+            case "create-news":
+                return this.news.newNews;
+            case "edit-news":
+                return this.news.existingNews[this.currentActiveNewsEdit()];
+            default:
+                throw new Error("Unbekannte Navigation: " + this.currentActiveNavigation());
+        }
+    }
+
     getCurrentImageStorage(): { url: string; file: File }[] {
         switch (this.currentActiveNavigation()) {
             case "edit-sites":
                 return this.siteEditImages[this.currentActiveSiteEdit()];
-            case "edit-blog":
-                return this.blogImages.existingBlogs[this.currentActiveBlogEdit()];
             case "create-blog":
                 return this.blogImages.newBlog;
+            case "edit-blog":
+                return this.blogImages.existingBlogs[this.currentActiveBlogEdit()];
+            case "create-news":
+                return this.newsImages.newNews;
+            case "edit-news":
+                return this.newsImages.existingNews[this.currentActiveNewsEdit()];
             default:
                 throw new Error("Unbekannte Navigation: " + this.currentActiveNavigation());
         }
@@ -599,6 +704,12 @@ export class DashboardComponent implements OnInit {
             this.submitBlogEdits();
         } else if (this.currentActiveNavigation() === "create-blog") {
             this.submitNewBlog();
+        } else if (this.currentActiveNavigation() === "create-news") {
+            this.submitNewNews();
+        } else if (this.currentActiveNavigation() === "edit-news") {
+            this.submitNewsEdits();
+        } else {
+            this.notificationService.error("Fehler beim Speichern", "Unbekannte Navigation: " + this.currentActiveNavigation());
         }
     }
 
@@ -765,15 +876,17 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    submitNewNews(): void {}
+
+    submitNewsEdits(): void {}
+
     /*
      * ===============================================================
      *              EDIT FUNCTION GENERATOR FUNCTION
      * ===============================================================
      */
 
-    generateEditFunction(
-        type: "addTitle" | "addSubtitle" | "addParagraph" | "editGeneralTitle" | "editGeneralSubtitle" | "editAuthor" | "editTitleImage" | "addImage" | "addMultipleImages" | "addImageWithText" | "addLine" | "addCurrentTeam",
-    ): Function {
+    generateEditFunction(type: DashboardEditTypes): Function {
         const _this = this;
 
         const editFunction = async () => {
@@ -784,21 +897,21 @@ export class DashboardComponent implements OnInit {
 
             _this.currentActionToPerform.set(type);
 
-            if (type === "addTitle") {
+            if (type === "addTitle" || type === "addNewsTitle") {
                 _this.titleInputOpen.set(true);
 
                 _this.titleInputTitle.set("Titel eingeben:");
                 _this.titleInputDescription.set("Bitte gib den Titel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
                 _this.titleInputLabel.set("Titel:");
                 _this.titleInputPlaceholder.set("Titel eingeben");
-            } else if (type === "addSubtitle") {
+            } else if (type === "addSubtitle" || type === "addNewsSubtitle") {
                 _this.titleInputOpen.set(true);
 
                 _this.titleInputTitle.set("Untertitel eingeben:");
                 _this.titleInputDescription.set("Bitte gib den Untertitel ein, den du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
                 _this.titleInputLabel.set("Untertitel:");
                 _this.titleInputPlaceholder.set("Untertitel eingeben");
-            } else if (type === "addParagraph" || type === "addImageWithText") {
+            } else if (type === "addParagraph" || type === "addImageWithText" || type === "addNewsParagraph") {
                 _this.textInputOpen.set(true);
             } else if (type === "addImage") {
                 _this.imageEditInputOpen.set(true);
@@ -871,6 +984,34 @@ export class DashboardComponent implements OnInit {
                 _this.imageEditInputLabel.set("Bild:");
 
                 _this.imageEditInputPlaceholderUrl.set(_this.getCurrentEditSignal()().metadata.imageUrl);
+            } else if (type === "addNewsImage") {
+                _this.imageEditInputOpen.set(true);
+
+                _this.imageEditInputTitle.set("Bild auswählen:");
+                _this.imageEditInputDescription.set("Bitte wähle ein Bild aus, dass du verwenden möchtest.");
+                _this.imageEditInputLabel.set("Bild:");
+
+                _this.imageEditInputPlaceholderUrl.set(_this.getCurrentNewsEditSignal()().data.imageUrl || PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
+            } else if (type === "addNewsPdf") {
+                _this.fileInputOpen.set(true);
+
+                _this.fileInputAccept.set("application/pdf, .pdf");
+            } else if (type === "addNewsMultipleImages") {
+                _this.multipleImagesInputOpen.set(true);
+
+                _this.multipleImagesEditInputTitle.set("Bilder auswählen:");
+                _this.multipleImagesEditInputDescription.set("Bitte wähle Bilder aus, die du verwenden möchtest.");
+                _this.multipleImagesEditInputLabel.set("Bilder:");
+            } else if (type === "addNewsLine") {
+                const element = _this.editService.addLine();
+
+                _this.getCurrentNewsEditSignal().update((news: News): News => {
+                    news.data.content.push(element);
+
+                    return news;
+                });
+            } else {
+                _this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht verarbeitet werden.");
             }
         };
 
@@ -988,6 +1129,83 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    handleNewsMove(event: CdkDragDrop<string[]>): void {
+        moveItemInArray(this.getCurrentNewsEditSignal()().data.content, event.previousIndex, event.currentIndex);
+    }
+
+    handleNewsEdit(index: number): void {
+        this.currentIndexToEdit.set(index);
+
+        const elementToEdit = this.getCurrentNewsEditSignal()().data.content[index];
+
+        switch (elementToEdit.type) {
+            case "title":
+                this.currentActionToPerform.set("editNewsTitle");
+                this.titleEditInputOpen.set(true);
+
+                this.titleEditInputTitle.set("Titel bearbeiten:");
+                this.titleEditInputDescription.set("Bitte bearbeite den Titel nach Bedarf.");
+                this.titleEditInputLabel.set("Titel:");
+                this.titleEditInputPlaceholder.set("Titel eingeben");
+                this.titleEditInputValue.set(elementToEdit.content);
+
+                break;
+
+            case "subtitle":
+                this.currentActionToPerform.set("editNewsSubtitle");
+                this.titleEditInputOpen.set(true);
+
+                this.titleEditInputTitle.set("Untertitel bearbeiten:");
+                this.titleEditInputDescription.set("Bitte bearbeite den Untertitel nach Bedarf.");
+                this.titleEditInputLabel.set("Untertitel:");
+                this.titleEditInputPlaceholder.set("Untertitel eingeben");
+                this.titleEditInputValue.set(elementToEdit.content);
+
+                break;
+
+            case "paragraph":
+                this.currentActionToPerform.set("editNewsParagraph");
+                this.textEditInputOpen.set(true);
+
+                this.textEditInputTitle.set("Text bearbeiten:");
+                this.textEditInputDescription.set("Bitte bearbeite den Text nach Bedarf.");
+                this.textEditInputLabel.set("Text:");
+                this.textEditInputPlaceholder.set("Text eingeben");
+                this.textEditInputValue.set(elementToEdit.content);
+
+                break;
+
+            case "multipleImages":
+                this.currentActionToPerform.set("editNewsMultipleImages");
+                this.multipleImagesEditInputOpen.set(true);
+
+                this.multipleImagesEditInputTitle.set("Bilder ändern:");
+                this.multipleImagesEditInputDescription.set("Bitte wähle neue Bilder aus, um die aktuellen zu ersetzen. Du kannst ausserdem einzelne Bilder hinzufügen oder entfernen oder einfach die Reihenfolge verändern.");
+                this.multipleImagesEditInputLabel.set("Bilder:");
+                this.multipleImagesEditInputValue.set(elementToEdit.images);
+
+                break;
+
+            default:
+                this.notificationService.error("Unbekanntes Element", "Dieses Element kann nicht bearbeitet werden.");
+                break;
+        }
+    }
+
+    async handleNewsDelete(index: number): Promise<void> {
+        const confirmDeletion = await this.awaitConfirmation("Löschen bestätigen", "Möchtest du dieses Element wirklich löschen?", "Löschen", "Abbrechen");
+
+        if (!confirmDeletion) {
+            return;
+        }
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content.splice(index, 1);
+
+            return news;
+        });
+    }
+
     /*
      * ===============================================================
      *                    INPUT HANDLER FUNCTIONS
@@ -1020,6 +1238,18 @@ export class DashboardComponent implements OnInit {
             case "editAuthor":
                 this.editAuthor(content);
                 break;
+            case "addNewsTitle":
+                this.addNewsTitle(content);
+                break;
+            case "editNewsTitle":
+                this.editNewsTitle(content);
+                break;
+            case "addNewsSubtitle":
+                this.addNewsSubtitle(content);
+                break;
+            case "editNewsSubtitle":
+                this.editNewsSubtitle(content);
+                break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
                 break;
@@ -1043,6 +1273,12 @@ export class DashboardComponent implements OnInit {
             case "editImageWithText":
                 this.editImageWithTextPart1(content);
                 break;
+            case "addNewsParagraph":
+                this.addNewsParagraph(content);
+                break;
+            case "editNewsParagraph":
+                this.editNewsParagraph(content);
+                break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
                 break;
@@ -1061,8 +1297,15 @@ export class DashboardComponent implements OnInit {
             case "blog-delete-blog":
                 this.deleteBlog(selectedOption);
                 break;
+            case "news-edit-news":
+                if (this.allEditableNews.includes(selectedOption)) {
+                    this.currentActiveNewsEdit.set(selectedOption);
+                } else {
+                    this.selectionInputObservable.next(selectedOption);
+                }
+                break;
             default:
-                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                this.selectionInputObservable.next(selectedOption);
                 break;
         }
     }
@@ -1093,6 +1336,28 @@ export class DashboardComponent implements OnInit {
             case "editTitleImage":
                 this.editGeneralImage(file as { file: File; url: string });
                 break;
+            case "addNewsImage":
+                this.addNewsImage(file as { file: File; url: string });
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
+    handleFileInputResult(file: File | null): void {
+        this.fileInputOpen.set(false);
+
+        if (file === null) {
+            this.notificationService.info("Keine Datei ausgewählt", "Bitte wähle eine Datei aus, um diese Funktion zu nutzen.");
+
+            return;
+        }
+
+        switch (this.currentActionToPerform()) {
+            case "addNewsPdf":
+                this.addNewsPdf(file);
+                break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
                 break;
@@ -1109,6 +1374,12 @@ export class DashboardComponent implements OnInit {
                 break;
             case "editMultipleImages":
                 this.editMultipleImages(files);
+                break;
+            case "addNewsMultipleImages":
+                this.addNewsMultipleImages(files);
+                break;
+            case "editNewsMultipleImages":
+                this.editNewsMultipleImages(files);
                 break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
@@ -1143,6 +1414,21 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    addNewsTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editService.addTitle(content);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content.push(element);
+
+            return news;
+        });
+    }
+
     addSubtitle(content: string): void {
         if (!content) {
             this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
@@ -1155,6 +1441,21 @@ export class DashboardComponent implements OnInit {
             siteOrBlog.data.unshift(element);
 
             return siteOrBlog;
+        });
+    }
+
+    addNewsSubtitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editService.addSubtitle(content);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content.push(element);
+
+            return news;
         });
     }
 
@@ -1173,6 +1474,21 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    addNewsParagraph(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht hinzugefügt, da kein Inhalt eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editService.addParagraph(content);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content.push(element);
+
+            return news;
+        });
+    }
+
     addImage(file: { file: File; url: string }): void {
         this.getCurrentImageStorage().push(file);
 
@@ -1182,6 +1498,31 @@ export class DashboardComponent implements OnInit {
             siteOrBlog.data.unshift(element);
 
             return siteOrBlog;
+        });
+    }
+
+    async addNewsImage(file: { file: File; url: string }): Promise<void> {
+        this.getCurrentImageStorage().push(file);
+
+        const element = this.editService.addImage(file.url, file.file.name);
+
+        const sideOfImage = (await this.awaitSelection(
+            ["Links", "In der Mitte", "Rechts"],
+            "Seite wählen:",
+            "Wo ist der wichtigste Teil des Bildes? Dies hilft uns, das Bild auf verschiedenen Bildschirmgrössen optimal zuzuschneiden.",
+            "Position:",
+            "In der Mitte",
+        )) as "Links" | "In der Mitte" | "Rechts";
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content = news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages");
+
+            news.data.type = "image";
+            news.data.imagePosition = sideOfImage.replace("In der Mitte", "center").replace("Links", "left").replace("Rechts", "right") as "left" | "center" | "right";
+            news.data.imageUrl = element.imageUrl;
+            news.data.imageAlt = element.imageAlt;
+
+            return news;
         });
     }
 
@@ -1237,6 +1578,56 @@ export class DashboardComponent implements OnInit {
             siteOrBlog.data.unshift(element);
 
             return siteOrBlog;
+        });
+    }
+
+    addNewsMultipleImages(files: { file: File; url: string }[]): void {
+        if (files.length === 0) {
+            this.notificationService.info("Keine Bilder ausgewählt", "Bitte wähle mindestens ein Bild aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const images: { imageUrl: string; imageAlt: string }[] = [];
+
+        for (const file of files) {
+            this.getCurrentImageStorage().push(file);
+
+            images.push({
+                imageUrl: file.url,
+                imageAlt: file.file.name,
+            });
+        }
+
+        const element = this.editService.addMultipleImages(images);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.type = "multipleImages";
+
+            news.data.content = news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages");
+
+            news.data.content.push(element);
+
+            return news;
+        });
+    }
+
+    addNewsPdf(file: File): void {
+        if (file.type !== "application/pdf") {
+            this.notificationService.info("Ungültige Datei", "Bitte wähle eine PDF-Datei aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const fileUrl = URL.createObjectURL(file);
+
+        this.getCurrentImageStorage().push({ file, url: fileUrl });
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content = news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages");
+
+            news.data.type = "pdf";
+            news.data.pdfUrl = fileUrl;
+
+            return news;
         });
     }
 
@@ -1308,6 +1699,21 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    editNewsTitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Titel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editService.addTitle(content);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content[this.currentIndexToEdit()] = element;
+
+            return news;
+        });
+    }
+
     editSubtitle(content: string): void {
         if (!content) {
             this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
@@ -1323,6 +1729,21 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    editNewsSubtitle(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Untertitel wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editService.addSubtitle(content);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content[this.currentIndexToEdit()] = element;
+
+            return news;
+        });
+    }
+
     editParagraph(content: string): void {
         if (!content) {
             this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
@@ -1335,6 +1756,21 @@ export class DashboardComponent implements OnInit {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
             return siteOrBlog;
+        });
+    }
+
+    editNewsParagraph(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Text wurde nicht aktualisiert, da kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        const element = this.editService.addParagraph(content);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content[this.currentIndexToEdit()] = element;
+
+            return news;
         });
     }
 
@@ -1426,6 +1862,34 @@ export class DashboardComponent implements OnInit {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
             return siteOrBlog;
+        });
+    }
+
+    editNewsMultipleImages(files: { file: File; url: string }[]): void {
+        if (files.length === 0) {
+            this.notificationService.info("Keine Bilder ausgewählt", "Bitte wähle mindestens ein Bild aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const images: { imageUrl: string; imageAlt: string }[] = [];
+
+        for (const file of files) {
+            if (file.url.startsWith("blob:")) {
+                this.getCurrentImageStorage().push(file);
+            }
+
+            images.push({
+                imageUrl: file.url,
+                imageAlt: file.file?.name ?? "Keine Bezeichnung",
+            });
+        }
+
+        const element = this.editService.addMultipleImages(images);
+
+        this.getCurrentNewsEditSignal().update((news: News): News => {
+            news.data.content[this.currentIndexToEdit()] = element;
+
+            return news;
         });
     }
 

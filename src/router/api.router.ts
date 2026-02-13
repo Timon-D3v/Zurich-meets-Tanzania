@@ -3,6 +3,7 @@ import rateLimit from "express-rate-limit";
 
 import envRouter from "./env.api.router";
 import authRouter from "./auth.api.router";
+import newsRouter from "./news.api.router";
 import blogRouter from "./blog.api.router";
 import teamRouter from "./team.api.router";
 import galleryRouter from "./gallery.api.router";
@@ -30,6 +31,7 @@ router.use(
 
 router.use("/env", envRouter);
 router.use("/auth", authRouter);
+router.use("/news", newsRouter);
 router.use("/blog", blogRouter);
 router.use("/team", teamRouter);
 router.use("/gallery", galleryRouter);

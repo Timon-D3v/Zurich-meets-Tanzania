@@ -1,4 +1,4 @@
-import { Blog, PublicConfig, StaticSite, StaticSiteNames } from ".";
+import { Blog, News, PublicConfig, StaticSite, StaticSiteNames } from ".";
 
 export const PUBLIC_CONFIG: PublicConfig = {
     NAME: "zurich meets tanzania",
@@ -9,6 +9,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
     FACEBOOK_URL: "https://www.facebook.com/profile.php?id=61577621371823",
     INSTAGRAM_URL: "https://www.instagram.com/zurichmeetstanzania/",
     PROGRAMMER_URL: "https://www.timondev.com/",
+    CDN_URL: "https://api.timondev.com/cdn/",
 
     PRIVACY_PDF_URL: "https://ik.imagekit.io/zmt/pdf/datenschutz/Datenschutzerklaerung.pdf",
     FALLBACK_IMAGE_URL: "/backup/fallback.png",
@@ -83,6 +84,44 @@ export const PUBLIC_CONFIG: PublicConfig = {
                         author: "Das ZMT-Team",
                     },
                     data: [
+                        {
+                            type: "title",
+                            content: "Fehler beim Laden der Seite",
+                        },
+                        {
+                            type: "paragraph",
+                            content: `Beim Laden der Seite ist ein Fehler aufgetreten: ${message}\nBitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.`,
+                        },
+                    ],
+                },
+            };
+        },
+    },
+
+    NEWS: {
+        LOADING: (imageUrl: string): News => {
+            return {
+                id: -1,
+                date: new Date().toLocaleString(),
+                data: {
+                    type: "image",
+                    imageUrl: imageUrl,
+                    imageAlt: "Laden...",
+                    imagePosition: "center",
+                    content: [],
+                },
+            };
+        },
+        ERROR: (imageUrl: string, message: string): News => {
+            return {
+                id: -2,
+                date: new Date().toLocaleString(),
+                data: {
+                    type: "image",
+                    imageUrl: imageUrl,
+                    imageAlt: "Fehler",
+                    imagePosition: "center",
+                    content: [
                         {
                             type: "title",
                             content: "Fehler beim Laden der Seite",

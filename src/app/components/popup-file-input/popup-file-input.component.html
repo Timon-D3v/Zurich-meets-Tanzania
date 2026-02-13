@@ -1,0 +1,16 @@
+<div class="popup" (click)="close()">
+    <form class="wrapper" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+        <label for="file">{{ label() }}</label>
+        <input type="file" [accept]="accept()" id="file" (change)="onChange($event)" />
+        <label for="file">
+            <label for="file" class="hidden"></label>
+            <input type="text" disabled [value]="file() === null ? '' : file()!.name" placeholder="Keine Datei ausgewählt" name="fileName" (click)="$event.preventDefault()" />
+        </label>
+        <button type="submit" class="submit">{{ submitButtonText() }}</button>
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>

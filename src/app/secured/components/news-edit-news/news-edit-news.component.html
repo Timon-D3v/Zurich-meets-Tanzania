@@ -1,1 +1,53 @@
-<p>news-edit-news works!</p>
+<div class="wrapper" id="scroll_to_news" [attr.data-date]="formatDate(news().date)">
+    <div class="content drag-wrapper" cdkDropList (cdkDropListDropped)="moveElement($event)">
+        <h1 class="news-title">{{ newsTitle() === null ? formatTitleDate(news().date) : newsTitle() }}</h1>
+        @for (element of news().data.content; track $index) {
+            <div class="drag-element" cdkDrag cdkDragBoundary=".drag-wrapper">
+                @if (element.type === "title") {
+                    <app-custom-title [content]="element.content"></app-custom-title>
+                } @else if (element.type === "subtitle") {
+                    <app-custom-subtitle [content]="element.content"></app-custom-subtitle>
+                } @else if (element.type === "paragraph") {
+                    <app-custom-paragraph [content]="element.content"></app-custom-paragraph>
+                } @else if (element.type === "image") {
+                    <app-custom-image [imageUrl]="element.imageUrl" [imageAlt]="element.imageAlt"></app-custom-image>
+                } @else if (element.type === "multipleImages") {
+                    <app-custom-image-carousel [images]="element.images"></app-custom-image-carousel>
+                } @else if (element.type === "imageWithText") {
+                    <app-custom-image-with-text [imageUrl]="element.imageUrl" [imageAlt]="element.imageAlt" [content]="element.content" [sideOfImage]="element.sideOfImage"></app-custom-image-with-text>
+                } @else if (element.type === "line") {
+                    <app-custom-line></app-custom-line>
+                } @else if (element.type === "currentTeam") {
+                    <app-team-from-id [id]="element.teamId"></app-team-from-id>
+                }
+                <!--
+                    Use the drag-placeholder to get a gray box that moves around when dragging.
+                    Currently the element is dragged, which is better for preview, but can be overwhelming with elements that are too big.
+                    Don't forget to import CdkDragPlaceholder from @angular/cdk/drag-drop and add it to the imports array in the component decorator.
+                    The styles are already there in the scss file, just uncomment them.
+                -->
+                <!-- <div class="drag-placeholder" *cdkDragPlaceholder></div> -->
+                <div class="drag-active-element" *cdkDragPreview></div>
+
+                @if (element.type !== "line" && element.type !== "currentTeam") {
+                    <button type="button" class="edit" (click)="editElement($index)">
+                        <img src="/svg/pen.svg" alt="Element bearbeiten" />
+                    </button>
+                }
+
+                <button type="button" class="delete" (click)="deleteElement($index)">
+                    <img src="/svg/trash.svg" alt="Element löschen" />
+                </button>
+            </div>
+        }
+    </div>
+    @if (news().data.type === "image" && news().data.imageUrl && news().data.imageAlt && news().data.imagePosition) {
+        <img class="news-img {{ news().data.imagePosition === 'left' ? 'left' : news().data.imagePosition === 'center' ? 'center' : 'right' }}" [src]="news().data.imageUrl" [alt]="news().data.imageAlt" />
+    } @else if (news().data.type === "pdf" && news().data.pdfUrl) {
+        <iframe class="news-iframe" [src]="pdfUrl()" title="{{ news().data.pdfUrl }}"></iframe>
+    } @else if (news().data.type === "multipleImages") {
+        <!-- The Carousel does not have another element at the side -->
+    } @else {
+        <img class="news-img center" [src]="FALLBACK_IMAGE_URL" alt="Fehler" />
+    }
+</div>

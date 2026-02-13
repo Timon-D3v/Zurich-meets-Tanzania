@@ -11,6 +11,7 @@ export class PublicEnvService {
     private cache = signal<PublicEnvVariables>({
         ORIGIN: null,
         ENV: null,
+        DELIVAPI_USER: null,
     });
 
     private notificationService = inject(NotificationService);
@@ -59,5 +60,27 @@ export class PublicEnvService {
         });
 
         return response.message as "dev" | "prod";
+    }
+
+    async getDelivApiUser(): Promise<string> {
+        if (typeof this.cache()["DELIVAPI_USER"] === "string") {
+            return this.cache()["DELIVAPI_USER"] as string;
+        }
+
+        const response = await lastValueFrom(this.http.get<ApiEndpointResponse>("/api/env/DELIVAPI_USER"));
+
+        if (response.error) {
+            this.notificationService.error("App Fehler", response.message);
+
+            throw new Error(response.message);
+        }
+
+        this.cache.update((value) => {
+            value.DELIVAPI_USER = response.message;
+
+            return value;
+        });
+
+        return response.message;
     }
 }

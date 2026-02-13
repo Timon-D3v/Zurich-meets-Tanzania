@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { HeroComponent } from "../components/hero/hero.component";
 import { PublicEnvService } from "../services/public-env.service";
+import { NewsComponent } from "../components/news/news.component";
 
 @Component({
     selector: "app-home",
-    imports: [HeroComponent],
+    imports: [HeroComponent, NewsComponent],
     templateUrl: "./home.component.html",
     styleUrl: "./home.component.scss",
 })
@@ -14,6 +15,8 @@ export class HomeComponent implements OnInit {
 
     readonly titleHtml = "Medizinische Hilfe<br>in Tanzania";
     readonly subtitle = "Wir sind ein Team von medizinischen Fachleuten aus den verschiedensten Berufsgruppen und Lehren.";
+
+    readonly newsTitle = "Aktuell:";
 
     publicEnvService = inject(PublicEnvService);
 
