@@ -44,4 +44,23 @@ export class NewsService {
 
         return request;
     }
+
+    updateNews(newsId: number, newsContent: NewsContent, images: { url: string; file: File }[], sendNewsletter: boolean): Observable<ApiEndpointResponse> {
+        const formData = new FormData();
+
+        const imageNames = images.map((image) => image.url);
+
+        formData.append("newsId", newsId.toString());
+        formData.append("newsContent", JSON.stringify(newsContent));
+        formData.append("imageNames", JSON.stringify(imageNames));
+        formData.append("sendNewsletter", sendNewsletter ? "true" : "false");
+
+        images.forEach((image) => {
+            formData.append("images", image.file);
+        });
+
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/news/updateNews", formData);
+
+        return request;
+    }
 }

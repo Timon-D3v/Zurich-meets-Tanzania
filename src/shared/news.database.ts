@@ -82,3 +82,23 @@ export async function createNews(newsContent: NewsContent): Promise<DatabaseResu
         };
     }
 }
+
+export async function updateNews(newsId: number, newsContent: NewsContent): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`news\` SET \`data\` = ? WHERE \`id\` = ?;`, [JSON.stringify(newsContent), newsId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}

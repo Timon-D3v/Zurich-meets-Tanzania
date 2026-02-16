@@ -904,7 +904,33 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    submitNewsEdits(): void {}
+    async submitNewsEdits(): Promise<void> {
+        this.submitEditsButton.set("Speichern...");
+
+        const currentNews = this.news.existingNews[this.currentActiveNewsEdit()]();
+        const currentNewsImages = this.newsImages.existingNews[this.currentActiveNewsEdit()];
+
+        const shouldSendNewsletter = await this.awaitConfirmation("Newsletter versenden?", "Möchtest du einen Newsletter an alle Abonnenten versenden, um sie über die neue News zu informieren?", "Ja", "Nein");
+
+        const request = this.newsService.updateNews(currentNews.id, currentNews.data, currentNewsImages, shouldSendNewsletter);
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            this.submitEditsButton.set("Abschliessen");
+
+            this.getAllNews();
+
+            if (response.error) {
+                this.notificationService.error("Fehler beim Aktualisieren", "Die News konnten nicht aktualisiert werden: " + response.message);
+
+                return;
+            }
+
+            this.notificationService.success("News aktualisiert", response.message);
+
+            // Reset the newsEdits
+            this.currentActiveNewsEdit.set("awaitSelection");
+        });
+    }
 
     /*
      * ===============================================================
