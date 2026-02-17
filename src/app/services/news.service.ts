@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { ApiEndpointResponse, GetAllNewsApiEndpointResponse, GetNewsApiEndpointResponse, NewsContent } from "../..";
+import { ApiEndpointResponse, GetAllNewsApiEndpointResponse, GetLastXNewsIdsApiEndpointResponse, GetNewsApiEndpointResponse, NewsContent } from "../..";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -17,6 +17,12 @@ export class NewsService {
 
     getLatestNews(): Observable<GetNewsApiEndpointResponse> {
         const request = this.http.get<GetNewsApiEndpointResponse>("/api/news/getLatestNews");
+
+        return request;
+    }
+
+    getLastXNews(x: number): Observable<GetLastXNewsIdsApiEndpointResponse> {
+        const request = this.http.get<GetLastXNewsIdsApiEndpointResponse>("/api/news/getLastXNews/" + x);
 
         return request;
     }

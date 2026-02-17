@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from "@angular/core";
 import { HeroComponent } from "../components/hero/hero.component";
 import { PublicEnvService } from "../services/public-env.service";
 import { NewsComponent } from "../components/news/news.component";
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: "app-home",
-    imports: [HeroComponent, NewsComponent],
+    imports: [HeroComponent, NewsComponent, RouterLink],
     templateUrl: "./home.component.html",
     styleUrl: "./home.component.scss",
 })

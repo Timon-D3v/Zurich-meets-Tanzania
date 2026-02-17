@@ -1,1 +1,11 @@
-<p>news-archive works!</p>
+@defer (when newsIds().length > 0; prefetch on immediate) {
+    @for (id of newsIds(); track id) {
+        <app-news [id]="id"></app-news>
+    }
+
+    @if (newsIds().length === loaded()) {
+        <a (click)="load($event)" href="#">Weitere</a>
+    }
+} @placeholder (minimum 100ms) {
+    <app-loading></app-loading>
+}

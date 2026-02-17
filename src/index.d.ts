@@ -342,6 +342,10 @@ export interface GetNewsApiEndpointResponse extends ApiEndpointResponse {
     data: News | null;
 }
 
+export interface GetLastXNewsIdsApiEndpointResponse extends ApiEndpointResponse {
+    data: number[]
+}
+
 export interface GetAllNewsApiEndpointResponse extends ApiEndpointResponse {
     data: News[] | null;
 }

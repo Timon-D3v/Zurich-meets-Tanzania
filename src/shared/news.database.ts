@@ -43,6 +43,26 @@ export async function getLatestNews(): Promise<DatabaseResult> {
     }
 }
 
+export async function getLastXNewsIds(numberOfNews: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`id\` from \`zmt\`.\`news\` ORDER BY \`id\` DESC LIMIT ${numberOfNews};`);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
 export async function getAllNews(): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * from \`zmt\`.\`news\``);
