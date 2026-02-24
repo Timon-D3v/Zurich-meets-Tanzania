@@ -358,25 +358,25 @@
                     [linkArray]="[
                         {
                             href: '#Blog-Titel',
-                            label: 'Blog Titel',
+                            label: currentActiveNavigation() === 'edit-sites' ? 'Seiten Titel' : 'Blog Titel',
                             clickable: true,
                             onClick: generateEditFunction('editGeneralTitle'),
                         },
                         {
                             href: '#Blog-Untertitel',
-                            label: 'Blog Untertitel',
+                            label: currentActiveNavigation() === 'edit-sites' ? 'Seiten Untertitel' : 'Blog Untertitel',
                             clickable: true,
                             onClick: generateEditFunction('editGeneralSubtitle'),
                         },
                         {
                             href: '#Blog-Autor',
-                            label: 'Blog Autor',
+                            label: currentActiveNavigation() === 'edit-sites' ? 'Seiten Autor' : 'Blog Autor',
                             clickable: true,
                             onClick: generateEditFunction('editAuthor'),
                         },
                         {
                             href: '#Blog-Titelbild',
-                            label: 'Blog Titelbild',
+                            label: currentActiveNavigation() === 'edit-sites' ? 'Seiten Titelbild' : 'Blog Titelbild',
                             clickable: true,
                             onClick: generateEditFunction('editTitleImage'),
                         },

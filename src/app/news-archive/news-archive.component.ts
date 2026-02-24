@@ -36,7 +36,7 @@ export class NewsArchiveComponent implements OnInit {
     load(event: Event): void {
         event.preventDefault();
 
-        this.loaded.update(value => value + 5);
+        this.loaded.update((value) => value + 5);
 
         const request = this.newsService.getLastXNews(this.loaded());
 

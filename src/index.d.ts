@@ -46,6 +46,11 @@ export type Config = {
     PASSWORD_INFOMANIAK_ACCOUNT: string;
 
     TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_READONLY_ACCOUNT: string;
+
+    TIANJI_API_KEY: string;
+    TIANJI_WORKSPACE_ID: string;
+    TIANJI_WEBSITE_ID: string;
+    TIANJI_URL: string;
 };
 
 export type PublicEnvVariables = {
@@ -343,11 +348,15 @@ export interface GetNewsApiEndpointResponse extends ApiEndpointResponse {
 }
 
 export interface GetLastXNewsIdsApiEndpointResponse extends ApiEndpointResponse {
-    data: number[]
+    data: number[];
 }
 
 export interface GetAllNewsApiEndpointResponse extends ApiEndpointResponse {
     data: News[] | null;
+}
+
+export interface GetVisitorCountsApiEndpointResponse extends ApiEndpointResponse {
+    data: VisitorCounts[];
 }
 
 export interface PublicUser {
@@ -619,3 +628,10 @@ export interface NewsContentMultipleImages extends NewsContentBase {
 }
 
 export type NewsContent = NewsContentImage | NewsContentPdf | NewsContentMultipleImages;
+
+export type VisitorCounts = {
+    bounces: { value: number; prev: number };
+    pageviews: { value: number; prev: number };
+    uniques: { value: number; prev: number };
+    totaltime: { value: number; prev: number };
+};

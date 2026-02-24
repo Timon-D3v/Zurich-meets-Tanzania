@@ -1,1 +1,187 @@
-<p>stats-website-analytics works!</p>
+@if (visitorCounts().length === 0) {
+    <app-loading></app-loading>
+} @else {
+    <div class="wrapper">
+        <h2>Anzahl Seitenaufrufe</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="`-5 0 ${svgWidth() + 10} ${svgHeight()}`">
+            <defs>
+                <!-- Linear gradient for the page views graph -->
+                <linearGradient id="svg-path-gradient" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-opacity="0.55" />
+                    <stop offset="100%" stop-opacity="0.2" />
+                </linearGradient>
+            </defs>
+            <!-- Page Views Graph -->
+            <path [attr.d]="pageViewsGraphPath()" />
+            <!-- Data points and labels for page views graph -->
+            <g>
+                @for (views of pageViews(); track $index) {
+                    <circle [attr.r]="svgWidth() / 200" [attr.cx]="calculateDataPointCoordinates($index, pageViews()).x" [attr.cy]="calculateDataPointCoordinates($index, pageViews()).y" />
+
+                    @if ($index === pageViews().length - 1) {
+                        <!-- For the last data point, position the label to the left of the point, that it does not get cut of by the end of the canvas -->
+                        <text [attr.x]="calculateDataPointCoordinates($index, pageViews()).x - 20" [attr.y]="calculateDataPointCoordinates($index, pageViews()).y">{{ views }}</text>
+                    } @else if ($index !== 0) {
+                        <!-- Don't display label for first data point since it is inside the y-axis label -->
+                        <text [attr.x]="calculateDataPointCoordinates($index, pageViews()).x" [attr.y]="calculateDataPointCoordinates($index, pageViews()).y - 10">{{ views }}</text>
+                    }
+                }
+            </g>
+            <!-- X and Y axes with markers and labels -->
+            <g>
+                <!-- X-axis and labels -->
+                <g>
+                    <line [attr.x1]="-10" [attr.y1]="svgHeight() - 5" [attr.x2]="svgWidth() + 10" [attr.y2]="svgHeight() - 5"></line>
+                    <!-- X-axis labels -->
+                    <g>
+                        @for (views of pageViews(); track $index) {
+                            <line [attr.x1]="calculateDataPointCoordinates($index, pageViews()).x" [attr.y1]="svgHeight() - 10" [attr.x2]="calculateDataPointCoordinates($index, pageViews()).x" [attr.y2]="svgHeight()" />
+
+                            @if ($index > 0 && $index < pageViews().length - 1) {
+                                <!-- Don't display label for first and last data point since they are inside the y-axis label or at the end of the canvas -->
+                                <text [attr.x]="calculateDataPointCoordinates($index, pageViews()).x" [attr.y]="svgHeight() - 15">{{ calculateDateXDaysAgo(pageViews().length - 1 - $index) }}</text>
+                            }
+                        }
+                    </g>
+                </g>
+                <!-- Y-axis and labels -->
+                <g>
+                    <line [attr.x1]="0" [attr.y1]="-10" [attr.x2]="0" [attr.y2]="svgHeight() + 10"></line>
+                    <!-- Y-axis labels -->
+                    <g>
+                        @for (step of pageViewsDataSteps(); track $index) {
+                            @if ($index !== pageViewsDataSteps().length - 1) {
+                                <!-- Don't display the last item since it would be too close to the second last one in some cases -->
+                                <line [attr.x1]="-5" [attr.y1]="calculateDataPointCoordinates($index, pageViewsDataSteps()).y" [attr.x2]="5" [attr.y2]="calculateDataPointCoordinates($index, pageViewsDataSteps()).y" />
+                                <text class="y-axis-label" [attr.x]="10" [attr.y]="calculateDataPointCoordinates($index, pageViewsDataSteps()).y">{{ step }}</text>
+                            }
+                        }
+                    </g>
+                </g>
+            </g>
+        </svg>
+        <a href="#" (click)="loadMoreDataPoints($event)">Mehr laden</a>
+    </div>
+    <div class="wrapper">
+        <h2>Anzahl unterschiedlicher Besucher</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="`-5 0 ${svgWidth() + 10} ${svgHeight()}`">
+            <defs>
+                <!-- Linear gradient for the page views graph -->
+                <linearGradient id="svg-path-gradient" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-opacity="0.55" />
+                    <stop offset="100%" stop-opacity="0.2" />
+                </linearGradient>
+            </defs>
+            <!-- Unique Views Graph -->
+            <path [attr.d]="uniqueViewsGraphPath()" />
+            <!-- Data points and labels for unique views graph -->
+            <g>
+                @for (views of uniqueViews(); track $index) {
+                    <circle [attr.r]="svgWidth() / 200" [attr.cx]="calculateDataPointCoordinates($index, uniqueViews()).x" [attr.cy]="calculateDataPointCoordinates($index, uniqueViews()).y" />
+
+                    @if ($index === uniqueViews().length - 1) {
+                        <!-- For the last data point, position the label to the left of the point, that it does not get cut of by the end of the canvas -->
+                        <text [attr.x]="calculateDataPointCoordinates($index, uniqueViews()).x - 20" [attr.y]="calculateDataPointCoordinates($index, uniqueViews()).y">{{ views }}</text>
+                    } @else if ($index !== 0) {
+                        <!-- Don't display label for first data point since it is inside the y-axis label -->
+                        <text [attr.x]="calculateDataPointCoordinates($index, uniqueViews()).x" [attr.y]="calculateDataPointCoordinates($index, uniqueViews()).y - 10">{{ views }}</text>
+                    }
+                }
+            </g>
+            <!-- X and Y axes with markers and labels -->
+            <g>
+                <!-- X-axis and labels -->
+                <g>
+                    <line [attr.x1]="-10" [attr.y1]="svgHeight() - 5" [attr.x2]="svgWidth() + 10" [attr.y2]="svgHeight() - 5"></line>
+                    <!-- X-axis labels -->
+                    <g>
+                        @for (views of uniqueViews(); track $index) {
+                            <line [attr.x1]="calculateDataPointCoordinates($index, uniqueViews()).x" [attr.y1]="svgHeight() - 10" [attr.x2]="calculateDataPointCoordinates($index, uniqueViews()).x" [attr.y2]="svgHeight()" />
+
+                            @if ($index > 0 && $index < uniqueViews().length - 1) {
+                                <!-- Don't display label for first and last data point since they are inside the y-axis label or at the end of the canvas -->
+                                <text [attr.x]="calculateDataPointCoordinates($index, uniqueViews()).x" [attr.y]="svgHeight() - 15">{{ calculateDateXDaysAgo(uniqueViews().length - 1 - $index) }}</text>
+                            }
+                        }
+                    </g>
+                </g>
+                <!-- Y-axis and labels -->
+                <g>
+                    <line [attr.x1]="0" [attr.y1]="-10" [attr.x2]="0" [attr.y2]="svgHeight() + 10"></line>
+                    <!-- Y-axis labels -->
+                    <g>
+                        @for (step of uniqueViewsDataSteps(); track $index) {
+                            @if ($index !== uniqueViewsDataSteps().length - 1) {
+                                <!-- Don't display the last item since it would be too close to the second last one in some cases -->
+                                <line [attr.x1]="-5" [attr.y1]="calculateDataPointCoordinates($index, uniqueViewsDataSteps()).y" [attr.x2]="5" [attr.y2]="calculateDataPointCoordinates($index, uniqueViewsDataSteps()).y" />
+                                <text class="y-axis-label" [attr.x]="10" [attr.y]="calculateDataPointCoordinates($index, uniqueViewsDataSteps()).y">{{ step }}</text>
+                            }
+                        }
+                    </g>
+                </g>
+            </g>
+        </svg>
+        <a href="#" (click)="loadMoreDataPoints($event)">Mehr laden</a>
+    </div>
+    <div class="wrapper">
+        <h2>Anzahl verbrachte Zeit <wbr />(in Sekunden)</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="`-5 0 ${svgWidth() + 10} ${svgHeight()}`">
+            <defs>
+                <!-- Linear gradient for the page views graph -->
+                <linearGradient id="svg-path-gradient" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-opacity="0.55" />
+                    <stop offset="100%" stop-opacity="0.2" />
+                </linearGradient>
+            </defs>
+            <!-- Total Time Graph -->
+            <path [attr.d]="totalTimeGraphPath()" />
+            <!-- Data points and labels for the total time graph -->
+            <g>
+                @for (views of totalTime(); track $index) {
+                    <circle [attr.r]="svgWidth() / 200" [attr.cx]="calculateDataPointCoordinates($index, totalTime()).x" [attr.cy]="calculateDataPointCoordinates($index, totalTime()).y" />
+
+                    @if ($index === totalTime().length - 1) {
+                        <!-- For the last data point, position the label to the left of the point, that it does not get cut of by the end of the canvas -->
+                        <text [attr.x]="calculateDataPointCoordinates($index, totalTime()).x - 20" [attr.y]="calculateDataPointCoordinates($index, totalTime()).y">{{ views }}</text>
+                    } @else if ($index !== 0) {
+                        <!-- Don't display label for first data point since it is inside the y-axis label -->
+                        <text [attr.x]="calculateDataPointCoordinates($index, totalTime()).x" [attr.y]="calculateDataPointCoordinates($index, totalTime()).y - 10">{{ views }}</text>
+                    }
+                }
+            </g>
+            <!-- X and Y axes with markers and labels -->
+            <g>
+                <!-- X-axis and labels -->
+                <g>
+                    <line [attr.x1]="-10" [attr.y1]="svgHeight() - 5" [attr.x2]="svgWidth() + 10" [attr.y2]="svgHeight() - 5"></line>
+                    <!-- X-axis labels -->
+                    <g>
+                        @for (views of totalTime(); track $index) {
+                            <line [attr.x1]="calculateDataPointCoordinates($index, totalTime()).x" [attr.y1]="svgHeight() - 10" [attr.x2]="calculateDataPointCoordinates($index, totalTime()).x" [attr.y2]="svgHeight()" />
+
+                            @if ($index > 0 && $index < totalTime().length - 1) {
+                                <!-- Don't display label for first and last data point since they are inside the y-axis label or at the end of the canvas -->
+                                <text [attr.x]="calculateDataPointCoordinates($index, totalTime()).x" [attr.y]="svgHeight() - 15">{{ calculateDateXDaysAgo(totalTime().length - 1 - $index) }}</text>
+                            }
+                        }
+                    </g>
+                </g>
+                <!-- Y-axis and labels -->
+                <g>
+                    <line [attr.x1]="0" [attr.y1]="-10" [attr.x2]="0" [attr.y2]="svgHeight() + 10"></line>
+                    <!-- Y-axis labels -->
+                    <g>
+                        @for (step of totalTimeDataSteps(); track $index) {
+                            @if ($index !== totalTimeDataSteps().length - 1) {
+                                <!-- Don't display the last item since it would be too close to the second last one in some cases -->
+                                <line [attr.x1]="-5" [attr.y1]="calculateDataPointCoordinates($index, totalTimeDataSteps()).y" [attr.x2]="5" [attr.y2]="calculateDataPointCoordinates($index, totalTimeDataSteps()).y" />
+                                <text class="y-axis-label" [attr.x]="10" [attr.y]="calculateDataPointCoordinates($index, totalTimeDataSteps()).y">{{ step }}</text>
+                            }
+                        }
+                    </g>
+                </g>
+            </g>
+        </svg>
+        <a href="#" (click)="loadMoreDataPoints($event)">Mehr laden</a>
+    </div>
+}

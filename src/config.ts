@@ -42,4 +42,9 @@ export const CONFIG: Config = {
     EMAIL_MAILJET_ACCOUNT: process.env["EMAIL_MAILJET_ACCOUNT"] as string,
 
     TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_READONLY_ACCOUNT: process.env["TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_READONLY_ACCOUNT"] as string,
+
+    TIANJI_API_KEY: process.env["TIANJI_API_KEY"] as string,
+    TIANJI_WORKSPACE_ID: process.env["TIANJI_WORKSPACE_ID"] as string,
+    TIANJI_WEBSITE_ID: process.env["TIANJI_WEBSITE_ID"] as string,
+    TIANJI_URL: process.env["TIANJI_URL"] as string,
 };
