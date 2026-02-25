@@ -1,0 +1,157 @@
+@use "../../../../styles/index" as *;
+
+.table-wrapper {
+    @include default-table;
+}
+
+td {
+    position: relative;
+    min-width: 100px;
+
+    &.half {
+        // 90px is the mim width that the edit and reset buttons need to be displayed properly,
+        // 16px is the padding of the td which is not included in the min-width of the content
+        min-width: calc(90px - 16px); 
+    }
+
+    &.double {
+        min-width: 150px;
+    }
+
+    & a.picture {
+        display: flex;
+        gap: 1rem;
+        text-decoration: none;
+
+        & img {
+            width: 30px;
+            height: 30px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        & span {
+            color: var(--text-950);
+            text-decoration: underline;
+
+            &:hover {
+                color: var(--primary-500);
+            }
+        }
+    }
+
+    & .edit,
+    & .reset {
+        display: none;
+    }
+
+    &:hover {
+        & .edit,
+        & .reset {
+            display: block;
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            aspect-ratio: 1 / 1;
+            background-color: var(--background-950);
+            box-sizing: border-box;
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background-color 0.25s ease-in-out;
+
+            &:hover {
+                background-color: var(--background-800);
+            }
+
+            &:active {
+                background-color: var(--background-700);
+            }
+
+            & img {
+                filter: invert(var(--not-darkmode));
+                width: 20px;
+                height: 20px;
+                aspect-ratio: 1 / 1;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+
+        & .edit {
+            right: 50px;
+            // background-image: url(../../../../../public/svg/pen.svg);
+
+            &.no-delete-button {
+                right: 10px;
+            }
+        }
+
+        & .reset {
+            right: 10px;
+            // background-image: url(../../../../../public/svg/trash.svg);
+        }
+    }
+}
+
+.action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    min-width: 200px;
+}
+
+.save,
+.discard,
+.delete {
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.1ch;
+    line-height: 1.5;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    display: grid;
+    place-items: center;
+
+    & img {
+        filter: invert(1);
+        width: 20px;
+        height: 20px;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        object-position: center;
+    }
+}
+
+.save {
+    background-color: var(--green);
+    color: var(--c-text-950);
+}
+
+.discard {
+    background-color: var(--background-500);
+    color: var(--c-text-950);
+}
+
+.delete {
+    background-color: var(--error);
+    color: var(--c-text-50);
+}
+
+.download {
+    @include primary-button;
+    margin-top: 3vh;
+    margin-left: auto;
+    margin-right: auto;
+}

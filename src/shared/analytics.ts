@@ -6,37 +6,44 @@ initOpenapiSDK(CONFIG.TIANJI_URL, {
     apiKey: CONFIG.TIANJI_API_KEY,
 });
 
-// async function getSystemConfig() {
-//   try {
-//     const config = await openApiClient.GlobalService.globalConfig();
-
-//     console.log('Allow registration:', config.allowRegister);
-//     console.log('Billing enabled:', config.enableBilling);
-
-//     return config;
-//   } catch (error) {
-//     console.error('Failed to get system configuration:', error);
-//   }
-// }
-
 export async function getLastXDaysVisitorCounts(days: number): Promise<VisitorCounts[]> {
     try {
         const statsStorage = [];
+        const now = new Date();
 
         for (let i = 0; i < days; i++) {
-            // Get page view stats for the date range
-            const stats = await openApiClient.WebsiteService.websiteStats({
-                //   shareId: "your-share-id-if-using-public-api", // Replace with your share ID if using public API
-                workspaceId: CONFIG.TIANJI_WORKSPACE_ID,
-                websiteId: CONFIG.TIANJI_WEBSITE_ID,
-                startAt: Date.now() - (i + 1) * 24 * 60 * 60 * 1000,
-                endAt: Date.now() - i * 24 * 60 * 60 * 1000,
-            });
+            try {
+                // Calculate the start and end of the day (i days ago)
+                const dayStart = new Date(now);
+                dayStart.setDate(now.getDate() - i);
+                dayStart.setHours(0, 0, 0, 0); // Set to start of day
 
-            statsStorage.push(stats);
+                const dayEnd = new Date(dayStart);
+                dayEnd.setDate(dayStart.getDate() + 1); // Set to end of day (next day at 00:00)
+                dayEnd.setTime(dayEnd.getTime() - 1); // Subtract 1ms to include the last second
+
+                // Get page view stats for the date range
+                const stats: VisitorCounts = await openApiClient.WebsiteService.websiteStats({
+                    workspaceId: CONFIG.TIANJI_WORKSPACE_ID,
+                    websiteId: CONFIG.TIANJI_WEBSITE_ID,
+                    startAt: dayStart.getTime(),
+                    endAt: dayEnd.getTime(),
+                });
+
+                statsStorage.push(stats);
+            } catch (error) {
+                console.error(`Error fetching stats for day ${now.getDate() - i}:`, error, "Skipping this day.");
+
+                statsStorage.push({
+                    bounces: { value: 0, prev: 0 },
+                    pageviews: { value: 0, prev: 0 },
+                    uniques: { value: 0, prev: 0 },
+                    totaltime: { value: 0, prev: 0 },
+                });
+            }
         }
 
-        // Now the array is reversed
+        // Now the array is reversed and the most recent stats are at the end of the array
         statsStorage.reverse();
 
         return statsStorage;

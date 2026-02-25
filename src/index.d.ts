@@ -359,6 +359,18 @@ export interface GetVisitorCountsApiEndpointResponse extends ApiEndpointResponse
     data: VisitorCounts[];
 }
 
+export interface GetAllUsersApiEndpointResponse extends ApiEndpointResponse {
+    data: PrivateUser[];
+}
+
+export interface UpdateUserWithIdApiEndpointResponse extends ApiEndpointResponse {
+    data: PrivateUser | null;
+}
+
+export interface UpdateUserProfilePictureWithIdApiEndpointResponse extends ApiEndpointResponse {
+    data: { pictureUrl: string } | null;
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -635,3 +647,35 @@ export type VisitorCounts = {
     uniques: { value: number; prev: number };
     totaltime: { value: number; prev: number };
 };
+
+export type EditUserCommand =
+    | {
+          executionType: "reset";
+          fieldType: "phone" | "type" | "picture";
+          userId: number;
+      }
+    | {
+          executionType: "edit";
+          fieldType: "firstName" | "lastName" | "phone" | "address" | "type";
+          userId: number;
+          previousValue: string;
+          newValue: string;
+      }
+    | {
+          executionType: "edit";
+          fieldType: "picture";
+          userId: number;
+          previousUrl: string;
+          newUrl: string;
+          pictureUploaded: false;
+          picture: null;
+      }
+    | {
+          executionType: "edit";
+          fieldType: "picture";
+          userId: number;
+          previousUrl: string;
+          newUrl: string;
+          pictureUploaded: true;
+          picture: File;
+      };

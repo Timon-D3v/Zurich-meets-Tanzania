@@ -1,0 +1,7 @@
+@use "../../../../styles/index" as *;
+
+:root[data-theme="dark"] app-admin-passwords-page {
+    & .table-wrapper {
+        @include default-table-darkmode;
+    }
+}

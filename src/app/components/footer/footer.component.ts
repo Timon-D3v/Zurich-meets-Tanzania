@@ -14,4 +14,6 @@ export class FooterComponent {
     FACEBOOK_URL = PUBLIC_CONFIG.FACEBOOK_URL;
     INSTAGRAM_URL = PUBLIC_CONFIG.INSTAGRAM_URL;
     PROGRAMMER_URL = PUBLIC_CONFIG.PROGRAMMER_URL;
+
+    currentYear = new Date().getFullYear();
 }

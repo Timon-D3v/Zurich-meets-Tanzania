@@ -1,1 +1,160 @@
-<p>stats-user-list works!</p>
+@defer (when users().length > 0; prefetch on immediate) {
+    <div class="table-wrapper">
+        <table>
+            <tbody>
+                <tr>
+                    <th class="hidden">User Id</th>
+                    <th>E-Mail</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Telefonnummer</th>
+                    <th>Adresse</th>
+                    <th>Rolle</th>
+                    <th>Profilbild-URL</th>
+                    <th>Aktionen</th>
+                </tr>
+                @for (user of users(); track $index) {
+                    <tr>
+                        <td class="hidden">{{ user.id }}</td>
+                        <td>
+                            <span>{{ user.email }}</span>
+                            <button type="button" class="edit no-delete-button" (click)="tryToEditEmail()">
+                                <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                        </td>
+                        <td>
+                            <span>{{ user.firstName }}</span>
+                            <button type="button" class="edit no-delete-button" (click)="edit(user.id, user.firstName, 'firstName')">
+                                <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                        </td>
+                        <td>
+                            <span>{{ user.lastName }}</span>
+                            <button type="button" class="edit no-delete-button" (click)="edit(user.id, user.lastName, 'lastName')">
+                                <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                        </td>
+                        <td>
+                            <span>{{ user.phone }}</span>
+                            <button type="button" class="edit" (click)="edit(user.id, user.phone, 'phone')">
+                                <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                            <button type="button" class="reset" (click)="reset(user.id, 'phone')">
+                                <img src="/svg/refresh.svg" alt="Feld zurücksetzen" />
+                            </button>
+                        </td>
+                        <td class="double">
+                            <span>{{ user.address }}</span>
+                            <button type="button" class="edit no-delete-button" (click)="edit(user.id, user.address, 'address')">
+                                <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                        </td>
+                        <td class="half">
+                            <span>{{ user.type }}</span>
+                            <button type="button" class="edit" (click)="edit(user.id, user.type, 'type')">
+                                <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                            <button type="button" class="reset" (click)="reset(user.id, 'type')">
+                                <img src="/svg/refresh.svg" alt="Feld zurücksetzen" />
+                            </button>
+                        </td>
+                        <td>
+                            <span>
+                                <a [href]="user.picture" target="_blank" class="picture">
+                                    <img [src]="user.picture" [alt]="user.firstName + ' ' + user.lastName" loading="lazy" />
+                                    <span>{{ user.picture }}</span>
+                                </a>
+                            </span>
+                            <button type="button" class="edit" (click)="edit(user.id, user.picture, 'picture')">
+                                <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                            <button type="button" class="reset" (click)="reset(user.id, 'picture')">
+                                <img src="/svg/refresh.svg" alt="Feld zurücksetzen" />
+                            </button>
+                        </td>
+                        <td>
+                            <div class="action">
+                                <button type="button" class="save" (click)="saveEditsForUserWithId(user.id)" title="Änderungen speichern">
+                                    <img src="/svg/save.svg" alt="Benutzer speichern" />
+                                </button>
+                                <button type="button" class="discard" (click)="discardEditsForUserWithId(user.id)" title="Änderungen verwerfen">
+                                    <img src="/svg/close.svg" alt="Änderungen verwerfen" />
+                                </button>
+                                <button type="button" class="delete" (click)="deleteUserWithId(user.id)" title="Benutzer löschen">
+                                    <img src="/svg/trash.svg" alt="Benutzer löschen" />
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <button type="button" (click)="initiateDownload()" class="download">Herunterladen</button>
+} @placeholder {
+    <app-loading></app-loading>
+}
+
+@if (titleInputOpen()) {
+    <app-popup-title-input
+        [title]="popups.title.title()"
+        [description]="popups.title.description()"
+        [label]="popups.title.label()"
+        [placeholder]="popups.title.placeholder()"
+        [value]="popups.title.value()"
+        [submitButtonText]="popups.title.submitButtonText()"
+        (resultOutput)="handleTitleInputResult($event)"
+        (closeOutput)="handleTitleInputResult('')"
+    ></app-popup-title-input>
+}
+
+@if (imageInputOpen()) {
+    <app-popup-image-input
+        [placeholderUrl]="popups.image.placeholderUrl()"
+        [description]="popups.image.description()"
+        [submitButtonText]="'Aktualisieren'"
+        (resultOutput)="handleImageInputResult($event)"
+        (closeOutput)="handleImageInputResult({ file: null, url: '' })"
+    ></app-popup-image-input>
+}
+
+@if (selectionInputOpen()) {
+    <app-popup-selection-input
+        [selectionOptions]="popups.selection.selectionOptions()"
+        (resultOutput)="handleSelectionInputResult($event)"
+        (closeOutput)="handleSelectionInputResult('')"
+        [title]="'Rolle setzten'"
+        [description]="popups.selection.description()"
+        [label]="'Rolle'"
+        [placeholder]="'Rolle suchen'"
+        [value]="popups.selection.value()"
+    ></app-popup-selection-input>
+}
+
+@if (confirmInputOpen()) {
+    <app-popup-confirm
+        [title]="popups.confirm.title()"
+        [description]="popups.confirm.description()"
+        [confirmButtonText]="popups.confirm.confirmButtonText()"
+        [cancelButtonText]="popups.confirm.cancelButtonText()"
+        [equalOptions]="popups.confirm.equalOptions()"
+        (resultOutput)="handleConfirmInputResult($event)"
+    ></app-popup-confirm>
+}
+
+@if (alertInputOpen()) {
+    <app-popup-alert [title]="popups.alert.title()" [description]="popups.alert.message()" [submitButtonText]="popups.alert.buttonText()" (closeOutput)="closeAlert()"></app-popup-alert>
+}
+
+@if (fileTypeSelectionOpen()) {
+    <app-popup-selection-input
+        [selectionOptions]="['CSV', 'Excel', 'OpenDocument']"
+        (resultOutput)="download($event)"
+        (closeOutput)="download('')"
+        [title]="'Dateityp auswählen'"
+        [description]="'Bitte wähle den Dateityp aus, in dem die Benutzerdaten heruntergeladen werden sollen.'"
+        [label]="'Dateityp'"
+        [placeholder]="'Dateityp suchen'"
+    ></app-popup-selection-input>
+}
