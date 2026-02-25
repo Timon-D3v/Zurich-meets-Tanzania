@@ -51,4 +51,10 @@ export class AnalyticsService {
 
         return request;
     }
+
+    resetUserPassword(userId: number): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/analytics/resetUserPasswordWithId", { userId });
+
+        return request;
+    }
 }

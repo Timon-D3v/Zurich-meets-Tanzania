@@ -2,10 +2,13 @@ import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { ApiEndpointResponse, EditUserCommand, GetAllUsersApiEndpointResponse, GetVisitorCountsApiEndpointResponse, PrivateUser, UpdateUserProfilePictureWithIdApiEndpointResponse, UpdateUserWithIdApiEndpointResponse } from "..";
 import { getLastXDaysVisitorCounts } from "../shared/analytics";
-import { deleteUserWithId, getAllUsers, getUserWithId, setNewAddressWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewPhoneNumberWithId, setNewProfilePictureWithId, setUserTypeWithId } from "../shared/user.database";
+import { deleteUserWithId, getAllUsers, getUserWithId, setNewAddressWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewPassword, setNewPhoneNumberWithId, setNewProfilePictureWithId, setUserTypeWithId } from "../shared/user.database";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpload } from "delivapi-client";
 import { CONFIG } from "../config";
+import { randomBytes } from "crypto";
+import bcrypt from "bcryptjs";
+import { sendNewPassword } from "../shared/auth.email";
 
 // Router Serves under /api/secured/admin/analytics
 const router = Router();
@@ -326,6 +329,67 @@ router.post("/deleteUserWithId", async (req: Request, res: Response): Promise<vo
         res.json({
             error: false,
             message: `Success`,
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/resetUserPasswordWithId", async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.body;
+
+        if (typeof userId !== "number" || isNaN(userId) || userId <= 0) {
+            throw new Error("Invalid parameter 'userId'.");
+        }
+
+        const user = await getUserWithId(userId);
+
+        if (user.data === null) {
+            console.error("DEBUG:\n", user.error);
+            throw new Error(PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE);
+        }
+
+        if (user.data.length === 0) {
+            throw new Error("Es wurde kein Benutzer mit der Id '" + userId + "' gefunden.");
+        }
+
+        const userData = user.data[0] as PrivateUser;
+
+        // Generate a new password and send it to the user's email address
+        const newPassword = randomBytes(16).toString("hex");
+
+        const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+        const result = await setNewPassword(userData.email, newPasswordHash);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        const sentSuccessfully = await sendNewPassword(newPassword, userData.email, userData.firstName, userData.lastName);
+
+        if (!sentSuccessfully) {
+            throw new Error("Das Senden der E-Mail mit dem neuen Passwort ist fehlgeschlagen.");
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);

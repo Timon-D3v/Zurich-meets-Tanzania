@@ -5,6 +5,7 @@
                 <tr>
                     <th class="hidden">User Id</th>
                     <th>E-Mail</th>
+                    <th>Passwort</th>
                     <th>Vorname</th>
                     <th>Nachname</th>
                     <th>Telefonnummer</th>
@@ -20,6 +21,12 @@
                             <span>{{ user.email }}</span>
                             <button type="button" class="edit no-delete-button" (click)="tryToEditEmail()">
                                 <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                            </button>
+                        </td>
+                        <td class="half">
+                            <span [attr.data-hashed-password]="user.password">********</span>
+                            <button type="button" class="reset" (click)="resetPassword(user.id)">
+                                <img src="/svg/refresh.svg" alt="Feld zurücksetzen" />
                             </button>
                         </td>
                         <td>

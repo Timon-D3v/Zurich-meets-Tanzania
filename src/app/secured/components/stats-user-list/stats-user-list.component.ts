@@ -298,6 +298,27 @@ export class StatsUserListComponent implements OnInit {
         });
     }
 
+    async resetPassword(userId: number): Promise<void> {
+        const confirm = await this.awaitConfirmation("Passwort zurücksetzen", "Möchtest du wirklich das Passwort für den Benutzer mit der Id '" + userId + "' zurücksetzen? Der Benutzer erhält dann eine E-Mail mit einem neuen Passwort.");
+
+        if (!confirm) {
+            this.notificationService.info("Abgebrochen", "Das Passwort für den Benutzer mit der Id '" + userId + "' wurde nicht zurückgesetzt.");
+            return;
+        }
+
+        const request = this.analyticsService.resetUserPassword(userId);
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            if (response.error) {
+                this.notificationService.error("Fehler", "Das Passwort konnte nicht zurückgesetzt werden: " + response.error);
+
+                return;
+            }
+
+            this.notificationService.success("Erfolg", "Das Passwort wurde erfolgreich zurückgesetzt.");
+        });
+    }
+
     updateDisplayedUser(userId: number, type: "firstName" | "lastName" | "phone" | "address" | "type" | "picture", value: string) {
         this.users.update((users: PrivateUser[]): PrivateUser[] => {
             for (const user of users) {
