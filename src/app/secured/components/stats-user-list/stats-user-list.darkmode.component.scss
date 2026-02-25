@@ -1,6 +1,6 @@
 @use "../../../../styles/index" as *;
 
-:root[data-theme="dark"] app-admin-passwords-page {
+:root[data-theme="dark"] app-stats-user-list {
     & .table-wrapper {
         @include default-table-darkmode;
     }

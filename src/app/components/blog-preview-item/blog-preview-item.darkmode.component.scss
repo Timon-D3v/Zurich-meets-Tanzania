@@ -1,0 +1,5 @@
+:root[data-theme="dark"] app-blog-preview-item {
+    & .overlay {
+        background-color: #1a0f00bf; // var(--background-950) @ 75% opacity
+    }
+}

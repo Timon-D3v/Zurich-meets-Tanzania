@@ -1,9 +1,9 @@
 <div class="wrapper">
     @if (sideOfImage() === "left") {
-        <img [src]="imageUrl()" [alt]="imageAlt()" />
+        <img [src]="imageUrl()" [alt]="imageAlt()" loading="lazy" />
         <p [innerHTML]="htmlContent()"></p>
     } @else {
         <p [innerHTML]="htmlContent()"></p>
-        <img [src]="imageUrl()" [alt]="imageAlt()" />
+        <img [src]="imageUrl()" [alt]="imageAlt()" loading="lazy" />
     }
 </div>

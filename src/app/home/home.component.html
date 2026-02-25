@@ -1,3 +1,20 @@
 <app-hero [title]="titleHtml" [subtitle]="subtitle" [pictureUrl]="HERO_IMAGE_URL" [pictureAlt]="HERO_IMAGE_ALT"></app-hero>
+
 <app-news [newsTitle]="newsTitle"></app-news>
 <a [routerLink]="'/archive'">Mehr anzeigen</a>
+
+<h1 class="title">Terminkalender</h1>
+<app-calendar></app-calendar>
+@if (true) {
+    <!--
+        Only show if not all calendar events are loaded
+        On click load 5 more calendar items
+    -->
+    <a href="#" (click)="$event.preventDefault()">Mehr anzeigen</a>
+}
+
+<h1 class="title">Blogbeiträge</h1>
+<app-blog-preview [numberOfItems]="4"></app-blog-preview>
+
+<h1 class="title">Unser Vorstand</h1>
+<app-team [team]="[]"></app-team>

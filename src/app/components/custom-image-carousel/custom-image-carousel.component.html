@@ -1,7 +1,7 @@
 <div class="wrapper">
     <div class="main">
         @for (image of images(); track $index) {
-            <img [alt]="image.imageAlt" [src]="image.imageUrl" [class]="currentIndex() === $index ? 'active' : null" />
+            <img [alt]="image.imageAlt" [src]="image.imageUrl" [class]="currentIndex() === $index ? 'active' : null" loading="lazy" />
         }
     </div>
 
@@ -10,7 +10,7 @@
 
     <div class="ruler">
         @for (image of images(); track $index) {
-            <img [alt]="image.imageAlt" [src]="image.imageUrl" (click)="setImage($index)" [class]="currentIndex() === $index ? 'active' : null" />
+            <img [alt]="image.imageAlt" [src]="image.imageUrl" (click)="setImage($index)" [class]="currentIndex() === $index ? 'active' : null" loading="lazy" />
         }
     </div>
 </div>

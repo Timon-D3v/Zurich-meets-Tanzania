@@ -1,0 +1,5 @@
+<div class="wrapper">
+    @for (blog of blogs(); track $index) {
+        <app-blog-preview-item [metadata]="blog"></app-blog-preview-item>
+    }
+</div>

@@ -343,6 +343,10 @@ export interface GetAllBlogsApiEndpointResponse extends ApiEndpointResponse {
     data: Blog[] | null;
 }
 
+export interface GetBlogMetadataApiEndpointResponse extends ApiEndpointResponse {
+    data: BlogMetadata[];
+}
+
 export interface GetNewsApiEndpointResponse extends ApiEndpointResponse {
     data: News | null;
 }
@@ -597,14 +601,16 @@ export type Blog = {
     data: BlogContent;
 };
 
+export type BlogMetadata = {
+    title: string;
+    subtitle: string;
+    author: string;
+    imageUrl: string;
+    imageAlt: string;
+}
+
 export type BlogContent = {
-    metadata: {
-        title: string;
-        subtitle: string;
-        author: string;
-        imageUrl: string;
-        imageAlt: string;
-    };
+    metadata: BlogMetadata;
     data: CustomElements;
 };
 

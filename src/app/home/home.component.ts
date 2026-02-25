@@ -3,10 +3,13 @@ import { HeroComponent } from "../components/hero/hero.component";
 import { PublicEnvService } from "../services/public-env.service";
 import { NewsComponent } from "../components/news/news.component";
 import { RouterLink } from "@angular/router";
+import { CalendarComponent } from "../components/calendar/calendar.component";
+import { BlogPreviewComponent } from "../components/blog-preview/blog-preview.component";
+import { TeamComponent } from "../components/team/team.component";
 
 @Component({
     selector: "app-home",
-    imports: [HeroComponent, NewsComponent, RouterLink],
+    imports: [HeroComponent, NewsComponent, RouterLink, CalendarComponent, BlogPreviewComponent, TeamComponent],
     templateUrl: "./home.component.html",
     styleUrl: "./home.component.scss",
 })

@@ -1,0 +1,25 @@
+User-agent: *
+User-agent: Yandex
+User-agent: facebookexternalhit
+User-agent: Twitterbot
+Disallow: /api
+Disallow: /api/
+Disallow: /admin
+Disallow: /admin/
+Allow: /blog
+Allow: /blog/
+Allow: /gallery
+Allow: /gallery/
+Disallow: /newsletter
+Disallow: /newsletter/
+Disallow: /login
+Disallow: /signup
+Disallow: /signup-confirm
+Disallow: /password-recovery
+Disallow: /password-recovery-confirm
+Allow: /
+
+# AdsBot
+User-agent: AdsBot-Google
+User-agent: Googlebot-Image
+Disallow: /

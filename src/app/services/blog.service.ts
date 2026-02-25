@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { ApiEndpointResponse, BlogContent, DatabaseApiEndpointResponse, GetAllBlogsApiEndpointResponse, GetBlogApiEndpointResponse } from "../..";
+import { ApiEndpointResponse, BlogContent, DatabaseApiEndpointResponse, GetAllBlogsApiEndpointResponse, GetBlogApiEndpointResponse, GetBlogMetadataApiEndpointResponse } from "../..";
 
 @Injectable({
     providedIn: "root",
@@ -11,6 +11,12 @@ export class BlogService {
 
     getBlog(title: string): Observable<GetBlogApiEndpointResponse> {
         const request = this.http.get<GetBlogApiEndpointResponse>(`/api/blog/getBlog/${title}`);
+
+        return request;
+    }
+
+    getBlogMetadata(count: number): Observable<GetBlogMetadataApiEndpointResponse> {
+        const request = this.http.get<GetBlogMetadataApiEndpointResponse>(`/api/blog/getBlogMetadata/${count}`);
 
         return request;
     }
