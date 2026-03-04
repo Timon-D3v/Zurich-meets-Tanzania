@@ -1,0 +1,14 @@
+---
+services:
+  zurich-meets-tanzania-website:
+    image: timond3v/zurich-meets-tanzania-website:2.6.7
+    container_name: zurich-meets-tanzania-website
+    pull_policy: if_not_present
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./cert:/zurich-meets-tanzania-website/cert:ro
+    ports:
+      - 3006:8080
+      - 5007:8081

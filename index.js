@@ -1923,5 +1923,19 @@ app.post("/post/donateForm", rateLimit(hardLimiter), async (req, res) => {
 });
 
 app.listen(process.env.PORT, process.env.HOST, () => {
-    console.log("Server listens on localhost:" + process.env.PORT);
+    console.log(`\x1b[34m%s\x1b[0m`, `Server listens on http://${process.env.HOST}:${process.env.PORT}`);
 });
+
+if (process.env.HTTPS_ACTIVE === "true") {
+    const httpsOptions = {
+        key: fs.readFileSync('./cert/key.pem'),
+        cert: fs.readFileSync('./cert/cert.pem'),
+        passphrase: process.env.HTTPS_CERT_PASSPHRASE
+    };
+
+    const httpsServer = https.createServer(httpsOptions, app);
+
+    httpsServer.listen(process.env.HTTPS_PORT, process.env.HOST, () => {
+        console.log(`\x1b[34m%s\x1b[0m`, `HTTPS Server listens on https://${process.env.HOST}:${process.env.HTTPS_PORT}`);
+    });
+}

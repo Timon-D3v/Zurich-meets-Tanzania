@@ -1,6 +1,6 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "2.6.6",
+  "version": "2.6.7",
   "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
@@ -23,7 +23,9 @@
     "docker:run": "docker run --rm --name zurich-meets-tanzania-website -p 8080:8080 --env-file ./docker.env zurich-meets-tanzania-website",
     "docker:stop": "docker stop zurich-meets-tanzania-website",
     "docker:tag": "docker tag zurich-meets-tanzania-website timond3v/zurich-meets-tanzania-website",
-    "docker:push": "docker push timond3v/zurich-meets-tanzania-website"
+    "docker:push": "docker push timond3v/zurich-meets-tanzania-website",
+    "docker:buildx": "docker buildx build --platform linux/amd64,linux/arm64 . -t zurich-meets-tanzania-website",
+    "docker:buildx:push": "docker buildx build --platform linux/amd64,linux/arm64 . -t timond3v/zurich-meets-tanzania-website --push"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
