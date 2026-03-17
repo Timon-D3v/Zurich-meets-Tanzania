@@ -24,9 +24,9 @@
             <%- include("./snippets/hero.ejs", {
                 img_alt: donate.alt,
                 img_path: donate.bild,
-                title: donate.titel,
+                title: "Mitglied werden",
                 subtitle: "",
-                cta_text: "Abonnieren",
+                cta_text: "Anzeigen",
                 cta_link: "/mitglied#scrollToMembership",
                 origin_url
             }) %>
@@ -37,15 +37,10 @@
                         <div class="donate-currency">CHF / Jahr</div>
                         <input type="number" class="donate-number" value="50" disabled="" />
                     </div>
-                    <button type="submit" id="membership-submit" class="donate-btn hero-cta">Abonnieren</button>
-                    <script>
-                        document.getElementById("membership-submit-label").addEventListener("click", () => {
-                            document.getElementById("membership-submit").click();
-                        });
-                    </script>
+                    <button type="submit" id="membership-submit" class="donate-btn hero-cta">Mitglied werden</button>
                 </div>
             </form>
-            <a href="/spenden#scrollToDonate" class="membership-navigate-to-donate">Oder einmalige Spende?</a>
+            <p class="membership-without-account-notice">Bitte beachte, dass du für das obige Formular eine Kreditkarte brauchst. Wenn du keine Karte hast und lieber via Banküberweisung Mitglied werden willst, melde dich bitte via unserem <a href="/contact">Webseitenformular</a> oder per E-Mail an <a href="mailto:info@zurich-meets-tanzania.com" target="_blank">info@zurich-meets-tanzania.com</a></p>
             <% if (typeof user !== "undefined" && user !== null && user.valid) { %>
             <div class="invisible">
                 <p id="donate-prefilled-name"><%= user.name %></p>

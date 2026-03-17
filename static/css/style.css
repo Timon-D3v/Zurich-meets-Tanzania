@@ -1906,11 +1906,10 @@ nav .mit-bild a {
     width: 40%;
 }
 
-.donate-amount:hover,
-.donate-amount:active,
-.donate-amount.active {
-    color: var(--secondary-500);
-    border-color: var(--secondary-500);
+.membership-without-account-notice {
+    margin: var(--basic-margin);
+    text-wrap: balance;
+    text-align: center;
 }
 
 .donate-currency {
