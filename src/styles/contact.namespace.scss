@@ -1,4 +1,8 @@
 :root[data-style-namespace="contact"] {
+    & main {
+        background-color: transparent;
+    }
+
     & header {
         & .top {
             --secondary-500: var(--accent-500);
@@ -13,6 +17,16 @@
                 --secondary-500: var(--violett);
                 --secondary-400: #4a2984;
             }
+        }
+
+        & app-contact form button {
+            --secondary-500: var(--violett);
+            --secondary-400: #4a2984;
+        }
+
+        *::selection,
+        *::marker {
+            background-color: #673ab7cc;
         }
     }
 

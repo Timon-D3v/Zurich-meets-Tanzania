@@ -9,11 +9,15 @@ import { CONFIG } from "./config";
 import { initSession } from "./middleware/init.session.middleware";
 import { PUBLIC_CONFIG } from "./publicConfig";
 import { isAdmin, isLoggedIn } from "./middleware/auth.middleware";
+import { readFileSync } from "node:fs";
+import https from "node:https";
 
 const browserDistFolder = join(import.meta.dirname, "../browser");
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine({
+    allowedHosts: CONFIG.ENV === "prod" ? ["*.zurich-meets-tanzania.com", "*.zurich-meets-tanzania.ch"] : ["*.zurich-meets-tanzania.com", "*.zurich-meets-tanzania.ch", "*.localhost", "127.0.0.1"],
+});
 
 /**
  * Set up express configuration
@@ -126,6 +130,24 @@ if (isMainModule(import.meta.url)) {
         }
 
         console.log(`Node Express server listening on ${CONFIG.HOST}:${CONFIG.PORT}`);
+    });
+}
+
+/**
+ * Start the HTTPS server if this module is the main entry point and HTTPS is enabled.
+ * The HTTPS server listens on the port defined by the `HTTPS_PORT` environment variable.
+ */
+if (isMainModule(import.meta.url) && CONFIG.HTTPS_ACTIVE) {
+    const httpsOptions = {
+        key: readFileSync("./cert/key.pem"),
+        cert: readFileSync("./cert/cert.pem"),
+        passphrase: CONFIG.HTTPS_CERT_PASSPHRASE,
+    };
+
+    const httpsServer = https.createServer(httpsOptions, app);
+
+    httpsServer.listen(CONFIG.HTTPS_PORT, CONFIG.HOST, () => {
+        console.log(`\x1b[34m%s\x1b[0m`, `HTTPS Node Express server listening on https://${CONFIG.HOST}:${CONFIG.HTTPS_PORT}`);
     });
 }
 

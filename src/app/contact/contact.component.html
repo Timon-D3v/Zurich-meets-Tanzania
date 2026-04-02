@@ -1,1 +1,40 @@
-<p>contact works!</p>
+<img class="background-image" alt="Hintergrund: Himmel" [src]="backgroundImageUrl()" />
+@if (!verificationCodeSent()) {
+    <form [formGroup]="contactForm" (submit)="onSubmit($event)">
+        <h2>Kontaktiere Uns</h2>
+        <p>
+            Fülle das Formular aus um ganz unkompliziert mit uns in Kontakt zu treten. Wir freuen uns über deine Nachricht und werden uns so schnell wie möglich bei dir melden. Egal ob du Fragen, Anregungen oder einfach nur ein nettes Wort hast, wir
+            sind für dich da!
+        </p>
+        <div class="half">
+            <div>
+                <label for="firstName">Vorname:</label>
+                <input type="text" id="firstName" placeholder="Vornamen eingeben" required formControlName="firstNameControl" />
+            </div>
+            <div>
+                <label for="lastName">Nachname:</label>
+                <input type="text" id="lastName" placeholder="Nachnamen eingeben" required formControlName="lastNameControl" />
+            </div>
+        </div>
+        <label for="email">Deine E-Mail:</label>
+        <input type="email" id="email" placeholder="E-Mail-Adresse eingeben" required formControlName="emailControl" />
+        <label for="message">Deine Nachricht:</label>
+        <textarea id="message" placeholder="Nachricht eingeben" required formControlName="messageControl"></textarea>
+        <button type="submit" [disabled]="submitButtonDisabled()">
+            {{ submitButtonText() }}
+        </button>
+    </form>
+} @else {
+    <form [formGroup]="contactVerificationForm" (submit)="onVerificationSubmit($event)">
+        <h2>Anfrage Bestätigen</h2>
+        <p>
+            Bitte gib den Bestätigungscode ein, den wir dir per E-Mail geschickt haben, um deine Anfrage zu bestätigen. Dieser Schritt hilft uns, Spam zu vermeiden und sicherzustellen, dass wir der richtigen Person antworten können. Vielen Dank für
+            dein Verständnis.
+        </p>
+        <label for="verificationCode">Bestätigungscode:</label>
+        <input type="text" id="verificationCode" placeholder="Bestätigungscode eingeben" required formControlName="verificationCodeControl" />
+        <button type="submit" [disabled]="submitButtonDisabled()">
+            {{ submitButtonText() }}
+        </button>
+    </form>
+}

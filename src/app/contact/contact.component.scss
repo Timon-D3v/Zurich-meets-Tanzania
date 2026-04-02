@@ -1,0 +1,72 @@
+@use "../../styles/index" as *;
+
+.background-image {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    z-index: -10;
+}
+
+form {
+    margin: 5vh 5vw;
+    padding: 2rem;
+    box-sizing: border-box;
+    border-radius: 20px;
+    background-color: var(--background-50);
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0 10vw;
+    margin: 0 0 1rem 0;
+}
+
+p {
+    font-size: medium;
+    margin: 1vh 5%;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+label {
+    @include admin-label;
+}
+
+button {
+    --secondary-500: var(--accent-500);
+    --secondary-400: var(--accent-600);
+    --text-50: var(--c-text-950);
+    @include primary-button;
+    margin-top: 3vh;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+textarea {
+    resize: vertical;
+    transition: height 0s linear !important;
+    min-height: 5lh;
+}
+
+.half {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    width: 90%;
+    margin: 0 5%;
+
+    & :first-child > * {
+        margin-left: 0;
+        width: 95%;
+    }
+
+    & :last-child > * {
+        margin-right: 0;
+        width: 95%;
+    }
+}

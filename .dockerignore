@@ -17,6 +17,7 @@ _important/
 node_modules/
 plainToHash.js
 _Tutorials/
+dev/
 Redesign spenden.txt
 *.env
 Text formatieren ZMT.docx

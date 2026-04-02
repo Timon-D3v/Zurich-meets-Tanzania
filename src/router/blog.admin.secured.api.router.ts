@@ -362,8 +362,6 @@ router.post("/updateBlog", multerInstance.array("images"), async (req: Request, 
         // - blog title is not "new-blog" or "awaitSelection"
         // - blog title is not already used by another blog (except itself)
 
-        const IMAGE_FALLBACK_URL = "/backup/fallback.png";
-
         // Upload images
 
         let failedUploads = 0;
@@ -388,7 +386,7 @@ router.post("/updateBlog", multerInstance.array("images"), async (req: Request, 
 
                 failedUploads++;
 
-                metadata.imageUrl = IMAGE_FALLBACK_URL;
+                metadata.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
             }
         }
 
@@ -413,7 +411,7 @@ router.post("/updateBlog", multerInstance.array("images"), async (req: Request, 
 
                         failedUploads++;
 
-                        element.imageUrl = IMAGE_FALLBACK_URL;
+                        element.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
                     }
                 }
             } else if (element.type === "multipleImages") {
@@ -437,7 +435,7 @@ router.post("/updateBlog", multerInstance.array("images"), async (req: Request, 
 
                             failedUploads++;
 
-                            image.imageUrl = IMAGE_FALLBACK_URL;
+                            image.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
                         }
                     }
                 }

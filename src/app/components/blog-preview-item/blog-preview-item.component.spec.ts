@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BlogPreviewItemComponent } from './blog-preview-item.component';
+import { BlogPreviewItemComponent } from "./blog-preview-item.component";
 
-describe('BlogPreviewItemComponent', () => {
-  let component: BlogPreviewItemComponent;
-  let fixture: ComponentFixture<BlogPreviewItemComponent>;
+describe("BlogPreviewItemComponent", () => {
+    let component: BlogPreviewItemComponent;
+    let fixture: ComponentFixture<BlogPreviewItemComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [BlogPreviewItemComponent]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [BlogPreviewItemComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(BlogPreviewItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(BlogPreviewItemComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

@@ -157,8 +157,8 @@ router.post("/updateUserWithId", async (req: Request, res: Response): Promise<vo
             },
             picture: async (userId: number) => {
                 return await setNewProfilePictureWithId(userId, "/svg/personal.svg");
-            }
-        }
+            },
+        };
 
         const editOptions = {
             firstName: async (userId: number, newValue: string) => {
@@ -178,8 +178,8 @@ router.post("/updateUserWithId", async (req: Request, res: Response): Promise<vo
             },
             picture: async (userId: number, newValue: string) => {
                 return await setNewProfilePictureWithId(userId, newValue);
-            }
-        }
+            },
+        };
 
         for (const command of commands) {
             if (command.executionType === "reset") {
@@ -246,7 +246,7 @@ router.post("/updateUserWithId", async (req: Request, res: Response): Promise<vo
             res.json({
                 error: true,
                 message: error.message,
-                data: null
+                data: null,
             } as UpdateUserWithIdApiEndpointResponse);
 
             return;
@@ -255,7 +255,7 @@ router.post("/updateUserWithId", async (req: Request, res: Response): Promise<vo
         res.status(501).json({
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
-            data: null
+            data: null,
         } as UpdateUserWithIdApiEndpointResponse);
     }
 });
@@ -264,7 +264,6 @@ router.post("/uploadProfilePictureForUserWithId", multerInstance.single("picture
     try {
         const { userId } = req.body;
         const picture = req.file;
-
 
         if (typeof userId !== "string" || typeof Number(userId) !== "number" || isNaN(Number(userId)) || Number(userId) <= 0) {
             throw new Error("Invalid parameter userId.");
@@ -275,7 +274,7 @@ router.post("/uploadProfilePictureForUserWithId", multerInstance.single("picture
         }
 
         const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, picture.buffer, picture.originalname);
-        
+
         if (response.error) {
             throw new Error(response.message);
         }
@@ -298,7 +297,7 @@ router.post("/uploadProfilePictureForUserWithId", multerInstance.single("picture
             res.json({
                 error: true,
                 message: error.message,
-                data: null
+                data: null,
             } as UpdateUserProfilePictureWithIdApiEndpointResponse);
 
             return;
@@ -307,7 +306,7 @@ router.post("/uploadProfilePictureForUserWithId", multerInstance.single("picture
         res.status(501).json({
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
-            data: null
+            data: null,
         } as UpdateUserProfilePictureWithIdApiEndpointResponse);
     }
 });

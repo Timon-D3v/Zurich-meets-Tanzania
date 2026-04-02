@@ -192,7 +192,6 @@ export class StatsUserListComponent implements OnInit {
 
                         return users;
                     });
-
                 });
             }
         }

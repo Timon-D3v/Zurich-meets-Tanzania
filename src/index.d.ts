@@ -12,6 +12,10 @@ export type Config = {
     HOST: string;
     PORT: number;
 
+    HTTPS_ACTIVE: boolean;
+    HTTPS_PORT: number;
+    HTTPS_CERT_PASSPHRASE: string;
+
     SESSION_SECRET: string;
 
     MYSQL_HOST: string;
@@ -375,6 +379,10 @@ export interface UpdateUserProfilePictureWithIdApiEndpointResponse extends ApiEn
     data: { pictureUrl: string } | null;
 }
 
+export interface GetContactRequestVerificationTokenApiEndpointResponse extends ApiEndpointResponse {
+    data: { token: string } | null;
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -607,7 +615,7 @@ export type BlogMetadata = {
     author: string;
     imageUrl: string;
     imageAlt: string;
-}
+};
 
 export type BlogContent = {
     metadata: BlogMetadata;
@@ -685,3 +693,17 @@ export type EditUserCommand =
           pictureUploaded: true;
           picture: File;
       };
+
+export type ContactConfirmRequest = {
+    token: string;
+    timestamp: number;
+    verificationCode: string;
+    payload: ContactRequest;
+};
+
+export type ContactRequest = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    message: string;
+};

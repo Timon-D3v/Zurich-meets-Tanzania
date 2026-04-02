@@ -11,7 +11,7 @@ td {
     &.half {
         // 90px is the mim width that the edit and reset buttons need to be displayed properly,
         // 16px is the padding of the td which is not included in the min-width of the content
-        min-width: calc(90px - 16px); 
+        min-width: calc(90px - 16px);
     }
 
     &.double {

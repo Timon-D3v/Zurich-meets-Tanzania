@@ -107,10 +107,10 @@ router.get("/getBlogMetadata/:count", async (req: Request, res: Response): Promi
         }
 
         if (!Array.isArray(response.data) || response.data.length === 0) {
-            throw new Error("No metadata found.")
+            throw new Error("No metadata found.");
         }
 
-        const metadataList: BlogMetadata[] = []
+        const metadataList: BlogMetadata[] = [];
 
         for (const item of response.data) {
             if (typeof item["title"] !== "string") {
