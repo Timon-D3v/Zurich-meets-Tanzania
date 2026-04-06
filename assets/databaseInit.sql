@@ -73,10 +73,12 @@ COMMENT = 'All people who have registered for the newsletter are stored in this 
 
 CREATE TABLE IF NOT EXISTS `zmt`.`calendar` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `startDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `endDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `title` VARCHAR(256) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `calendar_id_UNIQUE` (`id` ASC) VISIBLE
+    UNIQUE INDEX `calendar_start_date_UNIQUE` (`startDate` ASC) VISIBLE,
+    UNIQUE INDEX `calendar_end_date_UNIQUE` (`endDate` ASC) VISIBLE
 )
 COMMENT = 'This table holds all events from zurich meets tanzania.';
 

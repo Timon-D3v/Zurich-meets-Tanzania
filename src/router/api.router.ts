@@ -8,6 +8,7 @@ import blogRouter from "./blog.api.router";
 import teamRouter from "./team.api.router";
 import contactRouter from "./contact.api.router";
 import galleryRouter from "./gallery.api.router";
+import calendarRouter from "./calendar.api.router";
 import subpagesRouter from "./subpages.api.router";
 import newsletterRouter from "./newsletter.api.router";
 
@@ -37,6 +38,7 @@ router.use("/blog", blogRouter);
 router.use("/team", teamRouter);
 router.use("/contact", contactRouter);
 router.use("/gallery", galleryRouter);
+router.use("/calendar", calendarRouter);
 router.use("/subpages", subpagesRouter);
 router.use("/newsletter", newsletterRouter);
 

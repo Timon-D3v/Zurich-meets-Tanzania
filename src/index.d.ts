@@ -383,6 +383,10 @@ export interface GetContactRequestVerificationTokenApiEndpointResponse extends A
     data: { token: string } | null;
 }
 
+export interface GetCalendarEventsApiEndpointResponse extends ApiEndpointResponse {
+    data: CalendarEvent[] | null;
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -706,4 +710,11 @@ export type ContactRequest = {
     lastName: string;
     email: string;
     message: string;
+};
+
+export type CalendarEvent = {
+    id: number;
+    startDate: string;
+    endDate: string;
+    title: string;
 };

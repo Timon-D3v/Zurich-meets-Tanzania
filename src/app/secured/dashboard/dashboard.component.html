@@ -195,7 +195,7 @@
                             href: '#Event-löschen',
                             label: 'Event löschen',
                             clickable: true,
-                            onClick: generateActivateFunction('calendar-delete-event'),
+                            onClick: generateSelectEventToDeleteFunction(),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -555,7 +555,7 @@
         } @else if (currentActiveSection() === "calendar-create-event") {
             <app-calendar-create-event></app-calendar-create-event>
         } @else if (currentActiveSection() === "calendar-delete-event") {
-            <app-calendar-delete-event></app-calendar-delete-event>
+            <app-loading></app-loading>
         } @else if (currentActiveSection() === "team-create-team") {
             <app-team-create-team></app-team-create-team>
         } @else if (currentActiveSection() === "team-add-member") {

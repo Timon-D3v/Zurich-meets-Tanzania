@@ -1,0 +1,68 @@
+@use "../../../../styles/index" as *;
+
+form {
+    padding: 2vh 5vw;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0 10vw;
+}
+
+p {
+    font-size: medium;
+    margin: 1vh 5%;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+label {
+    @include admin-label;
+
+    &.containsCheckbox {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        box-sizing: border-box;
+        margin: 25px 5% 15px 5%;
+        cursor: pointer;
+
+        & span {
+            font-size: 18px; // This is the same as "large" in the global styles, but we want to be explicit here to avoid the checkbox placeholder to be a different size
+            line-height: 1;
+        }
+
+        & span.checkboxPlaceholder {
+            margin: 0;
+            height: 18px;
+            width: 18px;
+            box-sizing: border-box;
+            border: 2px solid var(--text-950);
+            position: relative;
+        }
+
+        &:has(input[type="checkbox"]:checked) span.checkboxPlaceholder::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1 / 1;
+            background-image: url("../../../../../public/svg/checkmark.svg");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    }
+}
+
+button {
+    @include primary-button;
+    margin-top: 3vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5vh;
+}

@@ -1,1 +1,9 @@
-<p>calendar works!</p>
+@defer (when events().length > 0; prefetch on immediate) {
+    <div>
+        @for (event of events(); track $index) {
+            <app-calendar-item [event]="event"></app-calendar-item>
+        }
+    </div>
+} @placeholder (minimum 100ms) {
+    <app-loading></app-loading>
+}

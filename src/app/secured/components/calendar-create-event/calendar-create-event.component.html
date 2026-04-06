@@ -1,1 +1,39 @@
-<p>calendar-create-event works!</p>
+<form [formGroup]="addCalendarEventForm" (submit)="onSubmit($event)">
+    <h2>Event hinzufügen</h2>
+    <p>Gib die Details des Events ein, um es zum Kalender hinzuzufügen. Sobald das Event hinzugefügt wurde, wird es auf der Startseite im Terminkalender angezeigt. Alle Besucher der Seite können es sehen.</p>
+    <label for="description">Event:</label>
+    <input type="text" id="description" placeholder="Eventnamen eingeben" required formControlName="eventDescriptionControl" />
+
+    <label for="multipleDays" class="containsCheckbox">
+        <span class="checkboxPlaceholder"></span>
+        <input type="checkbox" id="multipleDays" formControlName="multipleDaysControl" (click)="toggleIfEventIsMultipleDays()" class="hidden" />
+        <span>Findet das Event an mehreren Tagen statt?</span>
+    </label>
+
+    @if (eventIsMultipleDays()) {
+        <label for="startDate">Startdatum:</label>
+        <input type="date" id="startDate" required formControlName="startDateControl" />
+
+        <label for="endDate">Enddatum:</label>
+        <input type="date" id="endDate" required formControlName="endDateControl" />
+    } @else {
+        <label for="eventDate">Datum:</label>
+        <input type="date" id="eventDate" required formControlName="eventDateControl" />
+    }
+
+    <label for="specificTime" class="containsCheckbox">
+        <span class="checkboxPlaceholder"></span>
+        <input type="checkbox" id="specificTime" formControlName="specificTimeControl" (click)="toggleIfEventTimeIsSpecific()" class="hidden" />
+        <span>Findet das Event zu einer bestimmten Uhrzeit statt?</span>
+    </label>
+
+    @if (eventTimeIsSpecific()) {
+        <label for="startTime">Startzeit:</label>
+        <input type="time" id="startTime" required formControlName="startTimeControl" />
+
+        <label for="endTime">Endzeit:</label>
+        <input type="time" id="endTime" required formControlName="endTimeControl" />
+    }
+
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

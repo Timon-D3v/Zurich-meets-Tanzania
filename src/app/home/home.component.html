@@ -4,13 +4,9 @@
 <a [routerLink]="'/archive'">Mehr anzeigen</a>
 
 <h1 class="title">Terminkalender</h1>
-<app-calendar></app-calendar>
-@if (true) {
-    <!--
-        Only show if not all calendar events are loaded
-        On click load 5 more calendar items
-    -->
-    <a href="#" (click)="$event.preventDefault()">Mehr anzeigen</a>
+<app-calendar [events]="events()"></app-calendar>
+@if (numberOfEvents() <= events().length) {
+    <a href="#" (click)="loadMoreEvents($event)">Mehr anzeigen</a>
 }
 
 <h1 class="title">Blogbeiträge</h1>
