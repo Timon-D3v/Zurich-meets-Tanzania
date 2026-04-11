@@ -1,1 +1,24 @@
-<p>account works!</p>
+<div class="wrapper">
+    <section class="static-information">
+        <div class="banner" [style.background-image]="'url(/svg/profile-banner-' + bannerId() + '.svg)'"></div>
+        <div class="picture-wrapper">
+            <img class="profile-picture" [src]="user().picture" [alt]="user().firstName + ' ' + user().lastName + 's Profile Picture'" />
+            <button class="edit-profile-picture">
+                <img src="/svg/pen.svg" alt="Edit Profile Picture" />
+            </button>
+        </div>
+        <div class="information">
+            <h2>
+                {{ user().firstName }} {{ user().lastName }}
+
+                @if (user().type === "admin") {
+                    <wbr /><span class="special-effect">(Verwalter)</span>
+                } @else if (user().type === "member") {
+                    <wbr /><span class="special-effect">(Mitglied)</span>
+                }
+            </h2>
+            <p>{{ user().email }}</p>
+        </div>
+    </section>
+    <section class="dynamic-information"></section>
+</div>
