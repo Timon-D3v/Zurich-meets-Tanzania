@@ -1,0 +1,89 @@
+<form [formGroup]="editProfileForm" (submit)="onSubmit($event)">
+    <h2>Informationen bearbeiten</h2>
+    <app-edit-profile-input
+        [type]="'email'"
+        [label]="'E-Mail'"
+        [placeholder]="user().email"
+        [autocomplete]="'email'"
+        [required]="true"
+        [iconSource]="'/svg/mail.svg'"
+        [iconAlt]="'Ein Brief'"
+        (valueOutput)="updateEmailInput($event)"
+    ></app-edit-profile-input>
+    <app-edit-profile-input
+        [type]="'password'"
+        [label]="'Passwort'"
+        [placeholder]="'••••••••••'"
+        [autocomplete]="'current-password'"
+        [required]="true"
+        [isPassword]="true"
+        [iconSource]="'/svg/lock.svg'"
+        [iconAlt]="'Ein Schloss'"
+        (valueOutput)="updateEmailInput($event)"
+    ></app-edit-profile-input>
+    <app-edit-profile-input
+        [type]="'text'"
+        [label]="'Vorname'"
+        [placeholder]="user().firstName"
+        [autocomplete]="'given-name'"
+        [required]="true"
+        [iconSource]="'/svg/text.svg'"
+        [iconAlt]="'Buchstaben'"
+        (valueOutput)="updateEmailInput($event)"
+    ></app-edit-profile-input>
+    <app-edit-profile-input
+        [type]="'text'"
+        [label]="'Nachname'"
+        [placeholder]="user().lastName"
+        [autocomplete]="'family-name'"
+        [required]="true"
+        [iconSource]="'/svg/text.svg'"
+        [iconAlt]="'Buchstaben'"
+        (valueOutput)="updateEmailInput($event)"
+    ></app-edit-profile-input>
+    <app-edit-profile-input
+        [type]="'text'"
+        [label]="'Adresse'"
+        [placeholder]="user().address.split(',')[0]"
+        [autocomplete]="'street-address'"
+        [required]="true"
+        [iconSource]="'/svg/location.svg'"
+        [iconAlt]="'Ein Standort-Pin'"
+        (valueOutput)="updateEmailInput($event)"
+    ></app-edit-profile-input>
+    <div>
+        <app-edit-profile-input
+            [type]="'text'"
+            [label]="'Postleitzahl'"
+            [placeholder]="user().address.split(', ')[1].split(' ')[0]"
+            [autocomplete]="'postal-code'"
+            [required]="true"
+            [iconSource]="'/svg/location.svg'"
+            [iconAlt]="'Ein Standort-Pin'"
+            (valueOutput)="updateEmailInput($event)"
+        ></app-edit-profile-input>
+        <app-edit-profile-input
+            [type]="'text'"
+            [label]="'Ort'"
+            [placeholder]="user().address.split(', ')[1].split(' ').slice(1).join(' ')"
+            [autocomplete]="'address-level2'"
+            [required]="true"
+            [iconSource]="'/svg/location.svg'"
+            [iconAlt]="'Ein Standort-Pin'"
+            (valueOutput)="updateEmailInput($event)"
+        ></app-edit-profile-input>
+    </div>
+
+    <app-edit-profile-input
+        [type]="'tel'"
+        [label]="'Telefon Nummer'"
+        [placeholder]="user().phone"
+        [autocomplete]="'tel'"
+        [required]="true"
+        [iconSource]="'/svg/phone.svg'"
+        [iconAlt]="'Ein Telefon'"
+        (valueOutput)="updateEmailInput($event)"
+    ></app-edit-profile-input>
+
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

@@ -1,15 +1,15 @@
-import { Component, computed, effect, inject, input, output, PLATFORM_ID, signal } from "@angular/core";
+import { Component, effect, inject, input, output, PLATFORM_ID, signal } from "@angular/core";
 import { HTMLInputAutocompleteOptions, HTMLInputTypes } from "../../..";
 import { isPlatformBrowser } from "@angular/common";
 import { getRandomHexString } from "../../../shared/utils";
 
 @Component({
-    selector: "app-auth-input",
+    selector: "app-edit-profile-input",
     imports: [],
-    templateUrl: "./auth-input.component.html",
-    styleUrl: "./auth-input.component.scss",
+    templateUrl: "./edit-profile-input.component.html",
+    styleUrl: "./edit-profile-input.component.scss",
 })
-export class AuthInputComponent {
+export class EditProfileInputComponent {
     private _updateInputType = effect(() => {
         // Updates 'inputType' when the input type 'type' arrives or changes
         this.inputType.set(this.type());

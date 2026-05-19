@@ -18,6 +18,7 @@ router.get("/:env", (req: Request, res: Response): void => {
             ORIGIN: CONFIG.ORIGIN,
             ENV: CONFIG.ENV,
             DELIVAPI_USER: CONFIG.DELIVAPI_USER,
+            DELIVAPI_URL: CONFIG.DELIVAPI_URL,
         };
 
         if (!Object.keys(allowedEnvVariables).includes(env)) {

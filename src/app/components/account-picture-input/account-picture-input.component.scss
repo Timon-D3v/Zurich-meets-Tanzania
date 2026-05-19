@@ -43,19 +43,22 @@ input {
 
     & img {
         height: 100%;
-        width: 100%;
+        width: auto;
         cursor: pointer;
-        font-family:
-            Titillium Web,
-            sans-serif;
+        font-family: "Titillium Web", sans-serif;
         font-size: 1em;
         font-weight: 400;
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        object-fit: contain;
+        object-fit: cover;
         aspect-ratio: 1 / 1;
-        border-radius: 5px;
+        border-radius: 50%;
+
+        &[src="/svg/personal.svg"] {
+            border-radius: 0;
+            object-fit: contain;
+        }
     }
 }
 

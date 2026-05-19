@@ -45,6 +45,7 @@ input {
     display: block;
     border: 2px solid var(--text-950);
     padding: 5px;
+    cursor: pointer;
 
     & img {
         width: 100%;
@@ -52,6 +53,17 @@ input {
         display: block;
         object-fit: contain;
         object-position: center;
+
+        &.circle {
+            border-radius: 50%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+
+            &[src="/svg/personal.svg"] {
+                border-radius: 0;
+                object-fit: contain;
+            }
+        }
     }
 }
 

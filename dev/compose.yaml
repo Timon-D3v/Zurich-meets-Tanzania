@@ -1,0 +1,43 @@
+---
+services:
+  mysql:
+    image: "mysql:8.0.43"
+    container_name: "zmt-dev-mysql-db"
+    pull_policy: if_not_present
+    tty: true
+    restart: unless-stopped
+    env_file:
+      - ./mysql/.env
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/config:/etc/mysql/conf.d
+      - ./mysql/logs:/var/log/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - 8081:3306
+    networks:
+      zmt-dev-network:
+        ipv4_address: 172.20.0.10
+
+  delivapi:
+    image: timond3v/delivapi:2.0.0
+    container_name: "zmt-dev-delivapi"
+    pull_policy: if_not_present
+    restart: unless-stopped
+    env_file:
+      - ./delivapi/.env
+    ports:
+      - 8082:8082
+    depends_on:
+      - mysql
+    networks:
+      zmt-dev-network:
+        ipv4_address: 172.20.0.20
+
+
+networks:
+  zmt-dev-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

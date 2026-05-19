@@ -124,7 +124,7 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
 
                 const file = files[fileIndex];
 
-                const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.originalname);
+                const response = await delivApiUpload(file.buffer);
 
                 if (response.error) {
                     // Don't abort, just set fallback image
@@ -147,7 +147,7 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
 
                 const file = files[fileIndex];
 
-                const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.originalname);
+                const response = await delivApiUpload(file.buffer);
 
                 if (response.error) {
                     // Don't abort, just set fallback image
@@ -174,7 +174,7 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
 
                             const file = files[fileIndex];
 
-                            const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.originalname);
+                            const response = await delivApiUpload(file.buffer);
 
                             if (response.error) {
                                 // Don't abort, just set fallback image
@@ -327,7 +327,7 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
 
                 const file = files[fileIndex];
 
-                const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.originalname);
+                const response = await delivApiUpload(file.buffer);
 
                 if (response.error) {
                     // Don't abort, just set fallback image
@@ -350,7 +350,7 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
 
                 const file = files[fileIndex];
 
-                const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.originalname);
+                const response = await delivApiUpload(file.buffer);
 
                 if (response.error) {
                     // Don't abort, just set fallback image
@@ -377,7 +377,7 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
 
                             const file = files[fileIndex];
 
-                            const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.originalname);
+                            const response = await delivApiUpload(file.buffer);
 
                             if (response.error) {
                                 // Don't abort, just set fallback image

@@ -9,7 +9,6 @@ export const PUBLIC_CONFIG: PublicConfig = {
     FACEBOOK_URL: "https://www.facebook.com/profile.php?id=61577621371823",
     INSTAGRAM_URL: "https://www.instagram.com/zurichmeetstanzania/",
     PROGRAMMER_URL: "https://www.timondev.com/",
-    CDN_URL: "https://api.timondev.com/cdn/",
 
     PRIVACY_PDF_URL: "https://ik.imagekit.io/zmt/pdf/datenschutz/Datenschutzerklaerung.pdf",
     FALLBACK_IMAGE_URL: "/backup/fallback.png",

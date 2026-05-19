@@ -262,9 +262,9 @@ router.post("/changeHomepagePicture", multerInstance.single("picture"), async (r
             throw new Error("Bitte lade eine gültige Bilddatei hoch.");
         }
 
-        const filename = "7a121"; // This is the test entry for every organization and is always there
+        const filename = "heroImage"; // This has to exist before updating, but should be created at the initialization of the app.
 
-        const response = await delivApiUpdateFile(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, filename, file.buffer, file.originalname);
+        const response = await delivApiUpdateFile(filename, file.buffer);
 
         if (response.error) {
             throw new Error("Das Bild konnte nicht hochgeladen werden. Bitte versuche es später erneut. Weitere Informationen: " + response.message);

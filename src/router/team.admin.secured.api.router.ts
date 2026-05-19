@@ -27,7 +27,7 @@ router.post("/createTeam", multerInstance.single("image"), async (req: Request, 
             throw new Error("Es wurde kein Bild hochgeladen.");
         }
 
-        const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.mimetype);
+        const response = await delivApiUpload(file.buffer);
 
         if (response.error) {
             throw new Error("Das Bild konnte nicht hochgeladen werden. Bitte versuche es später erneut. Weitere Informationen: " + response.message);

@@ -20,6 +20,15 @@ export function markdownToHtml(markdown: string): string {
     return html;
 }
 
+export function getRandomHexString(length: number): string {
+    const characters = "0123456789abcdef";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+
 export function formatDateRangeString(startDate: Date, endDate: Date): string {
     const currentYear = new Date().getFullYear();
 

@@ -273,7 +273,7 @@ router.post("/uploadProfilePictureForUserWithId", multerInstance.single("picture
             throw new Error("No picture file uploaded.");
         }
 
-        const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, picture.buffer, picture.originalname);
+        const response = await delivApiUpload(picture.buffer);
 
         if (response.error) {
             throw new Error(response.message);

@@ -276,7 +276,7 @@ router.post("/confirmSignUp", async (req: Request, res: Response) => {
                     throw new Error("File is undefined but hasPicture was 'true'");
                 }
 
-                const response = await delivApiUpload(CONFIG.DELIVAPI_USER, CONFIG.DELIVAPI_KEY, file.buffer, file.mimetype);
+                const response = await delivApiUpload(file.buffer);
 
                 if (response.error) {
                     throw new Error(response.message);

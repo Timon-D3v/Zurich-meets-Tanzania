@@ -1,9 +1,13 @@
 label {
-    color: var(--dark-green);
+    color: var(--text-950);
     font-weight: 600;
     font-family: "Teko", monospace;
     font-size: x-large;
+    line-height: 1.5;
     margin-top: 10px;
+    display: block;
+    margin: 7.5px auto;
+    padding-top: 5px;
 }
 
 input {
@@ -13,13 +17,13 @@ input {
     width: 85%;
     height: 100%;
     background-color: transparent;
-    color: var(--c-text-950);
+    color: var(--text-950);
     font-size: 1.1rem;
 
     &::placeholder {
         font-family: "Titillium Web", sans-serif;
         font-size: 1rem;
-        color: var(--c-text-950);
+        color: var(--text-950);
     }
 
     &:focus {
@@ -28,7 +32,7 @@ input {
 }
 
 div {
-    border: 1.5px solid #ecedec;
+    border: 1.5px solid var(--text-950);
     border-radius: 10px;
     height: 50px;
     display: flex;
@@ -51,8 +55,4 @@ div {
     &:has(.file > img) {
         height: auto;
     }
-}
-
-img {
-    --darkmode: 0;
 }

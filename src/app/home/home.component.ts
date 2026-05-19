@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { HeroComponent } from "../components/hero/hero.component";
-import { PublicEnvService } from "../services/public-env.service";
 import { NewsComponent } from "../components/news/news.component";
 import { RouterLink } from "@angular/router";
 import { CalendarComponent } from "../components/calendar/calendar.component";
@@ -9,7 +8,6 @@ import { TeamComponent } from "../components/team/team.component";
 import { CalendarEvent, GetCalendarEventsApiEndpointResponse } from "../..";
 import { CalendarService } from "../services/calendar.service";
 import { isPlatformBrowser } from "@angular/common";
-import { response } from "express";
 import { NotificationService } from "../services/notification.service";
 
 @Component({
@@ -19,7 +17,7 @@ import { NotificationService } from "../services/notification.service";
     styleUrl: "./home.component.scss",
 })
 export class HomeComponent implements OnInit {
-    HERO_IMAGE_URL = "https://api.timondev.com/cdn/zmt/7a121";
+    HERO_IMAGE_URL = "/redirects/heroImage";
     readonly HERO_IMAGE_ALT = "Das Titelbild unserer Seite";
 
     readonly titleHtml = "Medizinische Hilfe<br>in Tanzania";
@@ -35,15 +33,7 @@ export class HomeComponent implements OnInit {
     numberOfEvents = signal(5);
     events = signal<CalendarEvent[]>([]);
 
-    publicEnvService = inject(PublicEnvService);
-
     async ngOnInit(): Promise<void> {
-        const env = await this.publicEnvService.getEnv();
-
-        if (env === "dev") {
-            this.HERO_IMAGE_URL = "https://api.timondev.com/cdn/dev/7a121";
-        }
-
         if (!isPlatformBrowser(this.platfromId)) {
             console.error("Cannot make API calls on the server side. Calendar events will not be loaded.");
             return;

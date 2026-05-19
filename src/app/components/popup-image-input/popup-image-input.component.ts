@@ -14,6 +14,9 @@ export class PopupImageInputComponent {
     label = input<string>("Bild:");
     placeholderUrl = input<string>(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
     submitButtonText = input<string>("Hinzufügen");
+    isCirclePicture = input<boolean>(false);
+    allowReset = input<boolean>(false);
+    resetUrl = input<string>(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
 
     resultOutput = output<{ file: File | null; url: string }>();
     closeOutput = output<void>();
@@ -26,7 +29,7 @@ export class PopupImageInputComponent {
     private notificationService = inject(NotificationService);
 
     private _updateFormControl = effect(() => {
-        this.image.set({ file: new File([], ""), url: this.placeholderUrl() });
+        this.image.set({ file: null, url: this.placeholderUrl() });
     });
 
     onSubmit(event: Event): void {

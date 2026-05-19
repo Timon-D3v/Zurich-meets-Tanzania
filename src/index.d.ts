@@ -32,6 +32,7 @@ export type Config = {
     EMAIL_SENDER_ADDRESS: string;
     EMAIL_SENDER_NAME: string;
 
+    DELIVAPI_URL: string;
     DELIVAPI_USER: string;
     DELIVAPI_KEY: string;
 
@@ -61,6 +62,7 @@ export type PublicEnvVariables = {
     ORIGIN: string | null;
     ENV: "dev" | "prod" | null;
     DELIVAPI_USER: string | null;
+    DELIVAPI_URL: string | null;
 };
 
 export type PublicConfig = {
@@ -72,7 +74,6 @@ export type PublicConfig = {
     FACEBOOK_URL: string;
     INSTAGRAM_URL: string;
     PROGRAMMER_URL: string;
-    CDN_URL: string;
 
     PRIVACY_PDF_URL: string;
     FALLBACK_IMAGE_URL: string;

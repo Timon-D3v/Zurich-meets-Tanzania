@@ -35,6 +35,15 @@
     border-radius: 50%;
     border: 2px var(--text-950) solid;
     object-fit: cover;
+    background-image: url(../../../public/backup/fallback.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &[src="/svg/personal.svg"] {
+        object-fit: contain;
+        background-color: var(--primary-500);
+    }
 }
 
 .edit-profile-picture {
@@ -50,6 +59,14 @@
     display: grid;
     place-items: center;
     cursor: pointer;
+
+    &:hover {
+        background-color: var(--accent-600);
+    }
+
+    &:active {
+        background-color: var(--accent-700);
+    }
 
     & > img {
         width: 100%;
@@ -70,6 +87,11 @@
     color: transparent;
     background-size: 200% 100%;
     animation: gradient 6s ease infinite;
+
+    &::selection,
+    &::marker {
+        background-color: rgba(67, 64, 62, 0.6);
+    }
 }
 
 @keyframes gradient {

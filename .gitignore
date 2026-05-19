@@ -53,7 +53,8 @@ _Beiträge/
 static/vid/
 route.zmt.js
 _important/
-dev/
+dev/mysql/
+dev/delivapi/
 node_modules/
 plainToHash.js
 _Tutorials/

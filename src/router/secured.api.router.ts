@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import themeRouter from "./theme.secured.api.router";
+import accountRouter from "./account.secured.api.router";
 
 import adminRouter from "./admin.secured.api.router";
 
@@ -11,6 +12,7 @@ import { isAdmin } from "../middleware/auth.middleware";
 const router = Router();
 
 router.use("/theme", themeRouter);
+router.use("/account", accountRouter);
 
 // Secured Routes for Admins
 router.use("/admin", isAdmin, adminRouter);

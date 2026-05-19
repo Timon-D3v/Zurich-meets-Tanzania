@@ -12,9 +12,9 @@ export function autoLogin(req: Request, res: Response, next: NextFunction): void
             firstName: "Admin",
             lastName: "Test",
             phone: "Keine Nummer",
-            address: "Test 1, DM-0000, Lego City",
+            address: "Test 1, DM-0000 Lego City",
             type: "admin",
-            picture: "https://api.timondev.com/cdn/dev/7a122",
+            picture: "http://localhost:8082/cdn/dev/7a122",
         };
 
         req.session.resetMaxAge();

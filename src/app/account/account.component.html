@@ -3,7 +3,7 @@
         <div class="banner" [style.background-image]="'url(/svg/profile-banner-' + bannerId() + '.svg)'"></div>
         <div class="picture-wrapper">
             <img class="profile-picture" [src]="user().picture" [alt]="user().firstName + ' ' + user().lastName + 's Profile Picture'" />
-            <button class="edit-profile-picture">
+            <button class="edit-profile-picture" (click)="editPicture()">
                 <img src="/svg/pen.svg" alt="Edit Profile Picture" />
             </button>
         </div>
@@ -20,5 +20,21 @@
             <p>{{ user().email }}</p>
         </div>
     </section>
-    <section class="dynamic-information"></section>
+    <section class="dynamic-information">
+        <app-edit-profile-information [user]="user()"></app-edit-profile-information>
+    </section>
 </div>
+@if (editPictureInputOpen()) {
+    <app-popup-image-input
+        [title]="'Neues Profilbild'"
+        [description]="'Suche ein Bild aus, dass du gerne als neues Profilbild setzen würdest. Beachte allerdings, dass das Bild rund zugeschnitten wird.'"
+        [label]="'Neues Bild:'"
+        [placeholderUrl]="user().picture"
+        [submitButtonText]="'Ersetzen'"
+        [isCirclePicture]="true"
+        [allowReset]="true"
+        [resetUrl]="'/svg/personal.svg'"
+        (resultOutput)="editPictureInputResult($event)"
+        (closeOutput)="closeEditPictureInput()"
+    ></app-popup-image-input>
+}

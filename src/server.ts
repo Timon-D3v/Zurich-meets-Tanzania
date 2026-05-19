@@ -11,6 +11,7 @@ import { PUBLIC_CONFIG } from "./publicConfig";
 import { isAdmin, isLoggedIn } from "./middleware/auth.middleware";
 import { readFileSync } from "node:fs";
 import https from "node:https";
+import { autoLogin } from "./middleware/autologin.middleware";
 
 const browserDistFolder = join(import.meta.dirname, "../browser");
 
@@ -88,7 +89,7 @@ app.use(
 );
 
 /**
- * Secure routes that not everyone should have access
+ * Secure routes that not everyone should have access to.
  */
 for (const route of PUBLIC_CONFIG.ROUTES.TYPES.SECURED) {
     app.use(route, isLoggedIn);
