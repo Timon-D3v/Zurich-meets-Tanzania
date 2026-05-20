@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { UpdateUserProfilePictureWithIdApiEndpointResponse } from "../..";
+import { UpdateUserInformationApiEndpointResponse, UpdateUserInformationRequestBody, UpdateUserProfilePictureWithIdApiEndpointResponse } from "../..";
 
 @Injectable({
     providedIn: "root",
@@ -15,6 +15,12 @@ export class AccountService {
         formData.append("image", picture);
 
         const request = this.http.post<UpdateUserProfilePictureWithIdApiEndpointResponse>("/api/secured/account/updateUserProfilePicture", formData);
+
+        return request;
+    }
+
+    updateUserInformation(requestBody: UpdateUserInformationRequestBody): Observable<UpdateUserInformationApiEndpointResponse> {
+        const request = this.http.post<UpdateUserInformationApiEndpointResponse>("/api/secured/account/updateUserInformation", requestBody);
 
         return request;
     }

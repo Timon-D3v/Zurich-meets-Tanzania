@@ -1,13 +1,294 @@
 import { Request, Response, Router } from "express";
 import { multerInstance } from "../shared/instance.multer";
 import { delivApiUpload, delivApiUpdateFile } from "delivapi-client";
-import { UpdateUserProfilePictureWithIdApiEndpointResponse } from "..";
+import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { setNewProfilePictureWithId } from "../shared/user.database";
+import { setNewEmailWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewAddressWithId, setNewPasswordWithId, setNewProfilePictureWithId, setNewPhoneNumberWithId } from "../shared/user.database";
 import { CONFIG } from "../config";
+import bcrypt from "bcryptjs";
 
 // Router Serves under /api/secured/account
 const router = Router();
+
+router.post("/updateUserInformation", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email, password, firstName, lastName, address, phone } = req.body;
+
+        const alreadyDoneUpdates: Array<"email" | "password" | "firstName" | "lastName" | "address" | "phone"> = [];
+
+        if (req.session.user === undefined || req.session.user === null) {
+            throw new Error("Ungültige Benutzersitzung. Bitte logge dich erneut ein.");
+        }
+
+        const userId = req.session.user.id;
+
+        if (email === null) {
+            // Skip the email
+            console.info("Email will not be updated.");
+        } else {
+            if (typeof email === "string" && /^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+                // Email is valid: Save it to the database
+                const result = await setNewEmailWithId(userId, email);
+
+                if (result.error) {
+                    res.json({
+                        error: true,
+                        message: "Die eingegebene E-Mail-Adresse konnte nicht gespeichert werden. Möglicherweise ist sie bereits mit einem anderen Konto verknüpft. Bitte überprüfe deine Eingabe.",
+                        data: {
+                            newUser: req.session.user,
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates: alreadyDoneUpdates
+                        }
+
+                    } as UpdateUserInformationApiEndpointResponse)
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("email");
+                req.session.user.email = email;
+            } else {
+                throw new Error("Die eingegebene E-Mail-Adresse ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
+        }
+
+        if (password === null) {
+            // Skip the password
+            console.info("Password will not be updated.");
+        } else {
+            if (typeof password === "string") {
+                // Password is valid: Save it to the database
+                const passwordHash = await bcrypt.hash(password, 10);
+
+
+                const result = await setNewPasswordWithId(userId, passwordHash);
+
+                if (result.error) {
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern des Passworts ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            newUser: req.session.user,
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates: alreadyDoneUpdates
+                        }
+
+                    } as UpdateUserInformationApiEndpointResponse)
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("password");
+                req.session.user.password = passwordHash;
+
+                // Send a security email to the user about the password change
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                console.warn("not implemented yet: Send security email to user about password change");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+            } else {
+                throw new Error("Das eingegebene Passwort ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
+        }
+
+        if (firstName === null) {
+            // Skip the first name
+            console.info("First name will not be updated.");
+        } else {
+            if (typeof firstName === "string") {
+                // First name is valid: Save it to the database
+                const result = await setNewFirstNameWithId(userId, firstName);
+
+                if (result.error) {
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern des Vornamens ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            newUser: req.session.user,
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates: alreadyDoneUpdates
+                        }
+
+                    } as UpdateUserInformationApiEndpointResponse)
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("firstName");
+                req.session.user.firstName = firstName;
+            } else {
+                throw new Error("Der eingegebene Vorname ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
+        }
+
+        if (lastName === null) {
+            // Skip the last name
+            console.info("Last name will not be updated.");
+        } else {
+            if (typeof lastName === "string") {
+                // Last name is valid: Save it to the database
+                const result = await setNewLastNameWithId(userId, lastName);
+
+                if (result.error) {
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern des Nachnamens ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            newUser: req.session.user,
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates: alreadyDoneUpdates
+                        }
+
+                    } as UpdateUserInformationApiEndpointResponse)
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("lastName");
+                req.session.user.lastName = lastName;
+            } else {
+                throw new Error("Der eingegebene Nachname ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
+        }
+
+        if (address === null) {
+            // Skip the address
+            console.info("Address will not be updated.");
+        } else {
+            if (typeof address === "string" && address.includes(", ") && address.includes(" ")) {
+                const streetName = address.split(',')[0]
+                const postalCode = address.split(', ')[1].split(' ')[0]
+                const city = address.split(', ')[1].split(' ')?.slice(1)?.join(' ')
+
+                if (!streetName || !postalCode || !city) {
+                    throw new Error("Die eingegebene Adresse ist ungültig. Bitte überprüfe deine Eingabe.");
+                }
+
+                // Address is valid: Save it to the database
+                const result = await setNewAddressWithId(userId, address);
+
+                if (result.error) {
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern der Adresse ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            newUser: req.session.user,
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates: alreadyDoneUpdates
+                        }
+
+                    } as UpdateUserInformationApiEndpointResponse)
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("address");
+                req.session.user.address = address;
+            } else {
+                throw new Error("Die eingegebene Adresse ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
+        }
+
+        if (phone === null) {
+            // Skip the phone number
+            console.info("Phone number will not be updated.");
+        } else {
+            if (typeof phone === "string" && (/^\+?[0-9\s\-()]{6,20}$/.test(phone) || phone === "" || phone === "Keine Nummer")) {
+                // Phone number is valid: Save it to the database
+                const result = await setNewPhoneNumberWithId(userId, phone === "" ? "Keine Nummer" : phone);
+
+                if (result.error) {
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern der Telefonnummer ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            newUser: req.session.user,
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates: alreadyDoneUpdates
+                        }
+
+                    } as UpdateUserInformationApiEndpointResponse)
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("phone");
+                req.session.user.phone = phone;
+            } else {
+                throw new Error("Die eingegebene Telefonnummer ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
+        }
+
+        res.json({
+            error: false,
+            message: "Deine Angaben wurden erfolgreich aktualisiert.",
+            data: {
+                newUser: req.session.user,
+                partialUpdate: false,
+                alreadyDoneUpdates: alreadyDoneUpdates
+            }
+        } as UpdateUserInformationApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: {
+                newUser: null,
+                partialUpdate: false,
+                alreadyDoneUpdates: []
+            }
+            } as UpdateUserInformationApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: {
+                newUser: null,
+                partialUpdate: false,
+                alreadyDoneUpdates: []
+            }
+        } as UpdateUserInformationApiEndpointResponse);
+    }
+});
 
 router.post("/updateUserProfilePicture", multerInstance.single("image"), async (req: Request, res: Response): Promise<void> => {
     try {

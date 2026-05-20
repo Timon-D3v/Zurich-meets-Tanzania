@@ -2,6 +2,7 @@
     display: grid;
     grid-template-rows: 150px 1fr;
     grid-template-columns: 1fr 2fr;
+    place-items: center;
 }
 
 .banner {
@@ -19,6 +20,7 @@
     z-index: 10;
     height: 100%;
     width: 100%;
+    max-width: 30vh; // This is the max height so I use vh
     display: grid;
     place-items: center;
     grid-template-rows: repeat(10, 10%);

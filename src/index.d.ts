@@ -380,6 +380,10 @@ export interface UpdateUserProfilePictureWithIdApiEndpointResponse extends ApiEn
     data: { pictureUrl: string } | null;
 }
 
+export interface UpdateUserInformationApiEndpointResponse extends ApiEndpointResponse {
+    data: { newUser: PublicUser | null, partialUpdate: boolean, alreadyDoneUpdates: Array<"email" | "password" | "firstName" | "lastName" | "address" | "phone"> };
+}
+
 export interface GetContactRequestVerificationTokenApiEndpointResponse extends ApiEndpointResponse {
     data: { token: string } | null;
 }
@@ -719,3 +723,12 @@ export type CalendarEvent = {
     endDate: string;
     title: string;
 };
+
+export type UpdateUserInformationRequestBody = {
+    email: string | null;
+    password: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    address: string | null;
+    phone: string | null;
+}

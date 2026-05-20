@@ -5,7 +5,6 @@
         [label]="'E-Mail'"
         [placeholder]="user().email"
         [autocomplete]="'email'"
-        [required]="true"
         [iconSource]="'/svg/mail.svg'"
         [iconAlt]="'Ein Brief'"
         (valueOutput)="updateEmailInput($event)"
@@ -15,41 +14,37 @@
         [label]="'Passwort'"
         [placeholder]="'••••••••••'"
         [autocomplete]="'current-password'"
-        [required]="true"
         [isPassword]="true"
         [iconSource]="'/svg/lock.svg'"
         [iconAlt]="'Ein Schloss'"
-        (valueOutput)="updateEmailInput($event)"
+        (valueOutput)="updatePasswordInput($event)"
     ></app-edit-profile-input>
     <app-edit-profile-input
         [type]="'text'"
         [label]="'Vorname'"
         [placeholder]="user().firstName"
         [autocomplete]="'given-name'"
-        [required]="true"
         [iconSource]="'/svg/text.svg'"
         [iconAlt]="'Buchstaben'"
-        (valueOutput)="updateEmailInput($event)"
+        (valueOutput)="updateFirstNameInput($event)"
     ></app-edit-profile-input>
     <app-edit-profile-input
         [type]="'text'"
         [label]="'Nachname'"
         [placeholder]="user().lastName"
         [autocomplete]="'family-name'"
-        [required]="true"
         [iconSource]="'/svg/text.svg'"
         [iconAlt]="'Buchstaben'"
-        (valueOutput)="updateEmailInput($event)"
+        (valueOutput)="updateLastNameInput($event)"
     ></app-edit-profile-input>
     <app-edit-profile-input
         [type]="'text'"
         [label]="'Adresse'"
         [placeholder]="user().address.split(',')[0]"
         [autocomplete]="'street-address'"
-        [required]="true"
         [iconSource]="'/svg/location.svg'"
         [iconAlt]="'Ein Standort-Pin'"
-        (valueOutput)="updateEmailInput($event)"
+        (valueOutput)="updateAddressInput($event)"
     ></app-edit-profile-input>
     <div>
         <app-edit-profile-input
@@ -60,7 +55,7 @@
             [required]="true"
             [iconSource]="'/svg/location.svg'"
             [iconAlt]="'Ein Standort-Pin'"
-            (valueOutput)="updateEmailInput($event)"
+            (valueOutput)="updatePostalCodeInput($event)"
         ></app-edit-profile-input>
         <app-edit-profile-input
             [type]="'text'"
@@ -70,7 +65,7 @@
             [required]="true"
             [iconSource]="'/svg/location.svg'"
             [iconAlt]="'Ein Standort-Pin'"
-            (valueOutput)="updateEmailInput($event)"
+            (valueOutput)="updateCityInput($event)"
         ></app-edit-profile-input>
     </div>
 
@@ -79,10 +74,9 @@
         [label]="'Telefon Nummer'"
         [placeholder]="user().phone"
         [autocomplete]="'tel'"
-        [required]="true"
         [iconSource]="'/svg/phone.svg'"
         [iconAlt]="'Ein Telefon'"
-        (valueOutput)="updateEmailInput($event)"
+        (valueOutput)="updatePhoneInput($event)"
     ></app-edit-profile-input>
 
     <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
