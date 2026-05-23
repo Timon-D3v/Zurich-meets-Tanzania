@@ -21,7 +21,8 @@
         </div>
     </section>
     <section class="dynamic-information">
-        <app-edit-profile-information [user]="user()"></app-edit-profile-information>
+        <app-edit-account-preferences></app-edit-account-preferences>
+        <app-edit-account-information [user]="user()"></app-edit-account-information>
     </section>
 </div>
 @if (editPictureInputOpen()) {

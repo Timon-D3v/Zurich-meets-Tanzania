@@ -230,3 +230,157 @@
     padding: var(--basic-margin);
     overflow: auto;
 }
+
+@mixin primary-checkbox($height: 40px, $fillColor: #018786, $hookColor: #fff, $activeBorderColor: #85b8b7) {
+    /*
+        From: https://uiverse.io/lenin55/black-dragon-46
+        By: https://uiverse.io/profile/lenin55
+        Changed and adapted by: Timon Fiedler
+
+        Copyright - 2026 lenin55 (Lenin Mariya Joseph) 
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+        to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+        and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+        WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+    */
+    position: relative;
+    display: inline-block;
+    height: $height;
+    width: $height;
+
+    &:hover {
+        & > input {
+            opacity: 0.04;
+
+            &:focus {
+                opacity: 0.16;
+            }
+        }
+    }
+
+    & > input {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        z-index: -1;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        margin: 0;
+        border-radius: 50%;
+        width: $height;
+        height: $height;
+        background-color: rgba(0, 0, 0, 0.6);
+        box-shadow: none;
+        outline: none;
+        opacity: 0;
+        transform: scale(1);
+        pointer-events: none;
+        transition:
+            opacity 0.3s,
+            transform 0.2s;
+
+        &:checked,
+        &:indeterminate {
+            background-color: $fillColor;
+
+            & + span::before {
+                border-color: $fillColor;
+                background-color: $fillColor;
+            }
+
+            & + span::after {
+                border-color: $hookColor;
+            }
+
+            &:disabled + span::before {
+                border-color: transparent;
+                background-color: currentColor;
+            }
+        }
+
+        &:indeterminate + span::after {
+            border-left: none;
+            transform: translate(calc($height / 30 * 2), calc($height / 4));
+            height: 0;
+            width: calc($height / 3 * 2);
+        }
+
+        &:focus {
+            opacity: 0.12;
+        }
+
+        &:active {
+            opacity: 1;
+            transform: scale(0);
+            transition:
+                transform 0s,
+                opacity 0s;
+
+            & + span::before {
+                border-color: $activeBorderColor;
+            }
+
+            &:checked + span::before {
+                border-color: transparent;
+                background-color: rgba(0, 0, 0, 0.6);
+            }
+        }
+
+        :disabled {
+            opacity: 0;
+
+            & + span {
+                color: rgba(0, 0, 0, 0.38);
+                cursor: initial;
+
+                &::before {
+                    border-color: currentColor;
+                }
+            }
+        }
+    }
+
+    & > span {
+        display: inline-block;
+        width: 100%;
+        cursor: pointer;
+
+        &::before {
+            content: "";
+            display: inline-block;
+            box-sizing: border-box;
+            border: solid calc($height / 10);
+            border-color: rgba(0, 0, 0, 0.6);
+            border-radius: calc($height / 10);
+            width: $height;
+            height: $height;
+            vertical-align: top;
+            transition:
+                border-color 0.2s,
+                background-color 0.2s;
+        }
+
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: calc($height / 5);
+            left: calc($height / 10);
+            width: calc($height / 3 * 2);
+            height: calc($height / 3);
+            border: solid calc($height / 10) transparent;
+            border-right: none;
+            border-top: none;
+            transform: rotate(-45deg);
+        }
+    }
+}

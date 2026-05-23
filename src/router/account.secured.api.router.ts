@@ -1,11 +1,13 @@
 import { Request, Response, Router } from "express";
 import { multerInstance } from "../shared/instance.multer";
 import { delivApiUpload, delivApiUpdateFile } from "delivapi-client";
-import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse } from "..";
+import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse, ApiEndpointResponse } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { setNewEmailWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewAddressWithId, setNewPasswordWithId, setNewProfilePictureWithId, setNewPhoneNumberWithId } from "../shared/user.database";
 import { CONFIG } from "../config";
 import bcrypt from "bcryptjs";
+import { sendPasswordChangeConfirmation } from "../shared/auth.email";
+import { getAllNewsletterEmails, updateNewsletterList, addToNewsletterList, removeFromNewsletterList } from "../shared/newsletter.database";
 
 // Router Serves under /api/secured/account
 const router = Router();
@@ -37,10 +39,9 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                         data: {
                             newUser: req.session.user,
                             partialUpdate: alreadyDoneUpdates.length > 0,
-                            alreadyDoneUpdates: alreadyDoneUpdates
-                        }
-
-                    } as UpdateUserInformationApiEndpointResponse)
+                            alreadyDoneUpdates: alreadyDoneUpdates,
+                        },
+                    } as UpdateUserInformationApiEndpointResponse);
 
                     return;
                 }
@@ -60,7 +61,6 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                 // Password is valid: Save it to the database
                 const passwordHash = await bcrypt.hash(password, 10);
 
-
                 const result = await setNewPasswordWithId(userId, passwordHash);
 
                 if (result.error) {
@@ -70,10 +70,9 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                         data: {
                             newUser: req.session.user,
                             partialUpdate: alreadyDoneUpdates.length > 0,
-                            alreadyDoneUpdates: alreadyDoneUpdates
-                        }
-
-                    } as UpdateUserInformationApiEndpointResponse)
+                            alreadyDoneUpdates: alreadyDoneUpdates,
+                        },
+                    } as UpdateUserInformationApiEndpointResponse);
 
                     return;
                 }
@@ -82,43 +81,7 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                 req.session.user.password = passwordHash;
 
                 // Send a security email to the user about the password change
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                console.warn("not implemented yet: Send security email to user about password change");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
+                await sendPasswordChangeConfirmation(password, req.session.user.email, req.session.user.firstName, req.session.user.lastName);
             } else {
                 throw new Error("Das eingegebene Passwort ist ungültig. Bitte überprüfe deine Eingabe.");
             }
@@ -139,10 +102,9 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                         data: {
                             newUser: req.session.user,
                             partialUpdate: alreadyDoneUpdates.length > 0,
-                            alreadyDoneUpdates: alreadyDoneUpdates
-                        }
-
-                    } as UpdateUserInformationApiEndpointResponse)
+                            alreadyDoneUpdates: alreadyDoneUpdates,
+                        },
+                    } as UpdateUserInformationApiEndpointResponse);
 
                     return;
                 }
@@ -169,10 +131,9 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                         data: {
                             newUser: req.session.user,
                             partialUpdate: alreadyDoneUpdates.length > 0,
-                            alreadyDoneUpdates: alreadyDoneUpdates
-                        }
-
-                    } as UpdateUserInformationApiEndpointResponse)
+                            alreadyDoneUpdates: alreadyDoneUpdates,
+                        },
+                    } as UpdateUserInformationApiEndpointResponse);
 
                     return;
                 }
@@ -189,9 +150,9 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
             console.info("Address will not be updated.");
         } else {
             if (typeof address === "string" && address.includes(", ") && address.includes(" ")) {
-                const streetName = address.split(',')[0]
-                const postalCode = address.split(', ')[1].split(' ')[0]
-                const city = address.split(', ')[1].split(' ')?.slice(1)?.join(' ')
+                const streetName = address.split(",")[0];
+                const postalCode = address.split(", ")[1].split(" ")[0];
+                const city = address.split(", ")[1].split(" ")?.slice(1)?.join(" ");
 
                 if (!streetName || !postalCode || !city) {
                     throw new Error("Die eingegebene Adresse ist ungültig. Bitte überprüfe deine Eingabe.");
@@ -207,10 +168,9 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                         data: {
                             newUser: req.session.user,
                             partialUpdate: alreadyDoneUpdates.length > 0,
-                            alreadyDoneUpdates: alreadyDoneUpdates
-                        }
-
-                    } as UpdateUserInformationApiEndpointResponse)
+                            alreadyDoneUpdates: alreadyDoneUpdates,
+                        },
+                    } as UpdateUserInformationApiEndpointResponse);
 
                     return;
                 }
@@ -237,10 +197,9 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                         data: {
                             newUser: req.session.user,
                             partialUpdate: alreadyDoneUpdates.length > 0,
-                            alreadyDoneUpdates: alreadyDoneUpdates
-                        }
-
-                    } as UpdateUserInformationApiEndpointResponse)
+                            alreadyDoneUpdates: alreadyDoneUpdates,
+                        },
+                    } as UpdateUserInformationApiEndpointResponse);
 
                     return;
                 }
@@ -258,8 +217,8 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
             data: {
                 newUser: req.session.user,
                 partialUpdate: false,
-                alreadyDoneUpdates: alreadyDoneUpdates
-            }
+                alreadyDoneUpdates: alreadyDoneUpdates,
+            },
         } as UpdateUserInformationApiEndpointResponse);
     } catch (error) {
         console.error(error);
@@ -269,10 +228,10 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
                 error: true,
                 message: error.message,
                 data: {
-                newUser: null,
-                partialUpdate: false,
-                alreadyDoneUpdates: []
-            }
+                    newUser: null,
+                    partialUpdate: false,
+                    alreadyDoneUpdates: [],
+                },
             } as UpdateUserInformationApiEndpointResponse);
 
             return;
@@ -284,8 +243,8 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
             data: {
                 newUser: null,
                 partialUpdate: false,
-                alreadyDoneUpdates: []
-            }
+                alreadyDoneUpdates: [],
+            },
         } as UpdateUserInformationApiEndpointResponse);
     }
 });
@@ -323,7 +282,7 @@ router.post("/updateUserProfilePicture", multerInstance.single("image"), async (
             message: "Dein Profilbild wurde erfolgreich aktualisiert.",
             data: {
                 pictureUrl: response.url,
-            }
+            },
         } as UpdateUserProfilePictureWithIdApiEndpointResponse);
     } catch (error) {
         console.error(error);
@@ -332,7 +291,7 @@ router.post("/updateUserProfilePicture", multerInstance.single("image"), async (
             res.json({
                 error: true,
                 message: error.message,
-                data: null
+                data: null,
             } as UpdateUserProfilePictureWithIdApiEndpointResponse);
 
             return;
@@ -341,8 +300,93 @@ router.post("/updateUserProfilePicture", multerInstance.single("image"), async (
         res.status(501).json({
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
-            data: null
+            data: null,
         } as UpdateUserProfilePictureWithIdApiEndpointResponse);
+    }
+});
+
+router.post("/newsletterSignUp", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+        const gender = req.body?.gender;
+
+        if (!gender || typeof gender !== "string" || !["Herr", "Frau", "Divers"].includes(gender)) {
+            throw new Error("Invalid gender provided.");
+        }
+
+        const newsletterUsers = await getAllNewsletterEmails();
+
+        if (newsletterUsers.error !== null) {
+            throw new Error(newsletterUsers.error);
+        }
+
+        const isAlreadySignedUp = newsletterUsers.data!.some((entry: { email: string }) => entry.email === user.email);
+
+        const result = isAlreadySignedUp
+            ? await updateNewsletterList(user.email, user.firstName, user.lastName, gender as "Herr" | "Frau" | "Divers")
+            : await addToNewsletterList(user.email, user.firstName, user.lastName, gender as "Herr" | "Frau" | "Divers");
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: isAlreadySignedUp ? "Du bist bereits in der Newsletterliste. Deine Daten wurden aktualisiert." : "Du hast dich erfolgreich für den Newsletter angemeldet.",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/newsletterSignOut", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const result = await removeFromNewsletterList(user.email);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as ApiEndpointResponse);
     }
 });
 

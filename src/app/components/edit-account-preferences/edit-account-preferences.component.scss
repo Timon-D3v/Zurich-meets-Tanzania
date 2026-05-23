@@ -1,0 +1,92 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    margin: 10vh 5vw;
+    background-color: var(--text-100);
+    box-sizing: border-box;
+    height: max-content;
+    padding: 40px 5%;
+    width: calc(100% - 10vw);
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+button {
+    @include form-submit-button;
+}
+
+label.checkbox {
+    @include primary-checkbox(1.5rem, var(--accent-500), var(--text-50), var(--accent-400));
+    margin-right: 1.5ch;
+
+    & + span {
+        line-height: 1.5rem;
+        font-size: 1.2rem;
+        vertical-align: top;
+    }
+}
+
+label.select_label {
+    line-height: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: block;
+}
+
+select {
+    appearance: none;
+    background-color: var(--accent-600);
+    background-image: url(../../../../public/svg/select_arrow.svg);
+    background-position: center right 0.25rem;
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    border: none;
+    border-radius: 0.25em;
+    box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    color: var(--text-50);
+    cursor: pointer;
+    height: 2.3rem;
+    outline: none;
+    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+    width: 100%;
+
+    &:hover {
+        background-color: var(--accent-700);
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    & > option {
+        background-color: var(--accent-600);
+        color: var(--text-50);
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--accent-700);
+        }
+
+        &:disabled {
+            border-bottom: 1px var(--text-50) solid;
+            cursor: not-allowed;
+            color: var(--text-200);
+        }
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .wrapper {
+        width: 70%;
+        margin: 5vh auto;
+    }
+}

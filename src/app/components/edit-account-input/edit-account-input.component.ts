@@ -4,12 +4,12 @@ import { isPlatformBrowser } from "@angular/common";
 import { getRandomHexString } from "../../../shared/utils";
 
 @Component({
-    selector: "app-edit-profile-input",
+    selector: "app-edit-account-input",
     imports: [],
-    templateUrl: "./edit-profile-input.component.html",
-    styleUrl: "./edit-profile-input.component.scss",
+    templateUrl: "./edit-account-input.component.html",
+    styleUrl: "./edit-account-input.component.scss",
 })
-export class EditProfileInputComponent {
+export class EditAccountInputComponent {
     private _updateInputType = effect(() => {
         // Updates 'inputType' when the input type 'type' arrives or changes
         this.inputType.set(this.type());

@@ -32,4 +32,18 @@ export class NewsletterService {
 
         return request;
     }
+
+    signUpWithAccount(gender: "Herr" | "Frau" | "Divers"): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/account/newsletterSignUp", {
+            gender,
+        });
+
+        return request;
+    }
+
+    signOutWithAccount(): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/account/newsletterSignOut", {});
+
+        return request;
+    }
 }

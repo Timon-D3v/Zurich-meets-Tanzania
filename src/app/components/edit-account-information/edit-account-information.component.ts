@@ -1,18 +1,18 @@
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { PublicUser, UpdateUserInformationApiEndpointResponse, UpdateUserInformationRequestBody } from "../../..";
-import { EditProfileInputComponent } from "../edit-profile-input/edit-profile-input.component";
+import { EditAccountInputComponent } from "../edit-account-input/edit-account-input.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { AccountService } from "../../services/account.service";
 import { NotificationService } from "../../services/notification.service";
 import { AuthService } from "../../services/auth.service";
 
 @Component({
-    selector: "app-edit-profile-information",
-    imports: [EditProfileInputComponent, ReactiveFormsModule],
-    templateUrl: "./edit-profile-information.component.html",
-    styleUrl: "./edit-profile-information.component.scss",
+    selector: "app-edit-account-information",
+    imports: [EditAccountInputComponent, ReactiveFormsModule],
+    templateUrl: "./edit-account-information.component.html",
+    styleUrl: "./edit-account-information.component.scss",
 })
-export class EditProfileInformationComponent implements OnInit {
+export class EditAccountInformationComponent implements OnInit {
     submitButtonDisabled = signal(false);
     submitButtonText = signal("Speichern");
 
@@ -29,7 +29,7 @@ export class EditProfileInformationComponent implements OnInit {
         phoneControl: new FormControl(""),
     });
 
-    private authService = inject(AuthService)
+    private authService = inject(AuthService);
     private accountService = inject(AccountService);
     private notificationService = inject(NotificationService);
 
@@ -38,9 +38,9 @@ export class EditProfileInformationComponent implements OnInit {
             emailControl: this.user().email,
             firstNameControl: this.user().firstName,
             lastNameControl: this.user().lastName,
-            addressControl: this.user().address.split(',')[0],
-            postalCodeControl: this.user().address.split(', ')[1].split(' ')[0],
-            cityControl: this.user().address.split(', ')[1].split(' ').slice(1).join(' '),
+            addressControl: this.user().address.split(",")[0],
+            postalCodeControl: this.user().address.split(", ")[1].split(" ")[0],
+            cityControl: this.user().address.split(", ")[1].split(" ").slice(1).join(" "),
             phoneControl: this.user().phone,
         });
     }
@@ -52,7 +52,7 @@ export class EditProfileInformationComponent implements OnInit {
         this.submitButtonText.set("Speichern...");
 
         // Validate inputs
-        const email = this.editProfileForm.value.emailControl
+        const email = this.editProfileForm.value.emailControl;
         const password = this.editProfileForm.value.passwordControl;
         const firstName = this.editProfileForm.value.firstNameControl;
         const lastName = this.editProfileForm.value.lastNameControl;
@@ -61,7 +61,7 @@ export class EditProfileInformationComponent implements OnInit {
         const city = this.editProfileForm.value.cityControl;
         const phone = this.editProfileForm.value.phoneControl;
 
-        console.log(email, password, firstName, lastName, address, postalCode, city, phone)
+        console.log(email, password, firstName, lastName, address, postalCode, city, phone);
 
         if (!email || typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
             return this.abortSubmit("Bitte gib eine gültige E-Mail-Adresse ein.");
@@ -94,17 +94,13 @@ export class EditProfileInformationComponent implements OnInit {
         }
 
         if (typeof phone !== "string") {
-            // When this happens, an error occurred, so we want to show an error message and not proceed with the form submission 
+            // When this happens, an error occurred, so we want to show an error message and not proceed with the form submission
             return this.abortSubmit("Bitte gib eine gültige Telefonnummer ein.");
         }
 
-        if (
-            phone !== "" &&
-            phone !== "Keine Nummer" &&
-            !/^\+?[0-9\s\-()]{6,20}$/.test(phone)
-        ) {
+        if (phone !== "" && phone !== "Keine Nummer" && !/^\+?[0-9\s\-()]{6,20}$/.test(phone)) {
             // Actual validation of the phone number, allowing empty string but if not empty, it should be a valid phone number or "Keine Nummer"
-            return this.abortSubmit("Bitte gib eine gültige Telefonnummer ein oder tippe \"Keine Nummer\" um deine Telefonnummer zu entfernen.");
+            return this.abortSubmit('Bitte gib eine gültige Telefonnummer ein oder tippe "Keine Nummer" um deine Telefonnummer zu entfernen.');
         }
 
         console.info("All inputs are valid. Proceeding with form submission...");
@@ -117,7 +113,7 @@ export class EditProfileInformationComponent implements OnInit {
             address: `${address.trim()}, ${postalCode.trim()} ${city.trim()}`,
             postalCode: postalCode.trim(),
             city: city.trim(),
-            phone: phone.trim()
+            phone: phone.trim(),
         };
 
         // Look for values that changed
@@ -127,10 +123,10 @@ export class EditProfileInformationComponent implements OnInit {
             firstName: updatedUserData.firstName !== this.user().firstName ? updatedUserData.firstName : null,
             lastName: updatedUserData.lastName !== this.user().lastName ? updatedUserData.lastName : null,
             address: updatedUserData.address !== this.user().address ? updatedUserData.address : null,
-            phone: updatedUserData.phone !== this.user().phone ? updatedUserData.phone : null
-        }
+            phone: updatedUserData.phone !== this.user().phone ? updatedUserData.phone : null,
+        };
 
-        if (Object.values(requestBody).every(value => value === null)) {
+        if (Object.values(requestBody).every((value) => value === null)) {
             // No changes were made, so we can just re-enable the submit button and return early
             this.submitButtonDisabled.set(false);
             this.submitButtonText.set("Speichern");
@@ -157,21 +153,22 @@ export class EditProfileInformationComponent implements OnInit {
                     alreadyDoneUpdatesReadableString += ` und ${response.data.alreadyDoneUpdates[response.data.alreadyDoneUpdates.length - 1]}`;
                 }
 
-                this.notificationService.warning("Teilweise erfolgreich", `${response.message} Folgende Änderungen haben geklappt: ${
-                    alreadyDoneUpdatesReadableString
-                    .replace("email", "E-Mail")
-                    .replace("password", "Passwort")
-                    .replace("firstName", "Vorname")
-                    .replace("lastName", "Nachname")
-                    .replace("address", "Adresse")
-                    .replace("phone", "Telefonnummer")
-                }`);
+                this.notificationService.warning(
+                    "Teilweise erfolgreich",
+                    `${response.message} Folgende Änderungen haben geklappt: ${alreadyDoneUpdatesReadableString
+                        .replace("email", "E-Mail")
+                        .replace("password", "Passwort")
+                        .replace("firstName", "Vorname")
+                        .replace("lastName", "Nachname")
+                        .replace("address", "Adresse")
+                        .replace("phone", "Telefonnummer")}`,
+                );
 
                 // Don't return here since we still want to update the user details
             } else if (response.error) {
                 this.notificationService.error("Fehler", response.message);
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Speichern");
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Speichern");
                 return;
             } else {
                 this.notificationService.success("Erfolg", "Alle Änderungen wurden erfolgreich gespeichert.");
@@ -205,13 +202,13 @@ export class EditProfileInformationComponent implements OnInit {
                     this.editProfileForm.patchValue({ lastNameControl: this.user().lastName });
                     break;
                 case "addressControl":
-                    this.editProfileForm.patchValue({ addressControl: this.user().address.split(',')[0] });
+                    this.editProfileForm.patchValue({ addressControl: this.user().address.split(",")[0] });
                     break;
                 case "postalCodeControl":
-                    this.editProfileForm.patchValue({ postalCodeControl: this.user().address.split(', ')[1].split(' ')[0] });
+                    this.editProfileForm.patchValue({ postalCodeControl: this.user().address.split(", ")[1].split(" ")[0] });
                     break;
                 case "cityControl":
-                    this.editProfileForm.patchValue({ cityControl: this.user().address.split(', ')[1].split(' ').slice(1).join(' ') });
+                    this.editProfileForm.patchValue({ cityControl: this.user().address.split(", ")[1].split(" ").slice(1).join(" ") });
                     break;
                 case "phoneControl":
                     // Don't set the initial value but the default since the user might want to remove their phone number by entering an empty string

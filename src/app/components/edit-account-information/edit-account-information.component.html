@@ -1,15 +1,7 @@
 <form [formGroup]="editProfileForm" (submit)="onSubmit($event)">
     <h2>Informationen bearbeiten</h2>
-    <app-edit-profile-input
-        [type]="'email'"
-        [label]="'E-Mail'"
-        [placeholder]="user().email"
-        [autocomplete]="'email'"
-        [iconSource]="'/svg/mail.svg'"
-        [iconAlt]="'Ein Brief'"
-        (valueOutput)="updateEmailInput($event)"
-    ></app-edit-profile-input>
-    <app-edit-profile-input
+    <app-edit-account-input [type]="'email'" [label]="'E-Mail'" [placeholder]="user().email" [autocomplete]="'email'" [iconSource]="'/svg/mail.svg'" [iconAlt]="'Ein Brief'" (valueOutput)="updateEmailInput($event)"></app-edit-account-input>
+    <app-edit-account-input
         [type]="'password'"
         [label]="'Passwort'"
         [placeholder]="'••••••••••'"
@@ -18,8 +10,8 @@
         [iconSource]="'/svg/lock.svg'"
         [iconAlt]="'Ein Schloss'"
         (valueOutput)="updatePasswordInput($event)"
-    ></app-edit-profile-input>
-    <app-edit-profile-input
+    ></app-edit-account-input>
+    <app-edit-account-input
         [type]="'text'"
         [label]="'Vorname'"
         [placeholder]="user().firstName"
@@ -27,8 +19,8 @@
         [iconSource]="'/svg/text.svg'"
         [iconAlt]="'Buchstaben'"
         (valueOutput)="updateFirstNameInput($event)"
-    ></app-edit-profile-input>
-    <app-edit-profile-input
+    ></app-edit-account-input>
+    <app-edit-account-input
         [type]="'text'"
         [label]="'Nachname'"
         [placeholder]="user().lastName"
@@ -36,8 +28,8 @@
         [iconSource]="'/svg/text.svg'"
         [iconAlt]="'Buchstaben'"
         (valueOutput)="updateLastNameInput($event)"
-    ></app-edit-profile-input>
-    <app-edit-profile-input
+    ></app-edit-account-input>
+    <app-edit-account-input
         [type]="'text'"
         [label]="'Adresse'"
         [placeholder]="user().address.split(',')[0]"
@@ -45,9 +37,9 @@
         [iconSource]="'/svg/location.svg'"
         [iconAlt]="'Ein Standort-Pin'"
         (valueOutput)="updateAddressInput($event)"
-    ></app-edit-profile-input>
+    ></app-edit-account-input>
     <div>
-        <app-edit-profile-input
+        <app-edit-account-input
             [type]="'text'"
             [label]="'Postleitzahl'"
             [placeholder]="user().address.split(', ')[1].split(' ')[0]"
@@ -56,8 +48,8 @@
             [iconSource]="'/svg/location.svg'"
             [iconAlt]="'Ein Standort-Pin'"
             (valueOutput)="updatePostalCodeInput($event)"
-        ></app-edit-profile-input>
-        <app-edit-profile-input
+        ></app-edit-account-input>
+        <app-edit-account-input
             [type]="'text'"
             [label]="'Ort'"
             [placeholder]="user().address.split(', ')[1].split(' ').slice(1).join(' ')"
@@ -66,18 +58,10 @@
             [iconSource]="'/svg/location.svg'"
             [iconAlt]="'Ein Standort-Pin'"
             (valueOutput)="updateCityInput($event)"
-        ></app-edit-profile-input>
+        ></app-edit-account-input>
     </div>
 
-    <app-edit-profile-input
-        [type]="'tel'"
-        [label]="'Telefon Nummer'"
-        [placeholder]="user().phone"
-        [autocomplete]="'tel'"
-        [iconSource]="'/svg/phone.svg'"
-        [iconAlt]="'Ein Telefon'"
-        (valueOutput)="updatePhoneInput($event)"
-    ></app-edit-profile-input>
+    <app-edit-account-input [type]="'tel'" [label]="'Telefon Nummer'" [placeholder]="user().phone" [autocomplete]="'tel'" [iconSource]="'/svg/phone.svg'" [iconAlt]="'Ein Telefon'" (valueOutput)="updatePhoneInput($event)"></app-edit-account-input>
 
     <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
 </form>

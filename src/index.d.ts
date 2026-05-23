@@ -381,7 +381,7 @@ export interface UpdateUserProfilePictureWithIdApiEndpointResponse extends ApiEn
 }
 
 export interface UpdateUserInformationApiEndpointResponse extends ApiEndpointResponse {
-    data: { newUser: PublicUser | null, partialUpdate: boolean, alreadyDoneUpdates: Array<"email" | "password" | "firstName" | "lastName" | "address" | "phone"> };
+    data: { newUser: PublicUser | null; partialUpdate: boolean; alreadyDoneUpdates: Array<"email" | "password" | "firstName" | "lastName" | "address" | "phone"> };
 }
 
 export interface GetContactRequestVerificationTokenApiEndpointResponse extends ApiEndpointResponse {
@@ -731,4 +731,4 @@ export type UpdateUserInformationRequestBody = {
     lastName: string | null;
     address: string | null;
     phone: string | null;
-}
+};

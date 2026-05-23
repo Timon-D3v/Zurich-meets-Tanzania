@@ -52,6 +52,31 @@ export async function sendNewPassword(password: string, email: string, firstName
     return request !== null && request.response.status === 200;
 }
 
+export async function sendPasswordChangeConfirmation(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
+    const text = [
+        PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, "Divers"),
+        `Du hast gerade dein Passwort auf der Account-Seite geändert. Dein neues Passwort lautet:`,
+        password,
+        "(Falls du das nicht warst, empfehlen wir, das Passwort unter 'Mein Account' selbst zu ändern oder das Passwort zurückzusetzen.)",
+        PUBLIC_CONFIG.EMAIL.REGARDS,
+    ].join("\n\n");
+
+    const html =
+        PUBLIC_CONFIG.EMAIL.HEADER +
+        [
+            PUBLIC_CONFIG.EMAIL.GREETINGS_HTML(PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, "Divers")),
+            `Du hast gerade dein Passwort auf der Account-Seite geändert. Dein neues Passwort lautet:`,
+            password,
+            "(Falls du das nicht warst, empfehlen wir, das Passwort unter 'Mein Account' selbst zu ändern oder das Passwort zurückzusetzen.)",
+            PUBLIC_CONFIG.EMAIL.REGARDS_HTML,
+        ].join("<br><br>") +
+        PUBLIC_CONFIG.EMAIL.FOOTER;
+
+    const request = await sendMail(email, "Passwort geändert", text, html, "Password Change Confirmation");
+
+    return request !== null && request.response.status === 200;
+}
+
 export async function sendSignUpConfirmationCode(code: string, email: string, firstName: string, lastName: string): Promise<boolean> {
     const text = [
         PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, "Divers"),

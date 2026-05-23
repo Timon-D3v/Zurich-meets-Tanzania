@@ -1,0 +1,29 @@
+<div class="wrapper">
+    <h2>Präferenzen bearbeiten</h2>
+    <h3>Ich möchte den Newsletter erhalten:</h3>
+    <p>
+        <label [for]="newsletterId" class="checkbox">
+            <input [id]="newsletterId" [checked]="newsletterIsChecked()" type="checkbox" (click)="toggleNewsletter($event)" />
+            <span></span>
+        </label>
+        <span>Ich möchte den Newsletter erhalten.</span>
+    </p>
+    @if (newsletterIsChecked()) {
+        <label class="select_label" [for]="newsletterId + '_gender_selection'">Anrede:</label><br>
+        <select [id]="newsletterId + '_gender_selection'" (change)="updateNewsletterGender($event)" title="Anrede für den Newsletter auswählen">
+            <option value="Divers" selected disabled>Auswählen:</option>
+            <hr>
+            <option value="Herr">Herr</option>
+            <option value="Frau">Frau</option>
+            <option value="Divers">Divers</option>
+        </select>
+    }
+    <h3>Dunkler Modus (Nachtmodus):</h3>
+    <p>
+        <label [for]="darkmodeId" class="checkbox">
+            <input [id]="darkmodeId" [checked]="darkmodeIsChecked()" type="checkbox" (click)="toggleDarkmode($event)" />
+            <span></span>
+        </label>
+        <span>Ich möchte den dunklen Modus aktivieren.</span>
+    </p>
+</div>

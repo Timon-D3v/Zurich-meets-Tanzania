@@ -2,13 +2,14 @@ import { Component, effect, inject, signal } from "@angular/core";
 import { AuthService } from "../services/auth.service";
 import { AccountService } from "../services/account.service";
 import { PublicUser, UpdateUserProfilePictureWithIdApiEndpointResponse } from "../..";
-import { EditProfileInformationComponent } from "../components/edit-profile-information/edit-profile-information.component";
+import { EditAccountInformationComponent } from "../components/edit-account-information/edit-account-information.component";
 import { PopupImageInputComponent } from "../components/popup-image-input/popup-image-input.component";
 import { NotificationService } from "../services/notification.service";
+import { EditAccountPreferencesComponent } from "../components/edit-account-preferences/edit-account-preferences.component";
 
 @Component({
     selector: "app-account",
-    imports: [EditProfileInformationComponent, PopupImageInputComponent],
+    imports: [EditAccountInformationComponent, PopupImageInputComponent, EditAccountPreferencesComponent],
     templateUrl: "./account.component.html",
     styleUrl: "./account.component.scss",
 })
@@ -28,7 +29,7 @@ export class AccountComponent {
     editPictureInputOpen = signal(false);
 
     private authService = inject(AuthService);
-    private accountService = inject(AccountService)
+    private accountService = inject(AccountService);
     private notificationService = inject(NotificationService);
 
     private _updateUserObject = effect(() => {
@@ -61,7 +62,7 @@ export class AccountComponent {
         this.closeEditPictureInput();
         this.notificationService.info("Datei ausgewählt:", "Dein neues Profilbild wird hochgeladen. Dies kann einen Moment dauern...");
 
-        const request = this.accountService.updateUserProfilePicture(event.file)
+        const request = this.accountService.updateUserProfilePicture(event.file);
 
         request.subscribe((response: UpdateUserProfilePictureWithIdApiEndpointResponse) => {
             if (response.error) {
@@ -72,13 +73,13 @@ export class AccountComponent {
             this.notificationService.success("Erfolg", response.message);
 
             this.user.update((user: PublicUser) => {
-                user.picture = response.data?.pictureUrl || user.picture
+                user.picture = response.data?.pictureUrl || user.picture;
 
                 user.picture += `?t=${Date.now()}`;
 
                 return user;
-            })
-        })
+            });
+        });
     }
 
     editPicture(): void {
