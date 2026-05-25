@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { UpdateUserInformationApiEndpointResponse, UpdateUserInformationRequestBody, UpdateUserProfilePictureWithIdApiEndpointResponse } from "../..";
+import { GetInvoicesApiEndpointResponse, UpdateUserInformationApiEndpointResponse, UpdateUserInformationRequestBody, UpdateUserProfilePictureWithIdApiEndpointResponse } from "../..";
 
 @Injectable({
     providedIn: "root",
@@ -21,6 +21,12 @@ export class AccountService {
 
     updateUserInformation(requestBody: UpdateUserInformationRequestBody): Observable<UpdateUserInformationApiEndpointResponse> {
         const request = this.http.post<UpdateUserInformationApiEndpointResponse>("/api/secured/account/updateUserInformation", requestBody);
+
+        return request;
+    }
+
+    getInvoices() {
+        const request = this.http.get<GetInvoicesApiEndpointResponse>("/api/secured/account/getInvoices");
 
         return request;
     }

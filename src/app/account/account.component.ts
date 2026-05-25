@@ -6,10 +6,11 @@ import { EditAccountInformationComponent } from "../components/edit-account-info
 import { PopupImageInputComponent } from "../components/popup-image-input/popup-image-input.component";
 import { NotificationService } from "../services/notification.service";
 import { EditAccountPreferencesComponent } from "../components/edit-account-preferences/edit-account-preferences.component";
+import { ViewAccountMembershipDetailsComponent } from "../components/view-account-membership-details/view-account-membership-details.component";
 
 @Component({
     selector: "app-account",
-    imports: [EditAccountInformationComponent, PopupImageInputComponent, EditAccountPreferencesComponent],
+    imports: [EditAccountInformationComponent, PopupImageInputComponent, EditAccountPreferencesComponent, ViewAccountMembershipDetailsComponent],
     templateUrl: "./account.component.html",
     styleUrl: "./account.component.scss",
 })

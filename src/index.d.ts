@@ -384,6 +384,10 @@ export interface UpdateUserInformationApiEndpointResponse extends ApiEndpointRes
     data: { newUser: PublicUser | null; partialUpdate: boolean; alreadyDoneUpdates: Array<"email" | "password" | "firstName" | "lastName" | "address" | "phone"> };
 }
 
+export interface GetInvoicesApiEndpointResponse extends ApiEndpointResponse {
+    data: Invoice[] | null;
+}
+
 export interface GetContactRequestVerificationTokenApiEndpointResponse extends ApiEndpointResponse {
     data: { token: string } | null;
 }
@@ -731,4 +735,16 @@ export type UpdateUserInformationRequestBody = {
     lastName: string | null;
     address: string | null;
     phone: string | null;
+};
+
+export type Invoice = {
+    id: number;
+    subscriptionId: string;
+    userId: number;
+    type: string;
+    price: string;
+    status: string;
+    date: string;
+    invoicePdf: string;
+    invoiceUrl: string;
 };

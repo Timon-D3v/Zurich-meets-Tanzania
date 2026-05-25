@@ -1,0 +1,84 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    margin: 10vh 5vw;
+    background-color: var(--text-100);
+    box-sizing: border-box;
+    height: max-content;
+    padding: 40px 5%;
+    width: calc(100% - 10vw);
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2rem;
+}
+
+p.no-membership {
+    margin-bottom: 0;
+    text-align: center;
+
+    & > span {
+        line-height: 1.5rem;
+        font-size: 1.2rem;
+    }
+
+    & > a {
+        @include primary-button;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}
+
+table {
+    border-collapse: collapse;
+    font-family:
+        Titillium Web,
+        sans-serif;
+    width: 100%;
+
+    &,
+    & th {
+        border: 1px solid var(--text-950);
+    }
+
+    & th {
+        padding: 12px 8px;
+    }
+
+    & td {
+        border: 1px solid var(--text-950);
+        color: var(--text-950);
+        padding: 8px;
+        text-align: center;
+
+        & > a {
+            vertical-align: top;
+
+            & > img {
+                vertical-align: top;
+                transition: filter 0.2s ease-in-out;
+            }
+
+            &:hover {
+                color: var(--secondary-500);
+
+                & > img {
+                    filter: invert(49%) sepia(98%) saturate(1695%) hue-rotate(359deg) brightness(99%) contrast(92%); // Black to secondary-500
+                }
+            }
+        }
+    }
+
+    & tbody tr:nth-child(2n - 1) {
+        background-color: var(--text-300);
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .wrapper {
+        width: 70%;
+        margin: 5vh auto;
+    }
+}

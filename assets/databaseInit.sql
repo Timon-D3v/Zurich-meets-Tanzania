@@ -133,10 +133,15 @@ COMMENT = 'This table stores user information and their session ids to authentic
 CREATE TABLE IF NOT EXISTS `zmt`.`invoices` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriptionId` VARCHAR(256) NOT NULL,
-    `invoicePdf` VARCHAR(512) NOT NULL,
-    `invoiceUrl` VARCHAR(512) NOT NULL,
+    `userId` INT NOT NULL,
+    `type` VARCHAR(64) NOT NULL,
+    `price` VARCHAR(32) NOT NULL,
+    `status` VARCHAR(16) NOT NULL DEFAULT 'unpaid',
+    `date` DATE NOT NULL DEFAULT CURRENT_DATE,
+    `invoicePdf` VARCHAR(256) NOT NULL,
+    `invoiceUrl` VARCHAR(256) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `invoice_subscription_id_UNIQUE` (`subscriptionId` ASC) VISIBLE
+    UNIQUE INDEX `invoice_id_UNIQUE` (`id` ASC) VISIBLE
 )
 COMMENT = 'This table holds all the invoices of the members.';
 

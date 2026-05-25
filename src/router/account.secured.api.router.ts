@@ -1,13 +1,14 @@
 import { Request, Response, Router } from "express";
 import { multerInstance } from "../shared/instance.multer";
 import { delivApiUpload, delivApiUpdateFile } from "delivapi-client";
-import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse, ApiEndpointResponse } from "..";
+import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse, Invoice, ApiEndpointResponse, GetInvoicesApiEndpointResponse } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { setNewEmailWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewAddressWithId, setNewPasswordWithId, setNewProfilePictureWithId, setNewPhoneNumberWithId } from "../shared/user.database";
 import { CONFIG } from "../config";
 import bcrypt from "bcryptjs";
 import { sendPasswordChangeConfirmation } from "../shared/auth.email";
 import { getAllNewsletterEmails, updateNewsletterList, addToNewsletterList, removeFromNewsletterList } from "../shared/newsletter.database";
+import { getInvoicesWithId } from "../shared/invoices.database";
 
 // Router Serves under /api/secured/account
 const router = Router();
@@ -387,6 +388,42 @@ router.post("/newsletterSignOut", async (req: Request, res: Response): Promise<v
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: null,
         } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getInvoices", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const result = await getInvoicesWithId(user.id);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: result.data as Invoice[],
+        } as GetInvoicesApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as GetInvoicesApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as GetInvoicesApiEndpointResponse);
     }
 });
 

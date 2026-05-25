@@ -1,0 +1,5 @@
+:root[data-theme="dark"] {
+    & tbody tr:nth-child(2n - 1) {
+        background-color: var(--text-200);
+    }
+}

@@ -1,0 +1,41 @@
+<div class="wrapper">
+    <h2>Mitgliedschaft</h2>
+    @if (user().type === "user") {
+        <p class="no-membership">
+            <span class="no-membership">Du bist noch kein Mitglied bei zurich meets tanzania.</span>
+            <br />
+            <a [routerLink]="'/membership'" class="no-membership">Jetzt Mitglied werden</a>
+        </p>
+    } @else {
+        @defer (when invoices().length > 0; prefetch on immediate) {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Abonnement</th>
+                        <th>Preis</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                        <th>Datei</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (invoice of invoices(); track $index) {
+                        <tr>
+                            <td>{{ formatDate(invoice.date) }}</td>
+                            <td>{{ invoice.type.replace("membership", "Mitgliedschaft") }}</td>
+                            <td>{{ invoice.price }}</td>
+                            <td>{{ invoice.status.replace("pending", "Ausstehend").replace("paid", "Bezahlt").replace("cancelled", "Storniert").replace("unpaid", "Unbezahlt") }}</td>
+                            <td><a [href]="invoice.invoiceUrl" target="_blank">Ansehen</a></td>
+                            <td>
+                                <a [href]="invoice.invoicePdf" target="_blank"> Herunterladen <img [alt]="invoice.invoicePdf" title="PDF herunterladen" src="/svg/download.svg" /> </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        } @placeholder (minimum 100ms) {
+            <app-loading></app-loading>
+        }
+    }
+</div>

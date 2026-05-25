@@ -42,11 +42,10 @@ export class EditAccountPreferencesComponent implements OnInit {
                 if (response.error) {
                     this.notificationService.error("Fehler:", response.message);
                     return;
-
                 }
 
                 this.notificationService.success("Erfolg:", response.message);
-            })
+            });
         } else {
             const request = this.newsletterService.signOutWithAccount();
 
@@ -54,14 +53,11 @@ export class EditAccountPreferencesComponent implements OnInit {
                 if (response.error) {
                     this.notificationService.error("Fehler:", response.message);
                     return;
-
                 }
 
                 this.notificationService.success("Schade...", "Du hast dich erfolgreich vom Newsletter abgemeldet. Schade, dass du nicht mehr dabei sein möchtest!");
-            })
+            });
         }
-
-        
     }
 
     toggleDarkmode(event: Event): void {
@@ -91,11 +87,10 @@ export class EditAccountPreferencesComponent implements OnInit {
             if (response.error) {
                 this.notificationService.error("Fehler:", response.message);
                 return;
-
             }
 
             this.notificationService.success("Erfolg:", response.message);
-        })
+        });
     }
 
     private randomId(length: number = 32): string {
