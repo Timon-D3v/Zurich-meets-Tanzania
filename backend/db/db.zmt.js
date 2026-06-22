@@ -719,3 +719,15 @@ export async function saveUnhandledStripeEvent(type, data) {
     await pool.query(query, [type, JSON.stringify(data)]);
     return true;
 }
+
+export async function getCurrentDonationBannerData() {
+    let query = "SELECT * FROM `zmt`.`donationmeter` ORDER BY `id` DESC LIMIT 1;";
+    let [result] = await pool.query(query);
+    return result[0];
+}
+
+export async function updateDonationMeter(title, description, max, current) {
+    let query = "INSERT INTO `zmt`.`donationmeter` (`title`, `description`, `max`, `value`) VALUES (?, ?, ?, ?);";
+    await pool.query(query, [title, description, max, current]);
+    return true;
+}

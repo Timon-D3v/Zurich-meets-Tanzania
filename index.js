@@ -970,6 +970,25 @@ app.get("/newsletter/signUp", rateLimit(softLimiter), async (req, res) => {
     }
 });
 
+app.get("/getCurrentDonationBannerData", rateLimit(softLimiter), async (req, res) => {
+    try {
+        const response = await db.getCurrentDonationBannerData();
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: response,
+        });
+    } catch (error) {
+        console.error(error);
+        res.json({
+            error: true,
+            message: "Etwas ist schief gelaufen. Bitte versuche es später erneut.",
+            data: null,
+        });
+    }
+});
+
 app.get("/*splat", (req, res) => {
     let url = req.protocol + "://" + req.get("host");
     res.status(404).render("errors/error404.ejs", {
@@ -1728,6 +1747,19 @@ app.post("/post/createTeam", async (req, res) => {
     res.json({ valid: result });
 });
 
+app.post("/post/updateDonationMeter", async (req, res) => {
+    if (req.session?.user?.type !== "admin") return res.json({ error: "501: Forbidden" });
+
+    const { title, description, max, current } = req.body;
+
+    let result = await db.updateDonationMeter(title, description, max, current).catch((err) => {
+        console.error(err);
+        return false;
+    });
+
+    res.json({ valid: result });
+});
+
 app.post("/post/addTeamMember", async (req, res) => {
     if (req.session?.user?.type !== "admin") return res.json({ error: "501: Forbidden" });
 
@@ -1928,9 +1960,9 @@ app.listen(process.env.PORT, process.env.HOST, () => {
 
 if (process.env.HTTPS_ACTIVE === "true") {
     const httpsOptions = {
-        key: fs.readFileSync('./cert/key.pem'),
-        cert: fs.readFileSync('./cert/cert.pem'),
-        passphrase: process.env.HTTPS_CERT_PASSPHRASE
+        key: fs.readFileSync("./cert/key.pem"),
+        cert: fs.readFileSync("./cert/cert.pem"),
+        passphrase: process.env.HTTPS_CERT_PASSPHRASE,
     };
 
     const httpsServer = https.createServer(httpsOptions, app);

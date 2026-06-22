@@ -40,7 +40,9 @@
                     <button type="submit" id="membership-submit" class="donate-btn hero-cta">Mitglied werden</button>
                 </div>
             </form>
-            <p class="membership-without-account-notice">Bitte beachte, dass du für das obige Formular eine Kreditkarte brauchst. Wenn du keine Karte hast und lieber via Banküberweisung Mitglied werden willst, melde dich bitte via unserem <a href="/contact">Webseitenformular</a> oder per E-Mail an <a href="mailto:info@zurich-meets-tanzania.com" target="_blank">info@zurich-meets-tanzania.com</a></p>
+            <p class="membership-without-account-notice">
+                Bitte beachte, dass du für das obige Formular eine Kreditkarte brauchst. Wenn du keine Karte hast und lieber via Banküberweisung Mitglied werden willst, melde dich bitte via unserem <a href="/contact">Webseitenformular</a> oder per E-Mail an <a href="mailto:info@zurich-meets-tanzania.com" target="_blank">info@zurich-meets-tanzania.com</a>
+            </p>
             <% if (typeof user !== "undefined" && user !== null && user.valid) { %>
             <div class="invisible">
                 <p id="donate-prefilled-name"><%= user.name %></p>

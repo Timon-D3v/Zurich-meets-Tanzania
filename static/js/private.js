@@ -117,6 +117,47 @@ getElm("merge_blogs_btn").click(async () => {
     else console.error("Unbekannter Fehler");
 });
 
+addEventListener("DOMContentLoaded", async () => {
+    const req = await fetch("/getCurrentDonationBannerData", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const { data } = await req.json();
+
+    if (data === null) {
+        console.error("Failed to fetch donation banner data");
+        return;
+    }
+
+    getElm("donatinmeter-m-title").val(data.title);
+    getElm("donatinmeter-m-description").val(data.description);
+    getElm("donatinmeter-m-max").val(data.max);
+    getElm("donatinmeter-m-current").val(data.value);
+});
+
+getElm("donatinmeter-m-submit").click(async () => {
+    const title = getElm("donatinmeter-m-title");
+    const description = getElm("donatinmeter-m-description");
+    const max = getElm("donatinmeter-m-max");
+    const current = getElm("donatinmeter-m-current");
+
+    if (title.valIsEmpty() || description.valIsEmpty() || max.valIsEmpty() || current.valIsEmpty()) {
+        alert("Bitte fülle alle Felder aus");
+        return;
+    }
+
+    const res = await post("/post/updateDonationMeter", {
+        title: markdownToHtml(title.val()),
+        description: markdownToHtml(description.val()),
+        max: Number(max.val()),
+        current: Number(current.val()),
+    });
+
+    alert(res.valid ? "Spendenbanner wurde aktualisiert" : "Spendenbanner konnte nicht aktualisiert werden");
+});
+
 getElm("team-m-submit").click(async () => {
     const leitsatz = getElm("team-m-leitsatz");
     const beschreibung = getElm("team-m-beschreibung");

@@ -2460,8 +2460,8 @@ select.donate-input {
     .donate-qr-wrapper {
         flex: 1;
         max-width: 100%;
-        flex-direction: row;
-        align-items: flex-end;
+        flex-direction: column;
+        align-items: center;
     }
 
     .donate-qr {
@@ -2587,8 +2587,8 @@ select.donate-input {
     .donate-qr-wrapper {
         flex: 1;
         max-width: 100%;
-        flex-direction: row;
-        align-items: flex-end;
+        flex-direction: column;
+        align-items: center;
     }
 
     .donate-qr {

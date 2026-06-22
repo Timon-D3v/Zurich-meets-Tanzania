@@ -70,8 +70,32 @@
                                 <option class="donate-option" value="Mbuzi">Mbuzi</option>
                                 <option class="donate-option" value="Meducation">Meducation</option>
                                 <option class="donate-option" value="Med. Geräte / Infrastruktur">Med. Geräte / Infrastruktur</option>
+                                <option class="donate-option invisible" id="donationBannerTitleReference" value="Spendenziel" selected>Spendenziel</option>
                             </select>
                         </div>
+                        <script>
+                            async function addDonationBannerTitleReference() {
+                                const req = await fetch("/getCurrentDonationBannerData", {
+                                    method: "GET",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                });
+                                const { data } = await req.json();
+
+                                if (data === null) {
+                                    console.error("Failed to fetch donation banner data");
+                                    return;
+                                }
+
+                                const donationBannerTitleReference = document.getElementById("donationBannerTitleReference");
+                                donationBannerTitleReference.value = data.title;
+                                donationBannerTitleReference.innerText = data.title;
+                                donationBannerTitleReference.classList.remove("invisible");
+                            }
+
+                            addDonationBannerTitleReference();
+                        </script>
                         <button type="submit" id="donate-submit" class="donate-btn hero-cta">Abschicken</button>
                     </div>
                 </div>

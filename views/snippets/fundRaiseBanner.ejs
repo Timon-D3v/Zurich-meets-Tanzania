@@ -1,0 +1,145 @@
+<div class="fundraise-banner open">
+    <h2>Spendenziel für den Röntgenaparat</h2>
+    <p>Wir benötigen umbedingt 50.000 CHF für den Kauf eines neuen Röntgenaparates, da der aktuelle nach unseren Schätzungen nur noch einige Wochen aushält.</p>
+    <div id="fundRaiseBannerProgress">
+        <p>30'000chf / 50'000chf</p>
+    </div>
+    <a href="/spenden#scrollToDonate" class="cta-btn flex"> Jetzt Mithelfen </a>
+    <button type="button" id="fundRaiseBannerToggle">
+        <img src="/img/svg/select_arrow.svg" alt="Pfeil" />
+    </button>
+</div>
+
+<style>
+    .fundraise-banner {
+        text-align: center;
+        padding: 10px;
+        box-sizing: border-box;
+        background-color: var(--background-200);
+        font-size: 1.2em;
+        /* height: calc(var(--header-height) * 2); */
+        top: var(--header-height);
+        position: fixed;
+        width: 100%;
+        z-index: 10;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .fundraise-banner.closed {
+        transform: translateY(-100%);
+    }
+
+    .fundraise-banner .cta-btn {
+        justify-content: center;
+        margin: 10px auto 0 auto;
+        width: 50%;
+
+        @media screen and (max-width: 800px) {
+            width: fit-content;
+        }
+    }
+
+    .fundraise-banner h2 {
+        margin: calc(var(--header-height) / 10) 0;
+        font-size: 1.5em;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .fundraise-banner p {
+        margin: 0;
+        margin-bottom: 10px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .fundraise-banner > div {
+        padding: calc(var(--header-height) / 10) 0;
+        background: linear-gradient(to right, orange 0%, orange 0%, transparent 60%, transparent 100%);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .fundraise-banner > div > p {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .fundraise-banner button {
+        position: absolute;
+        top: 100%;
+        right: 75px;
+        cursor: pointer;
+        background-color: var(--background-200);
+        outline: none;
+        border: none;
+        border-radius: 0 0 10px 10px;
+        height: 30px;
+        width: 75px;
+        padding: 0;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .fundraise-banner button img {
+        width: 100%;
+        height: 100%;
+        transition: all 0.3s ease-in-out;
+        object-fit: contain;
+        rotate: 180deg;
+    }
+
+    .fundraise-banner.closed button img {
+        rotate: 0deg;
+    }
+</style>
+<script defer>
+    const fundRaiseGoal = 50000; // Example goal amount
+    const fundRaiseCurrentAmount = 30000; // Example current amount raised
+    const fundRaiseProgressElement = document.getElementById("fundRaiseBannerProgress");
+    const fundRaiseBannerToggle = document.getElementById("fundRaiseBannerToggle");
+    const fundRaiseBanner = document.querySelector(".fundraise-banner");
+
+    fundRaiseProgressElement.innerHTML = `<p>${fundRaiseCurrentAmount}chf / ${fundRaiseGoal}chf</p>`;
+    fundRaiseProgressElement.style.background = `linear-gradient(to right, orange 0%, orange ${(fundRaiseCurrentAmount / fundRaiseGoal) * 100}%, transparent ${(fundRaiseCurrentAmount / fundRaiseGoal) * 100}%, transparent 100%)`;
+
+    fundRaiseProgressElement.value = fundRaiseCurrentAmount;
+    fundRaiseProgressElement.max = fundRaiseGoal;
+
+    fundRaiseBannerToggle.addEventListener("click", () => {
+        fundRaiseBanner.classList.toggle("closed");
+        sessionStorage.setItem("fundRaiseBannerClosed", fundRaiseBanner.classList.contains("closed"));
+    });
+
+    // Check session storage on page load
+    if (sessionStorage.getItem("fundRaiseBannerClosed") === "true") {
+        fundRaiseBanner.classList.add("closed");
+    }
+
+    async function updateFundRaiseBanner() {
+        const req = await fetch("/getCurrentDonationBannerData", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const { data } = await req.json();
+
+        if (data === null) {
+            console.error("Failed to fetch donation banner data");
+            return;
+        }
+
+        // Update the banner with the new data
+        fundRaiseProgressElement.innerHTML = `<p>${data.value < 1000 ? data.value : data.value.toString().split("").toSpliced(-3, 0, ".").join("")}chf / ${data.max < 1000 ? data.max : data.max.toString().split("").toSpliced(-3, 0, ".").join("")}chf</p>`;
+        fundRaiseProgressElement.style.background = `linear-gradient(to right, orange 0%, orange ${(data.value / data.max) * 100}%, transparent ${(data.value / data.max) * 100}%, transparent 100%)`;
+
+        fundRaiseBanner.querySelector("h2").innerText = data.title;
+        fundRaiseBanner.querySelector("p").innerText = data.description;
+    }
+
+    updateFundRaiseBanner(); // Initial update
+
+    setInterval(updateFundRaiseBanner, 60000); // Update every minute
+</script>
