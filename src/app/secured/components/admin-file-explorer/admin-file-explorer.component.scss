@@ -1,0 +1,25 @@
+.wrapper {
+    --width: 200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
+    grid-template-rows: repeat(auto-fill, var(--width));
+    justify-content: space-between;
+    gap: 1ch;
+    place-items: center;
+    padding: 5vh 5vw;
+    padding-top: 0;
+    box-sizing: border-box;
+
+    & > app-file-preview {
+        width: 100%;
+        height: var(--width);
+        border-color: var(--secondary-500);
+    }
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0 10vw;
+}

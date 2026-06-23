@@ -1,0 +1,36 @@
+<a class="wrapper" target="_blank" [href]="file().url" [title]="file().uuid" [id]="'file-preview-' + file().uuid" (contextmenu)="rightClick($event)">
+    <img [src]="getFilePreviewUrl(file())" [alt]="getFilePreviewAlt(file())" loading="lazy" />
+    <h3>{{ file().uuid }}</h3>
+    @if (contextMenuOpen()) {
+        <ul [style.left.px]="contextMenuPosition().x" [style.top.px]="contextMenuPosition().y" class="context-menu" (click)="doNotCloseContextMenu($event)">
+            <li title="Datei in neuem Fenster öffnen" (click)="openFile()">
+                <img src="/svg/open.svg" alt="Öffnen" />
+                <h4>Öffnen</h4>
+            </li>
+            <li title="Datei umbenennen" (click)="renameFile()">
+                <img src="/svg/rename.svg" alt="Umbenennen" />
+                <h4>Umbenennen</h4>
+            </li>
+            <li title="Datei herunterladen" (click)="downloadFile()">
+                <img src="/svg/download_from_cloud.svg" alt="Herunterladen" />
+                <h4>Herunterladen</h4>
+            </li>
+            <li title="Datei in die Zwischenablage kopieren" (click)="copyFile()">
+                <img src="/svg/copy.svg" alt="Kopieren" />
+                <h4>Kopieren</h4>
+            </li>
+            <li title="Link zur Datei teilen" (click)="shareFile()">
+                <img src="/svg/share.svg" alt="Teilen" />
+                <h4>Teilen</h4>
+            </li>
+            <li title="Datei Ersetzten" (click)="replaceFile()">
+                <img src="/svg/refresh.svg" alt="Ersetzen" />
+                <h4>Ersetzen</h4>
+            </li>
+            <li title="Datei Löschen" (click)="deleteFile()">
+                <img src="/svg/delete.svg" alt="Löschen" />
+                <h4>Löschen</h4>
+            </li>
+        </ul>
+    }
+</a>

@@ -300,6 +300,10 @@ export interface DatabaseApiEndpointResponse extends ApiEndpointResponse {
     data: DatabaseResult | null;
 }
 
+export interface GetGalleryImagesApiEndpointResponse extends ApiEndpointResponse {
+    data: DelivApiFile[];
+}
+
 export interface AddToNewsletterListApiEndpointResponse extends ApiEndpointResponse {
     data: {
         alreadyLoggedIn: boolean;
@@ -394,6 +398,10 @@ export interface GetContactRequestVerificationTokenApiEndpointResponse extends A
 
 export interface GetCalendarEventsApiEndpointResponse extends ApiEndpointResponse {
     data: CalendarEvent[] | null;
+}
+
+export interface GetAllFileInformationApiEndpointResponse extends ApiEndpointResponse {
+    data: DelivApiFile[] | null;
 }
 
 export interface PublicUser {
@@ -747,4 +755,10 @@ export type Invoice = {
     date: string;
     invoicePdf: string;
     invoiceUrl: string;
+};
+
+export type DelivApiFile = {
+    uuid: string;
+    url: string;
+    mimetype: string;
 };

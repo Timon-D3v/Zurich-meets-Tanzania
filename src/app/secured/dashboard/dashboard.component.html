@@ -16,6 +16,12 @@
                             onClick: generateActivateFunction('passwords'),
                         },
                         {
+                            href: '#Datei-Explorer',
+                            label: 'Datei Explorer',
+                            clickable: true,
+                            onClick: generateActivateFunction('file-explorer'),
+                        },
+                        {
                             href: '#Admins-ernennen',
                             label: ' Admins ernennen',
                             clickable: true,
@@ -513,6 +519,8 @@
     <section>
         @if (currentActiveSection() === "passwords") {
             <app-admin-passwords-page></app-admin-passwords-page>
+        } @else if (currentActiveSection() === "file-explorer") {
+            <app-admin-file-explorer></app-admin-file-explorer>
         } @else if (currentActiveSection() === "admin-add-admin") {
             <app-admin-add-admin></app-admin-add-admin>
         } @else if (currentActiveSection() === "admin-remove-admin") {

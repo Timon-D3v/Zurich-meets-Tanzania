@@ -1,2 +1,10 @@
-<h1>Current Name:</h1>
-<p>{{ name() }}</p>
+<app-hero [title]="name()" [subtitle]="" [pictureUrl]="galleryFiles()?.[0]?.url || FALLBACK_IMAGE_URL" [pictureAlt]="'Erstes Bild der Galerie'"></app-hero>
+
+<div class="wrapper">
+    @for (file of galleryFiles(); track $index) {
+        <app-file-preview [file]="file"></app-file-preview>
+    } @empty {
+        <app-loading></app-loading>
+        <button (click)="getGallery()">Reload</button>
+    }
+</div>

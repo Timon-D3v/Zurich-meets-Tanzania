@@ -66,6 +66,7 @@ import { NewsService } from "../../services/news.service";
 import { PopupFileInputComponent } from "../../components/popup-file-input/popup-file-input.component";
 import { CalendarService } from "../../services/calendar.service";
 import { formatDateRangeString } from "../../../shared/utils";
+import { AdminFileExplorerComponent } from "../components/admin-file-explorer/admin-file-explorer.component";
 
 @Component({
     selector: "app-dashboard",
@@ -106,6 +107,7 @@ import { formatDateRangeString } from "../../../shared/utils";
         PopupAlertComponent,
         LoadingComponent,
         PopupFileInputComponent,
+        AdminFileExplorerComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",

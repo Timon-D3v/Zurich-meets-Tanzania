@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { ApiEndpointResponse, GetPasswordsApiEndpointResponse, PrivateUser } from "..";
+import { ApiEndpointResponse, DelivApiFile, GetAllFileInformationApiEndpointResponse, GetPasswordsApiEndpointResponse, PrivateUser } from "..";
 import { PASSWORDS } from "../shared/passwords";
 import { createUser, getUserWithEmail, setUserType } from "../shared/user.database";
 import { getMemberWithEmail } from "../shared/member.database";
@@ -290,6 +290,50 @@ router.post("/changeHomepagePicture", multerInstance.single("picture"), async (r
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
         } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getAllFiles", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const request = await fetch(CONFIG.DELIVAPI_URL + "/api/getFilesMetadata", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user: CONFIG.DELIVAPI_USER,
+            }),
+        });
+
+        const response = await request.json();
+
+        if (response.error || !response.metadata || !Array.isArray(response.metadata)) {
+            throw new Error("Die Datei Informationen konnten nicht abgerufen werden. Bitte versuche es später erneut. Weitere Informationen: " + response.message);
+        }
+
+        res.json({
+            error: false,
+            message: "Die Dateien wurden erfolgreich abgerufen.",
+            data: response.metadata as DelivApiFile[],
+        } as GetAllFileInformationApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as GetAllFileInformationApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as GetAllFileInformationApiEndpointResponse);
     }
 });
 

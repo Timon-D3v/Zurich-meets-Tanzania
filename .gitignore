@@ -62,3 +62,4 @@ Redesign spenden.txt
 *.env
 TODO.txt
 _ZMT Marketing/
+dev/*.sql
