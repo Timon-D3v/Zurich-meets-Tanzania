@@ -1,0 +1,14 @@
+<div class="popup" (click)="close()">
+    <div class="wrapper" (click)="$event.stopPropagation()">
+        <img [src]="image().url" [alt]="image().uuid" />
+        <button type="button" class="close" title="Schliessen" (click)="close()">
+            <img src="/svg/close.svg" alt="Bildvorschau schliessen" />
+        </button>
+        <button type="button" class="next" title="Nächstes Bild" (click)="next()">
+            <img src="/svg/arrow_down.svg" alt="Nächstes Bild" />
+        </button>
+        <button type="button" class="previous" title="Vorheriges Bild" (click)="previous()">
+            <img src="/svg/arrow_down.svg" alt="Vorheriges Bild" />
+        </button>
+    </div>
+</div>

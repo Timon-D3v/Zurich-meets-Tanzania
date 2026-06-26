@@ -18,8 +18,8 @@ export class GalleryService {
 
     getGalleryWithName(name: string): Observable<GetGalleryImagesApiEndpointResponse> {
         const request = this.http.post<GetGalleryImagesApiEndpointResponse>("/api/gallery/getGalleryImages", {
-            name
-        })
+            name,
+        });
 
         return request;
     }

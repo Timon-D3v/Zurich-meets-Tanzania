@@ -3,12 +3,13 @@
         <img src="/svg/cookie.svg" alt="Ein Keks" />
     </div>
     <div class="content">
-        <h2>Wir benutzen Cookies</h2>
+        <h2>Deine Cookies würden uns freuen</h2>
         <p>
-            <span>Diese Webseite verwendet Cookies, um dir das bestmögliche Erlebnis zu bieten. Wenn du die Cookies akzeptierst, hilfst du mit die Seite besser zu machen. </span>
+            <span>Wenn du es erlaubst, verwendet diese Webseite Cookies, damit wir Nutzerstatistiken sammeln können. Standardmässig werden nur notwendige Cookies zum Speichern deines Logins verwendet. (Diese können nicht deaktiviert werden) </span>
             <a [routerLink]="'/privacy'">Mehr erfahren</a>
         </p>
-        <button type="button" (click)="acceptCookies()">Akzeptieren</button>
+        <button type="button" class="accept" (click)="acceptCookies()">Akzeptieren</button>
+        <button type="button" class="reject" (click)="rejectCookies()">Ablehnen</button>
     </div>
     <div class="close" (click)="rejectCookies()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" part="svg">

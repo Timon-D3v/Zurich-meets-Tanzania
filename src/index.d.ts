@@ -301,7 +301,7 @@ export interface DatabaseApiEndpointResponse extends ApiEndpointResponse {
 }
 
 export interface GetGalleryImagesApiEndpointResponse extends ApiEndpointResponse {
-    data: DelivApiFile[];
+    data: Gallery | null;
 }
 
 export interface AddToNewsletterListApiEndpointResponse extends ApiEndpointResponse {
@@ -628,6 +628,14 @@ export type Blog = {
     author: string;
     date: string;
     data: BlogContent;
+};
+
+export type Gallery = {
+    id: number;
+    title: string;
+    subtitle: string;
+    date: string;
+    data: DelivApiFile[];
 };
 
 export type BlogMetadata = {

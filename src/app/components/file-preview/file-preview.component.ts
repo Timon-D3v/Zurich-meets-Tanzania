@@ -31,12 +31,12 @@ export class FilePreviewComponent {
                 // Clicked inside the context menu, do not close it
                 return;
             }
-                this.contextMenuOpen.set(false);
+            this.contextMenuOpen.set(false);
 
-                window.removeEventListener("click", closeContextMenu);
-                window.removeEventListener("contextmenu", closeContextMenu);
-                window.removeEventListener("scroll", closeContextMenu);
-                window.removeEventListener("resize", closeContextMenu);
+            window.removeEventListener("click", closeContextMenu);
+            window.removeEventListener("contextmenu", closeContextMenu);
+            window.removeEventListener("scroll", closeContextMenu);
+            window.removeEventListener("resize", closeContextMenu);
         };
 
         setTimeout(() => {
@@ -95,35 +95,34 @@ export class FilePreviewComponent {
     async downloadFile(): Promise<void> {
         if (isPlatformBrowser(this.platformId)) {
             try {
-// const a = document.createElement("a");
-            // a.href = this.file().url + "?download=1";
-            // a.target = "_blank";
-            // a.download = this.file().uuid;
+                // const a = document.createElement("a");
+                // a.href = this.file().url + "?download=1";
+                // a.target = "_blank";
+                // a.download = this.file().uuid;
 
-            // a.click();
-            this.contextMenuOpen.set(false);
-            this.notificationService.info("Download gestartet", "Der Download der Datei '" + this.file().uuid + "' wurde gestartet.");
+                // a.click();
+                this.contextMenuOpen.set(false);
+                this.notificationService.info("Download gestartet", "Der Download der Datei '" + this.file().uuid + "' wurde gestartet.");
 
-            const request = await fetch(this.file().url)
+                const request = await fetch(this.file().url);
 
-            if (!request.ok) {
-                this.notificationService.error("Download fehlgeschlagen", "Die Datei konnte nicht heruntergeladen werden. Der Server antwortete mit einem Staus von: " + request.status);
-            }
+                if (!request.ok) {
+                    this.notificationService.error("Download fehlgeschlagen", "Die Datei konnte nicht heruntergeladen werden. Der Server antwortete mit einem Staus von: " + request.status);
+                }
 
-            const fileBlob = await request.blob();
-            const url = window.URL.createObjectURL(fileBlob);
+                const fileBlob = await request.blob();
+                const url = window.URL.createObjectURL(fileBlob);
 
-            const a = document.createElement("a");
-            a.href = url;
-            a.target = "_blank";
-            a.download = this.file().uuid;
+                const a = document.createElement("a");
+                a.href = url;
+                a.target = "_blank";
+                a.download = this.file().uuid;
 
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
 
-            window.URL.revokeObjectURL(url);
-        
+                window.URL.revokeObjectURL(url);
             } catch (error) {
                 this.notificationService.error("Download fehlgeschlagen", "Die Datei konnte nicht heruntergeladen werden. Es ist ein Fehler aufgetreten: " + (error instanceof Error ? error.message : String(error)));
             }
@@ -131,39 +130,37 @@ export class FilePreviewComponent {
     }
 
     async copyFile(): Promise<void> {
-        
         console.log("Kopiere Datei: " + this.file().uuid);
-
 
         if (isPlatformBrowser(this.platformId)) {
             try {
-// const a = document.createElement("a");
-            // a.href = this.file().url + "?download=1";
-            // a.target = "_blank";
-            // a.download = this.file().uuid;
+                // const a = document.createElement("a");
+                // a.href = this.file().url + "?download=1";
+                // a.target = "_blank";
+                // a.download = this.file().uuid;
 
-            // a.click();
-            this.contextMenuOpen.set(false);
-            this.notificationService.info("Download gestartet", "Der Download der Datei '" + this.file().uuid + "' wurde gestartet.");
+                // a.click();
+                this.contextMenuOpen.set(false);
+                this.notificationService.info("Download gestartet", "Der Download der Datei '" + this.file().uuid + "' wurde gestartet.");
 
-            const request = await fetch(this.file().url)
+                const request = await fetch(this.file().url);
 
-            if (!request.ok) {
-                this.notificationService.error("Download fehlgeschlagen", "Die Datei konnte nicht in die Zwischenablage kopiert werden, da die Datei nicht heruntergeladen werden konnte.");
-            }
+                if (!request.ok) {
+                    this.notificationService.error("Download fehlgeschlagen", "Die Datei konnte nicht in die Zwischenablage kopiert werden, da die Datei nicht heruntergeladen werden konnte.");
+                }
 
-            const fileBlob = await request.blob();
-            const item = new ClipboardItem({ [fileBlob.type]: fileBlob });
+                const fileBlob = await request.blob();
+                const item = new ClipboardItem({ [fileBlob.type]: fileBlob });
 
-            navigator.clipboard
-                .write([item])
-                .then((): void => {
-                    this.notificationService.success("Erfolg:", "Datei wurde in die Zwischenablage kopiert.");
-                })
-                .catch((error: Error): void => {
-                    console.error(error);
-                    this.notificationService.error("Fehler:", "Datei konnte nicht in die Zwischenablage kopiert werden.");
-                });
+                navigator.clipboard
+                    .write([item])
+                    .then((): void => {
+                        this.notificationService.success("Erfolg:", "Datei wurde in die Zwischenablage kopiert.");
+                    })
+                    .catch((error: Error): void => {
+                        console.error(error);
+                        this.notificationService.error("Fehler:", "Datei konnte nicht in die Zwischenablage kopiert werden.");
+                    });
             } catch (error) {
                 this.notificationService.error("Download fehlgeschlagen", "Die Datei konnte nicht in die Zwischenablage kopiert werden. Es ist ein Fehler aufgetreten: " + (error instanceof Error ? error.message : String(error)));
             }
@@ -175,17 +172,17 @@ export class FilePreviewComponent {
 
         if (isPlatformBrowser(this.platformId)) {
             try {
-            this.contextMenuOpen.set(false);
+                this.contextMenuOpen.set(false);
 
-            navigator.clipboard
-                .writeText(this.file().url)
-                .then((): void => {
-                    this.notificationService.success("Erfolg:", "Der direkte Link zur Datei wurde in die Zwischenablage kopiert. (" + this.file().url + ")");
-                })
-                .catch((error: Error): void => {
-                    console.error(error);
-                    this.notificationService.error("Fehler:", "Der direkte Link zur Datei konnte nicht in die Zwischenablage kopiert werden.");
-                });
+                navigator.clipboard
+                    .writeText(this.file().url)
+                    .then((): void => {
+                        this.notificationService.success("Erfolg:", "Der direkte Link zur Datei wurde in die Zwischenablage kopiert. (" + this.file().url + ")");
+                    })
+                    .catch((error: Error): void => {
+                        console.error(error);
+                        this.notificationService.error("Fehler:", "Der direkte Link zur Datei konnte nicht in die Zwischenablage kopiert werden.");
+                    });
             } catch (error) {
                 this.notificationService.error("Fehler", "Der direkte Link zur Datei konnte nicht in die Zwischenablage kopiert werden. Es ist ein Fehler aufgetreten: " + (error instanceof Error ? error.message : String(error)));
             }
@@ -193,7 +190,7 @@ export class FilePreviewComponent {
     }
 
     replaceFile(): void {
-        console.log("Ersetze Datei: " + this.file().uuid)
+        console.log("Ersetze Datei: " + this.file().uuid);
     }
 
     deleteFile(): void {

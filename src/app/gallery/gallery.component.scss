@@ -1,0 +1,34 @@
+.wrapper {
+    --width: 250px;
+    --height: calc(var(--width) / 5 * 4);
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
+    grid-template-rows: repeat(auto-fill, var(--height));
+    justify-content: space-between;
+    gap: 2ch;
+    place-items: center;
+    padding: var(--basic-margin);
+    box-sizing: border-box;
+
+    & > app-gallery-image {
+        width: 100%;
+        height: var(--height);
+        border-color: var(--secondary-500);
+    }
+}
+
+p.date {
+    font-size: 0.9rem;
+    color: var(--text-950);
+    padding: 0 1rem;
+    text-align: right;
+}
+
+@media screen and (max-width: 290px) {
+    .wrapper {
+        --width: 150px;
+        --height: calc(var(--width) / 5 * 4);
+        grid-template-columns: 1fr;
+    }
+}

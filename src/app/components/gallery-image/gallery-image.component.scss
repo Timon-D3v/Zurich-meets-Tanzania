@@ -1,0 +1,27 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--secondary-500);
+    border-radius: calc(var(--width, 200px) / 15);
+    padding: calc(var(--width, 200px) / 10);
+    box-sizing: border-box;
+    cursor: pointer;
+    text-decoration: none;
+
+    & > img {
+        height: calc(var(--height, 180px) - ((var(--width, 200px) / 10) * 2));
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+
+        &[alt$=".svg"] {
+            background-color: var(--background-50);
+        }
+    }
+}
