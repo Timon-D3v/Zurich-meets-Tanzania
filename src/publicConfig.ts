@@ -184,6 +184,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 "/imprint",
                 "/income-statement",
                 "/membership",
+                "/legacy-membership",
                 "/newsletter-sign-out",
                 "/privacy",
                 "/statutes",
@@ -351,6 +352,11 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 description: "Wir freuen uns sehr über jedes neue Mitglied in unserem Verein. Willkommen!",
                 lastUpdated: "Sat Nov 22 2025 23:45:27 GMT+0100 (Mitteleuropäische Normalzeit)",
             },
+            "/legacy-membership": {
+                title: "Mitglied werden",
+                description: "Wir freuen uns sehr über jedes neue Mitglied in unserem Verein. Willkommen!",
+                lastUpdated: "Sun Jun 28 2026 21:15:50 GMT+0200 (Central European Summer Time)",
+            },
             "/newsletter-sign-out": {
                 title: "Abmelden",
                 description: "Du möchtest nicht mehr von uns über aktuelle Neuigkeiten benachrichtigt werden? Das tut uns leid. Hier kannst du dich abmelden.",
@@ -420,6 +426,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
             "/imprint": ["/impressum", "/quellenangabe", "/quellen", "/sources"],
             "/income-statement": ["/income%20statement", "/erfolgsrechnung"],
             "/membership": ["/mitglied-und-spenden", "/mitglied%20und%20spenden", "/mitglied", "/mitgliedschaft", "/mitglied-werden", "/mitglied%20werden", "/become-member", "/become%20member"],
+            "/legacy-membership": ["/legacy%20membership", "/legacy%20mitgliedschaft", "/legacy-mitgliedschaft", "/legacy%20mitglied-werden", "/legacy-mitglied-werden", "/mitgliedschaft-via-bankverbindung"],
             "/newsletter-sign-out": ["/newsletter%20sign%20out"],
             "/privacy": ["/datenschutz", "/datenschutzerkl%C3%A4rung", "/privacy-statement", "/privacy%20statement"],
             "/statutes": ["/statuten"],

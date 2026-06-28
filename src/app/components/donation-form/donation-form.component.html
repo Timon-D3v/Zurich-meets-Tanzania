@@ -16,10 +16,15 @@
     ></div>
     <h2>Spendenformular</h2>
     @if (currentStage() === 1) {
-        <p>Vielen Dank, dass Sie zurich meets tanzania und deren Unterprojekte eine Spende widmen. Bitte geben Sie unten an wie viel Sie spenden möchten, um fortzufahren.</p>
+        <p>Vielen Dank, dass du zurich meets tanzania und unseren Unterprojekte eine Spende widmest. Bitte gib unten an wie viel du spenden möchtest, um fortzufahren.</p>
         <app-donation-amount-input (valueOutput)="setAmount($event)"></app-donation-amount-input>
     } @else if (currentStage() === 2) {
-        <p>Bitte scannen Sie den QR-Code unten in Ihrer Back-App oder benutzen Sie die Überweisungsdaten darunter um deine Spende zu tätigen. <br /><span>(Achten Sie darauf, dass die Maus beim scannen nicht über dem QR-Code gehalten wird.)</span></p>
+        <p>Bitte scanne den QR-Code unten in deiner Bank-App oder benutze die Überweisungsdaten darunter um deine Spende zu tätigen.
+            <br />
+            <span>
+                (Achte darauf, dass die Maus beim scannen nicht über dem QR-Code gehalten wird.)
+            </span>
+        </p>
         <div class="center">
             <img src="/common/donate-qr-code.png" alt="Der QR-Code zum Spenden" />
             <p>

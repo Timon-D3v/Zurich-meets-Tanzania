@@ -153,6 +153,14 @@ export const routes: Routes = [
         data: { siteName: "income-statement" },
     },
     {
+        path: "legacy-membership",
+        loadComponent: async () => {
+            const component = await import("./legacy-membership/legacy-membership.component");
+            return component.LegacyMembershipComponent;
+        },
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/legacy-membership"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+    },
+    {
         path: "mbuzi",
         loadComponent: async () => {
             const component = await import("./static-site/static-site.component");

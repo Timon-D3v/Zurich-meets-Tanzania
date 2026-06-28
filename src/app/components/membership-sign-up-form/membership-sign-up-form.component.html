@@ -1,0 +1,12 @@
+<div class="wrapper" id="scrollToMembership">
+    <h2>Mitglied werden</h2>
+    <p>
+        Wir freuen uns dich als Mitglied willkommen zu heissen! Um dich als Mitglied zu erfassen, brauchst du einen Account. Danach kommst du mit dem Button unten weiter zur Zahlungsseite.
+        <br />
+        <span> Bitte beachte, dass du für das Formular eine Kreditkarte brauchst. Wenn du keine Karte hast oder lieber via Banküberweisung Mitglied werden willst, kick bitte <a [routerLink]="'/legacy-membership'">hier</a>. </span>
+    </p>
+    <app-donation-amount-input [placeholder]="'50'" [disabled]="true"></app-donation-amount-input>
+    <div class="buttons-wrapper">
+        <button (click)="signUp()">Mitglied werden</button>
+    </div>
+</div>

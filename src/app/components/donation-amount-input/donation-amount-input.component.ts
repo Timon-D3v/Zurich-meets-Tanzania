@@ -12,6 +12,7 @@ export class DonationAmountInputComponent {
     placeholder = input<string>("___");
     currency = input<string>("CHF");
     maxLength = input<number>(7);
+    disabled = input<boolean>(false);
 
     id = this.generateId();
 
