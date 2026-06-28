@@ -404,6 +404,10 @@ export interface GetAllFileInformationApiEndpointResponse extends ApiEndpointRes
     data: DelivApiFile[] | null;
 }
 
+export interface GetDonationUsageTypesApiEndpointResponse extends ApiEndpointResponse {
+    data: string[];
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -769,4 +773,11 @@ export type DelivApiFile = {
     uuid: string;
     url: string;
     mimetype: string;
+};
+
+export type SelectOption = {
+    value: string;
+    label: string;
+    selected: boolean;
+    disabled: boolean;
 };

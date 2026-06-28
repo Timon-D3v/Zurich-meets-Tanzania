@@ -167,5 +167,33 @@ CREATE TABLE IF NOT EXISTS `zmt`.`subpages` (
   `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data` JSON NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `subpages_title_UNIQUE` (`title` ASC) VISIBLE)
+  UNIQUE INDEX `subpages_title_UNIQUE` (`title` ASC) VISIBLE
+)
 COMMENT = 'This table holds data for all the subpages of the zmt website.';
+
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`donationUsageTypes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(256) NOT NULL,
+  PRIMARY KEY (`id`),
+    UNIQUE INDEX `donationUsageTypes_id_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds all possible usage types for donations to zmt.';
+
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`donationRequests` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `amount` DECIMAL(10, 2) NOT NULL,
+  `firstName` VARCHAR(256) NOT NULL,
+  `lastName` VARCHAR(256) NOT NULL,
+  `email` VARCHAR(256) NOT NULL,
+  `usageType` VARCHAR(256) NOT NULL,
+  `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `reviewed` BOOLEAN DEFAULT FALSE,
+  `validated` BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (`id`),
+    UNIQUE INDEX `donationRequests_id_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds all donation requests submitted by users. Each request includes the amount, donor information, usage type, and status flags for review and validation.';
