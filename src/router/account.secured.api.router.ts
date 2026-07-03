@@ -1,14 +1,16 @@
 import { Request, Response, Router } from "express";
 import { multerInstance } from "../shared/instance.multer";
 import { delivApiUpload, delivApiUpdateFile } from "delivapi-client";
-import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse, Invoice, ApiEndpointResponse, GetInvoicesApiEndpointResponse } from "..";
+import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse, Invoice, ApiEndpointResponse, GetInvoicesApiEndpointResponse, GetExpandedUserInformationApiEndpointResponse } from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { setNewEmailWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewAddressWithId, setNewPasswordWithId, setNewProfilePictureWithId, setNewPhoneNumberWithId } from "../shared/user.database";
 import { CONFIG } from "../config";
 import bcrypt from "bcryptjs";
 import { sendPasswordChangeConfirmation } from "../shared/auth.email";
-import { getAllNewsletterEmails, updateNewsletterList, addToNewsletterList, removeFromNewsletterList } from "../shared/newsletter.database";
-import { getInvoicesWithId } from "../shared/invoices.database";
+import { getAllNewsletterEmails, updateNewsletterList, addToNewsletterList, removeFromNewsletterList, getNewsletterDetailsWithEmail } from "../shared/newsletter.database";
+import { stripeClient } from "../shared/stripe";
+import { getMemberWithUserId } from "../shared/member.database";
+import { getTeamMemberEntry } from "../shared/team.database";
 
 // Router Serves under /api/secured/account
 const router = Router();
@@ -395,16 +397,26 @@ router.get("/getInvoices", async (req: Request, res: Response): Promise<void> =>
     try {
         const user = req.session.user!;
 
-        const result = await getInvoicesWithId(user.id);
+        const memberResult = await getMemberWithUserId(user.id);
 
-        if (result.error !== null) {
-            throw new Error(result.error);
+        if (memberResult.error !== null) {
+            throw new Error(memberResult.error);
         }
+
+        if (memberResult.data.length === 0) {
+            throw new Error("No member found for this user.");
+        }
+
+        const customerId = memberResult.data[0].customerId;
+
+        const invoices = await stripeClient.invoices.list({
+            customer: customerId,
+        });
 
         res.json({
             error: false,
             message: "Success",
-            data: result.data as Invoice[],
+            data: invoices.data as Invoice[],
         } as GetInvoicesApiEndpointResponse);
     } catch (error) {
         console.error(error);
@@ -424,6 +436,164 @@ router.get("/getInvoices", async (req: Request, res: Response): Promise<void> =>
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: null,
         } as GetInvoicesApiEndpointResponse);
+    }
+});
+
+router.get("/newsletterCheck", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const newsletterUsers = await getNewsletterDetailsWithEmail(user.email);
+
+        if (newsletterUsers.error !== null) {
+            throw new Error(newsletterUsers.error);
+        }
+
+        res.json({
+            error: false,
+            message: newsletterUsers.data!.length > 0 ? newsletterUsers.data![0].gender : "Not signed up",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.get("/inAnyTeamCheck", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const memberResult = await getTeamMemberEntry(user.id);
+
+        if (memberResult.error !== null) {
+            throw new Error(memberResult.error);
+        }
+
+        res.json({
+            error: false,
+            message: memberResult.data.length > 0 ? "true" : "false",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getExpandedUserInformation", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const result = await getTeamMemberEntry(user.id);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: result.data[0],
+        } as GetExpandedUserInformationApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as GetExpandedUserInformationApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as GetExpandedUserInformationApiEndpointResponse);
+    }
+});
+
+router.post("/updateExpandedUserInformation", multerInstance.single("image"), async (req: Request, res: Response): Promise<void> => {
+    try {
+        const file = req.file;
+        const user = req.session.user!;
+
+        if (!file) {
+            throw new Error("No file uploaded.");
+        }
+
+        const allowedMimeTypes = ["application/octet-stream", "image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico"];
+
+        if (!allowedMimeTypes.includes(file.mimetype)) {
+            console.error("Invalid file mime type for file:", file.originalname, "with mime type:", file.mimetype);
+            throw new Error(`Die Datei '${file.originalname}' ist keine gültige Bilddatei. Bitte lade nur Bilddateien hoch.`);
+        }
+
+        const response = user.picture === "/svg/personal.svg" ? await delivApiUpload(file.buffer) : await delivApiUpdateFile(user.picture.replace(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.DELIVAPI_USER}/`, ""), file.buffer);
+
+        if (response.error) {
+            throw new Error("Bild konnte nicht hochgeladen werden: " + response.message);
+        }
+
+        const result = await setNewProfilePictureWithId(user.id, response.url);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Dein Profilbild wurde erfolgreich aktualisiert.",
+            data: {
+                pictureUrl: response.url,
+            },
+        } as UpdateUserProfilePictureWithIdApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as UpdateUserProfilePictureWithIdApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as UpdateUserProfilePictureWithIdApiEndpointResponse);
     }
 });
 

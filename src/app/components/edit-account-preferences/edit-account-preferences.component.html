@@ -11,11 +11,11 @@
     @if (newsletterIsChecked()) {
         <label class="select_label" [for]="newsletterId + '_gender_selection'">Anrede:</label><br />
         <select [id]="newsletterId + '_gender_selection'" (change)="updateNewsletterGender($event)" title="Anrede für den Newsletter auswählen">
-            <option value="Divers" selected disabled>Auswählen:</option>
+            <option value="Divers" [attr.selected]="newsletterInitialGender() === null ? 'true' : null" disabled>Auswählen:</option>
             <hr />
-            <option value="Herr">Herr</option>
-            <option value="Frau">Frau</option>
-            <option value="Divers">Divers</option>
+            <option value="Herr" [attr.selected]="newsletterInitialGender() === 'Herr' ? 'true' : null">Herr</option>
+            <option value="Frau" [attr.selected]="newsletterInitialGender() === 'Frau' ? 'true' : null">Frau</option>
+            <option value="Divers" [attr.selected]="newsletterInitialGender() === 'Divers' ? 'true' : null">Divers</option>
         </select>
     }
     <h3>Dunkler Modus (Nachtmodus):</h3>

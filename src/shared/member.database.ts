@@ -55,7 +55,10 @@ export async function setUserTypeToMember(userId: number): Promise<DatabaseResul
 
 export async function createMember(userId: number, subscriptionId: string, customerId: string, status: string, currentPeriodStart: number, currentPeriodEnd: number, startDate: number): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`members\` (\`userId\`, \`subscriptionId\`, \`customerId\`, \`status\`, \`periodStartTime\`, \`periodEndTime\`, \`subscriptionStartTime\`) VALUES (?, ?, ?, ?, ?, ?, ?);`, [userId, subscriptionId, customerId, status, currentPeriodStart, currentPeriodEnd, startDate]);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(
+            `INSERT INTO \`zmt\`.\`members\` (\`userId\`, \`subscriptionId\`, \`customerId\`, \`status\`, \`periodStartTime\`, \`periodEndTime\`, \`subscriptionStartTime\`) VALUES (?, ?, ?, ?, ?, ?, ?);`,
+            [userId, subscriptionId, customerId, status, currentPeriodStart, currentPeriodEnd, startDate],
+        );
 
         return {
             data: result,
@@ -80,7 +83,10 @@ export async function createMember(userId: number, subscriptionId: string, custo
 
 export async function updateMember(memberId: number, userId: number, subscriptionId: string, customerId: string, status: string, currentPeriodStart: number, currentPeriodEnd: number, startDate: number): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`members\` SET \`userId\` = ?, \`subscriptionId\` = ?, \`customerId\` = ?, \`status\` = ?, \`periodStartTime\` = ?, \`periodEndTime\` = ?, \`subscriptionStartTime\` = ? WHERE \`memberId\` = ?`, [userId, subscriptionId, customerId, status, currentPeriodStart, currentPeriodEnd, startDate, memberId]);
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(
+            `UPDATE \`zmt\`.\`members\` SET \`userId\` = ?, \`subscriptionId\` = ?, \`customerId\` = ?, \`status\` = ?, \`periodStartTime\` = ?, \`periodEndTime\` = ?, \`subscriptionStartTime\` = ? WHERE \`memberId\` = ?`,
+            [userId, subscriptionId, customerId, status, currentPeriodStart, currentPeriodEnd, startDate, memberId],
+        );
 
         return {
             data: result,

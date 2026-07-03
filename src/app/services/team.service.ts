@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { ApiEndpointResponse, GetTeamApiEndpointResponse } from "../..";
+import { ApiEndpointResponse, GetTeamApiEndpointResponse, GetBoardApiEndpointResponse } from "../..";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({
@@ -27,14 +27,20 @@ export class TeamService {
         return request;
     }
 
+    getBoard(): Observable<GetBoardApiEndpointResponse> {
+        const request = this.http.get<GetBoardApiEndpointResponse>("/api/team/getBoard");
+
+        return request;
+    }
+
     getTeam(id: number): Observable<GetTeamApiEndpointResponse> {
         const request = this.http.get<GetTeamApiEndpointResponse>(`/api/team/getTeam?id=${id}`);
 
         return request;
     }
 
-    addMember(email: string, job: string, motivation: string): Observable<ApiEndpointResponse> {
-        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/addMember", { email, job, motivation });
+    addMember(email: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/addMember", { email });
 
         return request;
     }

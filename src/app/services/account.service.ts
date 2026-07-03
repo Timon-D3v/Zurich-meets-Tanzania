@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { GetInvoicesApiEndpointResponse, UpdateUserInformationApiEndpointResponse, UpdateUserInformationRequestBody, UpdateUserProfilePictureWithIdApiEndpointResponse } from "../..";
+import { GetInvoicesApiEndpointResponse, UpdateUserInformationApiEndpointResponse, UpdateUserInformationRequestBody, UpdateUserProfilePictureWithIdApiEndpointResponse, UpdateExpandedUserInformationRequestBody, UpdateExpandedUserInformationApiEndpointResponse, GetExpandedUserInformationApiEndpointResponse } from "../..";
 
 @Injectable({
     providedIn: "root",
@@ -25,8 +25,26 @@ export class AccountService {
         return request;
     }
 
-    getInvoices() {
+    updateExpandedUserInformation(requestBody: UpdateExpandedUserInformationRequestBody): Observable<UpdateExpandedUserInformationApiEndpointResponse> {
+        const request = this.http.post<UpdateExpandedUserInformationApiEndpointResponse>("/api/secured/account/updateExpandedUserInformation", requestBody);
+
+        return request;
+    }
+
+    getInvoices(): Observable<GetInvoicesApiEndpointResponse> {
         const request = this.http.get<GetInvoicesApiEndpointResponse>("/api/secured/account/getInvoices");
+
+        return request;
+    }
+
+    checkIfUserIsInAnyTeam(): Observable<GetInvoicesApiEndpointResponse> {
+        const request = this.http.get<GetInvoicesApiEndpointResponse>("/api/secured/account/inAnyTeamCheck");
+
+        return request;
+    }
+
+    getExpandedUserInformation(): Observable<GetExpandedUserInformationApiEndpointResponse> {
+        const request = this.http.get<GetExpandedUserInformationApiEndpointResponse>("/api/secured/account/getExpandedUserInformation");
 
         return request;
     }

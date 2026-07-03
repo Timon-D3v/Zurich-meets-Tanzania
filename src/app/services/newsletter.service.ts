@@ -46,4 +46,10 @@ export class NewsletterService {
 
         return request;
     }
+
+    checkIfSignedUpWithAccount(): Observable<ApiEndpointResponse> {
+        const request = this.http.get<ApiEndpointResponse>("/api/secured/account/newsletterCheck");
+
+        return request;
+    }
 }

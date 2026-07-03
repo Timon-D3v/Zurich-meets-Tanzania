@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { TeamService } from "../services/team.service";
-import { GetTeamApiEndpointResponse, Team } from "../..";
+import { GetTeamApiEndpointResponse, AssembledTeam } from "../..";
 import { NotificationService } from "../services/notification.service";
 import { PUBLIC_CONFIG } from "../../publicConfig";
 import { LoadingComponent } from "../components/loading/loading.component";
@@ -15,7 +15,7 @@ import { TeamComponent } from "../components/team/team.component";
     styleUrl: "./current-team.component.scss",
 })
 export class CurrentTeamComponent implements OnInit {
-    team = signal<Team>({
+    team = signal<AssembledTeam>({
         id: -1,
         motto: "",
         text: "",

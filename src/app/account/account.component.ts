@@ -1,16 +1,17 @@
 import { Component, effect, inject, signal } from "@angular/core";
 import { AuthService } from "../services/auth.service";
 import { AccountService } from "../services/account.service";
-import { PublicUser, UpdateUserProfilePictureWithIdApiEndpointResponse } from "../..";
+import { PublicUser, UpdateUserProfilePictureWithIdApiEndpointResponse, ApiEndpointResponse } from "../..";
 import { EditAccountInformationComponent } from "../components/edit-account-information/edit-account-information.component";
 import { PopupImageInputComponent } from "../components/popup-image-input/popup-image-input.component";
 import { NotificationService } from "../services/notification.service";
 import { EditAccountPreferencesComponent } from "../components/edit-account-preferences/edit-account-preferences.component";
 import { ViewAccountMembershipDetailsComponent } from "../components/view-account-membership-details/view-account-membership-details.component";
+import { AddAdditionalUserInformationComponent } from "../components/add-additional-user-information/add-additional-user-information.component";
 
 @Component({
     selector: "app-account",
-    imports: [EditAccountInformationComponent, PopupImageInputComponent, EditAccountPreferencesComponent, ViewAccountMembershipDetailsComponent],
+    imports: [EditAccountInformationComponent, PopupImageInputComponent, EditAccountPreferencesComponent, ViewAccountMembershipDetailsComponent, AddAdditionalUserInformationComponent],
     templateUrl: "./account.component.html",
     styleUrl: "./account.component.scss",
 })
@@ -28,6 +29,8 @@ export class AccountComponent {
     bannerId = signal<number>(this.getRandomInt(1, 10));
 
     editPictureInputOpen = signal(false);
+
+    isInAnyTeam = signal<boolean>(false);
 
     private authService = inject(AuthService);
     private accountService = inject(AccountService);
@@ -49,6 +52,8 @@ export class AccountComponent {
         } else {
             this.user.set(userObject);
         }
+
+        this.isInAnyTeamCheck();
     });
 
     editPictureInputResult(event: { file: File | null; url: string }): void {
@@ -95,5 +100,18 @@ export class AccountComponent {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    isInAnyTeamCheck(): void {
+        const request = this.accountService.checkIfUserIsInAnyTeam();
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            if (response.error) {
+                this.notificationService.error("Fehler", response.message);
+                return;
+            }
+
+            this.isInAnyTeam.set(response.message === "true");
+        });
     }
 }

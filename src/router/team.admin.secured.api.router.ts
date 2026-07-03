@@ -4,7 +4,7 @@ import { ApiEndpointResponse, PrivateUser, Team, TeamMember } from "..";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpload } from "delivapi-client";
 import { CONFIG } from "../config";
-import { createTeam, getCurrentTeam, updateMembers } from "../shared/team.database";
+import { createTeam, getCurrentTeam, updateMembers, getTeamMemberEntry, createTeamMemberEntry } from "../shared/team.database";
 import { getUserWithEmail } from "../shared/user.database";
 
 // Router Serves under /api/secured/admin/team
@@ -64,18 +64,10 @@ router.post("/createTeam", multerInstance.single("image"), async (req: Request, 
 
 router.post("/addMember", async (req: Request, res: Response): Promise<void> => {
     try {
-        const { email, job, motivation } = req.body;
+        const { email } = req.body;
 
         if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
             throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
-        }
-
-        if (typeof job !== "string" || job.trim() === "") {
-            throw new Error("Bitte gib einen gültigen Job ein.");
-        }
-
-        if (typeof motivation !== "string" || motivation.trim() === "") {
-            throw new Error("Bitte gib eine gültige Motivation ein.");
         }
 
         const currentTeam = await getCurrentTeam();
@@ -98,19 +90,28 @@ router.post("/addMember", async (req: Request, res: Response): Promise<void> => 
 
         const user = userData.data[0] as PrivateUser;
 
-        const indexOfMember = team.members.findIndex((member: TeamMember): boolean => member.firstName === user.firstName && member.lastName === user.lastName);
+        const indexOfMember = team.members.findIndex((userIdOfMember: number): boolean => userIdOfMember === user.id);
 
         if (indexOfMember !== -1) {
             throw new Error("Das angegebene Teammitglied ist schon im Team.");
         }
 
-        team.members.push({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            job,
-            motivation,
-            imageUrl: user.picture,
-        });
+        // Create an entry in the teamMember table (if it doesn't exist yet) and add the user to the team
+        const teamMemberData = await getTeamMemberEntry(user.id);
+
+        if (teamMemberData.error !== null) {
+            throw new Error(teamMemberData.error);
+        }
+
+        if (teamMemberData.data.length === 0) {
+            const createTeamMemberResult = await createTeamMemberEntry(user.id);
+
+            if (createTeamMemberResult.error !== null) {
+                throw new Error(createTeamMemberResult.error);
+            }
+        }
+
+        team.members.push(user.id);
 
         const result = await updateMembers(team.id, team.members);
 
@@ -169,7 +170,7 @@ router.post("/removeMember", async (req: Request, res: Response): Promise<void> 
 
         const user = userData.data[0] as PrivateUser;
 
-        const indexOfMember = team.members.findIndex((member: TeamMember): boolean => member.firstName === user.firstName && member.lastName === user.lastName);
+        const indexOfMember = team.members.findIndex((userIdOfMember: number): boolean => userIdOfMember === user.id);
 
         if (indexOfMember === -1) {
             throw new Error("Das angegebene Teammitglied ist nicht im Team vorhanden.");

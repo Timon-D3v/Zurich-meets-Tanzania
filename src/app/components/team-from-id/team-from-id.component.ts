@@ -2,7 +2,7 @@ import { Component, effect, inject, input, PLATFORM_ID, signal } from "@angular/
 import { TeamService } from "../../services/team.service";
 import { NotificationService } from "../../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
-import { GetTeamApiEndpointResponse, Team } from "../../..";
+import { GetTeamApiEndpointResponse, AssembledTeam } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { TeamComponent } from "../team/team.component";
 
@@ -14,7 +14,7 @@ import { TeamComponent } from "../team/team.component";
 })
 export class TeamFromIdComponent {
     id = input.required<number>();
-    team = signal<Team>({
+    team = signal<AssembledTeam>({
         id: -1,
         motto: "",
         text: "",

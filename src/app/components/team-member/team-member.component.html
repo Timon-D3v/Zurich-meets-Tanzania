@@ -1,10 +1,13 @@
 <div [class]="isOpen() ? 'member open' : 'member'" (click)="toggle()">
     <div class="preview">
         <img [alt]="firstName() + ' ' + lastName()" [src]="imageUrl()" />
-        <h3>{{ firstName() }} {{ lastName() }}</h3>
-        <p>{{ job() }}</p>
+        <h3>{{ role() ? role() + ": " : "" }}{{ firstName() }} {{ lastName() }}</h3>
+        <p>{{ profession() }}</p>
     </div>
     <div class="full">
-        <p class="motivation" (click)="$event.stopPropagation()">{{ motivation() }}</p>
+        <p class="motive" (click)="$event.stopPropagation()">{{ motive() }}</p>
+        @if (secondaryImageUrl()) {
+            <img [alt]="firstName() + ' ' + lastName() + ' (secondary)'" [src]="secondaryImageUrl()" />
+        }
     </div>
 </div>

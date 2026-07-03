@@ -37,10 +37,11 @@ export class ViewAccountMembershipDetailsComponent implements OnInit {
         });
     }
 
-    formatDate(dateString: string): string {
-        const date = new Date(dateString);
+    formatDate(dateInput: string | number): string {
+        const date = new Date(dateInput);
 
         return date.toLocaleDateString("de-CH", {
+            day: "numeric",
             month: "short",
             year: "numeric",
         });

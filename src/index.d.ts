@@ -350,7 +350,11 @@ export interface GetAllStaticSitesApiEndpointResponse extends ApiEndpointRespons
 }
 
 export interface GetTeamApiEndpointResponse extends ApiEndpointResponse {
-    data: Team | null;
+    data: AssembledTeam | null;
+}
+
+export interface GetBoardApiEndpointResponse extends ApiEndpointResponse {
+    data: BoardUser[] | null;
 }
 
 export interface GetBlogApiEndpointResponse extends ApiEndpointResponse {
@@ -395,6 +399,14 @@ export interface UpdateUserProfilePictureWithIdApiEndpointResponse extends ApiEn
 
 export interface UpdateUserInformationApiEndpointResponse extends ApiEndpointResponse {
     data: { newUser: PublicUser | null; partialUpdate: boolean; alreadyDoneUpdates: Array<"email" | "password" | "firstName" | "lastName" | "address" | "phone"> };
+}
+
+export interface GetExpandedUserInformationApiEndpointResponse extends ApiEndpointResponse {
+    data: ExpandedUser | null;
+}
+
+export interface UpdateExpandedUserInformationApiEndpointResponse extends ApiEndpointResponse {
+    data: { newUser: ExpandedUser | null; partialUpdate: boolean; alreadyDoneUpdates: Array<"profession" | "motive" | "role" | "secondaryPicture"> };
 }
 
 export interface GetInvoicesApiEndpointResponse extends ApiEndpointResponse {
@@ -627,6 +639,15 @@ export type Team = {
     motto: string;
     text: string;
     picture: string;
+    members: number[];
+    date: string;
+};
+
+export type AssembledTeam = {
+    id: number;
+    motto: string;
+    text: string;
+    picture: string;
     members: TeamMember[];
     date: string;
 };
@@ -634,9 +655,21 @@ export type Team = {
 export type TeamMember = {
     firstName: string;
     lastName: string;
-    job: string;
-    motivation: string;
-    imageUrl: string;
+    picture: string;
+    motive: string;
+    profession: string;
+    role: string | null;
+    secondaryPicture: string | null;
+};
+
+export type BoardUser = {
+    firstName: string;
+    lastName: string;
+    picture: string;
+    motive: string;
+    profession: string;
+    role: string | null;
+    secondaryPicture: string | null;
 };
 
 export type Blog = {
@@ -770,16 +803,63 @@ export type UpdateUserInformationRequestBody = {
     phone: string | null;
 };
 
+export type UpdateExpandedUserInformationRequestBody = {
+    profession: string | null;
+    motive: string | null;
+    secondaryPicture: File | null;
+    role: string | null;
+};
+
+export type ExpandedUser = {
+    profession: string;
+    motive: string;
+    secondaryPicture: string;
+    role: string;
+}
+
 export type Invoice = {
-    id: number;
-    subscriptionId: string;
-    userId: number;
-    type: string;
-    price: string;
-    status: string;
-    date: string;
-    invoicePdf: string;
-    invoiceUrl: string;
+    id: string;
+    amount_due: number | null;
+    amount_overpaid: number | null;
+    amount_paid: number | null;
+    amount_remaining: number | null;
+    attempt_count: number | null;
+    attempted: boolean | null;
+    billing_reason: string | null;
+    collection_method: string | null;
+    created: number | null;
+    currency: string | null;
+    customer: string | null;
+    description: string | null;
+    due_date: number | null;
+    effective_at: number | null;
+    ending_balance: number | null;
+    footer: string | null;
+    from_invoice: string | null;
+    hosted_invoice_url: string | null;
+    invoice_pdf: string | null;
+    last_finalization_error: number | null;
+    next_payment_attempt: number | null;
+    number: string | null;
+    lines: {
+        data: {
+            period: {
+                start: number | null;
+                end: number | null;
+            };
+        }[];
+    };
+    period_end: number | null;
+    period_start: number | null;
+    receipt_number: string | null;
+    status: "paid" | "draft" | "open" | "uncollectible" | "void";
+    status_transitions: {
+        finalized_at: number | null;
+        marked_uncollectible_at: number | null;
+        paid_at: number | null;
+        voided_at: number | null;
+    };
+    total: number | null;
 };
 
 export type DelivApiFile = {

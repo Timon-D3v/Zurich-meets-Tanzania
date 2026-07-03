@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core";
-import { TeamMember } from "../../..";
+import { TeamMember, BoardUser } from "../../..";
 import { TeamMemberComponent } from "../team-member/team-member.component";
 
 @Component({
@@ -9,5 +9,5 @@ import { TeamMemberComponent } from "../team-member/team-member.component";
     styleUrl: "./team.component.scss",
 })
 export class TeamComponent {
-    team = input.required<TeamMember[]>();
+    team = input.required<TeamMember[] | BoardUser[]>();
 }

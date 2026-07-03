@@ -1,0 +1,27 @@
+@use "../../../styles/index" as *;
+
+form {
+    margin: 10vh 5vw;
+    background-color: var(--text-100);
+    box-sizing: border-box;
+    height: max-content;
+    padding: 40px 5%;
+    width: calc(100% - 10vw);
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2rem;
+}
+
+button {
+    @include form-submit-button;
+}
+
+@media screen and (min-width: 1000px) {
+    form {
+        width: 70%;
+        margin: 5vh auto;
+    }
+}

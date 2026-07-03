@@ -23,6 +23,9 @@
     <section class="dynamic-information">
         <app-edit-account-preferences></app-edit-account-preferences>
         <app-edit-account-information [user]="user()"></app-edit-account-information>
+        @if (isInAnyTeam()) {
+            <app-add-additional-user-information></app-add-additional-user-information>
+        }
         <app-view-account-membership-details [user]="user()"></app-view-account-membership-details>
     </section>
 </div>
@@ -40,3 +43,4 @@
         (closeOutput)="closeEditPictureInput()"
     ></app-popup-image-input>
 }
+add additional user information

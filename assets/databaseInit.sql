@@ -113,40 +113,6 @@ COMMENT = 'This table holds the payment information about all members that are s
 
 
 
-CREATE TABLE IF NOT EXISTS `zmt`.`payments` (
-    `paymentId` INT NOT NULL AUTO_INCREMENT,
-    `userId` INT NOT NULL,
-    `sessionId` VARCHAR(256) NOT NULL,
-    `paymentKey` VARCHAR(512) NOT NULL,
-    `email` VARCHAR(256) NOT NULL,
-    `password` VARCHAR(64) NOT NULL,
-    PRIMARY KEY (`paymentId`),
-    UNIQUE INDEX `payment_id_UNIQUE` (`paymentId` ASC) VISIBLE,
-    UNIQUE INDEX `payment_user_id_UNIQUE` (`userId` ASC) VISIBLE,
-    UNIQUE INDEX `payment_session_id_UNIQUE` (`sessionId` ASC) VISIBLE,
-    UNIQUE INDEX `payment_email_UNIQUE` (`email` ASC) VISIBLE
-)
-COMMENT = 'This table stores user information and their session ids to authenticate and validate if they have paid.';
-
-
-
-CREATE TABLE IF NOT EXISTS `zmt`.`invoices` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `subscriptionId` VARCHAR(256) NOT NULL,
-    `userId` INT NOT NULL,
-    `type` VARCHAR(64) NOT NULL,
-    `price` VARCHAR(32) NOT NULL,
-    `status` VARCHAR(16) NOT NULL DEFAULT 'unpaid',
-    `date` DATE NOT NULL DEFAULT CURRENT_DATE,
-    `invoicePdf` VARCHAR(256) NOT NULL,
-    `invoiceUrl` VARCHAR(256) NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `invoice_id_UNIQUE` (`id` ASC) VISIBLE
-)
-COMMENT = 'This table holds all the invoices of the members.';
-
-
-
 CREATE TABLE IF NOT EXISTS `zmt`.`team` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `motto` VARCHAR(512) NOT NULL,
@@ -236,3 +202,30 @@ CREATE TABLE IF NOT EXISTS `zmt`.`stripeCheckoutSessions` (
     UNIQUE INDEX `stripeCheckoutSessions_id_UNIQUE` (`id` ASC) VISIBLE
 )
 COMMENT = 'This table holds all Stripe checkout sessions. Each record includes the user ID, Stripe customer ID, session ID, and creation timestamp. This is used to track and manage checkout sessions for users.';
+
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`board` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `role` VARCHAR(256),
+    `profession` VARCHAR(256) NOT NULL,
+    `motive` VARCHAR(512) NOT NULL,
+    `secondaryPicture` VARCHAR(512),
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `board_id_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds the current board of zmt.';
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`teamMember` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `role` VARCHAR(256),
+    `profession` VARCHAR(256) NOT NULL,
+    `motive` VARCHAR(512) NOT NULL,
+    `secondaryPicture` VARCHAR(512),
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `teamMember_id_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds the extras information of the users that are also part of a team of zmt.';

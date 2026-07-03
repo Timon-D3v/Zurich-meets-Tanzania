@@ -11,24 +11,38 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Datum</th>
-                        <th>Abonnement</th>
+                        <th>Rechnungsnummer</th>
                         <th>Preis</th>
+                        <th>Startdatum</th>
+                        <th>Enddatum</th>
                         <th>Status</th>
+                        <th>Bezahlt am /<br />Zahlbar bis</th>
                         <th>Link</th>
                         <th>Datei</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (invoice of invoices(); track $index) {
+                    @for (invoice of invoices().reverse(); track $index) {
                         <tr>
-                            <td>{{ formatDate(invoice.date) }}</td>
-                            <td>{{ invoice.type.replace("membership", "Mitgliedschaft") }}</td>
-                            <td>{{ invoice.price }}</td>
-                            <td>{{ invoice.status.replace("pending", "Ausstehend").replace("paid", "Bezahlt").replace("cancelled", "Storniert").replace("unpaid", "Unbezahlt") }}</td>
-                            <td><a [href]="invoice.invoiceUrl" target="_blank">Ansehen</a></td>
+                            <td>{{ invoice.number }}</td>
                             <td>
-                                <a [href]="invoice.invoicePdf" target="_blank"> Herunterladen <img [alt]="invoice.invoicePdf" title="PDF herunterladen" src="/svg/download.svg" /> </a>
+                                {{ (invoice.amount_paid || 0) / 100 }}
+                                @if (invoice.amount_paid !== invoice.total) {
+                                    / {{ (invoice.total || 0) / 100 }}
+                                }
+                                {{ invoice.currency?.toUpperCase() }}
+                            </td>
+                            <td>{{ formatDate((invoice.lines.data[0].period.start || 0) * 1000) }}</td>
+                            <td>{{ formatDate((invoice.lines.data[0].period.end || 0) * 1000) }}</td>
+                            <td>
+                                {{ invoice.status.replace("paid", "Bezahlt").replace("draft", "Entwurf").replace("open", "Offen").replace("uncollectible", "Nicht einziehbar").replace("void", "Ungültig") }}
+                            </td>
+                            <td>
+                                {{ formatDate((invoice.due_date || invoice.status_transitions.paid_at || 0) * 1000) }}
+                            </td>
+                            <td><a [href]="invoice.hosted_invoice_url" target="_blank">Ansehen</a></td>
+                            <td>
+                                <a [href]="invoice.invoice_pdf" target="_blank"> Herunterladen <img [alt]="invoice.invoice_pdf" title="PDF herunterladen" src="/svg/download.svg" /> </a>
                             </td>
                         </tr>
                     }

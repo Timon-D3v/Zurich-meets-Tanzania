@@ -20,15 +20,14 @@ router.get("/createCheckoutSession", async (req: Request, res: Response): Promis
                 address: user.address,
             }),
             address: {
-                line1: user.address?.split(',')?.[0],
-                city: user.address?.split(', ')[1]?.split(' ')?.slice(1)?.join(' '),
-                postal_code: user.address?.split(', ')[1]?.split(' ')?.[0],
+                line1: user.address?.split(",")?.[0],
+                city: user.address?.split(", ")[1]?.split(" ")?.slice(1)?.join(" "),
+                postal_code: user.address?.split(", ")[1]?.split(" ")?.[0],
             },
             metadata: {
                 userId: user.id,
-            }
-        })
-
+            },
+        });
 
         const storeCustomerResult = await storeStripeCustomer(user.id, customer.id);
 
@@ -69,16 +68,15 @@ router.get("/createCheckoutSession", async (req: Request, res: Response): Promis
                 metadata: {
                     userId: user.id,
                     customerId: customer.id,
-
                 },
                 // If set to 'create_prorations' => Percentage of the year, the user is a member (Until the 1st of January), we will charge them for that percentage.
                 // Set the 'none' to disable this behavior. The user will be charged the full amount, regardless of when they become a member.
-                proration_behavior: "create_prorations", 
+                proration_behavior: "create_prorations",
             },
             success_url: `${CONFIG.ORIGIN}/payment-success`,
             cancel_url: `${CONFIG.ORIGIN}/payment-cancelled`,
             ui_mode: "hosted_page",
-        })
+        });
 
         // const session: any = await stripeClient.checkout.sessions.create({
         //     line_items: [
@@ -91,7 +89,6 @@ router.get("/createCheckoutSession", async (req: Request, res: Response): Promis
         //     success_url: `${CONFIG.ORIGIN}/payment-success`, // CHANGE AND CREATE ROUTES
         //     cancel_url: `${CONFIG.ORIGIN}/payment-cancelled`,
         // });
-
 
         const result = await storeStripeCheckoutSession(user.id, session.id, customer.id);
 

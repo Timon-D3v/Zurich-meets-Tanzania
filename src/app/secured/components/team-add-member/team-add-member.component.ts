@@ -17,8 +17,6 @@ export class TeamAddMemberComponent {
 
     addTeamMemberForm = new FormGroup({
         emailControl: new FormControl(""),
-        jobControl: new FormControl(""),
-        mottoControl: new FormControl(""),
     });
 
     private teamService = inject(TeamService);
@@ -33,29 +31,9 @@ export class TeamAddMemberComponent {
         this.submitButtonText.set("Verarbeiten...");
 
         const email = this.addTeamMemberForm.value.emailControl;
-        const job = this.addTeamMemberForm.value.jobControl;
-        const motivation = this.addTeamMemberForm.value.mottoControl;
 
         if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
             this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige E-Mail-Adresse ein.");
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Hinzufügen");
-
-            return;
-        }
-
-        if (typeof job !== "string" || job.trim() === "") {
-            this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige Jobbezeichnung ein.");
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Hinzufügen");
-
-            return;
-        }
-
-        if (typeof motivation !== "string" || motivation.trim() === "") {
-            this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige Motivationsbeschreibung ein.");
 
             this.submitButtonDisabled.set(false);
             this.submitButtonText.set("Hinzufügen");
@@ -71,7 +49,7 @@ export class TeamAddMemberComponent {
             return;
         }
 
-        const request = this.teamService.addMember(email, job, motivation);
+        const request = this.teamService.addMember(email);
 
         request.subscribe((response: ApiEndpointResponse): void => {
             if (response.error) {

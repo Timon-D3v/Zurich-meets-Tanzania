@@ -17,6 +17,7 @@ export class EditAccountPreferencesComponent implements OnInit {
     darkmodeId = this.randomId();
     darkmodeIsChecked = signal(false);
     newsletterIsChecked = signal(false);
+    newsletterInitialGender = signal<"Herr" | "Frau" | "Divers" | null>(null);
 
     private themeService = inject(ThemeService);
     private newsletterService = inject(NewsletterService);
@@ -26,8 +27,8 @@ export class EditAccountPreferencesComponent implements OnInit {
 
     ngOnInit(): void {
         this.darkmodeIsChecked.set(this.themeService.currentTheme() === "dark");
-        console.warn("Newsletter preference is currently not stored on the server. It will be reset to false on every page load.");
-        this.newsletterIsChecked.set(false); // Set initial state for newsletter preference
+
+        this.checkIfAlreadySubscribedToNewsletter();
     }
 
     toggleNewsletter(event: Event): void {
@@ -90,6 +91,22 @@ export class EditAccountPreferencesComponent implements OnInit {
             }
 
             this.notificationService.success("Erfolg:", response.message);
+        });
+    }
+
+    checkIfAlreadySubscribedToNewsletter(): void {
+        const request = this.newsletterService.checkIfSignedUpWithAccount();
+
+        request.subscribe((response: ApiEndpointResponse): void => {
+            if (response.error) {
+                this.notificationService.error("Fehler:", response.message);
+                return;
+            }
+
+            if (["Herr", "Frau", "Divers"].includes(response.message)) {
+                this.newsletterIsChecked.set(true);
+                this.newsletterInitialGender.set(response.message as "Herr" | "Frau" | "Divers");
+            }
         });
     }
 
