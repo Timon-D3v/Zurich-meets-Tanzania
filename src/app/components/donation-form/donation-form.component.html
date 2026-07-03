@@ -19,11 +19,10 @@
         <p>Vielen Dank, dass du zurich meets tanzania und unseren Unterprojekte eine Spende widmest. Bitte gib unten an wie viel du spenden möchtest, um fortzufahren.</p>
         <app-donation-amount-input (valueOutput)="setAmount($event)"></app-donation-amount-input>
     } @else if (currentStage() === 2) {
-        <p>Bitte scanne den QR-Code unten in deiner Bank-App oder benutze die Überweisungsdaten darunter um deine Spende zu tätigen.
+        <p>
+            Bitte scanne den QR-Code unten in deiner Bank-App oder benutze die Überweisungsdaten darunter um deine Spende zu tätigen.
             <br />
-            <span>
-                (Achte darauf, dass die Maus beim scannen nicht über dem QR-Code gehalten wird.)
-            </span>
+            <span> (Achte darauf, dass die Maus beim scannen nicht über dem QR-Code gehalten wird.) </span>
         </p>
         <div class="center">
             <img src="/common/donate-qr-code.png" alt="Der QR-Code zum Spenden" />

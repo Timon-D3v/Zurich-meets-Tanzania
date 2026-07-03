@@ -30,7 +30,7 @@ app.use(
     }),
 );
 app.use((req: Request, res: Response, next: NextFunction) => {
-    if (/\/api\/stripe\/webhook/.test(req.originalUrl)) {
+    if (/\/webhooks\/stripe/.test(req.originalUrl)) {
         next();
         return;
     }

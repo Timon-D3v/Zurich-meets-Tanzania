@@ -17,8 +17,8 @@ export class LegacyMembershipSignUpFormComponent {
         // Implement the sign-up logic here
         console.log("Sign-up button clicked");
 
-        this.notificationService.success("Erfolgreich", "Vielen Dank für deine Unterstützung! Wir werden deine Überweisung prüfen und dich dann als Mitglied aufnehmen."    );
-        
+        this.notificationService.success("Erfolgreich", "Vielen Dank für deine Unterstützung! Wir werden deine Überweisung prüfen und dich dann als Mitglied aufnehmen.");
+
         this.router.navigate(["/"]);
     }
 }

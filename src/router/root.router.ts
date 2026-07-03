@@ -2,6 +2,7 @@ import { Router } from "express";
 import { CONFIG } from "../config";
 
 import apiRouter from "./api.router";
+import webhooksRouter from "./webhooks.router";
 import redirectsRouter from "./redirects.api.router";
 import { autoLogin } from "../middleware/autologin.middleware";
 
@@ -18,6 +19,7 @@ if (CONFIG.ENV === "dev" && process.env["AUTO_LOGIN"] === "true") {
 }
 
 router.use("/api", apiRouter);
+router.use("/webhooks", webhooksRouter);
 router.use("/redirects", redirectsRouter);
 
 export default router;

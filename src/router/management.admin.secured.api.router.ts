@@ -3,7 +3,7 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 import { ApiEndpointResponse, DelivApiFile, GetAllFileInformationApiEndpointResponse, GetPasswordsApiEndpointResponse, PrivateUser } from "..";
 import { PASSWORDS } from "../shared/passwords";
 import { createUser, getUserWithEmail, setUserType } from "../shared/user.database";
-import { getMemberWithEmail } from "../shared/member.database";
+import { getMemberWithUserId } from "../shared/member.database";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import { createDarkmodeEntry } from "../shared/darkmode.database";
@@ -118,7 +118,7 @@ router.post("/removeAdmin", async (req: Request, res: Response): Promise<void> =
 
         const user: PrivateUser = databaseResult.data[0];
 
-        const member = await getMemberWithEmail(user.id);
+        const member = await getMemberWithUserId(user.id);
 
         if (member.error !== null) {
             throw new Error(member.error);

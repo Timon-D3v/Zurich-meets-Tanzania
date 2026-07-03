@@ -1,17 +1,20 @@
 <div class="wrapper" id="scrollToLegacyMembership">
     <h2>Mitglied werden</h2>
-    <p>Wir freuen uns dich als Mitglied willkommen zu heissen! Um dich als Mitglied zu erfassen, brauchst du einen Account.
+    <p>Wir freuen uns dich als Mitglied willkommen zu heissen! Um dich als Mitglied zu erfassen, brauchst du einen Account.</p>
+    <app-donation-amount-input [placeholder]="'50'" [disabled]="true"></app-donation-amount-input>
+    <p>
+        Bitte scanne den QR-Code unten in deiner Bank-App oder benutze die Überweisungsdaten darunter um deinen jährlichen Mitgliedsbeitrag zu überweisen. <br /><span
+            >(Achte darauf, dass die Maus beim scannen nicht über dem QR-Code gehalten wird.)</span
+        >
+    </p>
+    <div class="center">
+        <img src="/common/membership-qr-code.png" alt="Der QR-Code zum Mitgliedskonto" />
+        <p>
+            CH57 0900 0000 6189 8415 3<br />
+            zurich - meets - tanzania<br />
+            8049 Zürich
         </p>
-        <app-donation-amount-input [placeholder]="'50'" [disabled]="true"></app-donation-amount-input>
-        <p>Bitte scanne den QR-Code unten in deiner Bank-App oder benutze die Überweisungsdaten darunter um deinen jährlichen Mitgliedsbeitrag zu überweisen. <br /><span>(Achte darauf, dass die Maus beim scannen nicht über dem QR-Code gehalten wird.)</span></p>
-        <div class="center">
-            <img src="/common/membership-qr-code.png" alt="Der QR-Code zum Mitgliedskonto" />
-            <p>
-                CH57 0900 0000 6189 8415 3<br>
-                zurich - meets - tanzania<br>
-                8049 Zürich
-            </p>
-        </div>
+    </div>
     <div class="buttons-wrapper">
         <button (click)="signUp()">Mitglied werden</button>
     </div>

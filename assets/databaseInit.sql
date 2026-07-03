@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `zmt`.`subpages` (
   `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data` JSON NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `subpages_id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `subpages_title_UNIQUE` (`title` ASC) VISIBLE
 )
 COMMENT = 'This table holds data for all the subpages of the zmt website.';
@@ -197,3 +198,41 @@ CREATE TABLE IF NOT EXISTS `zmt`.`donationRequests` (
     UNIQUE INDEX `donationRequests_id_UNIQUE` (`id` ASC) VISIBLE
 )
 COMMENT = 'This table holds all donation requests submitted by users. Each request includes the amount, donor information, usage type, and status flags for review and validation.';
+
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`stripeEvents` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `eventId` VARCHAR(256) NOT NULL,
+    `eventType` VARCHAR(256) NOT NULL,
+    `eventData` JSON NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `stripeEvents_id_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds all events from Stripe. Each record includes the event ID, event type, event data in JSON format, and creation timestamp.';
+
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`stripeCustomers` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `customerId` VARCHAR(256) NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `stripeCustomers_id_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds all Stripe customers. Each record includes the user ID, Stripe customer ID, and creation timestamp. This is used to track and manage Stripe customers associated with users.';
+
+
+
+CREATE TABLE IF NOT EXISTS `zmt`.`stripeCheckoutSessions` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `customerId` VARCHAR(256) NOT NULL,
+    `sessionId` VARCHAR(256) NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `stripeCheckoutSessions_id_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds all Stripe checkout sessions. Each record includes the user ID, Stripe customer ID, session ID, and creation timestamp. This is used to track and manage checkout sessions for users.';

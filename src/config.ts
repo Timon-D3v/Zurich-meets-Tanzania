@@ -52,4 +52,13 @@ export const CONFIG: Config = {
     TIANJI_WORKSPACE_ID: process.env["TIANJI_WORKSPACE_ID"] as string,
     TIANJI_WEBSITE_ID: process.env["TIANJI_WEBSITE_ID"] as string,
     TIANJI_URL: process.env["TIANJI_URL"] as string,
+
+    STRIPE_PRIVATE_KEY: process.env["STRIPE_PRIVATE_KEY"] as string,
+    STRIPE_PUBLIC_KEY: process.env["STRIPE_PUBLIC_KEY"] as string,
+    STRIPE_PRIVATE_KEY_TEST: process.env["STRIPE_PRIVATE_KEY_TEST"] as string,
+    STRIPE_PUBLIC_KEY_TEST: process.env["STRIPE_PUBLIC_KEY_TEST"] as string,
+    STRIPE_ENDPOINT_SECRET: process.env["STRIPE_ENDPOINT_SECRET"] as string,
+    STRIPE_ENDPOINT_SECRET_TEST: process.env["STRIPE_ENDPOINT_SECRET_TEST"] as string,
+    STRIPE_PRICE_MEMBERSHIP: process.env["STRIPE_PRICE_MEMBERSHIP"] as string,
+    STRIPE_PRICE_MEMBERSHIP_TEST: process.env["STRIPE_PRICE_MEMBERSHIP_TEST"] as string,
 };

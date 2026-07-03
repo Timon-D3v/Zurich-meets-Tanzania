@@ -56,6 +56,15 @@ export type Config = {
     TIANJI_WORKSPACE_ID: string;
     TIANJI_WEBSITE_ID: string;
     TIANJI_URL: string;
+
+    STRIPE_PRIVATE_KEY: string;
+    STRIPE_PUBLIC_KEY: string;
+    STRIPE_PRIVATE_KEY_TEST: string;
+    STRIPE_PUBLIC_KEY_TEST: string;
+    STRIPE_ENDPOINT_SECRET: string;
+    STRIPE_ENDPOINT_SECRET_TEST: string;
+    STRIPE_PRICE_MEMBERSHIP: string;
+    STRIPE_PRICE_MEMBERSHIP_TEST: string;
 };
 
 export type PublicEnvVariables = {
@@ -406,6 +415,10 @@ export interface GetAllFileInformationApiEndpointResponse extends ApiEndpointRes
 
 export interface GetDonationUsageTypesApiEndpointResponse extends ApiEndpointResponse {
     data: string[];
+}
+
+export interface CreateCheckoutSessionApiEndpointResponse extends ApiEndpointResponse {
+    data: { url: string } | null;
 }
 
 export interface PublicUser {
@@ -780,4 +793,66 @@ export type SelectOption = {
     label: string;
     selected: boolean;
     disabled: boolean;
+};
+
+export type StripePaymentIntent = {
+    id: number;
+    paymentIntentId: string;
+    invoiceId: string;
+    chargeId: string;
+    customerId: string;
+    sessionId: string;
+    subscriptionId: string;
+    receiptEmail: string;
+    status: string;
+    createdAt: string;
+    eventData: any;
+};
+
+export type StripeInvoice = {
+    id: number;
+    invoiceId: string;
+    paymentIntentId: string;
+    chargeId: string;
+    customerId: string;
+    sessionId: string;
+    subscriptionId: string;
+    customerEmail: string;
+    customerName: string;
+    invoiceUrl: string;
+    invoicePdf: string;
+    status: string;
+    periodStart: number;
+    periodEnd: number;
+    createdAt: string;
+    eventData: any;
+};
+
+export type StripeCheckoutSession = {
+    id: number;
+    sessionId: string;
+    invoiceId: string;
+    paymentIntentId: string;
+    chargeId: string;
+    customerId: string;
+    subscriptionId: string;
+    customerEmail: string;
+    customerName: string;
+    status: string;
+    expiresAt: number;
+    createdAt: string;
+    eventData: any;
+};
+
+export type StripeCustomerSubscription = {
+    id: number;
+    subscriptionId: string;
+    customerId: string;
+    status: string;
+    periodStart: number;
+    periodEnd: number;
+    startDate: number;
+    billingCycleAnchor: number;
+    createdAt: string;
+    eventData: any;
 };
