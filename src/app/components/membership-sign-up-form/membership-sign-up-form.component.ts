@@ -25,7 +25,7 @@ export class MembershipSignUpFormComponent {
         if (!this.authService.isLoggedIn() || user === null) {
             this.notificationService.info("Nicht eingeloggt", "Um Mitglied zu werden brauchst du einen Account. Bitte logge dich ein oder registriere dich.");
 
-            this.router.navigate(["/login"]);
+            this.router.navigate(["/login"], { queryParams: { redirectUrl: "membership" } });
 
             return;
         }

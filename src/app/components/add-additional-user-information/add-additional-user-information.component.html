@@ -19,12 +19,10 @@
         (valueOutput)="updateMotiveInput($event)"
     ></app-edit-account-input>
 
-
     <!-- Add in the future:
             - Secondary Profile Picture
             - Role in Team (but i need to be carful since the users role is then set for all teams he is in, not just the latest one)
     -->
-
 
     <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
 </form>

@@ -13,7 +13,6 @@ export class NotificationComponent implements OnInit {
     message = input("Das ist eine Nachricht");
     title = input("Nachricht:");
     closable = input(true);
-    preloader = input(false);
 
     iconSrc = signal("/svg/neutral.svg");
     iconAlt = signal("Neutrale Benachrichtigung Icon");

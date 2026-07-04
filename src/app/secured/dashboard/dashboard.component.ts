@@ -10,6 +10,7 @@ import {
     DashboardEditTypes,
     DashboardNavigationOptions,
     DatabaseApiEndpointResponse,
+    DonationMeter,
     GetAllBlogsApiEndpointResponse,
     GetAllNewsApiEndpointResponse,
     GetAllStaticSitesApiEndpointResponse,
@@ -20,6 +21,7 @@ import {
     News,
     StaticSite,
     StaticSiteNames,
+    GetDonationMetersApiEndpointResponse,
 } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { TeamService } from "../../services/team.service";
@@ -33,7 +35,6 @@ import { AdminHomepagePicturePageComponent } from "../components/admin-homepage-
 import { EditStaticSiteComponent } from "../components/edit-static-site/edit-static-site.component";
 import { AdminAddAdminComponent } from "../components/admin-add-admin/admin-add-admin.component";
 import { AdminRemoveAdminComponent } from "../components/admin-remove-admin/admin-remove-admin.component";
-import { MembersRemoveManualMemberComponent } from "../components/members-remove-manual-member/members-remove-manual-member.component";
 import { AdminCreateAccountComponent } from "../components/admin-create-account/admin-create-account.component";
 import { StatsWebsiteAnalyticsComponent } from "../components/stats-website-analytics/stats-website-analytics.component";
 import { StatsUserListComponent } from "../components/stats-user-list/stats-user-list.component";
@@ -45,6 +46,10 @@ import { DonationsRemoveDonationMeterComponent } from "../components/donations-r
 import { DonationsCreateDonationMeterComponent } from "../components/donations-create-donation-meter/donations-create-donation-meter.component";
 import { DonationsFormEntriesComponent } from "../components/donations-form-entries/donations-form-entries.component";
 import { MembersAddManualMemberComponent } from "../components/members-add-manual-member/members-add-manual-member.component";
+import { MembersRemoveManualMemberComponent } from "../components/members-remove-manual-member/members-remove-manual-member.component";
+import { MembersMembersListComponent } from "../components/members-members-list/members-members-list.component";
+import { MembersManualMembersListComponent } from "../components/members-manual-members-list/members-manual-members-list.component";
+import { MembersStripeMembersListComponent } from "../components/members-stripe-members-list/members-stripe-members-list.component";
 import { GalleryRemoveImagesComponent } from "../components/gallery-remove-images/gallery-remove-images.component";
 import { GalleryAddImagesComponent } from "../components/gallery-add-images/gallery-add-images.component";
 import { GalleryDeleteGalleryComponent } from "../components/gallery-delete-gallery/gallery-delete-gallery.component";
@@ -67,6 +72,7 @@ import { PopupFileInputComponent } from "../../components/popup-file-input/popup
 import { CalendarService } from "../../services/calendar.service";
 import { formatDateRangeString } from "../../../shared/utils";
 import { AdminFileExplorerComponent } from "../components/admin-file-explorer/admin-file-explorer.component";
+import { DonationService } from "../../services/donation.service";
 
 @Component({
     selector: "app-dashboard",
@@ -77,7 +83,11 @@ import { AdminFileExplorerComponent } from "../components/admin-file-explorer/ad
         EditStaticSiteComponent,
         AdminAddAdminComponent,
         AdminRemoveAdminComponent,
+        MembersAddManualMemberComponent,
         MembersRemoveManualMemberComponent,
+        MembersMembersListComponent,
+        MembersManualMembersListComponent,
+        MembersStripeMembersListComponent,
         AdminCreateAccountComponent,
         StatsWebsiteAnalyticsComponent,
         StatsUserListComponent,
@@ -88,7 +98,6 @@ import { AdminFileExplorerComponent } from "../components/admin-file-explorer/ad
         DonationsRemoveDonationMeterComponent,
         DonationsCreateDonationMeterComponent,
         DonationsFormEntriesComponent,
-        MembersAddManualMemberComponent,
         GalleryRemoveImagesComponent,
         GalleryAddImagesComponent,
         GalleryDeleteGalleryComponent,
@@ -130,6 +139,7 @@ export class DashboardComponent implements OnInit {
     allEditableBlogs: string[] = [];
     allEditableNews: string[] = [];
     allEditableEvents: string[] = [];
+    allEditableDonationMeters: string[] = [];
 
     /*
      * ===============================================================
@@ -144,6 +154,7 @@ export class DashboardComponent implements OnInit {
     currentActiveNewsEdit = signal<string>("awaitSelection");
     currentActionToPerform = signal<DashboardEditTypes>("addTitle");
     currentIndexToEdit = signal<number>(-1);
+    currentDonationMeterIndex = signal<number>(0);
 
     /*
      * ===============================================================
@@ -331,6 +342,14 @@ export class DashboardComponent implements OnInit {
 
     /*
      * ===============================================================
+     *                    DONATION METER CACHE
+     * ===============================================================
+     */
+
+    donationMeters: DonationMeter[] = [];
+
+    /*
+     * ===============================================================
      *                          SERVICES
      * ===============================================================
      */
@@ -339,6 +358,7 @@ export class DashboardComponent implements OnInit {
     private blogService = inject(BlogService);
     private newsService = inject(NewsService);
     private editService = inject(EditService);
+    private donationService = inject(DonationService);
     private calendarService = inject(CalendarService);
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
@@ -398,6 +418,9 @@ export class DashboardComponent implements OnInit {
 
         // Get all events for deleting
         this.getAllEvents();
+
+        // Get all donation meters for editing and deleting
+        this.getAllDonationMeters();
     }
 
     getAllBlogTitles(): void {
@@ -468,6 +491,25 @@ export class DashboardComponent implements OnInit {
             for (const event of response.data) {
                 this.calendarEvents.push(event);
                 this.allEditableEvents.push(`${formatDateRangeString(new Date(event.startDate), new Date(event.endDate))} - ${event.title}`);
+            }
+        });
+    }
+
+    getAllDonationMeters(): void {
+        this.allEditableDonationMeters = [];
+
+        const donationMeterRequest = this.donationService.getDonationMeters();
+
+        donationMeterRequest.subscribe((response: GetDonationMetersApiEndpointResponse) => {
+            if (response.error || response.data === null || !Array.isArray(response.data)) {
+                this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden: " + response.message);
+
+                return;
+            }
+
+            for (const meter of response.data) {
+                this.donationMeters.push(meter);
+                this.allEditableDonationMeters.push(meter.title);
             }
         });
     }
@@ -649,6 +691,27 @@ export class DashboardComponent implements OnInit {
         this.selectionInputLabel.set("Titel:");
         this.selectionInputPlaceholder.set("Titel suchen");
         this.selectionInputOptions.set(this.allEditableEvents);
+    }
+
+    generateSelectDonationMeterToEditFunction(): Function {
+        const _this = this;
+
+        const activationFunction = () => {
+            _this.selectDonationMeterToEdit();
+            _this.generateActivateFunction("donations-push-donation-meter")();
+        };
+
+        return activationFunction;
+    }
+
+    selectDonationMeterToEdit(): void {
+        this.selectionInputOpen.set(true);
+
+        this.selectionInputTitle.set("Spendenbarometer bearbeiten");
+        this.selectionInputDescription.set("Bitte gib den Titel des Spendanbarometers ein, den du bearbeiten möchtest.");
+        this.selectionInputLabel.set("Titel:");
+        this.selectionInputPlaceholder.set("Titel suchen");
+        this.selectionInputOptions.set(this.allEditableDonationMeters);
     }
 
     /*
@@ -1415,6 +1478,9 @@ export class DashboardComponent implements OnInit {
                 break;
             case "calendar-delete-event":
                 this.deleteEvent(selectedOption);
+                break;
+            case "donations-push-donation-meter":
+                this.currentDonationMeterIndex.set(this.donationMeters.findIndex((meter) => meter.title === selectedOption));
                 break;
             default:
                 this.selectionInputObservable.next(selectedOption);

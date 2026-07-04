@@ -211,29 +211,7 @@ export type EmailPasswordCombo = {
 export type NotificationTypes = "neutral" | "success" | "error" | "warn" | "info";
 
 export type HTMLInputTypes =
-    | "button"
-    | "checkbox"
-    | "color"
-    | "date"
-    | "datetime"
-    | "datetime-local"
-    | "email"
-    | "file"
-    | "hidden"
-    | "image"
-    | "month"
-    | "number"
-    | "password"
-    | "radio"
-    | "range"
-    | "reset"
-    | "search"
-    | "submit"
-    | "tel"
-    | "text"
-    | "time"
-    | "url"
-    | "week";
+    "button" | "checkbox" | "color" | "date" | "datetime" | "datetime-local" | "email" | "file" | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset" | "search" | "submit" | "tel" | "text" | "time" | "url" | "week";
 
 export type HTMLInputAutocompleteOptions =
     | "on"
@@ -429,6 +407,10 @@ export interface GetDonationUsageTypesApiEndpointResponse extends ApiEndpointRes
     data: string[];
 }
 
+export interface GetDonationMetersApiEndpointResponse extends ApiEndpointResponse {
+    data: DonationMeter[];
+}
+
 export interface CreateCheckoutSessionApiEndpointResponse extends ApiEndpointResponse {
     data: { url: string } | null;
 }
@@ -532,22 +514,7 @@ export type StaticSiteStorage = {
 };
 
 export type StaticSiteNames =
-    | "vision"
-    | "board"
-    | "beginning"
-    | "finances"
-    | "income-statement"
-    | "general-meeting"
-    | "statutes"
-    | "zurich-meets-tanzania"
-    | "tanzania-meets-zurich"
-    | "mbuzi"
-    | "gynecology"
-    | "meducation"
-    | "bajaji"
-    | "cardiology"
-    | "surgery"
-    | "history";
+    "vision" | "board" | "beginning" | "finances" | "income-statement" | "general-meeting" | "statutes" | "zurich-meets-tanzania" | "tanzania-meets-zurich" | "mbuzi" | "gynecology" | "meducation" | "bajaji" | "cardiology" | "surgery" | "history";
 
 export interface CustomElement {
     type: "title" | "subtitle" | "paragraph" | "image" | "multipleImages" | "imageWithText" | "line" | "currentTeam";
@@ -815,7 +782,7 @@ export type ExpandedUser = {
     motive: string;
     secondaryPicture: string;
     role: string;
-}
+};
 
 export type Invoice = {
     id: string;
@@ -935,4 +902,14 @@ export type StripeCustomerSubscription = {
     billingCycleAnchor: number;
     createdAt: string;
     eventData: any;
+};
+
+export type DonationMeter = {
+    id: number;
+    currentValue: number;
+    maxValue: number;
+    title: string;
+    description: string;
+    active: boolean;
+    updatedAt: string;
 };

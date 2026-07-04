@@ -1,7 +1,7 @@
 import { Service, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { GetDonationUsageTypesApiEndpointResponse, ApiEndpointResponse } from "../..";
+import { GetDonationUsageTypesApiEndpointResponse, ApiEndpointResponse, GetDonationMetersApiEndpointResponse } from "../..";
 
 @Service()
 export class DonationService {
@@ -20,6 +20,24 @@ export class DonationService {
             lastName,
             email,
             usageType,
+        });
+
+        return request;
+    }
+
+    getDonationMeters(): Observable<GetDonationMetersApiEndpointResponse> {
+        const request = this.http.get<GetDonationMetersApiEndpointResponse>(`/api/donation/getDonationMeters`);
+
+        return request;
+    }
+
+    updateDonationMeter(id: number, title: string, description: string, currentValue: number, maxValue: number): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>(`/api/secured/admin/management/updateDonationMeter`, {
+            id,
+            title,
+            description,
+            currentValue,
+            maxValue,
         });
 
         return request;

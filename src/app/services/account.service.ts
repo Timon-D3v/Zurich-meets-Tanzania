@@ -1,7 +1,15 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { GetInvoicesApiEndpointResponse, UpdateUserInformationApiEndpointResponse, UpdateUserInformationRequestBody, UpdateUserProfilePictureWithIdApiEndpointResponse, UpdateExpandedUserInformationRequestBody, UpdateExpandedUserInformationApiEndpointResponse, GetExpandedUserInformationApiEndpointResponse } from "../..";
+import {
+    GetInvoicesApiEndpointResponse,
+    UpdateUserInformationApiEndpointResponse,
+    UpdateUserInformationRequestBody,
+    UpdateUserProfilePictureWithIdApiEndpointResponse,
+    UpdateExpandedUserInformationRequestBody,
+    UpdateExpandedUserInformationApiEndpointResponse,
+    GetExpandedUserInformationApiEndpointResponse,
+} from "../..";
 
 @Injectable({
     providedIn: "root",

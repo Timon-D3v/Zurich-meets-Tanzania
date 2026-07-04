@@ -13,7 +13,7 @@ import { PublicEnvService } from "../../../services/public-env.service";
     styleUrl: "./admin-homepage-picture-page.component.scss",
 })
 export class AdminHomepagePicturePageComponent implements OnInit {
-    private defaultImagePreview = "https://api.timondev.com/cdn/zmt/7a121";
+    private defaultImagePreview = "/redirects/heroImage";
     imagePreview = signal<string>(this.defaultImagePreview);
 
     submitButtonText = signal<string>("Aktualisieren");

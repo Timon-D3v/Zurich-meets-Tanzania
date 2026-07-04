@@ -1,0 +1,15 @@
+<div class="wrapper {{ banners().length > 0 ? 'shown' : 'hidden' }} {{ open() ? 'open' : 'closed' }}">
+    @for (banner of banners(); track $index) {
+        <div class="banner" [attr.data-index]="$index">
+            <h2>{{ banner.title }}</h2>
+            <p>{{ banner.description }}</p>
+            <div class="progress" [style.background]="generateGradient(banner.currentValue, banner.maxValue)">
+                <p>{{ formatNumber(banner.currentValue) }}chf / {{ formatNumber(banner.maxValue) }}chf</p>
+            </div>
+            <a [routerLink]="'/donate'">Jetzt Mithelfen</a>
+            <button type="button" (click)="toggleBanner()">
+                <img src="/svg/arrow_down.svg" alt="Pfeil" />
+            </button>
+        </div>
+    }
+</div>

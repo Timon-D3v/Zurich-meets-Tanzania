@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `zmt`.`blogs` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(256) NOT NULL,
     `author` VARCHAR(256) NOT NULL,
-    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `data` JSON NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `blog_title_UNIQUE` (`title` ASC) VISIBLE
@@ -49,7 +49,7 @@ COMMENT = 'This table holds all the blogs.';
 
 CREATE TABLE IF NOT EXISTS `zmt`.`news` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `data` JSON NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `news_id_UNIQUE` (`id` ASC) VISIBLE
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `zmt`.`gallery` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(256) NOT NULL,
     `subtitle` VARCHAR(512) NOT NULL,
-    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `data` JSON NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `gallery_title_UNIQUE` (`title` ASC) VISIBLE
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `zmt`.`team` (
     `text` TEXT NOT NULL,
     `members` JSON NOT NULL,
     `picture` VARCHAR(512) NOT NULL,
-    `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `team_id_UNIQUE` (`id` ASC) VISIBLE
 )
@@ -128,22 +128,22 @@ COMMENT = 'This table holds the current team of zmt.';
 
 
 CREATE TABLE IF NOT EXISTS `zmt`.`subpages` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(256) NOT NULL,
-  `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `data` JSON NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `subpages_id_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `subpages_title_UNIQUE` (`title` ASC) VISIBLE
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(256) NOT NULL,
+    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `data` JSON NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `subpages_id_UNIQUE` (`id` ASC) VISIBLE,
+    UNIQUE INDEX `subpages_title_UNIQUE` (`title` ASC) VISIBLE
 )
 COMMENT = 'This table holds data for all the subpages of the zmt website.';
 
 
 
 CREATE TABLE IF NOT EXISTS `zmt`.`donationUsageTypes` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(256) NOT NULL,
-  PRIMARY KEY (`id`),
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(256) NOT NULL,
+    PRIMARY KEY (`id`),
     UNIQUE INDEX `donationUsageTypes_id_UNIQUE` (`id` ASC) VISIBLE
 )
 COMMENT = 'This table holds all possible usage types for donations to zmt.';
@@ -151,16 +151,16 @@ COMMENT = 'This table holds all possible usage types for donations to zmt.';
 
 
 CREATE TABLE IF NOT EXISTS `zmt`.`donationRequests` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `amount` DECIMAL(10, 2) NOT NULL,
-  `firstName` VARCHAR(256) NOT NULL,
-  `lastName` VARCHAR(256) NOT NULL,
-  `email` VARCHAR(256) NOT NULL,
-  `usageType` VARCHAR(256) NOT NULL,
-  `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `reviewed` BOOLEAN DEFAULT FALSE,
-  `validated` BOOLEAN DEFAULT FALSE,
-  PRIMARY KEY (`id`),
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `amount` DECIMAL(10, 2) NOT NULL,
+    `firstName` VARCHAR(256) NOT NULL,
+    `lastName` VARCHAR(256) NOT NULL,
+    `email` VARCHAR(256) NOT NULL,
+    `usageType` VARCHAR(256) NOT NULL,
+    `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `reviewed` BOOLEAN DEFAULT FALSE,
+    `validated` BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (`id`),
     UNIQUE INDEX `donationRequests_id_UNIQUE` (`id` ASC) VISIBLE
 )
 COMMENT = 'This table holds all donation requests submitted by users. Each request includes the amount, donor information, usage type, and status flags for review and validation.';
@@ -229,3 +229,18 @@ CREATE TABLE IF NOT EXISTS `zmt`.`teamMember` (
     UNIQUE INDEX `teamMember_id_UNIQUE` (`id` ASC) VISIBLE
 )
 COMMENT = 'This table holds the extras information of the users that are also part of a team of zmt.';
+
+
+
+CREATE TABLE `zmt`.`donationMeter` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `currentValue` INT NOT NULL,
+    `maxValue` INT NOT NULL,
+    `title` VARCHAR(64) NOT NULL,
+    `description` VARCHAR(512) NOT NULL,
+    `active` BOOLEAN NOT NULL DEFAULT TRUE,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_donationMeter_UNIQUE` (`id` ASC) VISIBLE
+)
+COMMENT = 'This table holds the data of the donationMeter.';

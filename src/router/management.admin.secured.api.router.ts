@@ -11,6 +11,7 @@ import { sendPasswordFromAdmin } from "../shared/auth.email";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpdateFile } from "delivapi-client";
 import { CONFIG } from "../config";
+import { updateDonationMeterWithId } from "../shared/donation.database";
 
 // Router Serves under /api/secured/admin/management
 const router = Router();
@@ -334,6 +335,59 @@ router.get("/getAllFiles", async (req: Request, res: Response): Promise<void> =>
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: null,
         } as GetAllFileInformationApiEndpointResponse);
+    }
+});
+
+router.post("/updateDonationMeter", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id, title, description, currentValue, maxValue } = req.body;
+
+        if (typeof id !== "number" || isNaN(id)) {
+            throw new Error("Es konnte kein gültiger Spendenziel-Identifikator gefunden werden. Bitte lade die Seite neu und versuche es erneut.");
+        }
+
+        if (typeof title !== "string" || title.trim() === "") {
+            throw new Error("Bitte gib dem Spendenziel einen Titel.");
+        }
+
+        if (typeof description !== "string" || description.trim() === "") {
+            throw new Error("Bitte gib dem Spendenziel eine Beschreibung.");
+        }
+
+        if (typeof currentValue !== "number" || isNaN(currentValue)) {
+            throw new Error("Bitte gib dem Spendenziel einen gültigen aktuellen Wert.");
+        }
+
+        if (typeof maxValue !== "number" || isNaN(maxValue)) {
+            throw new Error("Bitte gib dem Spendenziel einen gültigen Maximalwert.");
+        }
+
+        const result = await updateDonationMeterWithId(id, title, description, currentValue, maxValue);
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
     }
 });
 

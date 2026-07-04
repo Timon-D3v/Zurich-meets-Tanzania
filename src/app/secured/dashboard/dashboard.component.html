@@ -317,7 +317,7 @@
                             href: '#Spendenbarometer-aktualisieren',
                             label: 'Spendenbarometer aktualisieren',
                             clickable: true,
-                            onClick: generateActivateFunction('donations-push-donation-meter'),
+                            onClick: generateSelectDonationMeterToEditFunction(),
                         },
                         {
                             href: '#Shopartikel-erstellen',
@@ -582,6 +582,12 @@
             <app-members-add-manual-member></app-members-add-manual-member>
         } @else if (currentActiveSection() === "members-remove-manual-member") {
             <app-members-remove-manual-member></app-members-remove-manual-member>
+        } @else if (currentActiveSection() === "members-members-list") {
+            <app-members-members-list></app-members-members-list>
+        } @else if (currentActiveSection() === "members-manual-members-list") {
+            <app-members-manual-members-list></app-members-manual-members-list>
+        } @else if (currentActiveSection() === "members-stripe-members-list") {
+            <app-members-stripe-members-list></app-members-stripe-members-list>
         } @else if (currentActiveSection() === "donations-form-entries") {
             <app-donations-form-entries></app-donations-form-entries>
         } @else if (currentActiveSection() === "donations-create-donation-meter") {
@@ -589,7 +595,7 @@
         } @else if (currentActiveSection() === "donations-remove-donation-meter") {
             <app-donations-remove-donation-meter></app-donations-remove-donation-meter>
         } @else if (currentActiveSection() === "donations-push-donation-meter") {
-            <app-donations-push-donation-meter></app-donations-push-donation-meter>
+            <app-donations-push-donation-meter [donationMeter]="donationMeters[currentDonationMeterIndex()] || null"></app-donations-push-donation-meter>
         } @else if (currentActiveSection() === "donations-create-shop-item") {
             <app-donations-create-shop-item></app-donations-create-shop-item>
         } @else if (currentActiveSection() === "donations-delete-shop-item") {

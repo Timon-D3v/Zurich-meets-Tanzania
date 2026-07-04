@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { CONFIG } from "../config";
-import { GetDonationUsageTypesApiEndpointResponse, ApiEndpointResponse } from "..";
-import { getAllDonationUsageTypes, insertDonationRequest } from "../shared/donation.database";
+import { GetDonationUsageTypesApiEndpointResponse, ApiEndpointResponse, GetDonationMetersApiEndpointResponse } from "..";
+import { getAllDonationUsageTypes, insertDonationRequest, getAllDonationMeters } from "../shared/donation.database";
 import { sendDonationRequestEmail } from "../shared/donation.email";
 
 // Router Serves under /api/donation
@@ -10,13 +10,27 @@ const router = Router();
 
 router.get("/getDonationUsageTypes", async (req: Request, res: Response): Promise<void> => {
     try {
+        const usageTypes = [];
+
         const result = await getAllDonationUsageTypes();
 
         if (result.error) {
             throw new Error(result.error);
         }
 
-        const usageTypes = result.data!.map((row: { id: number; title: string }) => row.title);
+        for (let i = 0; i < result.data!.length; i++) {
+            usageTypes.push(result.data![i].title);
+        }
+
+        const donationMetersResult = await getAllDonationMeters();
+
+        if (donationMetersResult.error) {
+            throw new Error(donationMetersResult.error);
+        }
+
+        for (let i = 0; i < donationMetersResult.data!.length; i++) {
+            usageTypes.push(donationMetersResult.data![i].title);
+        }
 
         res.json({
             error: false,
@@ -122,6 +136,40 @@ router.post("/submitDonationForm", async (req: Request, res: Response): Promise<
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
         } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getDonationMeters", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const result = await getAllDonationMeters();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: result.data,
+        } as GetDonationMetersApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetDonationMetersApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetDonationMetersApiEndpointResponse);
     }
 });
 

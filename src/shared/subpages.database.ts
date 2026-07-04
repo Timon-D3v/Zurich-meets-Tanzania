@@ -5,22 +5,7 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 
 export async function getStaticSite(
     title:
-        | "vision"
-        | "board"
-        | "beginning"
-        | "finances"
-        | "income-statement"
-        | "general-meeting"
-        | "statutes"
-        | "zurich-meets-tanzania"
-        | "tanzania-meets-zurich"
-        | "mbuzi"
-        | "gynecology"
-        | "meducation"
-        | "bajaji"
-        | "cardiology"
-        | "surgery"
-        | "history",
+        "vision" | "board" | "beginning" | "finances" | "income-statement" | "general-meeting" | "statutes" | "zurich-meets-tanzania" | "tanzania-meets-zurich" | "mbuzi" | "gynecology" | "meducation" | "bajaji" | "cardiology" | "surgery" | "history",
 ): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * FROM \`zmt\`.\`subpages\` WHERE (\`title\` = ?);`, [title]);
@@ -73,22 +58,7 @@ export async function getAllStaticSites(): Promise<DatabaseResult> {
 
 export async function updateStaticSite(
     title:
-        | "vision"
-        | "board"
-        | "beginning"
-        | "finances"
-        | "income-statement"
-        | "general-meeting"
-        | "statutes"
-        | "zurich-meets-tanzania"
-        | "tanzania-meets-zurich"
-        | "mbuzi"
-        | "gynecology"
-        | "meducation"
-        | "bajaji"
-        | "cardiology"
-        | "surgery"
-        | "history",
+        "vision" | "board" | "beginning" | "finances" | "income-statement" | "general-meeting" | "statutes" | "zurich-meets-tanzania" | "tanzania-meets-zurich" | "mbuzi" | "gynecology" | "meducation" | "bajaji" | "cardiology" | "surgery" | "history",
     site: StaticSite,
 ): Promise<DatabaseResult> {
     try {

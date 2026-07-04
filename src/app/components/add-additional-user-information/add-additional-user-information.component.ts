@@ -1,4 +1,4 @@
-import { Component, inject, signal,OnInit } from "@angular/core";
+import { Component, inject, signal, OnInit } from "@angular/core";
 import { UpdateExpandedUserInformationApiEndpointResponse, UpdateExpandedUserInformationRequestBody, GetExpandedUserInformationApiEndpointResponse } from "../../..";
 import { EditAccountInputComponent } from "../edit-account-input/edit-account-input.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
@@ -15,12 +15,12 @@ export class AddAdditionalUserInformationComponent implements OnInit {
     submitButtonDisabled = signal(false);
     submitButtonText = signal("Speichern");
 
-    expandedUser = signal<{motive: string; profession: string; role: string; secondaryPicture: string; }>({
+    expandedUser = signal<{ motive: string; profession: string; role: string; secondaryPicture: string }>({
         motive: "",
         profession: "",
         role: "",
         secondaryPicture: "",
-    })
+    });
 
     editProfileForm = new FormGroup({
         professionControl: new FormControl(""),
@@ -88,7 +88,6 @@ export class AddAdditionalUserInformationComponent implements OnInit {
             role: updatedUserData.role !== this.expandedUser().role ? updatedUserData.role : null,
         };
 
-
         if (Object.values(requestBody).every((value) => value === null)) {
             // No changes were made, so we can just re-enable the submit button and return early
             this.submitButtonDisabled.set(false);
@@ -118,11 +117,7 @@ export class AddAdditionalUserInformationComponent implements OnInit {
 
                 this.notificationService.warning(
                     "Teilweise erfolgreich",
-                    `${response.message} Folgende Änderungen haben geklappt: ${alreadyDoneUpdatesReadableString
-                        .replace("role", "Rolle")
-                        .replace("motive", "Motivation")
-                        .replace("profession", "Beruf")
-                        .replace("secondaryPicture", "Sekundäres Bild")}`,
+                    `${response.message} Folgende Änderungen haben geklappt: ${alreadyDoneUpdatesReadableString.replace("role", "Rolle").replace("motive", "Motivation").replace("profession", "Beruf").replace("secondaryPicture", "Sekundäres Bild")}`,
                 );
 
                 // Don't return here since we still want to update the user details
@@ -174,7 +169,6 @@ export class AddAdditionalUserInformationComponent implements OnInit {
     updateMotiveInput(event: string | number | object | null) {
         this.updateInput(event, "motiveControl");
     }
-
 
     abortSubmit(errorMessage: string): void {
         this.notificationService.error("Eingabefehler", errorMessage);

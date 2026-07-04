@@ -15,10 +15,11 @@ import { HeaderService } from "./services/header.service";
 import { NavigationService } from "./services/navigation.service";
 import { SiteMetadataService } from "./services/site-metadata.service";
 import { CookieBannerComponent } from "./components/cookie-banner/cookie-banner.component";
+import { DonationMeterBannerComponent } from "./components/donation-meter-banner/donation-meter-banner.component";
 
 @Component({
     selector: "app-root",
-    imports: [RouterOutlet, HeaderComponent, NavigationComponent, FooterComponent, NotificationsWrapperComponent, CookieBannerComponent],
+    imports: [RouterOutlet, HeaderComponent, NavigationComponent, FooterComponent, NotificationsWrapperComponent, CookieBannerComponent, DonationMeterBannerComponent],
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.scss",
 })

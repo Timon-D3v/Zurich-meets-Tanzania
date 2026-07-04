@@ -20,27 +20,11 @@ export class NotificationsWrapperComponent implements OnInit, OnDestroy {
 
     /**
      * Lifecycle hook that is called after data-bound properties of a directive are initialized.
-     * This method is used to preload a notification to prevent an error when notifications are called via the notificationService.
-     * It also subscribes to the notificationObservable of the notificationService to display notifications.
-     *
-     * @remarks
-     * - Preload a notification to prevent an error when notifications are called via the notificationService.
+     * This method is used to subscribe to the notificationObservable of the notificationService to display notifications.
      *
      * @returns {void}
      */
     ngOnInit(): void {
-        // Preload a notification
-        // Somehow this prevents an error when notifications are called via the notificationService
-        this.showWithObjectInput(
-            {
-                type: "info",
-                title: "Info",
-                message: "Das ist eine Info",
-                closable: true,
-            },
-            true,
-        );
-
         this.subscription = this.notificationService.notificationObservable.subscribe((notification: Notification): void => {
             this.showWithObjectInput(notification);
         });
@@ -102,10 +86,9 @@ export class NotificationsWrapperComponent implements OnInit, OnDestroy {
      * @param {string} title - The title of the notification.
      * @param {string} message - The message content of the notification.
      * @param {boolean} [closable=true] - Determines if the notification can be closed by the user.
-     * @param {boolean} [preloader=false] - Determines if a preloader should be shown in the notification.
      * @returns {void}
      */
-    show(type: NotificationTypes, title: string, message: string, closable: boolean = true, preloader: boolean = false): void {
+    show(type: NotificationTypes, title: string, message: string, closable: boolean = true): void {
         const component = this.createComponent();
 
         if (typeof component === "undefined" || component === undefined) return console.error("Component is undefined");
@@ -114,7 +97,6 @@ export class NotificationsWrapperComponent implements OnInit, OnDestroy {
         component.setInput("message", message);
         component.setInput("title", title);
         component.setInput("closable", closable);
-        component.setInput("preloader", preloader);
 
         component.instance.closeEvent.subscribe((): void => {
             this.destroyComponent(component);
@@ -129,11 +111,10 @@ export class NotificationsWrapperComponent implements OnInit, OnDestroy {
      * Displays a notification using an object as input.
      *
      * @param {Notification} input - The notification object containing the details to be displayed.
-     * @param {boolean} [preloader=false] - Optional boolean to indicate if a preloader should be shown. Defaults to false.
      *
      * @returns {void}
      */
-    showWithObjectInput(input: Notification, preloader: boolean = false): void {
-        this.show(input.type, input.title, input.message, input.closable, preloader);
+    showWithObjectInput(input: Notification): void {
+        this.show(input.type, input.title, input.message, input.closable);
     }
 }
