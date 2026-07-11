@@ -11,13 +11,13 @@ import { PUBLIC_CONFIG } from "./publicConfig";
 import { isAdmin, isLoggedIn } from "./middleware/auth.middleware";
 import { readFileSync } from "node:fs";
 import https from "node:https";
-import { autoLogin } from "./middleware/autologin.middleware";
 
 const browserDistFolder = join(import.meta.dirname, "../browser");
 
 const app = express();
 const angularApp = new AngularNodeAppEngine({
-    allowedHosts: CONFIG.ENV === "prod" ? ["*.zurich-meets-tanzania.com", "*.zurich-meets-tanzania.ch"] : ["*.zurich-meets-tanzania.com", "*.zurich-meets-tanzania.ch", "*.localhost", "127.0.0.1"],
+    trustProxyHeaders: true,
+    allowedHosts: CONFIG.ALLOWED_HOSTS,
 });
 
 /**
@@ -65,7 +65,11 @@ app.use(initSession);
  * Enable CORS for all routes.
  * This allows cross-origin requests, which is useful for APIs and frontend-backend communication.
  */
-app.use(cors());
+app.use(
+    cors({
+        origin: CONFIG.ALLOWED_HOSTS,
+    }),
+);
 
 /**
  * Enable compression for all routes.
@@ -130,7 +134,7 @@ if (isMainModule(import.meta.url)) {
             throw error;
         }
 
-        console.log(`Node Express server listening on ${CONFIG.HOST}:${CONFIG.PORT}`);
+        console.log(`\x1b[34m%s\x1b[0m`, `Node Express server listening on ${CONFIG.HOST}:${CONFIG.PORT}`);
     });
 }
 

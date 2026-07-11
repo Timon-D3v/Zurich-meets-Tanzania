@@ -82,3 +82,9 @@ table {
         margin: 5vh auto;
     }
 }
+
+::ng-deep :root[data-theme="dark"] app-view-account-membership-details {
+    & tbody tr:nth-child(2n - 1) {
+        background-color: var(--text-200);
+    }
+}

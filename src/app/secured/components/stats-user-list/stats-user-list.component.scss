@@ -155,3 +155,9 @@ td {
     margin-left: auto;
     margin-right: auto;
 }
+
+::ng-deep :root[data-theme="dark"] app-stats-user-list {
+    & .table-wrapper {
+        @include default-table-darkmode;
+    }
+}

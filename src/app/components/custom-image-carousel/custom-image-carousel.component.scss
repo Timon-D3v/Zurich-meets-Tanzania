@@ -22,6 +22,7 @@
         object-fit: contain;
         transition: all 0.75s;
         width: 0;
+        filter: none !important;
 
         &.active {
             flex-shrink: 0;
@@ -53,6 +54,7 @@
         height: 90%;
         object-fit: cover;
         transition: all 0.75s;
+        filter: none !important;
 
         &.active {
             border: 5px solid #41403f;

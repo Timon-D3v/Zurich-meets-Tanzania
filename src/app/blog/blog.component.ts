@@ -1,5 +1,6 @@
 import { Component, effect, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { isPlatformBrowser } from "@angular/common";
 import { Blog, GetBlogApiEndpointResponse } from "../..";
 import { BlogService } from "../services/blog.service";
 import { NotificationService } from "../services/notification.service";
@@ -14,11 +15,35 @@ import { CustomImageComponent } from "../components/custom-image/custom-image.co
 import { CustomParagraphComponent } from "../components/custom-paragraph/custom-paragraph.component";
 import { CustomSubtitleComponent } from "../components/custom-subtitle/custom-subtitle.component";
 import { CustomTitleComponent } from "../components/custom-title/custom-title.component";
-import { isPlatformBrowser } from "@angular/common";
+import { CustomSourceComponent } from "../components/custom-source/custom-source.component";
+import { CustomTableComponent } from "../components/custom-table/custom-table.component";
+import { CustomVideoComponent } from "../components/custom-video/custom-video.component";
+import { CustomMultipleButtonsComponent } from "../components/custom-multiple-buttons/custom-multiple-buttons.component";
+import { CustomPdfViewerComponent } from "../components/custom-pdf-viewer/custom-pdf-viewer.component";
+import { CustomMultipleListsComponent } from "../components/custom-multiple-lists/custom-multiple-lists.component";
+import { BoardComponent } from "../components/board/board.component";
 
 @Component({
     selector: "app-blog",
-    imports: [HeroComponent, LoadingComponent, TeamFromIdComponent, CustomLineComponent, CustomImageWithTextComponent, CustomImageCarouselComponent, CustomImageComponent, CustomParagraphComponent, CustomSubtitleComponent, CustomTitleComponent],
+    imports: [
+        HeroComponent,
+        LoadingComponent,
+        TeamFromIdComponent,
+        CustomLineComponent,
+        CustomImageWithTextComponent,
+        CustomImageCarouselComponent,
+        CustomImageComponent,
+        CustomParagraphComponent,
+        CustomSubtitleComponent,
+        CustomTitleComponent,
+        CustomMultipleListsComponent,
+        CustomVideoComponent,
+        CustomTableComponent,
+        CustomSourceComponent,
+        CustomPdfViewerComponent,
+        CustomMultipleButtonsComponent,
+        BoardComponent,
+    ],
     templateUrl: "./blog.component.html",
     styleUrl: "./blog.component.scss",
 })

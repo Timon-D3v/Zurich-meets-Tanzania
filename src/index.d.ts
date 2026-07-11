@@ -12,6 +12,8 @@ export type Config = {
     HOST: string;
     PORT: number;
 
+    ALLOWED_HOSTS: string[];
+
     HTTPS_ACTIVE: boolean;
     HTTPS_PORT: number;
     HTTPS_CERT_PASSPHRASE: string;
@@ -566,7 +568,71 @@ export interface CustomCurrentTeamElement extends CustomElement {
     teamId: number;
 }
 
-export type CustomElements = Array<CustomTitleElement | CustomSubtitleElement | CustomParagraphElement | CustomImageElement | CustomMultipleImagesElement | CustomImageWithTextElement | CustomLineElement | CustomCurrentTeamElement>;
+export interface CustomBoardElement extends CustomElement {
+    type: "board";
+}
+
+export interface CustomMultipleButtonsElement extends CustomElement {
+    type: "multipleButtons";
+    buttons: {
+        content: string;
+        url: string;
+        secondary: boolean;
+    }[];
+}
+
+export interface CustomPdfViewerElement extends CustomElement {
+    type: "pdfViewer";
+    pdfUrl: string;
+}
+
+export interface CustomSourceElement extends CustomElement {
+    type: "source";
+    content: string;
+    sourceUrl: string;
+}
+
+export interface CustomTableElement extends CustomElement {
+    type: "table";
+    headers: Array<CustomSubtitleElement | CustomImageElement>;
+    rows: Array<Array<CustomParagraphElement | CustomImageElement>>;
+    source?: {
+        url: string;
+        content: string;
+    };
+}
+
+export interface CustomMultipleListsElement extends CustomElement {
+    type: "multipleLists";
+    lists: {
+        title: string;
+        items: string[];
+    }[];
+}
+
+export interface CustomVideoElement extends CustomElement {
+    type: "video";
+    videoUrl: string;
+    videoType: string;
+}
+
+export type CustomElements = Array<
+    | CustomTitleElement
+    | CustomSubtitleElement
+    | CustomParagraphElement
+    | CustomImageElement
+    | CustomMultipleImagesElement
+    | CustomImageWithTextElement
+    | CustomLineElement
+    | CustomCurrentTeamElement
+    | CustomBoardElement
+    | CustomMultipleButtonsElement
+    | CustomPdfViewerElement
+    | CustomSourceElement
+    | CustomTableElement
+    | CustomMultipleListsElement
+    | CustomVideoElement
+>;
 
 export type DashboardNavigationOptions = "main" | "edit-sites" | "create-blog" | "edit-blog" | "create-news" | "edit-news";
 

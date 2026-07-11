@@ -1,0 +1,46 @@
+<div class="wrapper">
+    <table>
+        <thead>
+            <tr>
+                @for (header of headers(); track $index) {
+                    <th>
+                        @if (header.type === "subtitle") {
+                            <span [innerHTML]="markdownToHtml(header.content)"></span>
+                        } @else if (header.type === "image") {
+                            <img [src]="header.imageUrl" [alt]="header.imageAlt" loading="eager" />
+                        }
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (row of rows(); track $index) {
+                <tr>
+                    @for (cell of row; track $index) {
+                        <td>
+                            @if (cell.type === "paragraph") {
+                                <span [innerHTML]="markdownToHtml(cell.content)"></span>
+                            } @else if (cell.type === "image") {
+                                <img [src]="cell.imageUrl" [alt]="cell.imageAlt" loading="lazy" />
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                @for (header of headers(); track $index) {
+                    <td>
+                        @if ($last && source()) {
+                            <span>
+                                <span>Quelle: </span>
+                                <a [href]="source()?.url" target="_blank">{{ source()?.content }}</a>
+                            </span>
+                        }
+                    </td>
+                }
+            </tr>
+        </tfoot>
+    </table>
+</div>

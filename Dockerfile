@@ -1,12 +1,15 @@
-FROM node:22.14.0-alpine3.20
+FROM node:24-alpine
 
-WORKDIR /build
+WORKDIR /zurich-meets-tanzania
 
 COPY package*.json .
+
+COPY dist dist
+COPY public public
+
+RUN mkdir cert
 
 RUN npm install --omit=dev
 RUN npm cache clean --force
 
-COPY . .
-
-CMD ["node", "index.js"]
+CMD ["node", "dist/server/server.mjs"]

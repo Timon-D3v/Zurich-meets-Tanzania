@@ -11,6 +11,10 @@ p {
     margin-inline-end: 0px;
     unicode-bidi: isolate;
 
+    & ::ng-deep a:hover {
+        color: var(--primary-500);
+    }
+
     & * {
         font-family: "Titillium Web", sans-serif !important;
         color: var(--text-950) !important;

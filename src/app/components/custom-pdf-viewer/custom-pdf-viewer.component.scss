@@ -1,0 +1,18 @@
+iframe {
+    width: 100%;
+    min-height: 75vh;
+    max-height: 95vh;
+    aspect-ratio: 3 / 2;
+    padding: var(--basic-margin);
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 5vh 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+
+    @media (max-width: 600px) {
+        min-height: 50vh;
+        max-height: 75vh;
+    }
+}

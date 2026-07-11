@@ -13,8 +13,4 @@
 <app-blog-preview [numberOfItems]="4"></app-blog-preview>
 
 <h1 class="title">Unser Vorstand</h1>
-@defer (when board().length > 0; prefetch on immediate) {
-    <app-team [team]="board()"></app-team>
-} @placeholder (minimum 100ms) {
-    <app-loading></app-loading>
-}
+<app-board></app-board>

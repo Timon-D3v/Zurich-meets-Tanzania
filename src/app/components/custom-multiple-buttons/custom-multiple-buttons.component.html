@@ -1,0 +1,5 @@
+<div class="wrapper">
+    @for (button of buttons(); track $index) {
+        <a [class]="button.secondary ? 'secondary' : 'primary'" [href]="button.url" target="_blank">{{ button.content }}</a>
+    }
+</div>

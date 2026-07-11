@@ -1,0 +1,9 @@
+<div>
+    <video [id]="id" [attr.controls]="controlsVisible() ? true : null" (pause)="pauseVideo()" (play)="startVideo()" (ended)="pauseVideo()">
+        <source [src]="videoUrl()" [type]="videoType()" />
+        Ihr Browser unterstützt das Video-Tag nicht.
+    </video>
+    <button (click)="startVideo()" [class]="controlsVisible() ? 'hidden' : null">
+        <img src="/svg/play.svg" alt="Video abspielen" title="Video abspielen" />
+    </button>
+</div>

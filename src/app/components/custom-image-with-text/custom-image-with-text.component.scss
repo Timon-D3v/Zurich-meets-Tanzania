@@ -10,12 +10,17 @@
 
 img {
     width: 100%;
+    filter: none !important;
 }
 
 p {
     margin: 0;
     padding: 0;
     width: 100%;
+
+    & ::ng-deep a:hover {
+        color: var(--primary-500);
+    }
 }
 
 @media screen and (max-width: 749px) {

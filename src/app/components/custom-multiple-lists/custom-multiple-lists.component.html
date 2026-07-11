@@ -1,0 +1,12 @@
+<div class="wrapper">
+    @for (list of lists(); track $index; let i = $index) {
+        <div class="list">
+            <app-custom-subtitle [content]="list.title"></app-custom-subtitle>
+            <ul>
+                @for (item of list.items; track $index) {
+                    <li [attr.data-list-index]="i" [attr.data-item-index]="$index" [innerHTML]="markdownToHtml(item)"></li>
+                }
+            </ul>
+        </div>
+    }
+</div>

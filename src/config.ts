@@ -8,6 +8,8 @@ export const CONFIG: Config = {
     HOST: process.env["HOST"] as string,
     PORT: Number(process.env["PORT"]),
 
+    ALLOWED_HOSTS: (process.env["ALLOWED_HOSTS"] as string).split(","),
+
     HTTPS_ACTIVE: process.env["HTTPS_ACTIVE"] === "true",
     HTTPS_PORT: Number(process.env["HTTPS_PORT"]),
     HTTPS_CERT_PASSPHRASE: process.env["HTTPS_CERT_PASSPHRASE"] as string,

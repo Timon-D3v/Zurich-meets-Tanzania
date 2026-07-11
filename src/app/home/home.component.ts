@@ -4,17 +4,16 @@ import { NewsComponent } from "../components/news/news.component";
 import { RouterLink } from "@angular/router";
 import { CalendarComponent } from "../components/calendar/calendar.component";
 import { BlogPreviewComponent } from "../components/blog-preview/blog-preview.component";
-import { TeamComponent } from "../components/team/team.component";
 import { CalendarEvent, GetCalendarEventsApiEndpointResponse, GetBoardApiEndpointResponse, BoardUser } from "../..";
 import { CalendarService } from "../services/calendar.service";
 import { isPlatformBrowser } from "@angular/common";
 import { NotificationService } from "../services/notification.service";
 import { TeamService } from "../services/team.service";
-import { LoadingComponent } from "../components/loading/loading.component";
+import { BoardComponent } from "../components/board/board.component";
 
 @Component({
     selector: "app-home",
-    imports: [HeroComponent, NewsComponent, RouterLink, CalendarComponent, BlogPreviewComponent, TeamComponent, LoadingComponent],
+    imports: [HeroComponent, NewsComponent, RouterLink, CalendarComponent, BlogPreviewComponent, BoardComponent],
     templateUrl: "./home.component.html",
     styleUrl: "./home.component.scss",
 })
@@ -36,16 +35,13 @@ export class HomeComponent implements OnInit {
     numberOfEvents = signal(5);
     events = signal<CalendarEvent[]>([]);
 
-    board = signal<BoardUser[]>([]);
-
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         if (!isPlatformBrowser(this.platfromId)) {
             console.error("Cannot make API calls on the server side. Calendar events will not be loaded.");
             return;
         }
 
         this.getEvents();
-        this.getBoard();
     }
 
     loadMoreEvents(event: Event): void {
@@ -67,20 +63,6 @@ export class HomeComponent implements OnInit {
             }
 
             this.events.set(response.data);
-        });
-    }
-
-    getBoard(): void {
-        const request = this.teamService.getBoard();
-
-        request.subscribe((response: GetBoardApiEndpointResponse) => {
-            if (response.error || !response.data) {
-                this.notificationService.error("Fehler:", "Der Vorstand konnte nicht geladen werden. Bitte versuchen Sie es später erneut.");
-
-                return;
-            }
-
-            this.board.set(response.data);
         });
     }
 }

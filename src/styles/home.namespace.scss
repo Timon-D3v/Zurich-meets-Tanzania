@@ -1,4 +1,4 @@
-:root[data-style-namespace="home"] {
+::ng-deep :root[data-style-namespace="home"] {
     app-hero > div > img {
         filter: none;
     }

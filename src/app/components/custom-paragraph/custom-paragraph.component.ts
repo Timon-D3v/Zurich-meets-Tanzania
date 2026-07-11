@@ -10,11 +10,5 @@ import { markdownToHtml } from "../../../shared/utils";
 export class CustomParagraphComponent {
     content = input.required<string>();
 
-    htmlContent = signal<string>("");
-
-    private _updateContent = effect(() => {
-        this.htmlContent.set(this.markdownToHtml(this.content()));
-    });
-
-    private markdownToHtml = markdownToHtml;
+    markdownToHtml = markdownToHtml;
 }

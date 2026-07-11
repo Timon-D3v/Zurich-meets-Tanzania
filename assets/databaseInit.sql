@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `zmt`.`board` (
     `userId` INT NOT NULL,
     `role` VARCHAR(256),
     `profession` VARCHAR(256) NOT NULL,
-    `motive` VARCHAR(512) NOT NULL,
+    `motive` TEXT NOT NULL,
     `secondaryPicture` VARCHAR(512),
     PRIMARY KEY (`id`),
     UNIQUE INDEX `board_id_UNIQUE` (`id` ASC) VISIBLE
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `zmt`.`teamMember` (
     `userId` INT NOT NULL,
     `role` VARCHAR(256),
     `profession` VARCHAR(256) NOT NULL,
-    `motive` VARCHAR(512) NOT NULL,
+    `motive` TEXT NOT NULL,
     `secondaryPicture` VARCHAR(512),
     PRIMARY KEY (`id`),
     UNIQUE INDEX `teamMember_id_UNIQUE` (`id` ASC) VISIBLE

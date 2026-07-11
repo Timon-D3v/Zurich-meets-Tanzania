@@ -17,3 +17,10 @@ div {
     box-sizing: border-box;
     pointer-events: none;
 }
+
+::ng-deep :root[data-theme="dark"] app-notifications-wrapper {
+    & div {
+        --success: #1a9e4e;
+        --warn: #ff7100;
+    }
+}

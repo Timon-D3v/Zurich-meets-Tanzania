@@ -1,0 +1,12 @@
+p {
+    font-size: 0.9rem;
+    color: var(--text-950);
+    text-align: right;
+    font-style: italic;
+    width: 90%;
+    margin: 10px 5%;
+
+    & a:hover {
+        color: var(--primary-500);
+    }
+}

@@ -1,0 +1,5 @@
+@defer (when board().length > 0; prefetch on immediate) {
+    <app-team [team]="board()"></app-team>
+} @placeholder (minimum 100ms) {
+    <app-loading></app-loading>
+}

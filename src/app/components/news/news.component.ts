@@ -27,7 +27,6 @@ export class NewsComponent {
     newsTitle = input<string | null>(null);
 
     news = signal<News>(PUBLIC_CONFIG.NEWS.LOADING(PUBLIC_CONFIG.FALLBACK_IMAGE_URL));
-    pdfUrl = signal<SafeResourceUrl>("about:blank");
 
     private newsService = inject(NewsService);
     private sanitizerService = inject(SanitizerService);
@@ -36,6 +35,8 @@ export class NewsComponent {
     private sanitizer = inject(DomSanitizer);
 
     private platformId = inject(PLATFORM_ID);
+
+    pdfUrl = signal<SafeResourceUrl>(this.sanitizer.bypassSecurityTrustResourceUrl("about:blank"));
 
     private _updateContent = effect(() => {
         const id = this.id();

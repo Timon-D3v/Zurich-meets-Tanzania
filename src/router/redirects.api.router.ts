@@ -5,7 +5,7 @@ import { CONFIG } from "../config";
 const router = Router();
 
 router.get("/heroImage", (_req: Request, res: Response): void => {
-    res.redirect(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.ENV === "dev" ? "dev" : "zmt"}/heroImage`);
+    res.redirect(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.DELIVAPI_USER}/heroImage`);
 });
 
 export default router;

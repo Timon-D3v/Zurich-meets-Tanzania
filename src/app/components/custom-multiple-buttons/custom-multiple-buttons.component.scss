@@ -1,0 +1,23 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: max(1vh, 1rem) max(3vw, 1rem);
+    margin: 3vh 5vw;
+}
+
+a {
+    &.primary {
+        @include primary-button;
+        padding: 0 3vw;
+        height: 50px;
+    }
+
+    &.secondary {
+        @include secondary-button;
+        padding: 0 3vw;
+        height: 50px;
+    }
+}
