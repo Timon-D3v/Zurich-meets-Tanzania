@@ -55,8 +55,10 @@ export function formatDateRangeString(startDate: Date, endDate: Date): string {
 
     const startTimeIsUnspecific = startHour === 0 && startMinute === 0;
     const endTimeIsUnspecific = endHour === 0 && endMinute === 0;
+    const startAndEndHourIsTheSame = startHour === endHour;
+    const startAndEndMinuteIsTheSame = startMinute === endMinute;
 
-    const timeIsUnspecific = startTimeIsUnspecific && endTimeIsUnspecific;
+    const timeIsUnspecific = (startTimeIsUnspecific && endTimeIsUnspecific) || (startAndEndHourIsTheSame && startAndEndMinuteIsTheSame);
 
     if (timeIsUnspecific) {
         if (startDayIsSameAsEndDay) {

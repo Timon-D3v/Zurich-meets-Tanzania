@@ -112,7 +112,11 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
                     label: "Weitere",
                     href: "",
                     clickable: true,
-                    onClick: () => this.setBlogLinks(count + 5),
+                    onClick: (event: Event) => {
+                        event.stopPropagation();
+
+                        this.setBlogLinks(count + 5)
+                    },
                 });
             }
         });
@@ -146,7 +150,11 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
                     label: "Weitere",
                     href: "",
                     clickable: true,
-                    onClick: () => this.setGalleryLinks(count + 5),
+                    onClick: (event: Event) => {
+                        event.stopPropagation();
+
+                        this.setGalleryLinks(count + 5)
+                    },
                 });
             }
         });
