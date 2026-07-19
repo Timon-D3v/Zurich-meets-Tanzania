@@ -1,0 +1,298 @@
+@use "../../../styles/index" as *;
+
+.popup {
+    @include popup-backdrop;
+}
+
+.wrapper {
+    max-width: 800px;
+    width: auto;
+    height: auto;
+    background-color: var(--background-50);
+    color: var(--text-950);
+    border-radius: 16px;
+    padding: 2.5rem 1.5rem;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 0 7.5px #c7cdd180;
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0;
+    margin-top: 0;
+}
+
+p {
+    font-size: medium;
+    margin: 1vh 5%;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+label {
+    @include admin-label;
+
+    & + input {
+        padding: 0.5em 1em;
+    }
+}
+
+.submit {
+    @include primary-button;
+    margin-top: 3vh;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.close {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+
+    & > img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        aspect-ratio: 1 / 1;
+        object-position: center;
+        filter: invert(var(--darkmode));
+    }
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    font-family: "Titillium Web", sans-serif;
+    border-collapse: collapse;
+    // margin: 5vh 5vw;
+    margin: 1vh 5%;
+    // width: calc(100% - 10vw);
+    width: 90%;
+}
+
+td,
+th {
+    border: 1px solid var(--text-950);
+    text-align: left;
+    padding: 8px;
+    color: var(--text-950);
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+img {
+    max-height: 20vh;
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+    filter: none !important;
+}
+
+::ng-deep :root[data-theme="dark"] app-custom-table tr:nth-child(even) {
+    background-color: #7c7c7c;
+}
+
+tfoot td {
+    border: none;
+    text-align: right;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+tr {
+    &:has(.addRow),
+    &:has(.addColumn),
+    &:has(.removeRow),
+    &:has(.removeColumn) {
+        background-color: transparent !important;
+    }
+}
+
+td,
+th {
+    position: relative;
+    min-width: 100px;
+
+    &:has(> .addRow),
+    &:has(> .addColumn),
+    &:has(> .removeRow),
+    &:has(> .removeColumn) {
+        min-width: 30px;
+        border: none;
+        background-color: transparent !important;
+    }
+
+    & > .addRow,
+    & > .addColumn,
+    & > .removeRow,
+    & > .removeColumn {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 0;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        max-height: 2rem;
+
+        & > img {
+            height: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            object-position: center;
+        }
+    }
+
+    &.half {
+        // 90px is the mim width that the edit and reset buttons need to be displayed properly,
+        // 16px is the padding of the td which is not included in the min-width of the content
+        min-width: calc(90px - 16px);
+    }
+
+    &.double {
+        min-width: 150px;
+    }
+
+    & a.picture {
+        display: flex;
+        gap: 1rem;
+        text-decoration: none;
+
+        & img {
+            width: 30px;
+            height: 30px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        & span {
+            color: var(--c-text-950);
+            text-decoration: underline;
+
+            &:hover {
+                color: var(--primary-500);
+            }
+        }
+    }
+
+    & .edit,
+    & .reset {
+        display: none;
+    }
+
+    &:hover {
+        & .edit,
+        & .reset {
+            display: block;
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            aspect-ratio: 1 / 1;
+            background-color: var(--background-950);
+            box-sizing: border-box;
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background-color 0.25s ease-in-out;
+
+            &:hover {
+                background-color: var(--background-800);
+            }
+
+            &:active {
+                background-color: var(--background-700);
+            }
+
+            & img {
+                filter: invert(var(--not-darkmode)) !important;
+                width: 20px;
+                height: 20px;
+                aspect-ratio: 1 / 1;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+
+        & .edit {
+            right: 50px;
+            // background-image: url(../../../../../public/svg/pen.svg);
+
+            &.no-delete-button {
+                right: 10px;
+            }
+        }
+
+        & .reset {
+            right: 10px;
+            // background-image: url(../../../../../public/svg/trash.svg);
+        }
+    }
+}
+
+.additional-options-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+
+    & label {
+        background-color: var(--green);
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+        color: var(--c-text-950);
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        letter-spacing: 0.1ch;
+        line-height: 1.5;
+        margin: 0;
+        width: auto;
+
+        & > input {
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 275px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: small;
+    }
+
+    .submit {
+        font-size: 15px;
+    }
+
+    .close {
+        display: none;
+    }
+}

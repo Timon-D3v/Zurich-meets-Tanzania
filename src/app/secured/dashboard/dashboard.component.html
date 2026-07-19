@@ -409,6 +409,24 @@
                             clickable: true,
                             onClick: generateEditFunction('addParagraph'),
                         },
+                        {
+                            href: '#Listen',
+                            label: 'Listen',
+                            clickable: true,
+                            onClick: generateEditFunction('addLists'),
+                        },
+                        {
+                            href: '#Buttons',
+                            label: 'Buttons',
+                            clickable: true,
+                            onClick: generateEditFunction('addButtons'),
+                        },
+                        {
+                            href: '#Quelle',
+                            label: 'Quelle',
+                            clickable: true,
+                            onClick: generateEditFunction('addSource'),
+                        },
                     ]"
                 ></app-admin-nav-element>
                 <app-admin-nav-element
@@ -432,6 +450,12 @@
                             clickable: true,
                             onClick: generateEditFunction('addImageWithText'),
                         },
+                        {
+                            href: '#Video',
+                            label: 'Video',
+                            clickable: true,
+                            onClick: generateEditFunction('addVideo'),
+                        },
                     ]"
                 ></app-admin-nav-element>
                 <app-admin-nav-element
@@ -448,6 +472,24 @@
                             label: 'Aktuelles Team',
                             clickable: true,
                             onClick: generateEditFunction('addCurrentTeam'),
+                        },
+                        {
+                            href: '#Vorstand',
+                            label: 'Vorstand',
+                            clickable: true,
+                            onClick: generateEditFunction('addBoard'),
+                        },
+                        {
+                            href: '#Tabelle',
+                            label: 'Tabelle',
+                            clickable: true,
+                            onClick: generateEditFunction('addTable'),
+                        },
+                        {
+                            href: '#PDF-Viewer',
+                            label: 'PDF-Viewer',
+                            clickable: true,
+                            onClick: generateEditFunction('addPdfViewer'),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -629,6 +671,8 @@
     <app-popup-file-input [accept]="fileInputAccept()" (resultOutput)="handleFileInputResult($event)" (closeOutput)="closePopup()"></app-popup-file-input>
 } @else if (multipleImagesInputOpen()) {
     <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-images-input>
+} @else if (tableInputOpen()) {
+    <app-popup-table-input (resultOutput)="handleTableInputResult($event)" (filesOutput)="handleTableImageOutput($event)" (closeOutput)="closePopup()"></app-popup-table-input>
 }
 
 @if (titleEditInputOpen()) {

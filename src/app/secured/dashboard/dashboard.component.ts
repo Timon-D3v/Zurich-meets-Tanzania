@@ -22,6 +22,7 @@ import {
     StaticSite,
     StaticSiteNames,
     GetDonationMetersApiEndpointResponse,
+    CustomTableElement,
 } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { TeamService } from "../../services/team.service";
@@ -73,6 +74,7 @@ import { CalendarService } from "../../services/calendar.service";
 import { formatDateRangeString } from "../../../shared/utils";
 import { AdminFileExplorerComponent } from "../components/admin-file-explorer/admin-file-explorer.component";
 import { DonationService } from "../../services/donation.service";
+import { PopupTableInputComponent } from "../../components/popup-table-input/popup-table-input.component";
 
 @Component({
     selector: "app-dashboard",
@@ -117,6 +119,7 @@ import { DonationService } from "../../services/donation.service";
         LoadingComponent,
         PopupFileInputComponent,
         AdminFileExplorerComponent,
+        PopupTableInputComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
@@ -175,6 +178,7 @@ export class DashboardComponent implements OnInit {
     imageInputOpen = signal(false);
     fileInputOpen = signal(false);
     multipleImagesInputOpen = signal(false);
+    tableInputOpen = signal(false);
     selectionInputOpen = signal(false);
     confirmInputOpen = signal(false);
     alertOpen = signal(false);
@@ -524,6 +528,26 @@ export class DashboardComponent implements OnInit {
      * ===============================================================
      */
 
+    getIndicesToRemoveUnusedImagesFromStorage(
+        content: object,
+        images: {
+            url: string;
+            file: File;
+        }[],
+    ): number[] {
+        const json = JSON.stringify(content);
+
+        const indicesToRemove: number[] = [];
+
+        for (let i = 0; i < images.length; i++) {
+            if (!json.includes(images[i].url)) {
+                indicesToRemove.push(i);
+            }
+        }
+
+        return indicesToRemove;
+    }
+
     async awaitConfirmation(title: string, message: string, accept: string = "Ok", reject: string = "Abbrechen", equalOptions: boolean = false): Promise<boolean> {
         this.confirmInputOpen.set(true);
 
@@ -755,6 +779,7 @@ export class DashboardComponent implements OnInit {
         this.imageInputOpen.set(false);
         this.fileInputOpen.set(false);
         this.multipleImagesInputOpen.set(false);
+        this.tableInputOpen.set(false);
 
         this.titleEditInputOpen.set(false);
         this.textEditInputOpen.set(false);
@@ -836,6 +861,14 @@ export class DashboardComponent implements OnInit {
     submitSiteEdits(): void {
         this.submitEditsButton.set("Speichern...");
 
+        // Remove unused images from storage
+        const indicesToRemove = this.getIndicesToRemoveUnusedImagesFromStorage(this.siteEdits[this.currentActiveSiteEdit()](), this.siteEditImages[this.currentActiveSiteEdit()]);
+
+        for (const index of indicesToRemove.reverse()) {
+            this.siteEditImages[this.currentActiveSiteEdit()].splice(index, 1);
+        }
+
+        // Submit the edits to the backend
         const request = this.subpagesService.updateStaticSite(this.currentActiveSiteEdit(), this.siteEdits[this.currentActiveSiteEdit()](), this.siteEditImages[this.currentActiveSiteEdit()]);
 
         request.subscribe((response: ApiEndpointResponse) => {
@@ -881,6 +914,14 @@ export class DashboardComponent implements OnInit {
     submitNewBlog(): void {
         this.submitEditsButton.set("Speichern...");
 
+        // Remove unused images from storage
+        const indicesToRemove = this.getIndicesToRemoveUnusedImagesFromStorage(this.blogs.newBlog(), this.blogImages.newBlog);
+
+        for (const index of indicesToRemove.reverse()) {
+            this.blogImages.newBlog.splice(index, 1);
+        }
+
+        // Submit the edits to the backend
         const request = this.blogService.createBlog(this.blogs.newBlog().metadata.title, this.blogs.newBlog(), this.blogImages.newBlog);
 
         request.subscribe((response: ApiEndpointResponse) => {
@@ -939,6 +980,14 @@ export class DashboardComponent implements OnInit {
     submitBlogEdits(): void {
         this.submitEditsButton.set("Speichern...");
 
+        // Remove unused images from storage
+        const indicesToRemove = this.getIndicesToRemoveUnusedImagesFromStorage(this.blogs.newBlog(), this.blogImages.newBlog);
+
+        for (const index of indicesToRemove.reverse()) {
+            this.blogImages.newBlog.splice(index, 1);
+        }
+
+        // Submit the edits to the backend
         const request = this.blogService.updateBlog(this.currentActiveBlogEdit(), this.blogs.existingBlogs[this.currentActiveBlogEdit()](), this.blogImages.existingBlogs[this.currentActiveBlogEdit()]);
 
         request.subscribe((response: ApiEndpointResponse) => {
@@ -999,6 +1048,13 @@ export class DashboardComponent implements OnInit {
     async submitNewNews(): Promise<void> {
         this.submitEditsButton.set("Speichern...");
 
+        // Remove unused images from storage
+        const indicesToRemove = this.getIndicesToRemoveUnusedImagesFromStorage(this.news.newNews().data, this.newsImages.newNews);
+
+        for (const index of indicesToRemove.reverse()) {
+            this.newsImages.newNews.splice(index, 1);
+        }
+
         const shouldSendNewsletter = await this.awaitConfirmation("Newsletter versenden?", "Möchtest du einen Newsletter an alle Abonnenten versenden, um sie über die neue News zu informieren?", "Ja", "Nein");
 
         const request = this.newsService.createNews(this.news.newNews().data, this.newsImages.newNews, shouldSendNewsletter);
@@ -1026,6 +1082,13 @@ export class DashboardComponent implements OnInit {
 
     async submitNewsEdits(): Promise<void> {
         this.submitEditsButton.set("Speichern...");
+
+        // Remove unused images from storage
+        const indicesToRemove = this.getIndicesToRemoveUnusedImagesFromStorage(this.news.existingNews[this.currentActiveNewsEdit()]().data, this.newsImages.existingNews[this.currentActiveNewsEdit()]);
+
+        for (const index of indicesToRemove.reverse()) {
+            this.newsImages.existingNews[this.currentActiveNewsEdit()].splice(index, 1);
+        }
 
         const currentNews = this.news.existingNews[this.currentActiveNewsEdit()]();
         const currentNewsImages = this.newsImages.existingNews[this.currentActiveNewsEdit()];
@@ -1095,13 +1158,16 @@ export class DashboardComponent implements OnInit {
                 _this.imageEditInputPlaceholderUrl.set(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
             } else if (type === "addMultipleImages") {
                 _this.multipleImagesInputOpen.set(true);
+            } else if (type === "addTable") {
+                _this.tableInputOpen.set(true);
             } else if (type === "addLine") {
                 const element = _this.editService.addLine();
 
                 _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-                    siteOrBlog.data.unshift(element);
-
-                    return siteOrBlog;
+                    return {
+                        ...siteOrBlog,
+                        data: [element, ...siteOrBlog.data],
+                    };
                 });
             } else if (type === "addCurrentTeam") {
                 const request = _this.teamService.getCurrentTeam();
@@ -1116,10 +1182,20 @@ export class DashboardComponent implements OnInit {
                     const element = _this.editService.addCurrentTeam(response.data.id);
 
                     _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-                        siteOrBlog.data.unshift(element);
-
-                        return siteOrBlog;
+                        return {
+                            ...siteOrBlog,
+                            data: [element, ...siteOrBlog.data],
+                        };
                     });
+                });
+            } else if (type === "addBoard") {
+                const element = _this.editService.addBoard();
+
+                _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                    return {
+                        ...siteOrBlog,
+                        data: [element, ...siteOrBlog.data],
+                    };
                 });
             } else if (type === "editGeneralTitle") {
                 _this.titleEditInputOpen.set(true);
@@ -1168,6 +1244,14 @@ export class DashboardComponent implements OnInit {
                 _this.fileInputOpen.set(true);
 
                 _this.fileInputAccept.set("application/pdf, .pdf");
+            } else if (type === "addVideo") {
+                _this.fileInputOpen.set(true);
+
+                _this.fileInputAccept.set(["video/mp4", "video/quicktime", "video/webm", "video/x-msvideo", "video/mpeg", "video/x-matroska"].join(", "));
+            } else if (type === "addPdfViewer") {
+                _this.fileInputOpen.set(true);
+
+                _this.fileInputAccept.set("application/pdf, .pdf");
             } else if (type === "addNewsMultipleImages") {
                 _this.multipleImagesInputOpen.set(true);
 
@@ -1178,9 +1262,13 @@ export class DashboardComponent implements OnInit {
                 const element = _this.editService.addLine();
 
                 _this.getCurrentNewsEditSignal().update((news: News): News => {
-                    news.data.content.push(element);
-
-                    return news;
+                    return {
+                        ...news,
+                        data: {
+                            ...news.data,
+                            content: [...news.data.content, element],
+                        },
+                    };
                 });
             } else {
                 _this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht verarbeitet werden.");
@@ -1297,7 +1385,10 @@ export class DashboardComponent implements OnInit {
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data.splice(index, 1);
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
     }
 
@@ -1374,7 +1465,13 @@ export class DashboardComponent implements OnInit {
         this.getCurrentNewsEditSignal().update((news: News): News => {
             news.data.content.splice(index, 1);
 
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content],
+                },
+            };
         });
     }
 
@@ -1523,6 +1620,15 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    handleTableImageOutput(file: { file: File | null; url: string }): void {
+        if (!file.file || file.file === null) {
+            console.error("No file selected for table image output.");
+            return;
+        }
+
+        this.getCurrentImageStorage().push(file as { file: File; url: string });
+    }
+
     handleFileInputResult(file: File | null): void {
         this.fileInputOpen.set(false);
 
@@ -1535,6 +1641,12 @@ export class DashboardComponent implements OnInit {
         switch (this.currentActionToPerform()) {
             case "addNewsPdf":
                 this.addNewsPdf(file);
+                break;
+            case "addPdfViewer":
+                this.addPdfViewer(file);
+                break;
+            case "addVideo":
+                this.addVideo(file);
                 break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
@@ -1565,6 +1677,19 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    handleTableInputResult(tableData: CustomTableElement): void {
+        this.tableInputOpen.set(false);
+
+        switch (this.currentActionToPerform()) {
+            case "addTable":
+                this.addTable(tableData);
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
     handleConfirmInputResult(confirmed: boolean): void {
         this.confirmInputOpen.set(false);
 
@@ -1586,9 +1711,10 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addTitle(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.data.unshift(element);
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
         });
     }
 
@@ -1601,9 +1727,13 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addTitle(content);
 
         this.getCurrentNewsEditSignal().update((news: News): News => {
-            news.data.content.push(element);
-
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content, element],
+                },
+            };
         });
     }
 
@@ -1616,9 +1746,10 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addSubtitle(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.data.unshift(element);
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
         });
     }
 
@@ -1631,9 +1762,13 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addSubtitle(content);
 
         this.getCurrentNewsEditSignal().update((news: News): News => {
-            news.data.content.push(element);
-
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content, element],
+                },
+            };
         });
     }
 
@@ -1646,9 +1781,10 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addParagraph(content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.data.unshift(element);
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
         });
     }
 
@@ -1661,9 +1797,13 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addParagraph(content);
 
         this.getCurrentNewsEditSignal().update((news: News): News => {
-            news.data.content.push(element);
-
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content, element],
+                },
+            };
         });
     }
 
@@ -1673,9 +1813,10 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addImage(file.url, file.file.name);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.data.unshift(element);
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
         });
     }
 
@@ -1693,14 +1834,16 @@ export class DashboardComponent implements OnInit {
         )) as "Links" | "In der Mitte" | "Rechts";
 
         this.getCurrentNewsEditSignal().update((news: News): News => {
-            news.data.content = news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages");
-
-            news.data.type = "image";
-            news.data.imagePosition = sideOfImage.replace("In der Mitte", "center").replace("Links", "left").replace("Rechts", "right") as "left" | "center" | "right";
-            news.data.imageUrl = element.imageUrl;
-            news.data.imageAlt = element.imageAlt;
-
-            return news;
+            return {
+                ...news,
+                data: {
+                    type: "image",
+                    imageUrl: element.imageUrl,
+                    imageAlt: element.imageAlt,
+                    imagePosition: sideOfImage.replace("In der Mitte", "center").replace("Links", "left").replace("Rechts", "right") as "left" | "center" | "right",
+                    content: news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages"),
+                },
+            };
         });
     }
 
@@ -1727,9 +1870,10 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedRight ? "right" : "left");
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.data.unshift(element);
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
         });
     }
 
@@ -1753,9 +1897,10 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addMultipleImages(images);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.data.unshift(element);
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
         });
     }
 
@@ -1779,13 +1924,13 @@ export class DashboardComponent implements OnInit {
         const element = this.editService.addMultipleImages(images);
 
         this.getCurrentNewsEditSignal().update((news: News): News => {
-            news.data.type = "multipleImages";
-
-            news.data.content = news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages");
-
-            news.data.content.push(element);
-
-            return news;
+            return {
+                ...news,
+                data: {
+                    type: "multipleImages",
+                    content: [...news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages"), element],
+                },
+            };
         });
     }
 
@@ -1800,12 +1945,72 @@ export class DashboardComponent implements OnInit {
         this.getCurrentImageStorage().push({ file, url: fileUrl });
 
         this.getCurrentNewsEditSignal().update((news: News): News => {
-            news.data.content = news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages");
+            return {
+                ...news,
+                data: {
+                    type: "pdf",
+                    pdfUrl: fileUrl,
+                    content: news.data.content.filter((contentElement): boolean => contentElement.type !== "multipleImages"),
+                },
+            };
+        });
+    }
 
-            news.data.type = "pdf";
-            news.data.pdfUrl = fileUrl;
+    addPdfViewer(file: File): void {
+        if (file.type !== "application/pdf") {
+            this.notificationService.info("Ungültige Datei", "Bitte wähle eine PDF-Datei aus, um diese Funktion zu nutzen.");
+            return;
+        }
 
-            return news;
+        const fileUrl = URL.createObjectURL(file);
+
+        this.getCurrentImageStorage().push({ file, url: fileUrl });
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            const element = this.editService.addPdfViewer(fileUrl);
+
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
+        });
+    }
+
+    addVideo(file: File): void {
+        if (!["video/mp4", "video/quicktime", "video/webm", "video/x-msvideo", "video/mpeg", "video/x-matroska"].includes(file.type)) {
+            this.notificationService.info("Ungültige Datei", "Bitte wähle eine Videodatei aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const fileUrl = URL.createObjectURL(file);
+
+        this.getCurrentImageStorage().push({ file, url: fileUrl });
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            const element = this.editService.addVideo(fileUrl, file.type);
+
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
+        });
+    }
+
+    addTable(table: CustomTableElement): void {
+        const { headers, rows, source } = table;
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            const element: CustomTableElement = {
+                type: "table",
+                headers,
+                rows,
+                source: source?.content === "" || source?.url === "" ? undefined : source,
+            };
+
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
         });
     }
 
@@ -1822,9 +2027,13 @@ export class DashboardComponent implements OnInit {
         }
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.metadata.title = content;
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                metadata: {
+                    ...siteOrBlog.metadata,
+                    title: content,
+                },
+            };
         });
     }
 
@@ -1832,9 +2041,13 @@ export class DashboardComponent implements OnInit {
         // Allow empty subtitle
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.metadata.subtitle = content ? content : "";
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                metadata: {
+                    ...siteOrBlog.metadata,
+                    subtitle: content ? content : "",
+                },
+            };
         });
     }
 
@@ -1842,10 +2055,14 @@ export class DashboardComponent implements OnInit {
         this.getCurrentImageStorage().push(file);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.metadata.imageUrl = file.url;
-            siteOrBlog.metadata.imageAlt = file.file.name;
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                metadata: {
+                    ...siteOrBlog.metadata,
+                    imageUrl: file.url,
+                    imageAlt: file.file.name,
+                },
+            };
         });
     }
 
@@ -1856,9 +2073,13 @@ export class DashboardComponent implements OnInit {
         }
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            siteOrBlog.metadata.author = content;
-
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                metadata: {
+                    ...siteOrBlog.metadata,
+                    author: content,
+                },
+            };
         });
     }
 
@@ -1873,7 +2094,10 @@ export class DashboardComponent implements OnInit {
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
     }
 
@@ -1888,7 +2112,13 @@ export class DashboardComponent implements OnInit {
         this.getCurrentNewsEditSignal().update((news: News): News => {
             news.data.content[this.currentIndexToEdit()] = element;
 
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content],
+                },
+            };
         });
     }
 
@@ -1903,7 +2133,10 @@ export class DashboardComponent implements OnInit {
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
     }
 
@@ -1918,7 +2151,13 @@ export class DashboardComponent implements OnInit {
         this.getCurrentNewsEditSignal().update((news: News): News => {
             news.data.content[this.currentIndexToEdit()] = element;
 
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content],
+                },
+            };
         });
     }
 
@@ -1933,7 +2172,10 @@ export class DashboardComponent implements OnInit {
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
     }
 
@@ -1948,7 +2190,13 @@ export class DashboardComponent implements OnInit {
         this.getCurrentNewsEditSignal().update((news: News): News => {
             news.data.content[this.currentIndexToEdit()] = element;
 
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content],
+                },
+            };
         });
     }
 
@@ -1966,7 +2214,10 @@ export class DashboardComponent implements OnInit {
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
     }
 
@@ -1979,7 +2230,10 @@ export class DashboardComponent implements OnInit {
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).content = content;
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
 
         this.currentActionToPerform.set("editImageWithText");
@@ -1994,7 +2248,10 @@ export class DashboardComponent implements OnInit {
             this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
                 (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedRight ? "right" : "left";
 
-                return siteOrBlog;
+                return {
+                    ...siteOrBlog,
+                    data: [...siteOrBlog.data],
+                };
             });
 
             this.notificationService.info("Teilweise Veränderung", "Nur der Text wurde aktualisiert. Das Bild nicht, da kein Neues ausgewählt wurde.");
@@ -2011,7 +2268,10 @@ export class DashboardComponent implements OnInit {
             (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageAlt = file.file.name;
             (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedRight ? "right" : "left";
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
     }
 
@@ -2039,7 +2299,10 @@ export class DashboardComponent implements OnInit {
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
-            return siteOrBlog;
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
         });
     }
 
@@ -2067,7 +2330,13 @@ export class DashboardComponent implements OnInit {
         this.getCurrentNewsEditSignal().update((news: News): News => {
             news.data.content[this.currentIndexToEdit()] = element;
 
-            return news;
+            return {
+                ...news,
+                data: {
+                    ...news.data,
+                    content: [...news.data.content],
+                },
+            };
         });
     }
 

@@ -1,6 +1,22 @@
 import { inject, Injectable } from "@angular/core";
 import { NotificationService } from "./notification.service";
-import { CustomCurrentTeamElement, CustomImageElement, CustomImageWithTextElement, CustomLineElement, CustomMultipleImagesElement, CustomParagraphElement, CustomSubtitleElement, CustomTitleElement } from "../..";
+import {
+    CustomTitleElement,
+    CustomSubtitleElement,
+    CustomParagraphElement,
+    CustomImageElement,
+    CustomMultipleImagesElement,
+    CustomImageWithTextElement,
+    CustomLineElement,
+    CustomCurrentTeamElement,
+    CustomBoardElement,
+    CustomMultipleButtonsElement,
+    CustomPdfViewerElement,
+    CustomSourceElement,
+    CustomTableElement,
+    CustomMultipleListsElement,
+    CustomVideoElement,
+} from "../..";
 
 @Injectable({
     providedIn: "root",
@@ -82,6 +98,75 @@ export class EditService {
         return {
             type: "currentTeam",
             teamId: teamId,
+        };
+    }
+
+    addBoard(): CustomBoardElement {
+        return {
+            type: "board",
+        };
+    }
+
+    addPdfViewer(pdfUrl: string): CustomPdfViewerElement {
+        return {
+            type: "pdfViewer",
+            pdfUrl,
+        };
+    }
+
+    addSource(content: string, sourceUrl: string): CustomSourceElement {
+        return {
+            type: "source",
+            content: this.sanitizeString(content),
+            sourceUrl: this.sanitizeString(sourceUrl),
+        };
+    }
+
+    addVideo(videoUrl: string, videoType: string): CustomVideoElement {
+        return {
+            type: "video",
+            videoType,
+            videoUrl: videoUrl,
+        };
+    }
+
+    addTable(headers: Array<CustomSubtitleElement | CustomImageElement>, rows: Array<Array<CustomParagraphElement | CustomImageElement>>, sourceContent?: string, sourceUrl?: string): CustomTableElement {
+        return {
+            type: "table",
+            headers,
+            rows,
+            source:
+                sourceContent && sourceUrl
+                    ? {
+                          content: this.sanitizeString(sourceContent),
+                          url: this.sanitizeString(sourceUrl),
+                      }
+                    : undefined,
+        };
+    }
+
+    addMultipleLists(
+        lists: {
+            title: string;
+            items: string[];
+        }[],
+    ): CustomMultipleListsElement {
+        return {
+            type: "multipleLists",
+            lists,
+        };
+    }
+
+    addMultipleButtons(
+        buttons: {
+            content: string;
+            url: string;
+            secondary: boolean;
+        }[],
+    ): CustomMultipleButtonsElement {
+        return {
+            type: "multipleButtons",
+            buttons,
         };
     }
 }

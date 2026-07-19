@@ -1,27 +1,27 @@
 import { Component, effect, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { isPlatformBrowser } from "@angular/common";
+import { PUBLIC_CONFIG } from "../../publicConfig";
 import { Blog, GetBlogApiEndpointResponse } from "../..";
 import { BlogService } from "../services/blog.service";
 import { NotificationService } from "../services/notification.service";
 import { HeroComponent } from "../components/hero/hero.component";
-import { PUBLIC_CONFIG } from "../../publicConfig";
+import { BoardComponent } from "../components/board/board.component";
 import { LoadingComponent } from "../components/loading/loading.component";
-import { TeamFromIdComponent } from "../components/team-from-id/team-from-id.component";
 import { CustomLineComponent } from "../components/custom-line/custom-line.component";
-import { CustomImageWithTextComponent } from "../components/custom-image-with-text/custom-image-with-text.component";
-import { CustomImageCarouselComponent } from "../components/custom-image-carousel/custom-image-carousel.component";
+import { TeamFromIdComponent } from "../components/team-from-id/team-from-id.component";
 import { CustomImageComponent } from "../components/custom-image/custom-image.component";
-import { CustomParagraphComponent } from "../components/custom-paragraph/custom-paragraph.component";
-import { CustomSubtitleComponent } from "../components/custom-subtitle/custom-subtitle.component";
 import { CustomTitleComponent } from "../components/custom-title/custom-title.component";
-import { CustomSourceComponent } from "../components/custom-source/custom-source.component";
 import { CustomTableComponent } from "../components/custom-table/custom-table.component";
 import { CustomVideoComponent } from "../components/custom-video/custom-video.component";
-import { CustomMultipleButtonsComponent } from "../components/custom-multiple-buttons/custom-multiple-buttons.component";
+import { CustomSourceComponent } from "../components/custom-source/custom-source.component";
+import { CustomSubtitleComponent } from "../components/custom-subtitle/custom-subtitle.component";
+import { CustomParagraphComponent } from "../components/custom-paragraph/custom-paragraph.component";
 import { CustomPdfViewerComponent } from "../components/custom-pdf-viewer/custom-pdf-viewer.component";
+import { CustomImageCarouselComponent } from "../components/custom-image-carousel/custom-image-carousel.component";
 import { CustomMultipleListsComponent } from "../components/custom-multiple-lists/custom-multiple-lists.component";
-import { BoardComponent } from "../components/board/board.component";
+import { CustomImageWithTextComponent } from "../components/custom-image-with-text/custom-image-with-text.component";
+import { CustomMultipleButtonsComponent } from "../components/custom-multiple-buttons/custom-multiple-buttons.component";
 
 @Component({
     selector: "app-blog",

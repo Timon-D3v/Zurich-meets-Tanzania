@@ -76,7 +76,26 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
 
         const { data, metadata } = site as StaticSite;
 
-        const allowedMimeTypes = ["application/octet-stream", "image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico"];
+        const allowedMimeTypes = [
+            "application/octet-stream",
+            "image/png",
+            "image/jpg",
+            "image/gif",
+            "image/jpeg",
+            "image/tiff",
+            "image/raw",
+            "image/bpm",
+            "image/webp",
+            "image/ico",
+            "application/pdf",
+            "image/svg+xml",
+            "video/mp4",
+            "video/quicktime",
+            "video/webm",
+            "video/x-msvideo",
+            "video/mpeg",
+            "video/x-matroska",
+        ];
 
         for (const file of files) {
             if (!allowedMimeTypes.includes(file.mimetype)) {
@@ -94,7 +113,6 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
         // - site data is valid
         // - all files have valid mime types
 
-        const IMAGE_FALLBACK_URL = "/backup/fallback.png";
 
         // Upload images
 
@@ -120,7 +138,7 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
 
                 failedUploads++;
 
-                metadata.imageUrl = IMAGE_FALLBACK_URL;
+                metadata.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
             }
         }
 
@@ -145,7 +163,7 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
 
                         failedUploads++;
 
-                        element.imageUrl = IMAGE_FALLBACK_URL;
+                        element.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
                     }
                 }
             } else if (element.type === "multipleImages") {
@@ -169,7 +187,105 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
 
                             failedUploads++;
 
-                            image.imageUrl = IMAGE_FALLBACK_URL;
+                            image.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
+                        }
+                    }
+                }
+            } else if (element.type === "video") {
+                if (imageNames.includes(element.videoUrl)) {
+                    try {
+                        const fileIndex = imageNames.indexOf(element.videoUrl);
+
+                        const file = files[fileIndex];
+
+                        const response = await delivApiUpload(file.buffer);
+
+                        if (response.error) {
+                            // Don't abort, just set fallback image
+                            throw new Error(response.message);
+                        }
+
+                        element.videoUrl = response.url;
+                    } catch (error) {
+                        console.error("Error uploading video:", (error as Error).message);
+
+                        failedUploads++;
+
+                        element.videoUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL; // Videos don't have a fallback, so we use the fallback image instead
+                    }
+                }
+            } else if (element.type === "pdfViewer") {
+                if (imageNames.includes(element.pdfUrl)) {
+                    try {
+                        const fileIndex = imageNames.indexOf(element.pdfUrl);
+
+                        const file = files[fileIndex];
+
+                        const response = await delivApiUpload(file.buffer);
+
+                        if (response.error) {
+                            // Don't abort, just set fallback image
+                            throw new Error(response.message);
+                        }
+
+                        element.pdfUrl = response.url;
+                    } catch (error) {
+                        console.error("Error uploading pdf:", (error as Error).message);
+
+                        failedUploads++;
+
+                        element.pdfUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL; // PDFs don't have a fallback, so we use the fallback image instead
+                    }
+                }
+            } else if (element.type === "table") {
+                for (const header of element.headers) {
+                    if (header.type === "image" && imageNames.includes(header.imageUrl)) {
+                        try {
+                            const fileIndex = imageNames.indexOf(header.imageUrl);
+
+                            const file = files[fileIndex];
+
+                            const response = await delivApiUpload(file.buffer);
+
+                            if (response.error) {
+                                // Don't abort, just set fallback image
+                                throw new Error(response.message);
+                            }
+
+                            header.imageUrl = response.url;
+                        } catch (error) {
+                            console.error("Error uploading image:", (error as Error).message);
+
+                            failedUploads++;
+
+                            header.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
+                        }
+                    }
+                }
+
+                for (const row of element.rows) {
+                    for (const cell of row) {
+                        if (cell.type === "image" && imageNames.includes(cell.imageUrl)) {
+                            try {
+                                const fileIndex = imageNames.indexOf(cell.imageUrl);
+
+                                const file = files[fileIndex];
+
+                                const response = await delivApiUpload(file.buffer);
+
+                                if (response.error) {
+                                    // Don't abort, just set fallback image
+                                    throw new Error(response.message);
+                                }
+
+                                cell.imageUrl = response.url;
+                            } catch (error) {
+                                console.error("Error uploading image:", (error as Error).message);
+
+                                failedUploads++;
+
+                                cell.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
+                            }
                         }
                     }
                 }

@@ -94,7 +94,26 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
             throw new Error("News PDF metadata is not valid.");
         }
 
-        const allowedMimeTypes = ["application/octet-stream", "image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico", "application/pdf"];
+        const allowedMimeTypes = [
+            "application/octet-stream",
+            "image/png",
+            "image/jpg",
+            "image/gif",
+            "image/jpeg",
+            "image/tiff",
+            "image/raw",
+            "image/bpm",
+            "image/webp",
+            "image/ico",
+            "application/pdf",
+            "image/svg+xml",
+            "video/mp4",
+            "video/quicktime",
+            "video/webm",
+            "video/x-msvideo",
+            "video/mpeg",
+            "video/x-matroska",
+        ];
 
         for (const file of files) {
             if (!allowedMimeTypes.includes(file.mimetype)) {
@@ -111,8 +130,6 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
         // - news metadata is valid
         // - news data is valid
         // - all files have valid mime types
-
-        const IMAGE_FALLBACK_URL = "/backup/fallback.png";
 
         // Upload images
 
@@ -137,7 +154,7 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
 
                 failedUploads++;
 
-                news.imageUrl = IMAGE_FALLBACK_URL;
+                news.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
             }
         }
 
@@ -161,7 +178,7 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
                 failedUploads++;
 
                 // This is a image url, but we can still use it since we show the pdf in an iframe and the iframe can also display images
-                news.pdfUrl = IMAGE_FALLBACK_URL;
+                news.pdfUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
             }
         }
 
@@ -187,7 +204,7 @@ router.post("/createNews", multerInstance.array("images"), async (req: Request, 
 
                             failedUploads++;
 
-                            image.imageUrl = IMAGE_FALLBACK_URL;
+                            image.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
                         }
                     }
                 }
@@ -296,7 +313,26 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
             throw new Error("News PDF metadata is not valid.");
         }
 
-        const allowedMimeTypes = ["application/octet-stream", "image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico", "application/pdf"];
+        const allowedMimeTypes = [
+            "application/octet-stream",
+            "image/png",
+            "image/jpg",
+            "image/gif",
+            "image/jpeg",
+            "image/tiff",
+            "image/raw",
+            "image/bpm",
+            "image/webp",
+            "image/ico",
+            "application/pdf",
+            "image/svg+xml",
+            "video/mp4",
+            "video/quicktime",
+            "video/webm",
+            "video/x-msvideo",
+            "video/mpeg",
+            "video/x-matroska",
+        ];
 
         for (const file of files) {
             if (!allowedMimeTypes.includes(file.mimetype)) {

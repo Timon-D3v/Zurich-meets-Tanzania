@@ -1,0 +1,151 @@
+<div class="popup" (click)="close()">
+    <form class="wrapper" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        @for (header of table().headers; track $index) {
+                            <th>
+                                @if (header.type === "subtitle") {
+                                    <span [innerHTML]="markdownToHtml(header.content)"></span>
+                                } @else if (header.type === "image") {
+                                    <img [src]="header.imageUrl" [alt]="header.imageAlt" loading="eager" />
+                                }
+                                <button type="button" class="edit" title="Bearbeiten" (click)="editHeader($index)">
+                                    <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                                </button>
+                                <button type="button" class="reset" title="Zurücksetzen" (click)="resetHeader($index)">
+                                    <img src="/svg/refresh.svg" alt="Feld zurücksetzen" />
+                                </button>
+                            </th>
+                        }
+                        <th>
+                            <button type="button" class="addColumn" title="Spalte hinzufügen" (click)="addColumn()">
+                                <img src="/svg/plus.svg" alt="Spalte hinzufügen" />
+                            </button>
+                            <br />
+                            <button type="button" class="removeColumn" title="Spalte entfernen" (click)="removeColumn()">
+                                <img src="/svg/minus.svg" alt="Spalte entfernen" />
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of table().rows; track $index; let rowIndex = $index) {
+                        <tr>
+                            @for (cell of row; track $index) {
+                                <td>
+                                    @if (cell.type === "paragraph") {
+                                        <span [innerHTML]="markdownToHtml(cell.content)"></span>
+                                    } @else if (cell.type === "image") {
+                                        <img [src]="cell.imageUrl" [alt]="cell.imageAlt" loading="lazy" />
+                                    }
+                                    <button type="button" class="edit" title="Bearbeiten" (click)="edit(rowIndex, $index)">
+                                        <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                                    </button>
+                                    <button type="button" class="reset" title="Zurücksetzen" (click)="reset(rowIndex, $index)">
+                                        <img src="/svg/refresh.svg" alt="Feld zurücksetzen" />
+                                    </button>
+                                </td>
+                            }
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            <button type="button" class="addRow" title="Zeile hinzufügen" (click)="addRow()">
+                                <img src="/svg/plus.svg" alt="Zeile hinzufügen" />
+                            </button>
+                            <button type="button" class="removeColumn" title="Spalte entfernen" (click)="removeColumn()">
+                                <img src="/svg/minus.svg" alt="Spalte entfernen" />
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        @for (header of table().headers; track $index) {
+                            <td>
+                                @if ($last && table().source && typeof table().source?.content === "string" && table().source?.content?.trim() !== "" && typeof table().source?.url === "string" && table().source?.url?.trim() !== "") {
+                                    <span>
+                                        <span>Quelle: </span>
+                                        <a [href]="table().source?.url" target="_blank">{{ table().source?.content }}</a>
+                                    </span>
+                                }
+                            </td>
+                        }
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="additional-options-wrapper">
+            <label>
+                Aus Datei erstellen
+                <input type="file" accept=".xlsx,.xls" (change)="readFile($event)" />
+            </label>
+        </div>
+
+        <label for="sourceName">{{ sourceNameLabel() }}</label>
+        <input type="text" id="sourceName" [placeholder]="initialSourceName()" (input)="streamSourceName($event)" />
+
+        <label for="sourceUrl">{{ sourceUrlLabel() }}</label>
+        <input type="text" id="sourceUrl" [placeholder]="initialSourceUrl()" (input)="streamSourceUrl($event)" />
+
+        <button type="submit" class="submit">{{ submitButtonText() }}</button>
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>
+
+@if (inputs.titleOpen()) {
+    <app-popup-title-input
+        (resultOutput)="results.editText($event)"
+        (closeOutput)="closePopup()"
+        [title]="'Titel bearbeiten'"
+        [description]="'Bitte gib einen neuen Titel ein, der die Zelle ersetzen soll.'"
+        [submitButtonText]="'Aktualisieren'"
+        [value]="placeholders.title()"
+    ></app-popup-title-input>
+} @else if (inputs.textOpen()) {
+    <app-popup-text-input
+        (resultOutput)="results.editText($event)"
+        (closeOutput)="closePopup()"
+        [title]="'Text bearbeiten'"
+        [description]="'Bitte gib einen neuen Text ein, der die Zelle ersetzen soll.'"
+        [submitButtonText]="'Aktualisieren'"
+        [value]="placeholders.text()"
+    ></app-popup-text-input>
+} @else if (inputs.imageOpen()) {
+    <app-popup-image-input
+        (resultOutput)="results.editImage($event)"
+        (closeOutput)="closePopup()"
+        [description]="'Bitte wähle ein neues Bild aus, das die Zelle ersetzen soll.'"
+        [submitButtonText]="'Ersetzen'"
+        [placeholderUrl]="placeholders.imageUrl()"
+    ></app-popup-image-input>
+}
+
+@if (inputs.selectionOpen()) {
+    <app-popup-selection-input
+        (resultOutput)="results.selection($event)"
+        (closeOutput)="closePopup()"
+        [title]="'Zellentyp bestimmen'"
+        [description]="'Sollte diese Zelle ein Textfeld oder ein Bild sein?'"
+        [label]="'Zellentyp:'"
+        [selectionOptions]="['Text', 'Bild']"
+    ></app-popup-selection-input>
+}
+
+@if (inputs.confirmOpen()) {
+    <app-popup-confirm
+        [title]="'Popup schliessen'"
+        [description]="'Möchtest du das Popup wirklich schliessen? Alle ungespeicherten Änderungen gehen verloren.'"
+        [confirmButtonText]="'Schliessen'"
+        [cancelButtonText]="'Abbrechen'"
+        (resultOutput)="results.confirm($event)"
+    ></app-popup-confirm>
+}

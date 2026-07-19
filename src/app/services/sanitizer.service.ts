@@ -17,8 +17,14 @@ export class SanitizerService {
 
         try {
             // Check if the URL has a trusted origin
-            if (!url.startsWith(ORIGIN) && !url.startsWith(CDN_URL_WITH_USER) && !url.startsWith(`blob:${ORIGIN}`)) {
-                throw new Error(`URL is not from a trusted origin. URL: ${url}, Trusted Origins: ${ORIGIN}, ${CDN_URL_WITH_USER}`);
+            if (
+                !url.startsWith(ORIGIN) &&
+                !url.startsWith(ORIGIN.replace(/http(s*):\/\/www\./, "http$1://")) &&
+                !url.startsWith(CDN_URL_WITH_USER) &&
+                !url.startsWith(`blob:${ORIGIN}`) &&
+                !url.startsWith(`blob:${ORIGIN.replace(/http(s*):\/\/www\./, "http$1://")}`)
+            ) {
+                throw new Error(`URL is not from a trusted origin. URL: ${url}, Trusted Origins: ${ORIGIN}, ${CDN_URL_WITH_USER}, blob:${ORIGIN}`);
             }
 
             return true;

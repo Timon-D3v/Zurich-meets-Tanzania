@@ -55,6 +55,7 @@
         object-fit: cover;
         transition: all 0.75s;
         filter: none !important;
+        cursor: pointer;
 
         &.active {
             border: 5px solid #41403f;

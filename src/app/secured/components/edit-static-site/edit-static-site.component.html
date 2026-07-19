@@ -18,6 +18,20 @@
                 <app-custom-line></app-custom-line>
             } @else if (element.type === "currentTeam") {
                 <app-team-from-id [id]="element.teamId"></app-team-from-id>
+            } @else if (element.type === "source") {
+                <app-custom-source [content]="element.content" [source]="element.sourceUrl"></app-custom-source>
+            } @else if (element.type === "table") {
+                <app-custom-table [headers]="element.headers" [rows]="element.rows" [source]="element.source"></app-custom-table>
+            } @else if (element.type === "video") {
+                <app-custom-video [videoUrl]="element.videoUrl" [videoType]="element.videoType"></app-custom-video>
+            } @else if (element.type === "board") {
+                <app-board></app-board>
+            } @else if (element.type === "multipleButtons") {
+                <app-custom-multiple-buttons [buttons]="element.buttons"></app-custom-multiple-buttons>
+            } @else if (element.type === "pdfViewer") {
+                <app-custom-pdf-viewer [pdfUrl]="element.pdfUrl"></app-custom-pdf-viewer>
+            } @else if (element.type === "multipleLists") {
+                <app-custom-multiple-lists [lists]="element.lists"></app-custom-multiple-lists>
             }
             <!--
                 Use the drag-placeholder to get a gray box that moves around when dragging.
@@ -28,7 +42,7 @@
             <!-- <div class="drag-placeholder" *cdkDragPlaceholder></div> -->
             <div class="drag-active-element" *cdkDragPreview></div>
 
-            @if (element.type !== "line" && element.type !== "currentTeam") {
+            @if (element.type !== "line" && element.type !== "currentTeam" && element.type !== "board") {
                 <button type="button" class="edit" (click)="editElement($index)">
                     <img src="/svg/pen.svg" alt="Element bearbeiten" />
                 </button>

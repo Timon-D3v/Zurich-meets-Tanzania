@@ -29,7 +29,7 @@ export class PopupMultipleImagesInputComponent {
             this.images.update((images) => {
                 images.push({ file: new File([], image.imageAlt), url: image.imageUrl });
 
-                return images;
+                return [...images];
             });
         }
     });
@@ -66,7 +66,7 @@ export class PopupMultipleImagesInputComponent {
             this.images.update((images) => {
                 images.push({ file, url });
 
-                return images;
+                return [...images];
             });
         }
     }
@@ -95,7 +95,7 @@ export class PopupMultipleImagesInputComponent {
             this.images.update((images) => {
                 images.push({ file, url });
 
-                return images;
+                return [...images];
             });
         }
     }
@@ -104,7 +104,7 @@ export class PopupMultipleImagesInputComponent {
         this.images.update((images) => {
             images.pop();
 
-            return images;
+            return [...images];
         });
     }
 }
