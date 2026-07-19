@@ -48,7 +48,7 @@ router.post("/addAdmin", async (req: Request, res: Response): Promise<void> => {
     try {
         const { email } = req.body;
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
         }
 
@@ -99,7 +99,7 @@ router.post("/removeAdmin", async (req: Request, res: Response): Promise<void> =
     try {
         const { email } = req.body;
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
         }
 
@@ -165,7 +165,7 @@ router.post("/createUser", async (req: Request, res: Response): Promise<void> =>
     try {
         const { email, firstName, lastName, address } = req.body;
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
         }
 
@@ -195,7 +195,7 @@ router.post("/createUser", async (req: Request, res: Response): Promise<void> =>
 
         const passwordHash = await bcrypt.hash(password, 10);
 
-        const result = await createUser(email, passwordHash, firstName, lastName, address, "Keine Nummer", "/svg/personal.svg");
+        const result = await createUser(email, passwordHash, firstName, lastName, address, "Keine Nummer", PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE);
 
         if (result.error !== null) {
             throw new Error(result.error);

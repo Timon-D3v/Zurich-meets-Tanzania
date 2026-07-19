@@ -1,4 +1,5 @@
 import { Component, computed, inject, PLATFORM_ID, Signal, signal } from "@angular/core";
+import { PUBLIC_CONFIG } from "../../publicConfig"
 import { AuthInputComponent } from "../components/auth-input/auth-input.component";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
@@ -61,7 +62,7 @@ export class PasswordRecoveryConfirmComponent {
             return;
         }
 
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (!PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             this.notificationService.error("Ungültige E-Mail erkannt", "Etwas ist leider schief gelaufen. Bitte starte die Kontowiederherstellung noch einemal.");
             return;
         }

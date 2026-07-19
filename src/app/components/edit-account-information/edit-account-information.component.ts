@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { AccountService } from "../../services/account.service";
 import { NotificationService } from "../../services/notification.service";
 import { AuthService } from "../../services/auth.service";
+import { PUBLIC_CONFIG } from "../../../publicConfig"
 
 @Component({
     selector: "app-edit-account-information",
@@ -63,7 +64,7 @@ export class EditAccountInformationComponent implements OnInit {
 
         console.log(email, password, firstName, lastName, address, postalCode, city, phone);
 
-        if (!email || typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (!email || typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             return this.abortSubmit("Bitte gib eine gültige E-Mail-Adresse ein.");
         }
 
@@ -85,7 +86,7 @@ export class EditAccountInformationComponent implements OnInit {
             return this.abortSubmit("Bitte gib eine gültige Adresse ein.");
         }
 
-        if (!postalCode || typeof postalCode !== "string" || postalCode.trim() === "" || !/^(?:[A-Z]{2}-\d{3,6}|\d{3,6})$/.test(postalCode)) {
+        if (!postalCode || typeof postalCode !== "string" || postalCode.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_POSTAL_CODE.test(postalCode)) {
             return this.abortSubmit("Bitte gib eine gültige Postleitzahl ein.");
         }
 
@@ -98,7 +99,7 @@ export class EditAccountInformationComponent implements OnInit {
             return this.abortSubmit("Bitte gib eine gültige Telefonnummer ein.");
         }
 
-        if (phone !== "" && phone !== "Keine Nummer" && !/^\+?[0-9\s\-()]{6,20}$/.test(phone)) {
+        if (phone !== "" && phone !== "Keine Nummer" && !PUBLIC_CONFIG.REGEX.MATCH_VALID_PHONE.test(phone)) {
             // Actual validation of the phone number, allowing empty string but if not empty, it should be a valid phone number or "Keine Nummer"
             return this.abortSubmit('Bitte gib eine gültige Telefonnummer ein oder tippe "Keine Nummer" um deine Telefonnummer zu entfernen.');
         }

@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { FooterService } from "../../services/footer.service";
 import { NotificationService } from "../../services/notification.service";
 import { AddToNewsletterListApiEndpointResponse } from "../../..";
+import { PUBLIC_CONFIG } from "../../../publicConfig"
 
 @Component({
     selector: "app-footer-newsletter-sign-up-form",
@@ -54,7 +55,7 @@ export class FooterNewsletterSignUpFormComponent {
             return;
         }
 
-        if (typeof email !== "string" || email === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige E-Mail-Adresse ein.");
             this.submitButtonDisabled.set(false);
             this.submitButtonText.set("Anmelden");

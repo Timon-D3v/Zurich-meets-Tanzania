@@ -66,7 +66,7 @@ router.post("/addMember", async (req: Request, res: Response): Promise<void> => 
     try {
         const { email } = req.body;
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
         }
 
@@ -146,7 +146,7 @@ router.post("/removeMember", async (req: Request, res: Response): Promise<void> 
     try {
         const { email } = req.body;
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
         }
 

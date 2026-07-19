@@ -74,7 +74,7 @@ router.post("/submitDonationForm", async (req: Request, res: Response): Promise<
             throw new Error("Invalid last name. Last name must be a non-empty string.");
         }
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Invalid email address. Email must be a valid email address.");
         }
 

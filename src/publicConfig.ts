@@ -12,6 +12,13 @@ export const PUBLIC_CONFIG: PublicConfig = {
 
     PRIVACY_PDF_URL: "https://ik.imagekit.io/zmt/pdf/datenschutz/Datenschutzerklaerung.pdf",
     FALLBACK_IMAGE_URL: "/backup/fallback.png",
+    FALLBACK_PROFILE_PICTURE: "/svg/personal.svg",
+
+    REGEX: {
+        MATCH_VALID_EMAIL: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/,
+        MATCH_VALID_PHONE: /^\+?[0-9\s\-()]{6,20}$/,
+        MATCH_VALID_POSTAL_CODE: /^(?:[A-Z]{2}-\d{3,6}|\d{3,6})$/,
+    },
 
     STATIC_SITES: {
         LOADING: (name: StaticSiteNames, imageUrl: string): StaticSite => {

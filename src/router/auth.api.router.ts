@@ -44,7 +44,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             throw new Error("Invalid parameter 'email' or 'password'.");
         }
 
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (!PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Invalid parameter 'email'.");
         }
 
@@ -129,15 +129,15 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
             throw new Error("Invalid parameter found.");
         }
 
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (!PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Invalid parameter 'email'.");
         }
 
-        if (!/^(?:[A-Z]{2}-\d{3,6}|\d{3,6})$/.test(postalCode)) {
+        if (!PUBLIC_CONFIG.REGEX.MATCH_VALID_POSTAL_CODE.test(postalCode)) {
             throw new Error("Invalid parameter 'postalCode'.");
         }
 
-        if ((phone !== "" && phone.length > 15) || (phone !== "" && /[^0-9\+\ ]/.test(phone))) {
+        if (phone !== "" && !PUBLIC_CONFIG.REGEX.MATCH_VALID_PHONE.test(phone)) {
             throw new Error("Invalid parameter 'phone'");
         }
 
@@ -224,7 +224,7 @@ router.post("/confirmSignUp", async (req: Request, res: Response) => {
             throw new Error("Invalid parameter 'code'.");
         }
 
-        if (typeof email !== "string" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Invalid parameter 'email'.");
         }
 
@@ -266,7 +266,7 @@ router.post("/confirmSignUp", async (req: Request, res: Response) => {
         }
 
         // Now the request is confirmed
-        let pictureUrl: string = "/svg/personal.svg";
+        let pictureUrl: string = PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE;
 
         if (request.user.hasPicture) {
             try {
@@ -282,7 +282,7 @@ router.post("/confirmSignUp", async (req: Request, res: Response) => {
                     throw new Error(response.message);
                 }
 
-                pictureUrl = response.url ?? "/svg/personal.svg";
+                pictureUrl = response.url ?? PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE;
             } catch (error) {
                 console.error("An error happened while uploading the profile picture:");
 
@@ -443,7 +443,7 @@ router.post("/startPasswordRecovery", async (req: Request, res: Response) => {
             throw new Error("Missing parameter 'email'.");
         }
 
-        if (typeof email !== "string" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Invalid parameter 'email'.");
         }
 
@@ -542,7 +542,7 @@ router.post("/confirmPasswordRecovery", async (req: Request, res: Response) => {
             throw new Error("Invalid parameter 'code'.");
         }
 
-        if (typeof email !== "string" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Invalid parameter 'email'.");
         }
 

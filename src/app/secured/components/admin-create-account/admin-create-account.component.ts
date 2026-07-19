@@ -1,5 +1,6 @@
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { PUBLIC_CONFIG } from "../../../../publicConfig"
 import { AdminManagementService } from "../../../services/admin-management.service";
 import { NotificationService } from "../../../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
@@ -38,7 +39,7 @@ export class AdminCreateAccountComponent {
         const lastName = this.createUserForm.value.lastNameControl;
         const address = this.createUserForm.value.addressControl;
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige E-Mail-Adresse ein.");
 
             this.submitButtonDisabled.set(false);

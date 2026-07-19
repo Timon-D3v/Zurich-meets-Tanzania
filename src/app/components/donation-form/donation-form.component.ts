@@ -4,6 +4,7 @@ import { NotificationService } from "../../services/notification.service";
 import { EditAccountInputComponent } from "../edit-account-input/edit-account-input.component";
 import { EditAccountSelectInputComponent } from "../edit-account-select-input/edit-account-select-input.component";
 import { DonationService } from "../../services/donation.service";
+import { PUBLIC_CONFIG } from "../../../publicConfig"
 import { GetDonationUsageTypesApiEndpointResponse, SelectOption, ApiEndpointResponse } from "../../..";
 
 @Component({
@@ -117,7 +118,7 @@ export class DonationFormComponent implements OnInit {
             return;
         }
 
-        if (typeof data.email !== "string" || data.email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(data.email)) {
+        if (typeof data.email !== "string" || data.email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(data.email)) {
             this.notificationService.error("Eingabefehler:", "Bitte geben Sie eine gültige E-Mail-Adresse ein.");
 
             this.buttonDisabled.set(false);

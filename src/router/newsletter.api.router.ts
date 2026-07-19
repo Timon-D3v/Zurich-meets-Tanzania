@@ -49,7 +49,7 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email.trim())) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email.trim())) {
             res.json({
                 error: true,
                 message: "Bitte gib eine gültige E-Mail-Adresse ein.",

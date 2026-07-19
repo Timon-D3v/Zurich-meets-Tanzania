@@ -32,7 +32,7 @@ router.post("/getVerificationToken", async (req: Request, res: Response): Promis
             throw new Error("Invalid parameter 'lastName'.");
         }
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             throw new Error("Invalid parameter 'email'.");
         }
 

@@ -1,4 +1,5 @@
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
+import { PUBLIC_CONFIG } from "../../publicConfig"
 import { AuthInputComponent } from "../components/auth-input/auth-input.component";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AuthService } from "../services/auth.service";
@@ -61,7 +62,7 @@ export class LoginComponent {
             return;
         }
 
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(userInputs.email)) {
+        if (!PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(userInputs.email)) {
             this.notificationService.error("Eingabefehler", "Bitte gib eine gültige E-Mail-Adresse ein.");
             return;
         }

@@ -2,6 +2,7 @@ import { Component, effect, inject, OnInit, PLATFORM_ID, signal } from "@angular
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NotificationService } from "../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
+import { PUBLIC_CONFIG } from "../../publicConfig"
 import { ThemeService } from "../services/theme.service";
 import { AuthService } from "../services/auth.service";
 import { ContactService } from "../services/contact.service";
@@ -81,7 +82,7 @@ export class ContactComponent implements OnInit {
             return;
         }
 
-        if (typeof email !== "string" || email.trim() === "" || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige E-Mail-Adresse ein.");
 
             this.submitButtonDisabled.set(false);

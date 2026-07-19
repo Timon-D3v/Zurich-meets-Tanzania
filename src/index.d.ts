@@ -88,6 +88,13 @@ export type PublicConfig = {
 
     PRIVACY_PDF_URL: string;
     FALLBACK_IMAGE_URL: string;
+    FALLBACK_PROFILE_PICTURE: string;
+
+    REGEX: {
+        MATCH_VALID_EMAIL: RegExp;
+        MATCH_VALID_PHONE: RegExp;
+        MATCH_VALID_POSTAL_CODE: RegExp;
+    }
 
     STATIC_SITES: {
         LOADING: (name: StaticSiteNames, imageUrl: string) => StaticSite;

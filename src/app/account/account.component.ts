@@ -1,4 +1,5 @@
 import { Component, effect, inject, signal } from "@angular/core";
+import { PUBLIC_CONFIG } from "../../publicConfig";
 import { AuthService } from "../services/auth.service";
 import { AccountService } from "../services/account.service";
 import { PublicUser, UpdateUserProfilePictureWithIdApiEndpointResponse, ApiEndpointResponse } from "../..";
@@ -23,7 +24,7 @@ export class AccountComponent {
         phone: "Laden...",
         address: "Laden...",
         type: "user",
-        picture: "/svg/personal.svg",
+        picture: PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE,
     });
 
     bannerId = signal<number>(this.getRandomInt(1, 10));
@@ -47,7 +48,7 @@ export class AccountComponent {
                 phone: "Laden...",
                 address: "Laden...",
                 type: "user",
-                picture: "/svg/personal.svg",
+                picture: PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE,
             });
         } else {
             this.user.set(userObject);

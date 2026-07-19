@@ -156,7 +156,7 @@ router.post("/updateUserWithId", async (req: Request, res: Response): Promise<vo
                 return await setUserTypeWithId(userId, "user");
             },
             picture: async (userId: number) => {
-                return await setNewProfilePictureWithId(userId, "/svg/personal.svg");
+                return await setNewProfilePictureWithId(userId, PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE);
             },
         };
 

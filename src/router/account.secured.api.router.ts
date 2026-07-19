@@ -31,7 +31,7 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
             // Skip the email
             console.info("Email will not be updated.");
         } else {
-            if (typeof email === "string" && /^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(email)) {
+            if (typeof email === "string" && PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
                 // Email is valid: Save it to the database
                 const result = await setNewEmailWithId(userId, email);
 
@@ -189,7 +189,7 @@ router.post("/updateUserInformation", async (req: Request, res: Response): Promi
             // Skip the phone number
             console.info("Phone number will not be updated.");
         } else {
-            if (typeof phone === "string" && (/^\+?[0-9\s\-()]{6,20}$/.test(phone) || phone === "" || phone === "Keine Nummer")) {
+            if (typeof phone === "string" && (PUBLIC_CONFIG.REGEX.MATCH_VALID_PHONE.test(phone) || phone === "" || phone === "Keine Nummer")) {
                 // Phone number is valid: Save it to the database
                 const result = await setNewPhoneNumberWithId(userId, phone === "" ? "Keine Nummer" : phone);
 
@@ -268,7 +268,7 @@ router.post("/updateUserProfilePicture", multerInstance.single("image"), async (
             throw new Error(`Die Datei '${file.originalname}' ist keine gültige Bilddatei. Bitte lade nur Bilddateien hoch.`);
         }
 
-        const response = user.picture === "/svg/personal.svg" ? await delivApiUpload(file.buffer) : await delivApiUpdateFile(user.picture.replace(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.DELIVAPI_USER}/`, ""), file.buffer);
+        const response = user.picture === PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE ? await delivApiUpload(file.buffer) : await delivApiUpdateFile(user.picture.replace(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.DELIVAPI_USER}/`, ""), file.buffer);
 
         if (response.error) {
             throw new Error("Bild konnte nicht hochgeladen werden: " + response.message);
@@ -557,7 +557,7 @@ router.post("/updateExpandedUserInformation", multerInstance.single("image"), as
             throw new Error(`Die Datei '${file.originalname}' ist keine gültige Bilddatei. Bitte lade nur Bilddateien hoch.`);
         }
 
-        const response = user.picture === "/svg/personal.svg" ? await delivApiUpload(file.buffer) : await delivApiUpdateFile(user.picture.replace(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.DELIVAPI_USER}/`, ""), file.buffer);
+        const response = user.picture === PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE ? await delivApiUpload(file.buffer) : await delivApiUpdateFile(user.picture.replace(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.DELIVAPI_USER}/`, ""), file.buffer);
 
         if (response.error) {
             throw new Error("Bild konnte nicht hochgeladen werden: " + response.message);

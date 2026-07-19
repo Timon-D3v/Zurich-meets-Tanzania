@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
+import { PUBLIC_CONFIG } from "../../../../publicConfig";
 import { ApiEndpointResponse, EditUserCommand, GetAllUsersApiEndpointResponse, PrivateUser, UpdateUserProfilePictureWithIdApiEndpointResponse, UpdateUserWithIdApiEndpointResponse } from "../../../..";
 import { LoadingComponent } from "../../../components/loading/loading.component";
 import { AnalyticsService } from "../../../services/analytics.service";
@@ -374,7 +375,7 @@ export class StatsUserListComponent implements OnInit {
                 this.updateDisplayedUser(userId, type, "user");
                 break;
             case "picture":
-                this.updateDisplayedUser(userId, type, "/svg/personal.svg");
+                this.updateDisplayedUser(userId, type, PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE);
                 break;
             default:
                 this.notificationService.error("Fehler", "Der angegebene Typ '" + type + "' ist ungültig und kann nicht zurückgesetzt werden.");

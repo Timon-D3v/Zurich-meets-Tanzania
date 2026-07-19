@@ -1,4 +1,5 @@
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
+import { PUBLIC_CONFIG } from "../../publicConfig";
 import { AuthInputComponent } from "../components/auth-input/auth-input.component";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../services/auth.service";
@@ -17,7 +18,7 @@ export class SignupComponent {
     disabledButton = signal(false);
     submitButtonText = signal("Account erstellen");
 
-    accountPictureUrl = signal("/svg/personal.svg");
+    accountPictureUrl = signal(PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE);
 
     emailInput = signal<string>("");
     passwordInput = signal<string>("");
@@ -103,7 +104,7 @@ export class SignupComponent {
         this.accountPictureInput.set(file);
 
         if (file === null) {
-            this.accountPictureUrl.set("/svg/personal.svg");
+            this.accountPictureUrl.set(PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE);
             return;
         }
 
@@ -171,7 +172,7 @@ export class SignupComponent {
             return false;
         }
 
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,10}$/.test(user.email)) {
+        if (!PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(user.email)) {
             this.notificationService.error("Eingabefehler", "Bitte gib eine gültige E-Mail-Adresse ein.");
             return false;
         }
@@ -201,7 +202,7 @@ export class SignupComponent {
             return false;
         }
 
-        if (!/^(?:[A-Z]{2}-\d{3,6}|\d{3,6})$/.test(user.postalCode)) {
+        if (!PUBLIC_CONFIG.REGEX.MATCH_VALID_POSTAL_CODE.test(user.postalCode)) {
             this.notificationService.error("Eingabefehler", "Bitte gib eine gültige Postleitzahl ein.");
             return false;
         }
@@ -211,7 +212,7 @@ export class SignupComponent {
             return false;
         }
 
-        if ((user.phone !== "" && user.phone.length > 15) || (user.phone !== "" && /[^0-9\+\ ]/.test(user.phone))) {
+        if (user.phone !== "" && PUBLIC_CONFIG.REGEX.MATCH_VALID_PHONE.test(user.phone)) {
             this.notificationService.error("Eingabefehler", "Bitte gib eine gültige Telefonnummer ein oder lösche alle eingaben aus dem Feld.");
             return false;
         }
