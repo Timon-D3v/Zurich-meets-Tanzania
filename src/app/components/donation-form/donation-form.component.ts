@@ -4,7 +4,7 @@ import { NotificationService } from "../../services/notification.service";
 import { EditAccountInputComponent } from "../edit-account-input/edit-account-input.component";
 import { EditAccountSelectInputComponent } from "../edit-account-select-input/edit-account-select-input.component";
 import { DonationService } from "../../services/donation.service";
-import { PUBLIC_CONFIG } from "../../../publicConfig"
+import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { GetDonationUsageTypesApiEndpointResponse, SelectOption, ApiEndpointResponse } from "../../..";
 
 @Component({

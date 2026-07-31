@@ -130,18 +130,14 @@ export class EditService {
         };
     }
 
-    addTable(headers: Array<CustomSubtitleElement | CustomImageElement>, rows: Array<Array<CustomParagraphElement | CustomImageElement>>, sourceContent?: string, sourceUrl?: string): CustomTableElement {
+    addTable(headers: Array<CustomSubtitleElement | CustomImageElement>, rows: Array<Array<CustomParagraphElement | CustomImageElement>>, source?: { content: string; url: string }): CustomTableElement {
+        const sourceValid = source && source.content && source.url && typeof source.content === "string" && typeof source.url === "string" && source.content !== "" && source.url !== "";
+
         return {
             type: "table",
             headers,
             rows,
-            source:
-                sourceContent && sourceUrl
-                    ? {
-                          content: this.sanitizeString(sourceContent),
-                          url: this.sanitizeString(sourceUrl),
-                      }
-                    : undefined,
+            source: sourceValid ? source : undefined,
         };
     }
 

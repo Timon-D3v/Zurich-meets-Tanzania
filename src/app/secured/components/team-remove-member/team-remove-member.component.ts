@@ -1,6 +1,6 @@
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { PUBLIC_CONFIG } from "../../../../publicConfig"
+import { PUBLIC_CONFIG } from "../../../../publicConfig";
 import { NotificationService } from "../../../services/notification.service";
 import { ApiEndpointResponse } from "../../../..";
 import { isPlatformBrowser } from "@angular/common";

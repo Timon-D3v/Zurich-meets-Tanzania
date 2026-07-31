@@ -5,7 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { AccountService } from "../../services/account.service";
 import { NotificationService } from "../../services/notification.service";
 import { AuthService } from "../../services/auth.service";
-import { PUBLIC_CONFIG } from "../../../publicConfig"
+import { PUBLIC_CONFIG } from "../../../publicConfig";
 
 @Component({
     selector: "app-edit-account-information",

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { FooterService } from "../../services/footer.service";
 import { NotificationService } from "../../services/notification.service";
 import { AddToNewsletterListApiEndpointResponse } from "../../..";
-import { PUBLIC_CONFIG } from "../../../publicConfig"
+import { PUBLIC_CONFIG } from "../../../publicConfig";
 
 @Component({
     selector: "app-footer-newsletter-sign-up-form",

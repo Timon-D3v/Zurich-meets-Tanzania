@@ -173,15 +173,22 @@ export class DashboardComponent implements OnInit {
      * ===============================================================
      */
 
-    titleInputOpen = signal(false);
-    textInputOpen = signal(false);
-    imageInputOpen = signal(false);
-    fileInputOpen = signal(false);
-    multipleImagesInputOpen = signal(false);
-    tableInputOpen = signal(false);
-    selectionInputOpen = signal(false);
-    confirmInputOpen = signal(false);
-    alertOpen = signal(false);
+    titleInputOpen = signal<boolean>(false);
+    textInputOpen = signal<boolean>(false);
+    imageInputOpen = signal<boolean>(false);
+    fileInputOpen = signal<boolean>(false);
+    multipleImagesInputOpen = signal<boolean>(false);
+    tableInputOpen = signal<boolean>(false);
+    selectionInputOpen = signal<boolean>(false);
+    confirmInputOpen = signal<boolean>(false);
+    alertOpen = signal<boolean>(false);
+
+    titleEditInputOpen = signal<boolean>(false);
+    textEditInputOpen = signal<boolean>(false);
+    imageEditInputOpen = signal<boolean>(false);
+    multipleImagesEditInputOpen = signal<boolean>(false);
+    fileEditInputOpen = signal<boolean>(false);
+    tableEditInputOpen = signal<boolean>(false);
 
     /*
      * ===============================================================
@@ -213,11 +220,6 @@ export class DashboardComponent implements OnInit {
     confirmInputCancelButtonText = signal<string>("");
     confirmInputEqualOptions = signal<boolean>(false);
 
-    titleEditInputOpen = signal(false);
-    textEditInputOpen = signal(false);
-    imageEditInputOpen = signal(false);
-    multipleImagesEditInputOpen = signal(false);
-
     titleEditInputTitle = signal<string>("");
     titleEditInputDescription = signal<string>("");
     titleEditInputLabel = signal<string>("");
@@ -247,6 +249,16 @@ export class DashboardComponent implements OnInit {
     selectionInputOptions = signal<string[]>([]);
 
     fileInputAccept = signal<string>("*");
+    fileEditInputAccept = signal<string>("*");
+    fileEditInputDescription = signal<string>("");
+    fileEditInputTitle = signal<string>("");
+
+    tableEditInputTitle = signal<string>("");
+    tableEditInputDescription = signal<string>("");
+    tableEditInputInitialHeaders = signal<CustomTableElement["headers"]>([]);
+    tableEditInputInitialRows = signal<CustomTableElement["rows"]>([]);
+    tableEditInputInitialSourceName = signal<string>("");
+    tableEditInputInitialSourceUrl = signal<string>("");
 
     /*
      * ===============================================================
@@ -785,6 +797,8 @@ export class DashboardComponent implements OnInit {
         this.textEditInputOpen.set(false);
         this.imageEditInputOpen.set(false);
         this.multipleImagesEditInputOpen.set(false);
+        this.fileEditInputOpen.set(false);
+        this.tableEditInputOpen.set(false);
 
         this.selectionInputOpen.set(false);
     }
@@ -1341,7 +1355,7 @@ export class DashboardComponent implements OnInit {
                 this.textEditInputValue.set(elementToEdit.content);
 
                 this.imageEditInputTitle.set("Bild ändern:");
-                this.imageEditInputDescription.set("Bitte wähle ein neues Bild aus, um das aktuelle zu ersetzen. Wenn du das Bild nicht ändern möchtest, kannst du dieses Fenster einfach schliessen.");
+                this.imageEditInputDescription.set("Bitte wähle ein neues Bild aus, um das Aktuelle zu ersetzen. Wenn du das Bild nicht ändern möchtest, kannst du dieses Fenster einfach schliessen.");
                 this.imageEditInputLabel.set("Bild:");
                 this.imageEditInputPlaceholderUrl.set(elementToEdit.imageUrl);
 
@@ -1352,7 +1366,7 @@ export class DashboardComponent implements OnInit {
                 this.imageEditInputOpen.set(true);
 
                 this.imageEditInputTitle.set("Bild ändern:");
-                this.imageEditInputDescription.set("Bitte wähle ein neues Bild aus, um das aktuelle zu ersetzen.");
+                this.imageEditInputDescription.set("Bitte wähle ein neues Bild aus, um das Aktuelle zu ersetzen.");
                 this.imageEditInputLabel.set("Bild:");
                 this.imageEditInputPlaceholderUrl.set(elementToEdit.imageUrl);
 
@@ -1363,10 +1377,49 @@ export class DashboardComponent implements OnInit {
                 this.multipleImagesEditInputOpen.set(true);
 
                 this.multipleImagesEditInputTitle.set("Bilder ändern:");
-                this.multipleImagesEditInputDescription.set("Bitte wähle neue Bilder aus, um die aktuellen zu ersetzen. Du kannst ausserdem einzelne Bilder hinzufügen oder entfernen oder einfach die Reihenfolge verändern.");
+                this.multipleImagesEditInputDescription.set("Bitte wähle neue Bilder aus, um die Aktuellen zu ersetzen. Du kannst ausserdem einzelne Bilder hinzufügen oder entfernen oder einfach die Reihenfolge verändern.");
                 this.multipleImagesEditInputLabel.set("Bilder:");
                 this.multipleImagesEditInputValue.set(elementToEdit.images);
 
+                break;
+
+            case "video":
+                this.currentActionToPerform.set("editVideo");
+                this.fileEditInputOpen.set(true);
+
+                this.fileEditInputTitle.set("Video ersetzen");
+                this.fileEditInputDescription.set("Bitte wähle eine neue Videodatei aus, um die Aktuelle zu ersetzen.");
+                this.fileEditInputAccept.set(["video/mp4", "video/quicktime", "video/webm", "video/x-msvideo", "video/mpeg", "video/x-matroska"].join(", "));
+
+                break;
+
+            case "pdfViewer":
+                this.currentActionToPerform.set("editPdfViewer");
+                this.fileEditInputOpen.set(true);
+
+                this.fileEditInputTitle.set("PDF ersetzen");
+                this.fileEditInputDescription.set("Bitte wähle eine neue PDF-Datei aus, um die Aktuelle zu ersetzen.");
+                this.fileEditInputAccept.set("application/pdf, .pdf");
+
+                break;
+
+            case "table":
+                this.currentActionToPerform.set("editTable");
+                this.tableEditInputOpen.set(true);
+
+                this.tableEditInputTitle.set("Tabelle bearbeiten");
+                this.tableEditInputDescription.set("Bearbeite oder ergänze die Tabelle mit den gewünschten Daten. Es ist in jeder Zelle möglich, Text oder ein Bild einzufügen.");
+                this.tableEditInputInitialHeaders.set(elementToEdit.headers);
+                this.tableEditInputInitialRows.set(elementToEdit.rows);
+                this.tableEditInputInitialSourceName.set(elementToEdit.source?.content ?? "Keine Quelle");
+                this.tableEditInputInitialSourceUrl.set(elementToEdit.source?.url ?? "Keine Quelle");
+
+                break;
+
+            case "line":
+            case "currentTeam":
+            case "board":
+                this.notificationService.info("Statisches Element", "Dieses Element kann nicht bearbeitet werden. Es aktualisiert sich von alleine, wenn nötig");
                 break;
 
             default:
@@ -1620,7 +1673,7 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    handleTableImageOutput(file: { file: File | null; url: string }): void {
+    addFileToCurrentImageStorage(file: { file: File | null; url: string }): void {
         if (!file.file || file.file === null) {
             console.error("No file selected for table image output.");
             return;
@@ -1631,6 +1684,7 @@ export class DashboardComponent implements OnInit {
 
     handleFileInputResult(file: File | null): void {
         this.fileInputOpen.set(false);
+        this.fileEditInputOpen.set(false);
 
         if (file === null) {
             this.notificationService.info("Keine Datei ausgewählt", "Bitte wähle eine Datei aus, um diese Funktion zu nutzen.");
@@ -1647,6 +1701,12 @@ export class DashboardComponent implements OnInit {
                 break;
             case "addVideo":
                 this.addVideo(file);
+                break;
+            case "editVideo":
+                this.editVideo(file);
+                break;
+            case "editPdfViewer":
+                this.editPdfViewer(file);
                 break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
@@ -1677,12 +1737,16 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    handleTableInputResult(tableData: CustomTableElement): void {
+    handleTableInputResult(table: CustomTableElement): void {
         this.tableInputOpen.set(false);
+        this.tableEditInputOpen.set(false);
 
         switch (this.currentActionToPerform()) {
             case "addTable":
-                this.addTable(tableData);
+                this.addTable(table);
+                break;
+            case "editTable":
+                this.editTable(table);
                 break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
@@ -1999,14 +2063,9 @@ export class DashboardComponent implements OnInit {
     addTable(table: CustomTableElement): void {
         const { headers, rows, source } = table;
 
-        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-            const element: CustomTableElement = {
-                type: "table",
-                headers,
-                rows,
-                source: source?.content === "" || source?.url === "" ? undefined : source,
-            };
+        const element = this.editService.addTable(headers, rows, source);
 
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             return {
                 ...siteOrBlog,
                 data: [element, ...siteOrBlog.data],
@@ -2336,6 +2395,72 @@ export class DashboardComponent implements OnInit {
                     ...news.data,
                     content: [...news.data.content],
                 },
+            };
+        });
+    }
+
+    editPdfViewer(file: File): void {
+        if (file.type !== "application/pdf") {
+            this.notificationService.info("Ungültige Datei", "Bitte wähle eine PDF-Datei aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const fileUrl = URL.createObjectURL(file);
+
+        this.getCurrentImageStorage().push({ file, url: fileUrl });
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            const element = this.editService.addPdfViewer(fileUrl);
+
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
+        });
+    }
+
+    editVideo(file: File | null): void {
+        if (file === null) {
+            this.notificationService.error("Deine Datei ausgewählt:", "Bitte wähle eine Videodatei aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        if (!["video/mp4", "video/quicktime", "video/webm", "video/x-msvideo", "video/mpeg", "video/x-matroska"].includes(file.type)) {
+            this.notificationService.info("Ungültige Datei", "Bitte wähle eine Videodatei aus, um diese Funktion zu nutzen.");
+            return;
+        }
+
+        const fileUrl = URL.createObjectURL(file);
+
+        this.getCurrentImageStorage().push({ file, url: fileUrl });
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            const element = this.editService.addVideo(fileUrl, file.type);
+
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
+        });
+    }
+
+    editTable(table: CustomTableElement): void {
+        const { headers, rows, source } = table;
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            const element = this.editService.addTable(headers, rows, source);
+
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            console.log(this.currentIndexToEdit());
+
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
             };
         });
     }

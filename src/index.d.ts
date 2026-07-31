@@ -78,6 +78,7 @@ export type PublicEnvVariables = {
 
 export type PublicConfig = {
     NAME: string;
+    ADDRESS: string;
 
     THEME_COLOR: string;
 
@@ -94,7 +95,7 @@ export type PublicConfig = {
         MATCH_VALID_EMAIL: RegExp;
         MATCH_VALID_PHONE: RegExp;
         MATCH_VALID_POSTAL_CODE: RegExp;
-    }
+    };
 
     STATIC_SITES: {
         LOADING: (name: StaticSiteNames, imageUrl: string) => StaticSite;
@@ -679,7 +680,10 @@ export type DashboardEditTypes =
     | "editNewsTitle"
     | "editNewsSubtitle"
     | "editNewsParagraph"
-    | "editNewsMultipleImages";
+    | "editNewsMultipleImages"
+    | "editVideo"
+    | "editTable"
+    | "editPdfViewer";
 
 export type Team = {
     id: number;

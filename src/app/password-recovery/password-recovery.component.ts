@@ -1,5 +1,5 @@
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
-import { PUBLIC_CONFIG } from "../../publicConfig"
+import { PUBLIC_CONFIG } from "../../publicConfig";
 import { AuthInputComponent } from "../components/auth-input/auth-input.component";
 import { Router, RouterLink } from "@angular/router";
 import { NotificationService } from "../services/notification.service";

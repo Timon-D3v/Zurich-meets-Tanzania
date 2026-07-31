@@ -672,7 +672,7 @@
 } @else if (multipleImagesInputOpen()) {
     <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-images-input>
 } @else if (tableInputOpen()) {
-    <app-popup-table-input (resultOutput)="handleTableInputResult($event)" (filesOutput)="handleTableImageOutput($event)" (closeOutput)="closePopup()"></app-popup-table-input>
+    <app-popup-table-input (resultOutput)="handleTableInputResult($event)" (filesOutput)="addFileToCurrentImageStorage($event)" (closeOutput)="closePopup()"></app-popup-table-input>
 }
 
 @if (titleEditInputOpen()) {
@@ -717,6 +717,27 @@
         [editArray]="multipleImagesEditInputValue()"
         [submitButtonText]="'Aktualisieren'"
     ></app-popup-multiple-images-input>
+} @else if (fileEditInputOpen()) {
+    <app-popup-file-input
+        [accept]="fileEditInputAccept()"
+        (resultOutput)="handleFileInputResult($event)"
+        (closeOutput)="closePopup()"
+        [description]="fileEditInputDescription()"
+        [title]="fileEditInputTitle()"
+        [submitButtonText]="'Ersetzen'"
+    ></app-popup-file-input>
+} @else if (tableEditInputOpen()) {
+    <app-popup-table-input
+        (resultOutput)="handleTableInputResult($event)"
+        (filesOutput)="addFileToCurrentImageStorage($event)"
+        (closeOutput)="closePopup()"
+        [title]="tableEditInputTitle()"
+        [description]="tableEditInputDescription()"
+        [initialHeaders]="tableEditInputInitialHeaders()"
+        [initialRows]="tableEditInputInitialRows()"
+        [initialSourceName]="tableEditInputInitialSourceName()"
+        [initialSourceUrl]="tableEditInputInitialSourceUrl()"
+    ></app-popup-table-input>
 }
 
 @if (selectionInputOpen()) {

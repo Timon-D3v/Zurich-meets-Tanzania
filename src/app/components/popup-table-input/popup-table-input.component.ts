@@ -1,4 +1,5 @@
 import { Component, effect, inject, input, output, signal } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NotificationService } from "../../services/notification.service";
 import { CustomTableElement } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
@@ -13,11 +14,12 @@ import { utils as xlsxUtils, read as xlsxRead } from "xlsx";
 
 @Component({
     selector: "app-popup-table-input",
-    imports: [PopupTitleInputComponent, PopupTextInputComponent, PopupImageInputComponent, PopupSelectionInputComponent, PopupConfirmComponent],
+    imports: [PopupTitleInputComponent, PopupTextInputComponent, PopupImageInputComponent, PopupSelectionInputComponent, PopupConfirmComponent, ReactiveFormsModule],
     templateUrl: "./popup-table-input.component.html",
     styleUrl: "./popup-table-input.component.scss",
 })
 export class PopupTableInputComponent {
+    private noSource = "Keine Quelle";
     title = input<string>("Tabelle erstellen:");
     description = input<string>("Erstelle eine Tabelle mit den gewünschten Daten. Es ist in jeder Zelle möglich, Text oder ein Bild einzufügen. Du kannst die Tabelle später jederzeit bearbeiten.");
     initialHeaders = input<CustomTableElement["headers"]>([
@@ -31,9 +33,9 @@ export class PopupTableInputComponent {
         ],
     ]);
     sourceNameLabel = input<string>("Quellen Name (optional):");
-    initialSourceName = input<string>("Keine Quelle");
+    initialSourceName = input<string>(this.noSource);
     sourceUrlLabel = input<string>("Quellen URL (optional):");
-    initialSourceUrl = input<string>("Keine Quelle");
+    initialSourceUrl = input<string>(this.noSource);
     submitButtonText = input<string>("Hinzufügen");
 
     resultOutput = output<CustomTableElement>();
@@ -59,6 +61,11 @@ export class PopupTableInputComponent {
         text: signal<string>(""),
         imageUrl: signal<string>(PUBLIC_CONFIG.FALLBACK_IMAGE_URL),
     };
+
+    sourceForm = new FormGroup({
+        contentControl: new FormControl(""),
+        urlControl: new FormControl(""),
+    });
 
     private _updatePlaceholderEffect = effect(() => {
         const editInformation = this.elementToEdit();
@@ -99,21 +106,26 @@ export class PopupTableInputComponent {
         headers: this.initialHeaders(),
         rows: this.initialRows(),
         source: {
-            content: this.initialSourceName() === "Keine Quelle" ? "" : this.initialSourceName(),
-            url: this.initialSourceUrl() === "Keine Quelle" ? "" : this.initialSourceUrl(),
+            content: this.initialSourceName() === this.noSource ? "" : this.initialSourceName(),
+            url: this.initialSourceUrl() === this.noSource ? "" : this.initialSourceUrl(),
         },
     });
 
     private notificationService = inject(NotificationService);
 
     private _updateFormControl = effect(() => {
+        this.sourceForm.patchValue({
+            contentControl: this.initialSourceName() === this.noSource ? "" : this.initialSourceName(),
+            urlControl: this.initialSourceUrl() === this.noSource ? "" : this.initialSourceUrl(),
+        });
+
         this.table.set({
             type: "table",
             headers: this.initialHeaders(),
             rows: this.initialRows(),
             source: {
-                content: this.initialSourceName() === "Keine Quelle" ? "" : this.initialSourceName(),
-                url: this.initialSourceUrl() === "Keine Quelle" ? "" : this.initialSourceUrl(),
+                content: this.initialSourceName() === this.noSource ? "" : (this.sourceForm.value.contentControl ?? ""),
+                url: this.initialSourceUrl() === this.noSource ? "" : (this.sourceForm.value.urlControl ?? ""),
             },
         });
     });

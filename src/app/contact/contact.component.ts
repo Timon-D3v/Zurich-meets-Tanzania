@@ -2,7 +2,7 @@ import { Component, effect, inject, OnInit, PLATFORM_ID, signal } from "@angular
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NotificationService } from "../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
-import { PUBLIC_CONFIG } from "../../publicConfig"
+import { PUBLIC_CONFIG } from "../../publicConfig";
 import { ThemeService } from "../services/theme.service";
 import { AuthService } from "../services/auth.service";
 import { ContactService } from "../services/contact.service";

@@ -115,7 +115,7 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
                     onClick: (event: Event) => {
                         event.stopPropagation();
 
-                        this.setBlogLinks(count + 5)
+                        this.setBlogLinks(count + 5);
                     },
                 });
             }
@@ -153,7 +153,7 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
                     onClick: (event: Event) => {
                         event.stopPropagation();
 
-                        this.setGalleryLinks(count + 5)
+                        this.setGalleryLinks(count + 5);
                     },
                 });
             }

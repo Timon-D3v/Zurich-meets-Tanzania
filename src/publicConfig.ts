@@ -2,6 +2,7 @@ import { Blog, News, PublicConfig, StaticSite, StaticSiteNames } from ".";
 
 export const PUBLIC_CONFIG: PublicConfig = {
     NAME: "zurich meets tanzania",
+    ADDRESS: "Ackersteinstrasse 84\n8049 Zürich\nSwitzerland",
 
     THEME_COLOR: "#F27C0D",
 
@@ -10,7 +11,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
     INSTAGRAM_URL: "https://www.instagram.com/zurichmeetstanzania/",
     PROGRAMMER_URL: "https://www.timondev.com/",
 
-    PRIVACY_PDF_URL: "https://ik.imagekit.io/zmt/pdf/datenschutz/Datenschutzerklaerung.pdf",
+    PRIVACY_PDF_URL: "/pdf/Datenschutzerklärung.pdf",
     FALLBACK_IMAGE_URL: "/backup/fallback.png",
     FALLBACK_PROFILE_PICTURE: "/svg/personal.svg",
 

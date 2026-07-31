@@ -113,7 +113,6 @@ router.post("/updateStaticSite", multerInstance.array("images"), async (req: Req
         // - site data is valid
         // - all files have valid mime types
 
-
         // Upload images
 
         let failedUploads = 0;

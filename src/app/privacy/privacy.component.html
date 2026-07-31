@@ -1,20 +1,25 @@
 <h1>Datenschutzerklärung ZMT</h1>
 <h2>1. Allgemeine Informationen</h2>
 <p>
-    Datenschutz ist uns ein wichtiges Anliegen. Daher bearbeiten wir Ihre personenbezogenen Daten («Personendaten») mit grosser Sorgfalt und gemäss den anwendbaren gesetzlichen Vorgaben. zurich meets tanzania, Ackersteinstrasse 84, 8049 Zürich,
-    Switzerland bearbeitet Ihre Personendaten für unterschiedliche Zwecke und informiert vorliegend transparent über diese Datenbearbeitungen. Unter «Personendaten» sind alle Informationen zu verstehen, die mit einer bestimmten oder bestimmbaren
-    natürlichen Person in Verbindung gebracht werden können. Unter den Begriff «Bearbeiten» fällt jeglicher Umgang mit Personendaten, z.B. beschaffen, bekanntgeben, speichern, löschen usw.
+    Datenschutz ist uns ein wichtiges Anliegen. Daher bearbeiten wir Ihre personenbezogenen Daten («Personendaten») mit grosser Sorgfalt und gemäss den anwendbaren gesetzlichen Vorgaben.
+    <br />
+    {{ name }}<br /><span [innerHTML]="address.replaceAll('\n', '\<br\>')"></span><br />
+    bearbeitet Ihre Personendaten für unterschiedliche Zwecke und informiert vorliegend transparent über diese Datenbearbeitungen. Unter «Personendaten» sind alle Informationen zu verstehen, die mit einer bestimmten oder bestimmbaren natürlichen
+    Person in Verbindung gebracht werden können. Unter den Begriff «Bearbeiten» fällt jeglicher Umgang mit Personendaten, z.B. beschaffen, bekanntgeben, speichern, löschen usw.
 </p>
 <p>Bitte lesen Sie die ganze Datenschutzerklärung sorgfältig durch. So erfahren Sie wie und warum wir Ihre Personendaten bearbeiten und welche Rechte Sie im Zusammenhang mit diesen Datenbearbeitungen haben.</p>
 <p>
-    Diese Datenschutzerklärung richtet sich nach dem Schweizer Datenschutzgesetz (<strong>DSG</strong>). Sodann richtet sie sich auch nach der Europäischen Datenschutz-Grundverordnung (<strong>DSGVO</strong>). Es hängt vom individuellen Einzelfall
-    ab, inwiefern überhaupt die DSGVO anwendbar ist.
+    Diese Datenschutzerklärung richtet sich nach dem <a href="https://www.fedlex.admin.ch/eli/cc/2022/491/de" target="_blank" rel="noopener noreferrer">Schweizer Datenschutzgesetz (<strong>DSG</strong>)</a>. Sodann richtet sie sich auch nach der
+    <a href="https://eur-lex.europa.eu/DE/legal-content/summary/general-data-protection-regulation-gdpr.html" target="_blank" rel="noopener noreferrer">Europäischen Datenschutz-Grundverordnung (<strong>DSGVO</strong>)</a>. Es hängt vom individuellen
+    Einzelfall ab, inwiefern oder ob die DSGVO anwendbar ist.
 </p>
 <p>Für wen und wann gilt diese Datenschutzerklärung?</p>
 <ul>
     <li>wenn Sie von uns Dienstleistungen oder Produkte beziehen oder vertraglich mit uns in Verbindung stehen</li>
-    <li>Besucherinnen und Besucher unserer Website www.zurich-meets-tanzania.com</li>
-    <li>wenn Sie uns kontaktieren, z.B. via E-Mail, Brief, über unser Kontaktformular oder auch ein anderes Kontakttool</li>
+    <li>
+        Besucherinnen und Besucher unserer Website <a href="{{ origin() }}" target="_blank">{{ origin() }}</a>
+    </li>
+    <li>wenn Sie uns kontaktieren, z.B. via <a [href]="'mailto:' + contactEmail" target="_blank">E-Mail</a>, Brief, über unser <a href="{{ origin() }}/contact" target="_blank">Kontaktformular</a> oder auch ein anderes Kontakttool</li>
     <li>wenn Sie von uns Informationen oder Marketingkommunikation erhalten</li>
     <li>wenn Sie sich für bestimmte Angebote (z.B. Events) anmelden</li>
     <li>wenn Sie unseren Newsletter abonnieren</li>
@@ -25,9 +30,11 @@
     Es ist dasjenige Unternehmen für die Bearbeitung von Personendaten verantwortlich, das festlegt, zu welchem <strong>Zweck</strong> und mit welchen <strong>Mitteln</strong> die Bearbeitung erfolgt. Für die Datenbearbeitungen nach dieser
     Datenschutzerklärung ist folgende Gesellschaft oder Person die «Verantwortliche» im Sinne des DSG, d.h. die <strong>datenschutzrechtlich zuständige Stelle</strong>, soweit im spezifischen Einzelfall nichts Anderes kommuniziert wird (Identität):
 </p>
-<p>zurich meets tanzania Ackersteinstrasse 84 8049 Zürich Switzerland</p>
+<p>{{ name }}<br /><span [innerHTML]="address.replaceAll('\n', '\<br\>')"></span></p>
 <p>Bei Anliegen oder Fragen zum Datenschutz können Sie uns über folgende Adresse kontaktieren:</p>
-<p>stefanchristen62@gmail.com</p>
+<p>
+    <a [href]="'mailto:' + contactEmail" target="_blank">{{ contactEmail }}</a>
+</p>
 <h2>3. Zu bearbeitende Personendaten</h2>
 <p>
     Wir bearbeiten mit Blick auf die unterschiedlichen Zwecke auch unterschiedliche Kategorien von Personendaten. Bei Vertragspartnern, die Unternehmen sind, bearbeiten wir weniger Personendaten – hier bearbeiten wir insbesondere Daten von
@@ -39,7 +46,6 @@
 <p>Grunddaten und Kontaktinformationen beziehen sich direkt auf Ihre Person und Eigenschaften (bspw. um Sie zu kontaktieren). Wir bearbeiten z.B. die folgenden Grunddaten:</p>
 <ul>
     <li>Name, Vorname</li>
-    <li>Geburtsdatum</li>
     <li>Anschrift/Adresse</li>
     <li>E-Mail-Adresse</li>
     <li>Telefonnummer</li>
@@ -47,7 +53,7 @@
     <li>Angaben zur Ausbildung</li>
 </ul>
 <p>
-    Wir erhalten diese Stammdaten direkt von Ihnen. Wir können unter bestimmten Bedingungen aber auch Personendaten von Dritten beiziehen, wie z.B. von unseren Vertragspartnern, Verbänden und Adresshändlern und aus öffentlich zugänglichen Quellen wie
+    Wir erhalten diese Stammdaten direkt von Ihnen. Wir können unter bestimmten Bedingungen aber auch Personendaten von Dritten beziehen, wie z.B. von unseren Vertragspartnern, Verbänden und Adresshändlern und aus öffentlich zugänglichen Quellen wie
     z.B. aus dem Internet.
 </p>
 <h3>3.2. Vertragsdaten</h3>
@@ -66,8 +72,8 @@
 <h3>3.4. Standortdaten und technische Daten</h3>
 <p>Wenn Sie unsere Website besuchen, werden technische Daten erfasst. Dazu zählen z.B. folgende Daten:</p>
 <ul>
-    <li>Standort- und Verkehrsdaten</li>
-    <li>IP-Adresse des Endgeräts und Geräte-ID</li>
+    <li>Ungefährer Standort- (Land des Zugriffs) und Verkehrsdaten</li>
+    <li>Anonymisierte IP-Adresse des Endgeräts und Geräte-ID</li>
     <li>Angaben über Ihr Gerät, das Betriebssystem Ihres Endgeräts</li>
     <li>Angaben über Ihren Internetprovider</li>
     <li>Aufgerufene Inhalte bzw. Protokolle, in denen die Nutzung unserer Systeme aufgezeichnet wird</li>
@@ -76,7 +82,7 @@
 <h3>3.5. Weitere mögliche Daten</h3>
 <p>Je nach Notwendigkeit können wir sodann auch folgende weitere Daten bearbeiten:</p>
 <ul>
-    <li>Wir können auch Fotos oder Videos bearbeiten, in denen Sie erkennbar sein können (z.B. von Events).</li>
+    <li>Wir können auch Fotos oder Videos bearbeiten, in denen Sie erkennbar sein können (z.B. von Events oder vom Profilbild).</li>
 </ul>
 <h2>4. Zwecke unserer Datenbearbeitung</h2>
 <p>Wir bearbeiten Personendaten von Ihnen, soweit erlaubt, für unterschiedliche Zwecke, an denen wir ein dem Zweck entsprechendes berechtigtes Interesse haben:</p>
@@ -93,31 +99,46 @@
     <strong>Weitere Informationen zur Datenbearbeitung durch einen Social-Media-Anbieter selbst finden Sie in der jeweiligen Datenschutzerklärungen dieses Anbieters.</strong>
 </p>
 <h2>6. Online-Werbetechniken</h2>
-<p>Auf unserer Website setzen wir Online-Werbetechniken wie bspw. Cookies ein. Damit messen wir die Nutzerfreundlichkeit und den Erfolg der Website und der Online-Werbekampagnen.</p>
+<p>
+    Auf unserer Website setzen wir Online-Werbetechniken wie bspw. Cookies ein. Damit messen wir die Nutzerfreundlichkeit und den Erfolg der Website und der Online-Werbekampagnen. Sie werden allerdings keine Werbung von Drittanbietern auf unserer
+    Webseite sehen. Wir werben ausschliesslich für unsere eigenen Produkte und Dienstleistungen (Partner wie das Unikat zählen wir zu unseren Dienstleistern).
+</p>
 <h3>6.1. Was sind Online-Werbetechniken wie bspw. Cookies?</h3>
 <p>
     Wenn wir Sie tracken, können wir die Zugriffe von Ihnen von Zugriffen anderer Benutzer unterscheiden, damit wir die Funktionalität der Website sicherstellen und statistische Auswertungen vornehmen können. Bei jedem Seitenaufruf werden Sie als
     individuelle Besucherin bzw. individueller Besucher erkannt und können damit von anderen Personen unterschieden werden, etwa indem der Server Ihrem Browser eine eindeutige Erkennungsnummer zuweist (die Rede ist dann von einem sog. «Cookie»).
-    Cookies werden automatisch auf Ihrem Endgerät gespeichert, wenn Sie unsere Website besuchen. Cookies nutzen wir z.B. zum Speichern von Einstellungen zwischen Ihren Besuchen auf der Website oder auch für die Erhebung von statistischen, technischen
-    Daten.
+    Cookies werden automatisch auf Ihrem Endgerät gespeichert, wenn Sie unsere Website besuchen. Cookies nutzen wir z.B. zum Speichern von Einstellungen und Login-Informationen zwischen Ihren Besuchen auf der Website oder auch für die Erhebung von
+    statistischen, technischen Daten.
 </p>
 <h3>6.2. Welche Cookies bzw. Online-Werbetechniken nutzen wir?</h3>
+<p>Wir setzen Analysedienste ein, damit wir unsere Website optimieren können. In der Folge erläutern wir die Funktionsweise unseres Analyse-Tools:</p>
+<ul>
+    <li>
+        <strong><a href="https://tianji.dev/de/" target="_blank" rel="noopener">Tianji:</a></strong> Tianji ist eine Open-Source-Lösung für Webanalysen, die vollständig auf unseren eigenen Servern gehostet wird (Self-hosted). Im Gegensatz zu vielen
+        Standardlösungen verzichtet Tianji auf Cookie-Tracking und ist vollumfänglich konform mit den Datenschutzrichtlinien GDPR (DSGVO) und CCPA (Unseren Wissens ebenfalls die der DGS und DSGVO). Wir wären deswegen rechtlich nicht einmal
+        verpflichtet, Sie über die Nutzung von Tianji zu informieren oder Ihre Zustimmung für das Tracking einzuholen. Wir tun dies aber trotzdem, um Ihnen maximale Transparenz und Kontrolle zu bieten. Weitere Informationen zu Tianji finden Sie
+        unter: <a href="https://tianji.dev/" target="_blank" rel="noopener">https://tianji.dev/</a>
+    </li>
+</ul>
 <p>
-    Wir setzenn Analysedienste ein, damit wir unsere Website optimieren können. In der Folge erläutern wir beispielhaft die Funktionsweise unserer wichtigsten Analysedienstanbieter. Andere Drittanbieter von entsprechenden Tools bearbeiten
-    Personendaten in der Regel auf ähnliche Art und Weise.
+    Wir gehen hierbei einen Schritt weiter: Da das System selbst gehostet wird, werden Ihre Daten niemals an Drittanbieter weitergegeben oder von diesen für eigene Zwecke verarbeitet. Alle Daten werden sicher verschlüsselt auf unseren eigenen Servern
+    in der Schweiz gespeichert. Wir nutzen die Analysedienste ausschliesslich, um unsere Website zu verbessern und die Nutzerfreundlichkeit zu erhöhen. Weitere Details zur datenschutzfreundlichen Architektur von Tianji finden Sie unter:
+    <a href="https://tianji.dev/blog/privacy-first-website-analytics-tianji" target="_blank" rel="noopener">https://tianji.dev/blog/privacy-first-website-analytics-tianji</a>
+
+    <br /><br />
+    Was wir deshalb nicht verwenden:
 </p>
 <ul>
     <li>
-        <strong>Google Analytics</strong>, ein Analyse-Dienst von Google LLC und Google Ireland Ltd.. Google Ireland Ltd. ist für die Bearbeitung von Personendaten die Verantwortliche. Google verwendet Cookies und Online-Werbetechniken, um bestimmte
-        Informationen über das Verhalten einzelner Nutzer auf der Website zu analysieren. Auf der Basis der analysierten Daten stellt uns Google Auswertungen zur Verfügung, bearbeitet aber auch Daten für eigene Zwecke. Angaben zum Datenschutz bei
-        Google Analytics finden Sie hier: <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a>
+        <strong>Google Analytics</strong>, ein Analyse-Dienst von Google. Google verwendet Cookies und Online-Werbetechniken, um bestimmte Informationen über das Verhalten einzelner Nutzer auf der Website zu analysieren. Auf der Basis der
+        analysierten Daten stellt uns Google Auswertungen zur Verfügung, bearbeitet aber auch Daten für eigene Zwecke. Wir verzichten auf die Nutzung von Google Analytics, da wir die Daten unserer Benutzer nicht an Google weitergeben möchten.
     </li>
 </ul>
 <h2>7. Datenbekanntgabe an andere Unternehmen und weitere Empfänger</h2>
 <p>
-    Wir geben Ihre Personendaten Dienstleistern bekannt. Das betrifft insbesondere IT-Dienstleister, kann aber – wo notwendig – Analysedienstleister, Inkassodienstleister, Wirtschaftsauskunfteien, Marketingdienstleister usw. betreffen. Soweit diese
-    Dienstleister Personendaten als Auftragsbearbeiter bearbeiten, sind sie verpflichtet, Personendaten ausschliesslich nach unseren Instruktionen zu bearbeiten und Massnahmen zur Datensicherheit zu treffen. Daten können sodann auch an andere
-    Empfänger bekanntgegeben werden, z.B. an Gerichte und Behörden im Rahmen von Gerichtsverfahren.
+    Wir geben Ihre Personendaten Dienstleistern bekannt. Das betrifft insbesondere IT-Dienstleister, kann aber – wo notwendig – Inkassodienstleister, Wirtschaftsauskunfteien, Marketingdienstleister usw. betreffen. Soweit diese Dienstleister
+    Personendaten als Auftragsbearbeiter bearbeiten, sind sie verpflichtet, Personendaten ausschliesslich nach unseren Instruktionen zu bearbeiten und Massnahmen zur Datensicherheit zu treffen. Daten können sodann auch an andere Empfänger
+    bekanntgegeben werden, z.B. an Gerichte und Behörden im Rahmen von Gerichtsverfahren.
 </p>
 <p>
     In Einzelfällen ist es möglich, dass wir Personendaten an andere Dritte auch zu deren eigenen Zwecken weitergeben, z.B. wenn Sie uns dazu Ihre Einwilligung gegeben haben oder wenn wir zu einer Weitergabe gesetzlich verpflichtet oder berechtigt
@@ -169,9 +190,12 @@
     wir Ihre Rechteausübung einschränken oder verweigern. Es sei im Übrigen erwähnt, dass Sie auch die Möglichkeit haben, mit Ihrem Anliegen an die zuständige Datenschutzbehörde zu gelangen.
 </p>
 <h2>11. Stand der Datenschutzerklärung</h2>
-<p>Diese Datenschutzerklärung ist auf dem neusten Stand und datiert vom 13.10.2024.</p>
+<p>Diese Datenschutzerklärung ist auf dem neusten Stand und datiert vom 25.07.2026.</p>
 <p>
-    <strong>Diese Datenschutzerklärung wurde erstellt durch <a href="https://lexdex.ch">LEXDEX.ch</a></strong>
+    <strong
+        >Diese Datenschutzerklärung wurde erstellt durch <a href="https://lexdex.ch">LEXDEX.ch</a> und teilweise abgeändert durch <a [href]="developerContactUrl" target="_blank">{{ developerName }}</a
+        >.</strong
+    >
 </p>
 <p>
     <a class="download" [href]="pdfUrl" [download]="pdfDownloadName" target="_blank">Download</a>

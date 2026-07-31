@@ -1,5 +1,5 @@
 <div class="popup" (click)="close()">
-    <form class="wrapper" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
+    <form class="wrapper" [formGroup]="sourceForm" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
         <h2>{{ title() }}</h2>
         <p>{{ description() }}</p>
 
@@ -89,10 +89,10 @@
         </div>
 
         <label for="sourceName">{{ sourceNameLabel() }}</label>
-        <input type="text" id="sourceName" [placeholder]="initialSourceName()" (input)="streamSourceName($event)" />
+        <input type="text" id="sourceName" [placeholder]="'Keine Quelle'" (input)="streamSourceName($event)" formControlName="contentControl" />
 
         <label for="sourceUrl">{{ sourceUrlLabel() }}</label>
-        <input type="text" id="sourceUrl" [placeholder]="initialSourceUrl()" (input)="streamSourceUrl($event)" />
+        <input type="text" id="sourceUrl" [placeholder]="'Keine Quelle'" (input)="streamSourceUrl($event)" formControlName="urlControl" />
 
         <button type="submit" class="submit">{{ submitButtonText() }}</button>
         <button type="button" class="close" (click)="close()">

@@ -32,16 +32,7 @@ export class CookieConsentService {
 
         localStorage.setItem("cookie_consent", "true");
 
-        localStorage.setItem(
-            "cookie_consent_mode",
-            JSON.stringify({
-                ad_storage: "granted",
-                analytics_storage: "granted",
-                functionality_storage: "granted",
-                personalization_storage: "granted",
-                security_storage: "granted",
-            }),
-        );
+        localStorage.removeItem("tianji.disabled");
 
         document.dispatchEvent(this.consentEvent);
     }
@@ -66,16 +57,7 @@ export class CookieConsentService {
 
         localStorage.setItem("cookie_consent", "false");
 
-        localStorage.setItem(
-            "cookie_consent_mode",
-            JSON.stringify({
-                ad_storage: "denied",
-                analytics_storage: "denied",
-                personalization_storage: "denied",
-                functionality_storage: "granted",
-                security_storage: "granted",
-            }),
-        );
+        localStorage.setItem("tianji.disabled", "true");
 
         document.dispatchEvent(this.consentEvent);
     }
@@ -127,15 +109,6 @@ export class CookieConsentService {
             return;
         }
 
-        localStorage.setItem(
-            "cookie_consent_mode",
-            JSON.stringify({
-                ad_storage: "denied",
-                analytics_storage: "denied",
-                personalization_storage: "denied",
-                functionality_storage: "granted",
-                security_storage: "granted",
-            }),
-        );
+        localStorage.setItem("tianji.disabled", "true");
     }
 }

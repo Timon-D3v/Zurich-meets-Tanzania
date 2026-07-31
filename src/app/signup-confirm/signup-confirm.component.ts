@@ -1,5 +1,5 @@
 import { Component, computed, inject, PLATFORM_ID, Signal, signal } from "@angular/core";
-import { PUBLIC_CONFIG } from "../../publicConfig"
+import { PUBLIC_CONFIG } from "../../publicConfig";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AuthInputComponent } from "../components/auth-input/auth-input.component";
 import { ApiEndpointResponseWithRedirect } from "../..";

@@ -351,8 +351,6 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
         // - news data is valid
         // - all files have valid mime types
 
-        const IMAGE_FALLBACK_URL = "/backup/fallback.png";
-
         // Upload images
 
         let failedUploads = 0;
@@ -376,7 +374,7 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
 
                 failedUploads++;
 
-                news.imageUrl = IMAGE_FALLBACK_URL;
+                news.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
             }
         }
 
@@ -400,7 +398,7 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
                 failedUploads++;
 
                 // This is a image url, but we can still use it since we show the pdf in an iframe and the iframe can also display images
-                news.pdfUrl = IMAGE_FALLBACK_URL;
+                news.pdfUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
             }
         }
 
@@ -426,7 +424,7 @@ router.post("/updateNews", multerInstance.array("images"), async (req: Request, 
 
                             failedUploads++;
 
-                            image.imageUrl = IMAGE_FALLBACK_URL;
+                            image.imageUrl = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
                         }
                     }
                 }
