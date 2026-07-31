@@ -23,6 +23,7 @@ import {
     StaticSiteNames,
     GetDonationMetersApiEndpointResponse,
     CustomTableElement,
+    CustomSourceElement,
 } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { TeamService } from "../../services/team.service";
@@ -267,6 +268,7 @@ export class DashboardComponent implements OnInit {
      */
 
     textWithImageTextCache = signal<string>("");
+    sourceNameCache = signal<string>("");
 
     /*
      * ===============================================================
@@ -1174,6 +1176,13 @@ export class DashboardComponent implements OnInit {
                 _this.multipleImagesInputOpen.set(true);
             } else if (type === "addTable") {
                 _this.tableInputOpen.set(true);
+            } else if (type === "addSourcePart1") {
+                _this.titleInputOpen.set(true);
+
+                _this.titleInputTitle.set("Quellenname eingeben:");
+                _this.titleInputDescription.set("Bitte gib den Namen deiner Quelle ein, welche du hinzufügen möchtest. Du kannst ihn auch nachher noch bearbeiten.");
+                _this.titleInputLabel.set("Quellenname:");
+                _this.titleInputPlaceholder.set("Quellenname eingeben");
             } else if (type === "addLine") {
                 const element = _this.editService.addLine();
 
@@ -1415,6 +1424,18 @@ export class DashboardComponent implements OnInit {
                 this.tableEditInputInitialSourceUrl.set(elementToEdit.source?.url ?? "Keine Quelle");
 
                 break;
+            
+            case "source":
+                this.currentActionToPerform.set("editSourcePart1")
+                this.titleEditInputOpen.set(true);
+
+                this.titleEditInputTitle.set("Quellenname bearbeiten:");
+                this.titleEditInputDescription.set("Bitte bearbeite den Namen deiner Quelle nach Bedarf.");
+                this.titleEditInputLabel.set("Quellenname:");
+                this.titleEditInputPlaceholder.set("Quellenname eingeben");
+                this.titleEditInputValue.set(elementToEdit.content);
+
+                break;
 
             case "line":
             case "currentTeam":
@@ -1571,6 +1592,18 @@ export class DashboardComponent implements OnInit {
                 break;
             case "editNewsSubtitle":
                 this.editNewsSubtitle(content);
+                break;
+            case "addSourcePart1":
+                this.addSourcePart1(content);
+                break;
+            case "addSourcePart2":
+                this.addSourcePart2(content);
+                break;
+            case "editSourcePart1":
+                this.editSourcePart1(content);
+                break;
+            case "editSourcePart2":
+                this.editSourcePart2(content);
                 break;
             default:
                 this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
@@ -1932,6 +1965,42 @@ export class DashboardComponent implements OnInit {
         this.getCurrentImageStorage().push(file);
 
         const element = this.editService.addImageWithText(file.url, file.file.name, this.textWithImageTextCache(), shouldImageBePlacedRight ? "right" : "left");
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
+        });
+    }
+
+    addSourcePart1(content: string): void {
+        // Add the content to a cache variable and open the image input popup
+
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Die Quelle wurde nicht hinzugefügt, da kein Name eingegeben wurde.");
+            return;
+        }
+
+        this.sourceNameCache.set(content);
+
+        this.currentActionToPerform.set("addSourcePart2");
+
+        this.titleInputOpen.set(true);
+
+        this.titleInputTitle.set("Quellen-URL eingeben:");
+        this.titleInputDescription.set("Bitte gib die URL deiner Quelle ein, welche du hinzufügen möchtest. Du kannst sie auch nachher noch bearbeiten.");
+        this.titleInputLabel.set("Quellen-URL:");
+        this.titleInputPlaceholder.set("Quellen-URL eingeben");
+    }
+
+    addSourcePart2(content: string): void {
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Quelle wurde nicht hinzugefügt, da keine URL eingegeben wurde.");
+            return;
+        }
+
+        const element = this.editService.addSource(this.sourceNameCache(), content);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             return {
@@ -2326,6 +2395,51 @@ export class DashboardComponent implements OnInit {
             (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageUrl = file.url;
             (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).imageAlt = file.file.name;
             (siteOrBlog.data[this.currentIndexToEdit()] as CustomImageWithTextElement).sideOfImage = shouldImageBePlacedRight ? "right" : "left";
+
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
+        });
+    }
+
+    editSourcePart1(content: string): void {
+         // Add the content to a cache variable and open the image input popup
+
+        if (!content) {
+            this.notificationService.info("Leere Eingabe", "Der Quellenname wurde nicht aktualisiert, da ein kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            (siteOrBlog.data[this.currentIndexToEdit()] as CustomSourceElement).content = content;
+
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
+        });
+
+        this.currentActionToPerform.set("editSourcePart2");
+
+        this.titleEditInputOpen.set(true);
+
+        this.titleEditInputTitle.set("Quellen-URL bearbeiten:");
+        this.titleEditInputDescription.set("Bitte bearbeite die URL deiner Quelle nach Bedarf.");
+        this.titleEditInputLabel.set("Quellen-URL:");
+        this.titleEditInputPlaceholder.set("Quellen-URL eingeben");
+        this.titleEditInputValue.set((this.getCurrentEditSignal()().data[this.currentIndexToEdit()] as CustomSourceElement).sourceUrl ?? "");
+
+    }
+
+    editSourcePart2(content: string): void {
+if (!content) {
+            this.notificationService.info("Leere Eingabe", "Die Quellen-URL wurde nicht aktualisiert, da ein kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
+            return;
+        }
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            (siteOrBlog.data[this.currentIndexToEdit()] as CustomSourceElement).sourceUrl = content;
 
             return {
                 ...siteOrBlog,
