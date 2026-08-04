@@ -53,7 +53,6 @@ export class PopupTableInputComponent {
         imageOpen: signal<boolean>(false),
         selectionOpen: signal<boolean>(false),
         confirmOpen: signal<boolean>(false),
-        alertOpen: signal<boolean>(false),
     };
 
     placeholders = {
@@ -385,7 +384,6 @@ export class PopupTableInputComponent {
         this.inputs.imageOpen.set(false);
         this.inputs.selectionOpen.set(false);
         this.inputs.confirmOpen.set(false);
-        this.inputs.alertOpen.set(false);
 
         this.elementToEdit.set(null);
     }

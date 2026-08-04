@@ -1424,9 +1424,9 @@ export class DashboardComponent implements OnInit {
                 this.tableEditInputInitialSourceUrl.set(elementToEdit.source?.url ?? "Keine Quelle");
 
                 break;
-            
+
             case "source":
-                this.currentActionToPerform.set("editSourcePart1")
+                this.currentActionToPerform.set("editSourcePart1");
                 this.titleEditInputOpen.set(true);
 
                 this.titleEditInputTitle.set("Quellenname bearbeiten:");
@@ -2404,7 +2404,7 @@ export class DashboardComponent implements OnInit {
     }
 
     editSourcePart1(content: string): void {
-         // Add the content to a cache variable and open the image input popup
+        // Add the content to a cache variable and open the image input popup
 
         if (!content) {
             this.notificationService.info("Leere Eingabe", "Der Quellenname wurde nicht aktualisiert, da ein kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
@@ -2429,11 +2429,10 @@ export class DashboardComponent implements OnInit {
         this.titleEditInputLabel.set("Quellen-URL:");
         this.titleEditInputPlaceholder.set("Quellen-URL eingeben");
         this.titleEditInputValue.set((this.getCurrentEditSignal()().data[this.currentIndexToEdit()] as CustomSourceElement).sourceUrl ?? "");
-
     }
 
     editSourcePart2(content: string): void {
-if (!content) {
+        if (!content) {
             this.notificationService.info("Leere Eingabe", "Die Quellen-URL wurde nicht aktualisiert, da ein kein Inhalt eingegeben wurde. Wenn du das Element löschen möchtest, benutze bitte die Lösch-Funktion.");
             return;
         }

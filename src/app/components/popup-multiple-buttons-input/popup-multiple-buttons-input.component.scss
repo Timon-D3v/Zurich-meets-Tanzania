@@ -1,0 +1,214 @@
+@use "../../../styles/index" as *;
+
+.popup {
+    @include popup-backdrop;
+}
+
+.wrapper {
+    max-width: 800px;
+    width: auto;
+    height: auto;
+    background-color: var(--background-50);
+    color: var(--text-950);
+    border-radius: 16px;
+    padding: 2.5rem 1.5rem;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 0 7.5px #c7cdd180;
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0;
+    margin-top: 0;
+}
+
+p {
+    font-size: medium;
+    margin: 1vh 5%;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+label {
+    @include admin-label;
+
+    & + input {
+        padding: 0.5em 1em;
+    }
+}
+
+.submit {
+    @include primary-button;
+    margin-top: 3vh;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.close {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+
+    & > img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        aspect-ratio: 1 / 1;
+        object-position: center;
+        filter: invert(var(--darkmode));
+    }
+}
+
+.button-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: max(1vh, 1rem) max(3vw, 1rem);
+    margin: 3vh 5vw;
+}
+
+h2 {
+    text-align: center;
+}
+
+.addButton,
+.removeButton {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    max-height: 2rem;
+
+    & > img {
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        object-position: center;
+    }
+}
+
+.button.functional-buttons {
+    width: 4rem;
+    display: flex;
+    align-items: center;
+}
+
+a {
+    position: relative;
+    padding-right: 30px;
+    min-height: 30px;
+    border: 1px dashed transparent;
+
+    & .edit,
+    & .reset {
+        display: none;
+    }
+
+    &:has(.addButton),
+    &:has(.removeButton) {
+        height: 1.5rem;
+        padding: 0.25rem 0 0 0 !important;
+        list-style-type: none;
+        min-height: unset;
+        border: none !important;
+        transform: translateX(-10px); // 1/4 of the padding of a ul
+    }
+
+    &:hover {
+        border: 1px solid var(--background-950);
+        cursor: default;
+
+        & .edit,
+        & .reset {
+            display: block;
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            aspect-ratio: 1 / 1;
+            background-color: var(--background-950);
+            box-sizing: border-box;
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background-color 0.25s ease-in-out;
+
+            &:hover {
+                background-color: var(--background-800);
+            }
+
+            &:active {
+                background-color: var(--background-700);
+            }
+
+            & img {
+                filter: invert(var(--not-darkmode)) !important;
+                width: 20px;
+                height: 20px;
+                aspect-ratio: 1 / 1;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+
+        & .edit {
+            right: 0px;
+        }
+
+        & .reset {
+            right: 40px;
+        }
+    }
+}
+
+a {
+    &.primary {
+        @include primary-button;
+        // This is a important duplication
+        padding: 0 3vw;
+        height: 50px;
+    }
+
+    &.secondary {
+        @include secondary-button;
+        // This is a important duplication
+        padding: 0 3vw;
+        height: 50px;
+    }
+}
+
+@media screen and (max-width: 275px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: small;
+    }
+
+    .submit {
+        font-size: 15px;
+    }
+
+    .close {
+        display: none;
+    }
+}

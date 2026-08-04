@@ -1,9 +1,9 @@
 .wrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: 3vh 5vw;
+    gap: 0 min(5vw, 2.5rem);
     justify-content: space-evenly;
-    padding: 0 5vw;
+    padding: 0 calc(5vw + 20px) 0 5vw;
     box-sizing: border-box;
 }
 

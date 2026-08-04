@@ -11,12 +11,14 @@
 a {
     &.primary {
         @include primary-button;
+        // This is a important duplication
         padding: 0 3vw;
         height: 50px;
     }
 
     &.secondary {
         @include secondary-button;
+        // This is a important duplication
         padding: 0 3vw;
         height: 50px;
     }
