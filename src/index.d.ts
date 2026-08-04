@@ -686,7 +686,11 @@ export type DashboardEditTypes =
     | "editTable"
     | "editPdfViewer"
     | "editSourcePart1"
-    | "editSourcePart2";
+    | "editSourcePart2"
+    | "addMultipleButtons"
+    | "editMultipleButtons"
+    | "addMultipleLists"
+    | "editMultipleLists";
 
 export type Team = {
     id: number;

@@ -24,6 +24,8 @@ import {
     GetDonationMetersApiEndpointResponse,
     CustomTableElement,
     CustomSourceElement,
+    CustomMultipleButtonsElement,
+    CustomMultipleListsElement,
 } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { TeamService } from "../../services/team.service";
@@ -76,6 +78,8 @@ import { formatDateRangeString } from "../../../shared/utils";
 import { AdminFileExplorerComponent } from "../components/admin-file-explorer/admin-file-explorer.component";
 import { DonationService } from "../../services/donation.service";
 import { PopupTableInputComponent } from "../../components/popup-table-input/popup-table-input.component";
+import { PopupMultipleButtonsInputComponent } from "../../components/popup-multiple-buttons-input/popup-multiple-buttons-input.component";
+import { PopupMultipleListsInputComponent } from "../../components/popup-multiple-lists-input/popup-multiple-lists-input.component";
 
 @Component({
     selector: "app-dashboard",
@@ -121,6 +125,8 @@ import { PopupTableInputComponent } from "../../components/popup-table-input/pop
         PopupFileInputComponent,
         AdminFileExplorerComponent,
         PopupTableInputComponent,
+        PopupMultipleButtonsInputComponent,
+        PopupMultipleListsInputComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
@@ -180,6 +186,8 @@ export class DashboardComponent implements OnInit {
     fileInputOpen = signal<boolean>(false);
     multipleImagesInputOpen = signal<boolean>(false);
     tableInputOpen = signal<boolean>(false);
+    multipleButtonsInputOpen = signal<boolean>(false);
+    multipleListsInputOpen = signal<boolean>(false);
     selectionInputOpen = signal<boolean>(false);
     confirmInputOpen = signal<boolean>(false);
     alertOpen = signal<boolean>(false);
@@ -190,6 +198,8 @@ export class DashboardComponent implements OnInit {
     multipleImagesEditInputOpen = signal<boolean>(false);
     fileEditInputOpen = signal<boolean>(false);
     tableEditInputOpen = signal<boolean>(false);
+    multipleButtonsEditInputOpen = signal<boolean>(false);
+    multipleListsEditInputOpen = signal<boolean>(false);
 
     /*
      * ===============================================================
@@ -242,6 +252,14 @@ export class DashboardComponent implements OnInit {
     multipleImagesEditInputDescription = signal<string>("");
     multipleImagesEditInputLabel = signal<string>("");
     multipleImagesEditInputValue = signal<{ imageUrl: string; imageAlt: string }[]>([]);
+
+    multipleButtonsEditInputTitle = signal<string>("");
+    multipleButtonsEditInputDescription = signal<string>("");
+    multipleButtonsEditInputValue = signal<CustomMultipleButtonsElement["buttons"]>([]);
+
+    multipleListsEditInputTitle = signal<string>("");
+    multipleListsEditInputDescription = signal<string>("");
+    multipleListsEditInputValue = signal<CustomMultipleListsElement["lists"]>([]);
 
     selectionInputTitle = signal<string>("");
     selectionInputDescription = signal<string>("");
@@ -793,12 +811,16 @@ export class DashboardComponent implements OnInit {
         this.imageInputOpen.set(false);
         this.fileInputOpen.set(false);
         this.multipleImagesInputOpen.set(false);
+        this.multipleButtonsInputOpen.set(false);
+        this.multipleListsInputOpen.set(false);
         this.tableInputOpen.set(false);
 
         this.titleEditInputOpen.set(false);
         this.textEditInputOpen.set(false);
         this.imageEditInputOpen.set(false);
         this.multipleImagesEditInputOpen.set(false);
+        this.multipleButtonsEditInputOpen.set(false);
+        this.multipleListsEditInputOpen.set(false);
         this.fileEditInputOpen.set(false);
         this.tableEditInputOpen.set(false);
 
@@ -1211,6 +1233,10 @@ export class DashboardComponent implements OnInit {
                         };
                     });
                 });
+            } else if (type === "addMultipleButtons") {
+                _this.multipleButtonsInputOpen.set(true);
+            } else if (type === "addMultipleLists") {
+                _this.multipleListsInputOpen.set(true);
             } else if (type === "addBoard") {
                 const element = _this.editService.addBoard();
 
@@ -1434,6 +1460,26 @@ export class DashboardComponent implements OnInit {
                 this.titleEditInputLabel.set("Quellenname:");
                 this.titleEditInputPlaceholder.set("Quellenname eingeben");
                 this.titleEditInputValue.set(elementToEdit.content);
+
+                break;
+
+            case "multipleButtons":
+                this.currentActionToPerform.set("editMultipleButtons");
+                this.multipleButtonsEditInputOpen.set(true);
+
+                this.multipleButtonsEditInputTitle.set("Buttons bearbeiten:");
+                this.multipleButtonsEditInputDescription.set("Bearbeite mehrere Buttons welche nebeneinander aufgeführt werden und als Link agieren.");
+                this.multipleButtonsEditInputValue.set(elementToEdit.buttons);
+
+                break;
+
+            case "multipleLists":
+                this.currentActionToPerform.set("editMultipleLists");
+                this.multipleListsEditInputOpen.set(true);
+
+                this.multipleListsEditInputTitle.set("Listen bearbeiten:");
+                this.multipleListsEditInputDescription.set("Bearbeite mehrere Listen welche nebeneinander aufgeführt werden mit den gewünschten Daten.");
+                this.multipleListsEditInputValue.set(elementToEdit.lists);
 
                 break;
 
@@ -1787,6 +1833,40 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    handleMultipleButtonsInputResult(buttons: CustomMultipleButtonsElement["buttons"]): void {
+        this.multipleButtonsInputOpen.set(false);
+        this.multipleButtonsEditInputOpen.set(false);
+
+        switch (this.currentActionToPerform()) {
+            case "addMultipleButtons":
+                this.addMultipleButtons(buttons);
+                break;
+            case "editMultipleButtons":
+                this.editMultipleButtons(buttons);
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
+    handleMultipleListsInputResult(lists: CustomMultipleListsElement["lists"]): void {
+        this.multipleListsInputOpen.set(false);
+        this.multipleListsEditInputOpen.set(false);
+
+        switch (this.currentActionToPerform()) {
+            case "addMultipleLists":
+                this.addMultipleLists(lists);
+                break;
+            case "editMultipleLists":
+                this.editMultipleLists(lists);
+                break;
+            default:
+                this.notificationService.error("Unbekannte Aktion", "Diese Aktion kann nicht mit dem aktuellen Popup verarbeitet werden.");
+                break;
+        }
+    }
+
     handleConfirmInputResult(confirmed: boolean): void {
         this.confirmInputOpen.set(false);
 
@@ -2133,6 +2213,28 @@ export class DashboardComponent implements OnInit {
         const { headers, rows, source } = table;
 
         const element = this.editService.addTable(headers, rows, source);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
+        });
+    }
+
+    addMultipleButtons(buttons: CustomMultipleButtonsElement["buttons"]): void {
+        const element = this.editService.addMultipleButtons(buttons);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            return {
+                ...siteOrBlog,
+                data: [element, ...siteOrBlog.data],
+            };
+        });
+    }
+
+    addMultipleLists(lists: CustomMultipleListsElement["lists"]): void {
+        const element = this.editService.addMultipleLists(lists);
 
         this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
             return {
@@ -2569,7 +2671,31 @@ export class DashboardComponent implements OnInit {
 
             siteOrBlog.data[this.currentIndexToEdit()] = element;
 
-            console.log(this.currentIndexToEdit());
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
+        });
+    }
+
+    editMultipleButtons(buttons: CustomMultipleButtonsElement["buttons"]): void {
+        const element = this.editService.addMultipleButtons(buttons);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
+
+            return {
+                ...siteOrBlog,
+                data: [...siteOrBlog.data],
+            };
+        });
+    }
+
+    editMultipleLists(lists: CustomMultipleListsElement["lists"]): void {
+        const element = this.editService.addMultipleLists(lists);
+
+        this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+            siteOrBlog.data[this.currentIndexToEdit()] = element;
 
             return {
                 ...siteOrBlog,

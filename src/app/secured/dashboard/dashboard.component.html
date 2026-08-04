@@ -413,13 +413,13 @@
                             href: '#Listen',
                             label: 'Listen',
                             clickable: true,
-                            onClick: generateEditFunction('addLists'),
+                            onClick: generateEditFunction('addMultipleLists'),
                         },
                         {
                             href: '#Buttons',
                             label: 'Buttons',
                             clickable: true,
-                            onClick: generateEditFunction('addButtons'),
+                            onClick: generateEditFunction('addMultipleButtons'),
                         },
                         {
                             href: '#Quelle',
@@ -673,6 +673,10 @@
     <app-popup-multiple-images-input (resultOutput)="handleMultipleImagesInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-images-input>
 } @else if (tableInputOpen()) {
     <app-popup-table-input (resultOutput)="handleTableInputResult($event)" (filesOutput)="addFileToCurrentImageStorage($event)" (closeOutput)="closePopup()"></app-popup-table-input>
+} @else if (multipleButtonsInputOpen()) {
+    <app-popup-multiple-buttons-input (resultOutput)="handleMultipleButtonsInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-buttons-input>
+} @else if (multipleListsInputOpen()) {
+    <app-popup-multiple-lists-input (resultOutput)="handleMultipleListsInputResult($event)" (closeOutput)="closePopup()"></app-popup-multiple-lists-input>
 }
 
 @if (titleEditInputOpen()) {
@@ -737,7 +741,26 @@
         [initialRows]="tableEditInputInitialRows()"
         [initialSourceName]="tableEditInputInitialSourceName()"
         [initialSourceUrl]="tableEditInputInitialSourceUrl()"
+        [submitButtonText]="'Aktualisieren'"
     ></app-popup-table-input>
+} @else if (multipleButtonsEditInputOpen()) {
+    <app-popup-multiple-buttons-input
+        (resultOutput)="handleMultipleButtonsInputResult($event)"
+        (closeOutput)="closePopup()"
+        [title]="multipleButtonsEditInputTitle()"
+        [description]="multipleButtonsEditInputDescription()"
+        [initialButtons]="multipleButtonsEditInputValue()"
+        [submitButtonText]="'Aktualisieren'"
+    ></app-popup-multiple-buttons-input>
+} @else if (multipleListsEditInputOpen()) {
+    <app-popup-multiple-lists-input
+        (resultOutput)="handleMultipleListsInputResult($event)"
+        (closeOutput)="closePopup()"
+        [title]="multipleListsEditInputTitle()"
+        [description]="multipleListsEditInputDescription()"
+        [initialLists]="multipleListsEditInputValue()"
+        [submitButtonText]="'Aktualisieren'"
+    ></app-popup-multiple-lists-input>
 }
 
 @if (selectionInputOpen()) {
