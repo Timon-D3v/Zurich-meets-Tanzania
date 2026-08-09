@@ -7,6 +7,6 @@
     </p>
     <app-donation-amount-input [placeholder]="'50'" [disabled]="true"></app-donation-amount-input>
     <div class="buttons-wrapper">
-        <button (click)="signUp()">Mitglied werden</button>
+        <button (click)="signUp()" [disabled]="buttonDisabled()">{{ buttonText() }}</button>
     </div>
 </div>

@@ -4,16 +4,16 @@ import { NewsComponent } from "../components/news/news.component";
 import { RouterLink } from "@angular/router";
 import { CalendarComponent } from "../components/calendar/calendar.component";
 import { BlogPreviewComponent } from "../components/blog-preview/blog-preview.component";
-import { CalendarEvent, GetCalendarEventsApiEndpointResponse, GetBoardApiEndpointResponse, BoardUser } from "../..";
+import { CalendarEvent, GetCalendarEventsApiEndpointResponse } from "../..";
 import { CalendarService } from "../services/calendar.service";
 import { isPlatformBrowser } from "@angular/common";
 import { NotificationService } from "../services/notification.service";
-import { TeamService } from "../services/team.service";
 import { BoardComponent } from "../components/board/board.component";
+import { CustomMultipleButtonsComponent } from "../components/custom-multiple-buttons/custom-multiple-buttons.component";
 
 @Component({
     selector: "app-home",
-    imports: [HeroComponent, NewsComponent, RouterLink, CalendarComponent, BlogPreviewComponent, BoardComponent],
+    imports: [HeroComponent, NewsComponent, RouterLink, CalendarComponent, BlogPreviewComponent, BoardComponent, CustomMultipleButtonsComponent],
     templateUrl: "./home.component.html",
     styleUrl: "./home.component.scss",
 })
@@ -26,17 +26,16 @@ export class HomeComponent implements OnInit {
 
     readonly newsTitle = "Aktuell:";
 
-    private teamService = inject(TeamService);
     private calendarService = inject(CalendarService);
     private notificationService = inject(NotificationService);
 
-    private platfromId = inject(PLATFORM_ID);
+    private platformId = inject(PLATFORM_ID);
 
     numberOfEvents = signal(5);
     events = signal<CalendarEvent[]>([]);
 
     ngOnInit(): void {
-        if (!isPlatformBrowser(this.platfromId)) {
+        if (!isPlatformBrowser(this.platformId)) {
             console.error("Cannot make API calls on the server side. Calendar events will not be loaded.");
             return;
         }

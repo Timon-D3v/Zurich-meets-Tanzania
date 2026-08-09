@@ -135,7 +135,7 @@ export class PopupMultipleButtonsInputComponent {
     submit(output: string) {
         const index = this.buttonToEdit();
 
-        if (!index) {
+        if (!index && index !== 0) {
             this.notificationService.error("Fehler:", "Es konnte kein Button zum Bearbeiten gefunden werden.");
             return;
         }

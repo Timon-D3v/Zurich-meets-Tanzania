@@ -1,7 +1,15 @@
 import { Request, Response, Router } from "express";
 import { multerInstance } from "../shared/instance.multer";
 import { delivApiUpload, delivApiUpdateFile } from "delivapi-client";
-import { UpdateUserInformationApiEndpointResponse, UpdateUserProfilePictureWithIdApiEndpointResponse, Invoice, ApiEndpointResponse, GetInvoicesApiEndpointResponse, GetExpandedUserInformationApiEndpointResponse } from "..";
+import {
+    UpdateUserInformationApiEndpointResponse,
+    UpdateUserProfilePictureWithIdApiEndpointResponse,
+    Invoice,
+    ApiEndpointResponse,
+    GetInvoicesApiEndpointResponse,
+    GetExpandedUserInformationApiEndpointResponse,
+    UpdateExpandedUserInformationApiEndpointResponse,
+} from "..";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { setNewEmailWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewAddressWithId, setNewPasswordWithId, setNewProfilePictureWithId, setNewPhoneNumberWithId } from "../shared/user.database";
 import { CONFIG } from "../config";
@@ -10,7 +18,7 @@ import { sendPasswordChangeConfirmation } from "../shared/auth.email";
 import { getAllNewsletterEmails, updateNewsletterList, addToNewsletterList, removeFromNewsletterList, getNewsletterDetailsWithEmail } from "../shared/newsletter.database";
 import { stripeClient } from "../shared/stripe";
 import { getMemberWithUserId } from "../shared/member.database";
-import { getTeamMemberEntry } from "../shared/team.database";
+import { getTeamMemberEntry, updateTeamMemberMotive, updateTeamMemberProfession, updateTeamMemberRole, updateTeamMemberSecondaryPicture } from "../shared/team.database";
 
 // Router Serves under /api/secured/account
 const router = Router();
@@ -541,29 +549,151 @@ router.get("/getExpandedUserInformation", async (req: Request, res: Response): P
     }
 });
 
-router.post("/updateExpandedUserInformation", multerInstance.single("image"), async (req: Request, res: Response): Promise<void> => {
+router.post("/updateExpandedUserInformation", async (req: Request, res: Response): Promise<void> => {
     try {
-        const file = req.file;
+        const { motive, profession, role, secondaryPicture } = req.body;
+
         const user = req.session.user!;
 
-        if (!file) {
-            throw new Error("No file uploaded.");
+        const alreadyDoneUpdates: Array<"motive" | "profession" | "role" | "secondaryPicture"> = [];
+
+        if (motive === null) {
+            // Skip the motive
+            console.info("Motive will not be updated.");
+        } else {
+            if (typeof motive === "string" || motive === "") {
+                // Motive is valid: Save it to the database
+                const result = await updateTeamMemberMotive(user.id, motive);
+
+                if (result.error) {
+                    const result = await getTeamMemberEntry(user.id);
+
+                    if (result.error !== null) {
+                        throw new Error(result.error);
+                    }
+
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern des Motivs ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates,
+                            newUser: result.data[0],
+                        },
+                    } as UpdateExpandedUserInformationApiEndpointResponse);
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("motive");
+            } else {
+                throw new Error("Das eingegebene Motiv ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
         }
 
-        const allowedMimeTypes = ["application/octet-stream", "image/png", "image/jpg", "image/gif", "image/jpeg", "image/tiff", "image/raw", "image/bpm", "image/webp", "image/ico"];
+        if (profession === null) {
+            // Skip the profession
+            console.info("Profession will not be updated.");
+        } else {
+            if (typeof profession === "string" || profession === "") {
+                // Profession is valid: Save it to the database
+                const result = await updateTeamMemberProfession(user.id, profession);
 
-        if (!allowedMimeTypes.includes(file.mimetype)) {
-            console.error("Invalid file mime type for file:", file.originalname, "with mime type:", file.mimetype);
-            throw new Error(`Die Datei '${file.originalname}' ist keine gültige Bilddatei. Bitte lade nur Bilddateien hoch.`);
+                if (result.error) {
+                    const result = await getTeamMemberEntry(user.id);
+
+                    if (result.error !== null) {
+                        throw new Error(result.error);
+                    }
+
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern der Berufsbezeichnung ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates,
+                            newUser: result.data[0],
+                        },
+                    } as UpdateExpandedUserInformationApiEndpointResponse);
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("profession");
+            } else {
+                throw new Error("Die eingegebene Berufsbezeichnung ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
         }
 
-        const response = user.picture === PUBLIC_CONFIG.FALLBACK_PROFILE_PICTURE ? await delivApiUpload(file.buffer) : await delivApiUpdateFile(user.picture.replace(`${CONFIG.DELIVAPI_URL}/cdn/${CONFIG.DELIVAPI_USER}/`, ""), file.buffer);
+        if (role === null) {
+            // Skip the role
+            console.info("Role will not be updated.");
+        } else {
+            if (typeof role === "string" || role === "") {
+                // Role is valid: Save it to the database
+                const result = await updateTeamMemberRole(user.id, role);
 
-        if (response.error) {
-            throw new Error("Bild konnte nicht hochgeladen werden: " + response.message);
+                if (result.error) {
+                    const result = await getTeamMemberEntry(user.id);
+
+                    if (result.error !== null) {
+                        throw new Error(result.error);
+                    }
+
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern der Rollenbezeichnung ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates,
+                            newUser: result.data[0],
+                        },
+                    } as UpdateExpandedUserInformationApiEndpointResponse);
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("role");
+            } else {
+                throw new Error("Die eingegebene Rollenbezeichnung ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
         }
 
-        const result = await setNewProfilePictureWithId(user.id, response.url);
+        if (secondaryPicture === null) {
+            // Skip the secondary picture
+            console.info("Secondary picture will not be updated.");
+        } else {
+            if (typeof secondaryPicture === "string" || secondaryPicture === "") {
+                // Secondary picture is valid: Save it to the database
+                const result = await updateTeamMemberSecondaryPicture(user.id, secondaryPicture);
+
+                if (result.error) {
+                    const result = await getTeamMemberEntry(user.id);
+
+                    if (result.error !== null) {
+                        throw new Error(result.error);
+                    }
+
+                    res.json({
+                        error: true,
+                        message: "Beim Speichern des sekundären Bildes ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+                        data: {
+                            partialUpdate: alreadyDoneUpdates.length > 0,
+                            alreadyDoneUpdates,
+                            newUser: result.data[0],
+                        },
+                    } as UpdateExpandedUserInformationApiEndpointResponse);
+
+                    return;
+                }
+
+                alreadyDoneUpdates.push("secondaryPicture");
+            } else {
+                throw new Error("Das eingegebene sekundäre Bild ist ungültig. Bitte überprüfe deine Eingabe.");
+            }
+        }
+
+        const result = await getTeamMemberEntry(user.id);
 
         if (result.error !== null) {
             throw new Error(result.error);
@@ -571,11 +701,13 @@ router.post("/updateExpandedUserInformation", multerInstance.single("image"), as
 
         res.json({
             error: false,
-            message: "Dein Profilbild wurde erfolgreich aktualisiert.",
+            message: "Deine Informationen wurden erfolgreich aktualisiert. (Oder es gab keine Änderungen.)",
             data: {
-                pictureUrl: response.url,
+                partialUpdate: false,
+                alreadyDoneUpdates,
+                newUser: result.data[0],
             },
-        } as UpdateUserProfilePictureWithIdApiEndpointResponse);
+        } as UpdateExpandedUserInformationApiEndpointResponse);
     } catch (error) {
         console.error(error);
 
@@ -583,8 +715,12 @@ router.post("/updateExpandedUserInformation", multerInstance.single("image"), as
             res.json({
                 error: true,
                 message: error.message,
-                data: null,
-            } as UpdateUserProfilePictureWithIdApiEndpointResponse);
+                data: {
+                    partialUpdate: false,
+                    alreadyDoneUpdates: [],
+                    newUser: null,
+                },
+            } as UpdateExpandedUserInformationApiEndpointResponse);
 
             return;
         }
@@ -592,8 +728,12 @@ router.post("/updateExpandedUserInformation", multerInstance.single("image"), as
         res.status(501).json({
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
-            data: null,
-        } as UpdateUserProfilePictureWithIdApiEndpointResponse);
+            data: {
+                partialUpdate: false,
+                alreadyDoneUpdates: [],
+                newUser: null,
+            },
+        } as UpdateExpandedUserInformationApiEndpointResponse);
     }
 });
 

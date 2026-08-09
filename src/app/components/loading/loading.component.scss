@@ -2,6 +2,10 @@ div {
     display: grid;
     place-items: center;
     min-height: 50vh;
+
+    &.spinner-only {
+        min-height: unset;
+    }
 }
 
 span {

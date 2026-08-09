@@ -113,6 +113,20 @@ COMMENT = 'This table holds the payment information about all members that are s
 
 
 
+CREATE TABLE IF NOT EXISTS `zmt`.`legacyMembers` (
+    `legacyMemberId` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `status` VARCHAR(32) NOT NULL,
+    `periodStartTime` BIGINT NOT NULL,
+    `periodEndTime` BIGINT NOT NULL,
+    `subscriptionStartTime` BIGINT NOT NULL,
+    PRIMARY KEY (`legacyMemberId`),
+    UNIQUE INDEX `legacyMembers_user_id_UNIQUE` (`userId` ASC) VISIBLE
+)
+COMMENT = 'This table holds the payment information about all members that are subscribed to the membership of zmt, but did not subscribe via stripe.';
+
+
+
 CREATE TABLE IF NOT EXISTS `zmt`.`team` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `motto` VARCHAR(512) NOT NULL,

@@ -78,18 +78,6 @@ router.get("/createCheckoutSession", async (req: Request, res: Response): Promis
             ui_mode: "hosted_page",
         });
 
-        // const session: any = await stripeClient.checkout.sessions.create({
-        //     line_items: [
-        //         {
-        //             price: CONFIG.ENV === "prod" ? CONFIG.STRIPE_PRICE_MEMBERSHIP : CONFIG.STRIPE_PRICE_MEMBERSHIP_TEST,
-        //             quantity: 1,
-        //         },
-        //     ],
-        //     mode: "subscription",
-        //     success_url: `${CONFIG.ORIGIN}/payment-success`, // CHANGE AND CREATE ROUTES
-        //     cancel_url: `${CONFIG.ORIGIN}/payment-cancelled`,
-        // });
-
         const result = await storeStripeCheckoutSession(user.id, session.id, customer.id);
 
         if (result.error) {

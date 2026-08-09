@@ -14,3 +14,9 @@ a {
         color: var(--primary-500);
     }
 }
+
+.min-width-750px {
+    @media screen and (min-width: 750px) {
+        display: none;
+    }
+}

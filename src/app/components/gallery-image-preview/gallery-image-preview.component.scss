@@ -17,13 +17,27 @@
     position: relative;
     box-shadow: 0 0 7.5px #c7cdd180;
 
-    & img {
+    & > img {
         width: 100%;
         height: auto;
+        max-height: calc(100vh - 20vh - 4.5rem - 1vh);
+        min-height: 20vh;
+        min-width: 20vw;
         object-fit: contain;
         object-position: center;
         border-radius: 4px;
     }
+}
+
+app-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
 }
 
 button {

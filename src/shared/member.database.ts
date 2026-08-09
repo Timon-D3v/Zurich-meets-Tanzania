@@ -108,3 +108,34 @@ export async function updateMember(memberId: number, userId: number, subscriptio
         };
     }
 }
+
+export async function createLegacyMember(userId: number, currentPeriodStart: number, currentPeriodEnd: number, startDate: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`legacyMembers\` (\`userId\`, \`status\`, \`periodStartTime\`, \`periodEndTime\`, \`subscriptionStartTime\`) VALUES (?, ?, ?, ?, ?);`, [
+            userId,
+            "unverified",
+            currentPeriodStart,
+            currentPeriodEnd,
+            startDate,
+        ]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}

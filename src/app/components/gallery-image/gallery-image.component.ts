@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, signal } from "@angular/core";
 import { DelivApiFile } from "../../..";
 
 @Component({
@@ -10,10 +10,15 @@ import { DelivApiFile } from "../../..";
 export class GalleryImageComponent {
     image = input.required<DelivApiFile>();
     transformation = input<string>("");
+    keepTransformation = input<boolean>(false);
 
-    getFilePreviewUrl(file: DelivApiFile): string {
+    stripTransformation = signal<boolean>(false);
+
+    getFilePreviewUrl(file: DelivApiFile, stripTransformation: boolean): string {
         if (file.mimetype.startsWith("image/")) {
-            return file.url + this.transformation();
+            const transformation = this.keepTransformation() || !stripTransformation ? this.transformation() : "";
+
+            return file.url + transformation;
         } else if (file.mimetype.startsWith("video/")) {
             return "/svg/video.svg";
         } else if (file.mimetype.startsWith("audio/")) {

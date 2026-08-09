@@ -1,6 +1,9 @@
 <div class="popup" (click)="close()">
     <div class="wrapper" (click)="$event.stopPropagation()">
-        <img [src]="image().url" [alt]="image().uuid" />
+        <img [src]="image().url" [alt]="image().uuid" [style.filter]="blurred() ? 'blur(5px) brightness(0.8)' : null" (load)="blurred.set(false)" />
+        @if (blurred()) {
+            <app-loading [page]="false"></app-loading>
+        }
         <button type="button" class="close" title="Schliessen" (click)="close()">
             <img src="/svg/close.svg" alt="Bildvorschau schliessen" />
         </button>
