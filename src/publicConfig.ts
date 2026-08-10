@@ -197,6 +197,8 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 "/privacy",
                 "/statutes",
                 "/vision",
+                "/payment-success",
+                "/payment-cancelled",
             ],
             REDIRECTS: ["/shop"],
         },
@@ -384,6 +386,16 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 title: "Vision",
                 description: "Unsere Vision für das Hauptprojekt sowie die vielen Tochterprojekte findest du auf dieser Seite.",
                 lastUpdated: "Sat Nov 22 2025 19:50:52 GMT+0100 (Mitteleuropäische Normalzeit)",
+            },
+            "/payment-success": {
+                title: "Zahlung erfolgreich",
+                description: "Vielen Dank für deine Zahlung. Wir haben sie erfolgreich erhalten und werden dich per sofort als Mitglied in unserem System registrieren.",
+                lastUpdated: "Mon Aug 10 2026 06:13:51 GMT+0200 (Central European Summer Time)",
+            },
+            "/payment-cancelled": {
+                title: "Zahlung abgebrochen",
+                description: "Deine Zahlung wurde abgebrochen. Solltest du Fragen haben, kontaktiere uns gerne.",
+                lastUpdated: "Mon Aug 10 2026 06:14:45 GMT+0200 (Central European Summer Time)",
             },
             "/shop": {
                 title: "Shop",

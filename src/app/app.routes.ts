@@ -205,6 +205,24 @@ export const routes: Routes = [
         title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter-sign-out"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
+        path: "payment-success",
+        loadComponent: async () => {
+            const component = await import("./payment-response/payment-response.component");
+            return component.PaymentResponseComponent;
+        },
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/payment-success"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { status: "success" },
+    },
+    {
+        path: "payment-cancelled",
+        loadComponent: async () => {
+            const component = await import("./payment-response/payment-response.component");
+            return component.PaymentResponseComponent;
+        },
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/payment-cancelled"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        data: { status: "cancelled" },
+    },
+    {
         path: "privacy",
         loadComponent: async () => {
             const component = await import("./privacy/privacy.component");

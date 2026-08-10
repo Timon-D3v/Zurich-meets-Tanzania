@@ -10,6 +10,14 @@ export const serverRoutes: ServerRoute[] = [
         renderMode: RenderMode.Server,
     },
     {
+        path: "payment-success",
+        renderMode: RenderMode.Client,
+    },
+    {
+        path: "payment-cancelled",
+        renderMode: RenderMode.Client,
+    },
+    {
         path: "**",
         renderMode: RenderMode.Prerender,
     },

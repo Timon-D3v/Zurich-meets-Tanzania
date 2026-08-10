@@ -1,5 +1,6 @@
 import { stripeClient } from "./stripe";
 import { setUserTypeToMember, getMemberWithUserId, createMember, updateMember } from "./member.database";
+import { sendCriticalErrorEmailForStripeSubscriptionNotFound } from "./member.email";
 
 export async function paymentIntentSucceeded(event: any): Promise<void> {
     const paymentIntent = event.data.object;
@@ -20,14 +21,33 @@ export async function paymentIntentSucceeded(event: any): Promise<void> {
         throw new Error("Invalid userId in customer metadata");
     }
 
-    const subscriptionList = await stripeClient.subscriptions.list({
-        customer: customerId,
-    });
+    let retriesPossible = 5;
+    let subscription = customer.subscriptions?.data[0];
 
-    const subscription = customer.subscriptions?.data[0];
+    while (retriesPossible > 0 && !subscription) {
+        console.warn("No subscription found for customer " + customerId + ". Retrying...");
+
+        await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before retrying
+
+        const subscriptionList = await stripeClient.subscriptions.list({
+            customer: customerId,
+        });
+
+        subscription = subscriptionList?.data[0];
+
+        if (subscription) {
+            break; // Exit the loop if a subscription is found
+        }
+
+        retriesPossible--;
+    }
 
     if (!subscription) {
-        throw new Error("No subscription found for customer " + customerId);
+        // FATAL ERROR: REPORT TO ADMINS
+
+        await sendCriticalErrorEmailForStripeSubscriptionNotFound(customerId, userId);
+
+        throw new Error("\n\n\n\nFATAl ERROR:\n\nNo subscription found for customer " + customerId + " after multiple retries. \nThis is a critical issue that needs immediate attention.\n\n\n\n");
     }
 
     const setUserTypeToMemberResult = await setUserTypeToMember(userId);

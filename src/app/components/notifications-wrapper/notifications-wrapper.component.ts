@@ -98,13 +98,14 @@ export class NotificationsWrapperComponent implements OnInit, OnDestroy {
         component.setInput("title", title);
         component.setInput("closable", closable);
 
-        component.instance.closeEvent.subscribe((): void => {
-            this.destroyComponent(component);
-        });
-
-        setTimeout((): void => {
+        const closeTimeout = setTimeout((): void => {
             this.destroyComponent(component);
         }, 10000);
+
+        component.instance.closeEvent.subscribe((): void => {
+            clearTimeout(closeTimeout);
+            this.destroyComponent(component);
+        });
     }
 
     /**
