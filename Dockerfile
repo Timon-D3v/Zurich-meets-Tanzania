@@ -2,16 +2,16 @@ FROM node:24-slim
 
 WORKDIR /zurich-meets-tanzania
 
-COPY package*.json .
+COPY package.json package-lock.json ./
 
-RUN npm ci
+RUN npm ci --omit=dev
 
-COPY dist dist
-COPY public public
+# RUN npm install --omit=dev
+# RUN npm cache clean --force
+
+COPY dist ./dist
+COPY public ./public
 
 RUN mkdir cert
-
-#RUN npm install --omit=dev
-#RUN npm cache clean --force
 
 CMD ["node", "dist/server/server.mjs"]

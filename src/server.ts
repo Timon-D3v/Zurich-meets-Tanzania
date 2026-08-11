@@ -77,11 +77,6 @@ app.use(
 app.use(compression());
 
 /**
- * Root router serves the entire backend.
- */
-app.use(rootRouter);
-
-/**
  * Serve static files from /browser
  */
 app.use(
@@ -115,9 +110,16 @@ for (const [targetUrl, redirectUrls] of Object.entries(PUBLIC_CONFIG.ROUTES.REDI
 }
 
 /**
+ * Root router serves the entire backend.
+ */
+app.use(rootRouter);
+
+/**
  * Handle all other requests by rendering the Angular application.
  */
 app.use((req: Request, res: Response, next: NextFunction) => {
+    console.log("Angular SSR:", req.method, req.originalUrl);
+
     angularApp
         .handle(req)
         .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))

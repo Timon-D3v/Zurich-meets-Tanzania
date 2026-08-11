@@ -66,3 +66,4 @@ dev/*.sql
 dev/*.sh
 *.docx
 public/.archive
+dev/bugs/
