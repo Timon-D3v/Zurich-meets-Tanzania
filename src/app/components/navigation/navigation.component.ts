@@ -196,4 +196,23 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
 
         this.closeMobileNavigation();
     }
+
+    preventOtherElementsToScroll(event: Event): void {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    preventOtherElementsToScrollWhileAllowingSourceElementToScroll(event: WheelEvent, element: HTMLElement): void {
+        event.stopPropagation();
+
+        const atTop = element.scrollTop === 0;
+        const atBottom = element.scrollTop + element.clientHeight >= element.scrollHeight;
+
+        const scrollingUp = event.deltaY < 0;
+        const scrollingDown = event.deltaY > 0;
+
+        if ((atTop && scrollingUp) || (atBottom && scrollingDown)) {
+            event.preventDefault();
+        }
+    }
 }

@@ -1,6 +1,6 @@
-<nav [class]="mobileNavIsOpen() ? 'mobile-open' : null">
+<nav [class]="mobileNavIsOpen() ? 'mobile-open' : null" (wheel)="preventOtherElementsToScroll($event)" (touchmove)="preventOtherElementsToScroll($event)">
     <div class="wrapper">
-        <ul class="list">
+        <ul #scrollableList class="list" (touchmove)="$event.stopPropagation()" (wheel)="preventOtherElementsToScrollWhileAllowingSourceElementToScroll($event, scrollableList)">
             <li class="floating-nav-elements">
                 <app-nav-element
                     [description]="'Verein'"

@@ -212,7 +212,7 @@ export class SignupComponent {
             return false;
         }
 
-        if (user.phone !== "" && PUBLIC_CONFIG.REGEX.MATCH_VALID_PHONE.test(user.phone)) {
+        if (user.phone !== "" && !PUBLIC_CONFIG.REGEX.MATCH_VALID_PHONE.test(user.phone)) {
             this.notificationService.error("Eingabefehler", "Bitte gib eine gültige Telefonnummer ein oder lösche alle eingaben aus dem Feld.");
             return false;
         }
