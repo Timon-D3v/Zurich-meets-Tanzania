@@ -40,7 +40,7 @@
                 <app-edit-account-input [label]="'Nachname'" [iconSource]="'/svg/text.svg'" [iconAlt]="'Ein Buchstabe'" [placeholder]="'Nachname'" (valueOutput)="setLastName($event)"></app-edit-account-input>
             </div>
             <app-edit-account-input [label]="'E-Mail'" [iconSource]="'/svg/mail.svg'" [iconAlt]="'Ein Brief'" [placeholder]="'E-Mail-Adresse'" (valueOutput)="setEmail($event)"></app-edit-account-input>
-            <app-edit-account-select-input [label]="'Anrede'" [iconSource]="'/svg/text.svg'" [iconAlt]="'Ein Buchstabe'" [options]="donationUsageTypes()" (valueOutput)="setUsageType($event)"></app-edit-account-select-input>
+            <app-edit-account-select-input [label]="'Spendenzweck'" [iconSource]="'/svg/text.svg'" [iconAlt]="'Ein Buchstabe'" [options]="donationUsageTypes()" (valueOutput)="setUsageType($event)"></app-edit-account-select-input>
         </form>
     }
     <div class="buttons-wrapper">

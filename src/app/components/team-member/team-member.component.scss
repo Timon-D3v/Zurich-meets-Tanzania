@@ -110,13 +110,11 @@
                 width: 20px;
             }
 
-        
-        & img {
-            max-height: 15vh;
-            padding: 1vh;
+            & img {
+                max-height: 15vh;
+                padding: 1vh;
+            }
         }
-        }
-
     }
 }
 
@@ -125,6 +123,5 @@
         .preview {
             grid-template-columns: min(10vh, 30vw) 1fr;
         }
-
     }
 }

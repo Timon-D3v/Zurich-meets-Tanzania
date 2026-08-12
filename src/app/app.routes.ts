@@ -187,13 +187,12 @@ export const routes: Routes = [
         title: PUBLIC_CONFIG.ROUTES.TITLES["/membership"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
-        path: "newsletter/cancel",
+        path: "newsletter/unsubscribe",
         loadComponent: async () => {
             const component = await import("./newsletter-sign-out/newsletter-sign-out.component");
             return component.NewsletterSignOutComponent;
         },
-        // TODO: Change either the url newsletter/cancel or the route /newsletter-sign-out
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter-sign-out"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter/unsubscribe"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "newsletter/confirm",
@@ -202,7 +201,7 @@ export const routes: Routes = [
             return component.NewsletterSignUpConfirmComponent;
         },
         // TODO: Add an entry to the route titles
-        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter-sign-out"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
+        title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter/confirm"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {
         path: "payment-success",

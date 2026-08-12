@@ -56,6 +56,18 @@
         flex-direction: column;
         align-items: center;
 
+        @media screen and (max-width: 900px) {
+            max-width: 60%;
+        }
+
+        @media screen and (max-width: 500px) {
+            max-width: 80%;
+        }
+
+        @media screen and (max-width: 300px) {
+            max-width: 100%;
+        }
+
         & > img {
             filter: invert(1) invert(92%) sepia(6%) saturate(2857%) hue-rotate(312deg) brightness(113%) contrast(101%); /* White to --background-100 */
             width: 100%;

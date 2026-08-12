@@ -193,7 +193,8 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 "/income-statement",
                 "/membership",
                 "/legacy-membership",
-                "/newsletter-sign-out",
+                "/newsletter/unsubscribe",
+                "/newsletter/confirm",
                 "/privacy",
                 "/statutes",
                 "/vision",
@@ -367,10 +368,15 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 description: "Wir freuen uns sehr über jedes neue Mitglied in unserem Verein. Willkommen!",
                 lastUpdated: "Sun Jun 28 2026 21:15:50 GMT+0200 (Central European Summer Time)",
             },
-            "/newsletter-sign-out": {
+            "/newsletter/unsubscribe": {
                 title: "Abmelden",
                 description: "Du möchtest nicht mehr von uns über aktuelle Neuigkeiten benachrichtigt werden? Das tut uns leid. Hier kannst du dich abmelden.",
-                lastUpdated: "Sat Nov 22 2025 23:55:48 GMT+0100 (Mitteleuropäische Normalzeit)",
+                lastUpdated: "Wed Aug 12 2026 11:29:23 GMT+0200 (Central European Summer Time)",
+            },
+            "/newsletter/confirm": {
+                title: "Anmeldung bestätigen",
+                description: "Du hast dich für unseren Newsletter angemeldet. Bitte bestätige deine Anmeldung via den Code, den du von uns erhalten hast.",
+                lastUpdated: "Wed Aug 12 2026 11:30:08 GMT+0200 (Central European Summer Time)",
             },
             "/privacy": {
                 title: "Datenschutz",
@@ -447,7 +453,8 @@ export const PUBLIC_CONFIG: PublicConfig = {
             "/income-statement": ["/income%20statement", "/erfolgsrechnung"],
             "/membership": ["/mitglied-und-spenden", "/mitglied%20und%20spenden", "/mitglied", "/mitgliedschaft", "/mitglied-werden", "/mitglied%20werden", "/become-member", "/become%20member"],
             "/legacy-membership": ["/legacy%20membership", "/legacy%20mitgliedschaft", "/legacy-mitgliedschaft", "/legacy%20mitglied-werden", "/legacy-mitglied-werden", "/mitgliedschaft-via-bankverbindung"],
-            "/newsletter-sign-out": ["/newsletter%20sign%20out"],
+            "/newsletter/unsubscribe": ["/newsletter/cancel", "/newsletter/abmelden", "/newsletter-sign-out", "/newsletter%20sign%20out", "/newsletter/signOut", "/newsletter/sign-out", "/newsletter/sign%20out", "/newsletter%20unsubscribe"],
+            "/newsletter/confirm": ["/newsletter/confirm-signup", "/newsletter/anmeldung-best%C3%A4tigen", "/newsletter/anmeldung%20best%C3%A4tigen", "/newsletter/confirm-sign-up", "/newsletter/confirm%20sign%20up"],
             "/privacy": ["/datenschutz", "/datenschutzerkl%C3%A4rung", "/privacy-statement", "/privacy%20statement"],
             "/statutes": ["/statuten"],
             "/vision": ["/ideas", "/idee", "/ideen", "/leitideen"],
@@ -596,7 +603,7 @@ export const PUBLIC_CONFIG: PublicConfig = {
                                                 cursor: pointer; 
                                                 text-decoration: underline;" 
                                                 
-                                                href="https://zurich-meets-tanzania.com/newsletter/abmelden"
+                                                href="https://zurich-meets-tanzania.com/newsletter/unsubscribe"
                                             >
                                                 Abmelden
                                             </a>

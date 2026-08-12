@@ -22,7 +22,7 @@ export const serverRoutes: ServerRoute[] = [
         renderMode: RenderMode.Prerender,
     },
     {
-        path: "newsletter/cancel",
+        path: "newsletter/unsubscribe",
         renderMode: RenderMode.Prerender,
     },
     {

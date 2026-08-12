@@ -39,13 +39,13 @@ export class NewsletterSignUpConfirmComponent implements OnInit {
         const request = this.newsletterService.confirmSignUp(params["firstName"] ?? "", params["lastName"] ?? "", params["email"] ?? "", params["gender"] ?? "", params["id"] ?? "", params["timestamp"] ?? "");
 
         request.subscribe((response: ApiEndpointResponse): void => {
-            // if (response.error) {
-            //     this.notificationService.error("Etwas hat nicht geklappt.", response.message);
+            if (response.error) {
+                this.notificationService.error("Etwas hat nicht geklappt.", response.message);
 
-            //     this.router.navigate(["/"]);
+                this.router.navigate(["/"]);
 
-            //     return;
-            // }
+                return;
+            }
 
             this.notificationService.success("Das hat geklappt.", "Du hast dich erfolgreich für den Newsletter angemeldet.");
 
