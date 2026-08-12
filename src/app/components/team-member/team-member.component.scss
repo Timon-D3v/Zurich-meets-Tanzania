@@ -40,7 +40,8 @@
             padding: 2vh;
             box-sizing: border-box;
             aspect-ratio: 1/1;
-            height: 20vh;
+            max-height: 20vh;
+            max-width: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
@@ -93,5 +94,37 @@
         & .preview::after {
             transform: rotate(-180deg);
         }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .member {
+        .preview {
+            grid-template-columns: min(15vh, 40vw) 1fr;
+            padding-right: max(30px, 5vw);
+
+            &::after,
+            &::before {
+                top: calc(10vh - 2px);
+                height: 3px;
+                width: 20px;
+            }
+
+        
+        & img {
+            max-height: 15vh;
+            padding: 1vh;
+        }
+        }
+
+    }
+}
+
+@media screen and (max-width: 300px) {
+    .member {
+        .preview {
+            grid-template-columns: min(10vh, 30vw) 1fr;
+        }
+
     }
 }

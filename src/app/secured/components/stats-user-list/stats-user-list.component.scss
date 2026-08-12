@@ -150,7 +150,7 @@ td {
 }
 
 .download {
-    @include primary-button($margin: 3vh auto 0 auto);
+    @include primary-button($margin: 3vh auto 5vh auto);
 }
 
 ::ng-deep :root[data-theme="dark"] app-stats-user-list {
