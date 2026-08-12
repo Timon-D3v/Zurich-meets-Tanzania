@@ -42,10 +42,7 @@ button {
     --secondary-500: var(--accent-500);
     --secondary-400: var(--accent-600);
     --text-50: var(--c-text-950);
-    @include primary-button;
-    margin-top: 3vh;
-    margin-left: auto;
-    margin-right: auto;
+    @include primary-button($margin: 3vh auto 0 auto);
 }
 
 textarea {

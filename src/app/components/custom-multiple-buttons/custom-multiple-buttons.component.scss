@@ -10,16 +10,10 @@
 
 a {
     &.primary {
-        @include primary-button;
-        // This is a important duplication
-        padding: 0 3vw;
-        height: 50px;
+        @include primary-button($min-height: 50px, $padding: 0 3vw);
     }
 
     &.secondary {
-        @include secondary-button;
-        // This is a important duplication
-        padding: 0 3vw;
-        height: 50px;
+        @include secondary-button($min-height: 50px, $padding: 0 3vw);
     }
 }

@@ -83,20 +83,12 @@
         margin-top: 1.5rem;
 
         & > button.next {
-            @include primary-button;
-            margin: 1rem 0.5rem 0.5rem 0.5rem;
-            font-size: 30px;
-            height: 50px;
-            padding: 0 1rem;
+            @include primary-button(50px, 30px, 1rem 0.5rem 0.5rem 0.5rem, 0 1rem);
         }
 
         & > button.back {
-            @include secondary-button;
-            margin: 1rem 0.5rem 0.5rem 0.5rem;
+            @include secondary-button(50px, 30px, 1rem 0.5rem 0.5rem 0.5rem, 0 1rem);
             background-color: transparent;
-            font-size: 30px;
-            height: 50px;
-            padding: 0 1rem;
         }
     }
 }

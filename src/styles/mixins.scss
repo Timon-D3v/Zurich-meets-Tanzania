@@ -1,12 +1,13 @@
-@mixin primary-button {
+@mixin primary-button($min-height: 40px, $font-size: 20px, $margin: 0 0.75vw, $padding: 0 1vw) {
     display: flex;
     align-items: center;
-    height: 40px;
-    padding: 0 1vw;
-    margin: 0 0.75vw;
+    height: auto;
+    min-height: $min-height;
+    padding: $padding;
+    margin: $margin;
     box-sizing: border-box;
     font-weight: 600;
-    font-size: 20px;
+    font-size: $font-size;
     text-decoration: none;
     text-transform: uppercase;
     text-align: center;
@@ -25,15 +26,16 @@
     }
 }
 
-@mixin secondary-button {
+@mixin secondary-button($min-height: 40px, $font-size: 20px, $margin: 0 0.75vw, $padding: 0 1vw) {
     display: flex;
     align-items: center;
-    height: 40px;
-    padding: 0 1vw;
-    margin: 0 0.75vw;
+    height: auto;
+    min-height: $min-height;
+    padding: $padding;
+    margin: $margin;
     box-sizing: border-box;
     font-weight: 600;
-    font-size: 20px;
+    font-size: $font-size;
     text-decoration: none;
     text-transform: uppercase;
     text-align: center;

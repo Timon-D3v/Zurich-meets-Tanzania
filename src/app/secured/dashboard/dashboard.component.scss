@@ -61,9 +61,7 @@ section > * {
 }
 
 .edit-done-button {
-    @include primary-button;
-    font-size: 1rem;
-    margin: 0.5rem auto;
+    @include primary-button($font-size: 1rem, $margin: 0.5rem auto);
 }
 
 @media screen and (max-width: 600px) {

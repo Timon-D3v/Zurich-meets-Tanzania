@@ -60,9 +60,5 @@ label {
 }
 
 button {
-    @include primary-button;
-    margin-top: 3vh;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 5vh;
+    @include primary-button($margin: 3vh auto 5vh auto);
 }

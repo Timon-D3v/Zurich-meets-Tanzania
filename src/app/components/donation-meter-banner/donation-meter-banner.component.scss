@@ -41,9 +41,8 @@
 }
 
 a {
-    @include primary-button;
+    @include primary-button($margin: 10px auto 0 auto);
     justify-content: center;
-    margin: 10px auto 0 auto;
     width: 50%;
 
     @media screen and (max-width: 800px) {
