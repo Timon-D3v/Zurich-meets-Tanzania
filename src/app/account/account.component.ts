@@ -89,6 +89,19 @@ export class AccountComponent {
         });
     }
 
+    split(text: string, interval: number): string {
+        return text
+            .split("")
+            .map((char, index) => {
+                if (index % interval === 0 && index !== 0) {
+                    return "\u00AD" + char;
+                } else {
+                    return char;
+                }
+            })
+            .join("");
+    }
+
     editPicture(): void {
         this.editPictureInputOpen.set(true);
     }

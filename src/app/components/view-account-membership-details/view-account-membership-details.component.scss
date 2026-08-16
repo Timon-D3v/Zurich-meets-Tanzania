@@ -31,12 +31,16 @@ p.no-membership {
     }
 }
 
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
 table {
     border-collapse: collapse;
-    font-family:
-        Titillium Web,
-        sans-serif;
+    font-family: "Titillium Web", sans-serif;
     width: 100%;
+    box-sizing: border-box;
 
     &,
     & th {
@@ -45,6 +49,7 @@ table {
 
     & th {
         padding: 12px 8px;
+        min-width: 10ch;
     }
 
     & td {

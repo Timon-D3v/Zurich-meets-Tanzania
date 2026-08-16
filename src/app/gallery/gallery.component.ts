@@ -1,4 +1,4 @@
-import { Component, inject, OnChanges, OnInit, signal, PLATFORM_ID } from "@angular/core";
+import { Component, inject, OnInit, signal, PLATFORM_ID } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { GalleryService } from "../services/gallery.service";
 import { NotificationService } from "../services/notification.service";
@@ -16,7 +16,7 @@ import { isPlatformBrowser } from "@angular/common";
     templateUrl: "./gallery.component.html",
     styleUrl: "./gallery.component.scss",
 })
-export class GalleryComponent implements OnInit, OnChanges {
+export class GalleryComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
 
@@ -39,26 +39,21 @@ export class GalleryComponent implements OnInit, OnChanges {
 
     private platformId = inject(PLATFORM_ID);
 
-    async ngOnInit(): Promise<void> {
-        if (typeof this.route.snapshot.params["name"] !== "string") {
-            this.router.navigate(["/"]);
+    ngOnInit(): void {
+        this.route.paramMap.subscribe(async (params) => {
+            const name = params.get("name");
 
-            return;
-        }
+            if (name === null) {
+                this.router.navigate(["/"]);
+                return;
+            }
 
-        this.name.set(decodeURIComponent(this.route.snapshot.params["name"]));
+            this.name.set(decodeURIComponent(this.route.snapshot.params["name"]));
 
-        this.getGallery();
+            this.getGallery();
 
-        this.heroImage.set(await this.generateObjectUrl(this.COLORS));
-    }
-
-    async ngOnChanges(): Promise<void> {
-        this.name.set(decodeURIComponent(this.route.snapshot.params["name"]));
-
-        this.getGallery();
-
-        this.heroImage.set(await this.generateObjectUrl(this.COLORS));
+            this.heroImage.set(await this.generateObjectUrl(this.COLORS));
+        });
     }
 
     getGallery(): void {

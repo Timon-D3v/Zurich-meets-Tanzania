@@ -19,15 +19,6 @@ import { NavigationService } from "../../services/navigation.service";
     styleUrl: "./navigation.component.scss",
 })
 export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
-    constructor() {
-        effect(() => {
-            this.isLoggedIn.set(this.authService.isLoggedIn());
-            this.becomeMemberUrl.set(this.headerService.becomeMemberUrl());
-            this.currentThemeMode.set(this.themeService.currentTheme());
-            this.mobileNavIsOpen.set(this.navigationService.navigationIsOpen());
-        });
-    }
-
     UNIKAT_URL = PUBLIC_CONFIG.UNIKAT_URL;
     blogLinks = signal<NavLink[]>([]);
     galleryLinks = signal<NavLink[]>([]);
@@ -45,6 +36,19 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
     private themeService = inject(ThemeService);
 
     private platformId = inject(PLATFORM_ID);
+
+    private _updateLoginStatus = effect(() => {
+        this.isLoggedIn.set(this.authService.isLoggedIn());
+    });
+    private _updateBecomeMemberUrl = effect(() => {
+        this.becomeMemberUrl.set(this.headerService.becomeMemberUrl());
+    });
+    private _updateTheme = effect(() => {
+        this.currentThemeMode.set(this.themeService.currentTheme());
+    });
+    private _updateNavigationOpen = effect(() => {
+        this.mobileNavIsOpen.set(this.navigationService.navigationIsOpen());
+    });
 
     ngOnInit(): void {
         this.setBlogLinks();
