@@ -405,6 +405,10 @@ export interface GetContactRequestVerificationTokenApiEndpointResponse extends A
     data: { token: string } | null;
 }
 
+export interface GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse extends ApiEndpointResponse {
+    data: { token: string } | null;
+}
+
 export interface GetCalendarEventsApiEndpointResponse extends ApiEndpointResponse {
     data: CalendarEvent[] | null;
 }
@@ -468,6 +472,13 @@ export type NewsletterSignUpRequest = {
     gender: "Herr" | "Frau" | "Divers";
     timestamp: number;
     used: boolean;
+};
+
+export type NewsletterUnsubscribeRequests = {
+    token: string;
+    timestamp: number;
+    verificationCode: string;
+    email: string;
 };
 
 export type PasswordRecoveryRequest = {

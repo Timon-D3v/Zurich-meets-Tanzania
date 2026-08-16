@@ -4,10 +4,11 @@ import { FooterService } from "../../services/footer.service";
 import { NotificationService } from "../../services/notification.service";
 import { AddToNewsletterListApiEndpointResponse } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: "app-footer-newsletter-sign-up-form",
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, RouterLink],
     templateUrl: "./footer-newsletter-sign-up-form.component.html",
     styleUrl: "./footer-newsletter-sign-up-form.component.scss",
 })

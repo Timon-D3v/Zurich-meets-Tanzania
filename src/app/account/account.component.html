@@ -9,7 +9,7 @@
         </div>
         <div class="information">
             <h2>
-                {{ split(`${user().firstName}jhgauziwoidjkncabwwtfwdahwbhvdguawhd`, 3) }} {{ split(`${user().lastName}jhgauziwoidjkncabwwtfwdahwbhvdguawhd`, 3) }}
+                {{ split(user().firstName, 3) }} {{ split(user().lastName, 3) }}
 
                 @if (user().type === "admin") {
                     <wbr /><span class="special-effect">(Verwalter)</span>
@@ -17,7 +17,7 @@
                     <wbr /><span class="special-effect">(Mitglied)</span>
                 }
             </h2>
-            <p>{{ split(`${user().email}jhgauziwoidjkncabwwtfwdahwbhvdguawhd`, 3) }}</p>
+            <p>{{ split(user().email, 3) }}</p>
         </div>
     </section>
     <section class="dynamic-information">

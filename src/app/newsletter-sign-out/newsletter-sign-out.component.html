@@ -1,1 +1,24 @@
-<p>newsletter-sign-out works!</p>
+<img class="background-image" alt="Hintergrund: Himmel" src="/stock/butterflies.jpg" />
+@if (!verificationCodeSent()) {
+    <form [formGroup]="newsletterUnsubscribeForm" (submit)="onSubmit($event)">
+        <h2>Vom Newsletter Abmelden</h2>
+        <p>Bitte gibt deine E-Mail-Adresse ein, welche du von Newsletter abmelden möchtest. Wir werden dir dann eine E-Mail mit einem Bestätigungscode zukommen lassen um die Anfrage zu bestätigen.</p>
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" placeholder="E-Mail-Adresse eingeben" required formControlName="emailControl" (input)="updateDisplayEmail($event)" />
+        <button type="submit" [disabled]="submitButtonDisabled()">
+            {{ submitButtonText() }}
+        </button>
+    </form>
+} @else {
+    <form [formGroup]="newsletterUnsubscribeVerificationForm" (submit)="onVerificationSubmit($event)">
+        <h2>Anfrage Bestätigen</h2>
+        <p>Bitte gib den Bestätigungscode ein, den wir dir per E-Mail geschickt haben, um deine Anfrage zu bestätigen. Dieser Schritt ist aus sicherheitstechnischen Gründen notwendig. Vielen Dank für dein Verständnis.</p>
+        <label for="emailDisplay">E-Mail:</label>
+        <input type="email" id="emailDisplay" placeholder="E-Mail-Adresse eingeben" [value]="displayEmail()" disabled />
+        <label for="verificationCode">Bestätigungscode:</label>
+        <input type="text" id="verificationCode" placeholder="Bestätigungscode eingeben" required formControlName="verificationCodeControl" />
+        <button type="submit" [disabled]="submitButtonDisabled()">
+            {{ submitButtonText() }}
+        </button>
+    </form>
+}

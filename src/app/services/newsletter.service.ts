@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse } from "../..";
+import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse } from "../..";
 
 @Injectable({
     providedIn: "root",
@@ -28,6 +28,23 @@ export class NewsletterService {
             gender,
             id,
             timestamp,
+        });
+
+        return request;
+    }
+
+    signOut(email: string): Observable<GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse> {
+        const request = this.http.post<GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse>("/api/newsletter/unsubscribe", {
+            email,
+        });
+
+        return request;
+    }
+
+    confirmSignOut(code: string, token: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/newsletter/confirmUnsubscribe", {
+            code,
+            token,
         });
 
         return request;

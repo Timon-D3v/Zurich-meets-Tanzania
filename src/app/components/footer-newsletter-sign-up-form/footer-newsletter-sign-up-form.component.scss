@@ -29,6 +29,14 @@ h2 {
     margin: 22px 0;
 }
 
+a {
+    color: var(--c-text-50);
+
+    &:hover {
+        color: var(--c-background-300);
+    }
+}
+
 .salutation {
     margin: 10px 0;
 }

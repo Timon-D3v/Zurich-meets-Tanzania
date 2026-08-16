@@ -1,7 +1,7 @@
 <form [formGroup]="newsletterSignUpForm" (submit)="onSubmit($event)">
     <div>
         <h2>Newsletter</h2>
-        <p>Bleiben Sie über zurich meets tanzania und unsere Projekte informiert.</p>
+        <p>Bleiben Sie über zurich meets tanzania und unsere Projekte informiert. (Sie können sich jederzeit <a [routerLink]="'/newsletter/unsubscribe'">hier</a> abmelden.)</p>
         <div>
             <p class="salutation">Anrede:</p>
             <input type="checkbox" formControlName="isMaleControl" id="newsletter-anrede-herr" (click)="disableIsFemaleCheckbox()" />
@@ -16,4 +16,5 @@
     </div>
     <input type="email" formControlName="emailControl" id="newsletter-email" autocomplete="email" placeholder="E-Mail-Adresse" class="input full" required />
     <button type="submit" class="submit" id="newsletter-submit" [attr.disabled]="submitButtonDisabled() ? true : null">{{ submitButtonText() }}</button>
+    <br />
 </form>

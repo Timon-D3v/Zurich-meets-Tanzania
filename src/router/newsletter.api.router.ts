@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
-import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, NewsletterSignUpRequest } from "..";
-import { addToNewsletterList, getAllNewsletterEmails } from "../shared/newsletter.database.js";
+import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse, NewsletterSignUpRequest, NewsletterUnsubscribeRequests, NewsletterUser } from "..";
+import { addToNewsletterList, getAllNewsletterEmails, getNewsletterDetailsWithEmail, removeFromNewsletterList } from "../shared/newsletter.database.js";
 import { PUBLIC_CONFIG } from "../publicConfig.js";
 import { randomBytes } from "node:crypto";
-import { sendNewsletterSignUpConfirmation } from "../shared/newsletter.email.js";
+import { sendNewsletterSignOutConfirmation, sendNewsletterSignUpConfirmation } from "../shared/newsletter.email.js";
 import { RowDataPacket } from "mysql2";
 
 // Router Serves under /api/newsletter
@@ -15,6 +15,17 @@ const GLOBAL_clearOutdatedRequestsInterval = setInterval(
         for (let i = 0; i < GLOBAL_newsletterSignUpRequests.length; i++) {
             if (Date.now() - GLOBAL_newsletterSignUpRequests[0].timestamp > 60 * 60 * 1000) {
                 GLOBAL_newsletterSignUpRequests.shift();
+            }
+        }
+    },
+    60 * 60 * 1000,
+); // Every Hour
+const GLOBAL_unsubscribeConfirmRequests: NewsletterUnsubscribeRequests[] = [];
+const GLOBAL_clearOutdatedUnsubscribeRequestsInterval = setInterval(
+    (): void => {
+        for (let i = 0; i < GLOBAL_unsubscribeConfirmRequests.length; i++) {
+            if (Date.now() - GLOBAL_unsubscribeConfirmRequests[0].timestamp > 60 * 60 * 1000) {
+                GLOBAL_unsubscribeConfirmRequests.shift();
             }
         }
     },
@@ -220,6 +231,134 @@ router.post("/confirm", async (req: Request, res: Response): Promise<void> => {
         res.json({
             error: true,
             message: "Der Link ist nicht (mehr) gültig. Bitte versuche es noch einmal oder registriere dich erneut.",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/unsubscribe", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email } = req.body;
+
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
+            throw new Error("Invalid parameter 'email'.");
+        }
+
+        // Get user data
+
+        const result = await getNewsletterDetailsWithEmail(email);
+
+        if (result.error || result.data === null) {
+            throw new Error(result.error);
+        }
+
+        if (result.data.length === 0) {
+            throw new Error("Du bist nicht auf der Newsletterliste. Es gibt nichts mehr zu tun.");
+        }
+
+        const user = result.data[0] as NewsletterUser;
+
+        // Set up a confirm request
+
+        const code = randomBytes(5).toString("hex");
+        const token = randomBytes(32).toString("hex");
+
+        const sentSuccessfully = await sendNewsletterSignOutConfirmation(user.email, code, user.firstName, user.lastName, user.gender);
+
+        if (!sentSuccessfully) {
+            throw new Error("Failed to send verification email.");
+        }
+
+        GLOBAL_unsubscribeConfirmRequests.push({
+            token,
+            verificationCode: code,
+            timestamp: Date.now(),
+            email: user.email,
+        });
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: {
+                token,
+            },
+        } as GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse);
+
+            return;
+        }
+
+        res.json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse);
+    }
+});
+
+router.post("/confirmUnsubscribe", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { token, code } = req.body;
+        if (typeof token !== "string" || !/^[a-z0-9]{64}$/.test(token.toLowerCase())) {
+            throw new Error("Invalid parameter 'token'");
+        }
+
+        if (typeof code !== "string" || !/^[a-z0-9]{10}$/.test(code.toLowerCase())) {
+            throw new Error("Invalid parameter 'code'");
+        }
+
+        for (let i = 0; i < GLOBAL_unsubscribeConfirmRequests.length; i++) {
+            if (GLOBAL_unsubscribeConfirmRequests[i].token !== token || GLOBAL_unsubscribeConfirmRequests[i].verificationCode !== code) {
+                continue;
+            }
+
+            const result = await removeFromNewsletterList(GLOBAL_unsubscribeConfirmRequests[i].email);
+
+            if (result.error === null) {
+                res.json({
+                    error: false,
+                    message: "Erfolgreich vom Newsletter abgemeldet.",
+                });
+
+                GLOBAL_unsubscribeConfirmRequests.splice(i, 1);
+
+                return;
+            }
+
+            res.json({
+                error: true,
+                message: result.error,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.json({
+            error: true,
+            message: "Der Bestätigungscode ist nicht (mehr) gültig. Bitte versuche es noch einmal.",
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);

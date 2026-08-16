@@ -29,6 +29,10 @@ select {
     &:focus {
         outline: none;
     }
+
+    & option {
+        color: var(--c-text-950, #070d13);
+    }
 }
 
 div {

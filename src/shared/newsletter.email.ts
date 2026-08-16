@@ -25,6 +25,25 @@ export async function sendNewsletterSignUpConfirmation(email: string, id: string
     return request !== null && request.response.status === 200;
 }
 
+export async function sendNewsletterSignOutConfirmation(email: string, code: string, firstName: string, lastName: string, gender: "Herr" | "Frau" | "Divers"): Promise<boolean> {
+    const text = [PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, gender), "Dein Bestätigungscode zum Abmelden von unserem Newsletter lautet:", code, "(Der Code ist etwa 60 Minuten gültig.)", PUBLIC_CONFIG.EMAIL.REGARDS].join("\n\n");
+
+    const html =
+        PUBLIC_CONFIG.EMAIL.HEADER +
+        [
+            PUBLIC_CONFIG.EMAIL.GREETINGS_HTML(PUBLIC_CONFIG.EMAIL.GREETINGS(firstName, lastName, gender)),
+            "BDein Bestätigungscode zum Abmelden von unserem Newsletter lautet:",
+            code,
+            "(Der Code ist etwa 60 Minuten gültig.)",
+            PUBLIC_CONFIG.EMAIL.REGARDS_HTML,
+        ].join("<br><br>") +
+        PUBLIC_CONFIG.EMAIL.FOOTER;
+
+    const request = await sendMail(email, "Vom Newsletter Abmelden", text, html, "Newsletter Abmeldung");
+
+    return request !== null && request.response.status === 200;
+}
+
 export async function sendNewsletterForNews(newsContent: NewsContent): Promise<boolean> {
     const recipientsResult = await getAllNewsletterUsers();
 

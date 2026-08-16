@@ -223,6 +223,12 @@
             border-color: var(--green);
         }
 
+        &:disabled,
+        &[disabled="true"] {
+            background-color: #80808040;
+            cursor: not-allowed;
+        }
+
         @media screen and (max-width: 700px) {
             padding: 0.5em 1em;
         }
