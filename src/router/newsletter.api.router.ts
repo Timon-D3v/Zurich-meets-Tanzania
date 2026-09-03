@@ -2,9 +2,9 @@ import { Request, Response, Router } from "express";
 import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse, NewsletterSignUpRequest, NewsletterUnsubscribeRequests, NewsletterUser } from "..";
 import { addToNewsletterList, getAllNewsletterEmails, getNewsletterDetailsWithEmail, removeFromNewsletterList } from "../shared/newsletter.database.js";
 import { PUBLIC_CONFIG } from "../publicConfig.js";
-import { randomBytes } from "node:crypto";
 import { sendNewsletterSignOutConfirmation, sendNewsletterSignUpConfirmation } from "../shared/newsletter.email.js";
 import { RowDataPacket } from "mysql2";
+import { getSecureHexString, getSecureMFACode } from "../shared/secure.utils";
 
 // Router Serves under /api/newsletter
 const router = Router();
@@ -115,7 +115,7 @@ router.post("/signUp", async (req: Request, res: Response): Promise<void> => {
             }
         }
 
-        const requestId = randomBytes(256).toString("hex");
+        const requestId = getSecureHexString(256);
         const timestamp = Date.now();
 
         const isSent = await sendNewsletterSignUpConfirmation(email.trim(), requestId, firstName, lastName, gender, timestamp);
@@ -275,8 +275,8 @@ router.post("/unsubscribe", async (req: Request, res: Response): Promise<void> =
 
         // Set up a confirm request
 
-        const code = randomBytes(5).toString("hex");
-        const token = randomBytes(32).toString("hex");
+        const code = getSecureMFACode();
+        const token = getSecureHexString(64);
 
         const sentSuccessfully = await sendNewsletterSignOutConfirmation(user.email, code, user.firstName, user.lastName, user.gender);
 

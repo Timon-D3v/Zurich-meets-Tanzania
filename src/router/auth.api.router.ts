@@ -1,7 +1,6 @@
 import { Request, Response, Router } from "express";
 import { ApiEndpointResponse, GetPublicUserDetailsApiEndpointResponse, ApiEndpointResponseWithRedirect, PasswordRecoveryRequest, PrivateUser, PublicUser, SignUpConfirmRequest } from "..";
 import bcrypt from "bcryptjs";
-import { randomBytes } from "node:crypto";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { sendNewPassword, sendPasswordRecoveryConfirmationCode, sendSignUpConfirmationCode } from "../shared/auth.email";
 import multerInstance from "../shared/instance.multer";
@@ -9,6 +8,7 @@ import { delivApiUpload } from "delivapi-client";
 import { CONFIG } from "../config";
 import { createDarkmodeEntry } from "../shared/darkmode.database";
 import { createUser, getUserWithEmail, setNewPassword } from "../shared/user.database";
+import { getSecureHexString, getSecureMFACode } from "../shared/secure.utils";
 
 // Router Serves under /api/auth
 const router = Router();
@@ -170,7 +170,7 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
         }
 
         // Set up a confirm request
-        const code = randomBytes(10).toString("hex");
+        const code = getSecureMFACode();
 
         GLOBAL_signUpConfirmRequests.push({
             code,
@@ -491,7 +491,7 @@ router.post("/startPasswordRecovery", async (req: Request, res: Response) => {
             }
         }
 
-        const recoveryCode = randomBytes(10).toString("hex");
+        const recoveryCode = getSecureMFACode();
 
         GLOBAL_passwordRecoveryRequests.push({
             code: recoveryCode,
@@ -575,7 +575,7 @@ router.post("/confirmPasswordRecovery", async (req: Request, res: Response) => {
         for (const request of GLOBAL_passwordRecoveryRequests) {
             if (request.code === code && request.user.email === userData.email && request.user.password === userData.password) {
                 // If the code, email (and password for added safety) match, the password recovery can execute.
-                const newPassword = randomBytes(16).toString("hex");
+                const newPassword = getSecureHexString(18);
 
                 const newPasswordHash = await bcrypt.hash(newPassword, 10);
 

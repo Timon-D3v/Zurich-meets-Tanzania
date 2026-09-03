@@ -5,10 +5,9 @@ import { getLastXDaysVisitorCounts } from "../shared/analytics";
 import { deleteUserWithId, getAllUsers, getUserWithId, setNewAddressWithId, setNewFirstNameWithId, setNewLastNameWithId, setNewPassword, setNewPhoneNumberWithId, setNewProfilePictureWithId, setUserTypeWithId } from "../shared/user.database";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpload } from "delivapi-client";
-import { CONFIG } from "../config";
-import { randomBytes } from "crypto";
 import bcrypt from "bcryptjs";
 import { sendNewPassword } from "../shared/auth.email";
+import { getSecureHexString } from "../shared/secure.utils";
 
 // Router Serves under /api/secured/admin/analytics
 const router = Router();
@@ -370,7 +369,7 @@ router.post("/resetUserPasswordWithId", async (req: Request, res: Response) => {
         const userData = user.data[0] as PrivateUser;
 
         // Generate a new password and send it to the user's email address
-        const newPassword = randomBytes(16).toString("hex");
+        const newPassword = getSecureHexString(18);
 
         const newPasswordHash = await bcrypt.hash(newPassword, 10);
 

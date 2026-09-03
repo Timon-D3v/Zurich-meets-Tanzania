@@ -1,9 +1,8 @@
 import { Request, Response, Router } from "express";
-import { randomBytes } from "node:crypto";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { CONFIG } from "../config";
 import { ApiEndpointResponse, ContactConfirmRequest, GetContactRequestVerificationTokenApiEndpointResponse } from "..";
 import { sendContactRequest, sendContactRequestConfirmation } from "../shared/contact.email";
+import { getSecureHexString, getSecureMFACode } from "../shared/secure.utils";
 
 // Router Serves under /api/contact
 const router = Router();
@@ -42,8 +41,8 @@ router.post("/getVerificationToken", async (req: Request, res: Response): Promis
 
         // Set up a confirm request
 
-        const code = randomBytes(5).toString("hex");
-        const token = randomBytes(32).toString("hex");
+        const code = getSecureMFACode();
+        const token = getSecureHexString(64);
 
         GLOBAL_contactConfirmRequests.push({
             token,

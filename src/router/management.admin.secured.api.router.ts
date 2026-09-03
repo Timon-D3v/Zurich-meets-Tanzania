@@ -5,13 +5,13 @@ import { PASSWORDS } from "../shared/passwords";
 import { createUser, getUserWithEmail, setUserType } from "../shared/user.database";
 import { getMemberWithUserId } from "../shared/member.database";
 import bcrypt from "bcryptjs";
-import { randomBytes } from "crypto";
 import { createDarkmodeEntry } from "../shared/darkmode.database";
 import { sendPasswordFromAdmin } from "../shared/auth.email";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpdateFile } from "delivapi-client";
 import { CONFIG } from "../config";
 import { updateDonationMeterWithId } from "../shared/donation.database";
+import { getSecureHexString } from "../shared/secure.utils";
 
 // Router Serves under /api/secured/admin/management
 const router = Router();
@@ -191,7 +191,7 @@ router.post("/createUser", async (req: Request, res: Response): Promise<void> =>
             throw new Error(`Es gibt bereits einen Account mit der E-Mail-Adresse '${email}'. Bitte benutze eine andere E-Mail-Adresse.`);
         }
 
-        const password = randomBytes(10).toString("hex");
+        const password = getSecureHexString(18);
 
         const passwordHash = await bcrypt.hash(password, 10);
 
