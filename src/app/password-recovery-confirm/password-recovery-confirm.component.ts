@@ -50,7 +50,7 @@ export class PasswordRecoveryConfirmComponent {
             return;
         }
 
-        if (!/([0-9a-f]{20})/.test(code)) {
+        if (!/([0-9]{6})/.test(code)) {
             this.notificationService.error("Eingabefehler", "Bitte gib einen gültigen Code ein.");
             return;
         }
