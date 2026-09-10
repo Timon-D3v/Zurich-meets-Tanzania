@@ -1,0 +1,23 @@
+import { Router } from "express";
+
+import adminTeamRouter from "./team.admin.secured.api.router";
+import adminNewsRouter from "./news.admin.secured.api.router";
+import adminBlogRouter from "./blog.admin.secured.api.router";
+import adminCalendarRouter from "./calendar.admin.secured.api.router";
+import adminSubpagesRouter from "./subpages.admin.secured.api.router";
+import adminAnalyticsRouter from "./analytics.admin.secured.api.router";
+import adminManagementRouter from "./management.admin.secured.api.router";
+
+// Router Serves under /api/secured/admin
+// To access apis under this router, authentication with admin privilege is required
+const router = Router();
+
+router.use("/team", adminTeamRouter);
+router.use("/news", adminNewsRouter);
+router.use("/blog", adminBlogRouter);
+router.use("/calendar", adminCalendarRouter);
+router.use("/subpages", adminSubpagesRouter);
+router.use("/analytics", adminAnalyticsRouter);
+router.use("/management", adminManagementRouter);
+
+export default router;

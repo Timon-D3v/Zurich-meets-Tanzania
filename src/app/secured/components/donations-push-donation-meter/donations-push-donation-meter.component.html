@@ -1,0 +1,17 @@
+<form [formGroup]="updateDonationMeterForm" (submit)="onSubmit($event)">
+    <h2>Spendenbarometer aktualisieren</h2>
+    <p>Gib den Titel, die Beschreibung und den aktuellen Stande des Spendenbarometers ein, um ihn zu aktualisieren.</p>
+    <label for="title">Titel:</label>
+    <input type="text" id="title" placeholder="Titel eingeben" required formControlName="titleControl" />
+
+    <label for="description">Beschreibung:</label>
+    <input type="text" id="description" placeholder="Beschreibung eingeben" required formControlName="descriptionControl" />
+
+    <label for="currentValue">Aktueller Stand:</label>
+    <input type="number" id="currentValue" placeholder="Aktuellen Stand eingeben" required formControlName="currentValueControl" />
+
+    <label for="maxValue">Ziel:</label>
+    <input type="number" id="maxValue" placeholder="Ziel eingeben" required formControlName="maxValueControl" />
+
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

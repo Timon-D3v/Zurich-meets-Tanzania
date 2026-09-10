@@ -1,0 +1,39 @@
+<app-hero [title]="titleHtml" [subtitle]="subtitle" [pictureUrl]="HERO_IMAGE_URL" [pictureAlt]="HERO_IMAGE_ALT"></app-hero>
+
+<div class="min-width-750px">
+    <h1 class="title">Spenden</h1>
+    <app-custom-multiple-buttons
+        [buttons]="[
+            {
+                content: 'Spenden',
+                url: '/donate',
+                secondary: false,
+            },
+            {
+                content: 'Shop',
+                url: 'https://shop.unikat-hoengg.ch/produkte/zurichmeetstanzania-60?d=1',
+                secondary: false,
+            },
+            {
+                content: 'Mitglied werden',
+                url: '/membership',
+                secondary: false,
+            },
+        ]"
+    ></app-custom-multiple-buttons>
+</div>
+
+<app-news [newsTitle]="newsTitle"></app-news>
+<a [routerLink]="'/archive'">Mehr anzeigen</a>
+
+<h1 class="title">Terminkalender</h1>
+<app-calendar [events]="events()"></app-calendar>
+@if (numberOfEvents() <= events().length) {
+    <a href="#" (click)="loadMoreEvents($event)">Mehr anzeigen</a>
+}
+
+<h1 class="title">Blogbeiträge</h1>
+<app-blog-preview [numberOfItems]="4"></app-blog-preview>
+
+<h1 class="title">Unser Vorstand</h1>
+<app-board></app-board>

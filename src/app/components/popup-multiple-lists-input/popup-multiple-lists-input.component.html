@@ -1,0 +1,81 @@
+<div class="popup" (click)="close()">
+    <form class="wrapper" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+
+        <div class="list-wrapper">
+            @for (list of lists(); track $index; let i = $index) {
+                <div class="list">
+                    <div class="list-title">
+                        <app-custom-subtitle [content]="list.title"></app-custom-subtitle>
+                        <button type="button" class="edit" title="Bearbeiten" (click)="editTitle(i)">
+                            <img src="/svg/pen.svg" alt="Eintrag bearbeiten" />
+                        </button>
+                    </div>
+                    <ul>
+                        @for (item of list.items; track $index) {
+                            <li [attr.data-list-index]="i" [attr.data-item-index]="$index">
+                                <span [innerHTML]="markdownToHtml(item)"></span>
+                                <button type="button" class="edit" title="Bearbeiten" (click)="editItem(i, $index)">
+                                    <img src="/svg/pen.svg" alt="Eintrag bearbeiten" />
+                                </button>
+                            </li>
+                        }
+                        <li>
+                            <button type="button" class="addItem" title="Eintrag hinzufügen" (click)="addItem(i)">
+                                <img src="/svg/plus.svg" alt="Eintrag hinzufügen" />
+                            </button>
+                            <button type="button" class="removeItem" title="Eintrag entfernen" (click)="removeItem(i)">
+                                <img src="/svg/minus.svg" alt="Eintrag entfernen" />
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            }
+            <div class="list buttons">
+                <button type="button" class="addList" title="Liste hinzufügen" (click)="addList()">
+                    <img src="/svg/plus.svg" alt="Liste hinzufügen" />
+                </button>
+                <br />
+                <button type="button" class="removeList" title="Liste entfernen" (click)="removeList()">
+                    <img src="/svg/minus.svg" alt="Liste entfernen" />
+                </button>
+            </div>
+        </div>
+
+        <button type="submit" class="submit">{{ submitButtonText() }}</button>
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>
+
+@if (titleInputOpen()) {
+    <app-popup-title-input
+        (resultOutput)="completeTitleEdit($event)"
+        (closeOutput)="closePopup()"
+        [title]="'Titel bearbeiten'"
+        [description]="'Bitte gib einen neuen Titel für die Liste ein.'"
+        [submitButtonText]="'Aktualisieren'"
+        [value]="placeholder()"
+    ></app-popup-title-input>
+} @else if (textInputOpen()) {
+    <app-popup-text-input
+        (resultOutput)="completeItemEdit($event)"
+        (closeOutput)="closePopup()"
+        [title]="'Text bearbeiten'"
+        [description]="'Bitte gib einen neuen Text ein, der den aktuellen Eintrag ersetzen soll.'"
+        [submitButtonText]="'Aktualisieren'"
+        [value]="placeholder()"
+    ></app-popup-text-input>
+}
+
+@if (confirmInputOpen()) {
+    <app-popup-confirm
+        [title]="'Popup schliessen'"
+        [description]="'Möchtest du das Popup wirklich schliessen? Alle ungespeicherten Änderungen gehen verloren.'"
+        [confirmButtonText]="'Schliessen'"
+        [cancelButtonText]="'Abbrechen'"
+        (resultOutput)="confirm($event)"
+    ></app-popup-confirm>
+}

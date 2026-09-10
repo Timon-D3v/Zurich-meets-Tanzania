@@ -1,0 +1,53 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    margin: var(--basic-margin);
+    background-color: var(--background-100);
+    padding: 2vh 1vw;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & h2 {
+        font-size: 3.75em;
+        text-align: center;
+        margin: 0;
+        padding: 0 5vw;
+        text-decoration: underline;
+    }
+
+    & > p {
+        margin: 0;
+        padding: 1rem;
+        box-sizing: border-box;
+        width: 100%;
+        text-align: center;
+        font-size: 1.25rem;
+        text-wrap: balance;
+
+        &.current-stage-counter {
+            padding: 0 1vh 0 0;
+            margin-top: 0.5rem;
+            text-align: end;
+            font-size: 1.2rem;
+        }
+
+        & span {
+            font-size: 1rem;
+            text-wrap: balance;
+        }
+    }
+
+    & .buttons-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 1.5rem;
+
+        & > button {
+            @include primary-button(50px, 30px, 1rem 0.5rem 0.5rem 0.5rem, 0 1rem);
+        }
+    }
+}

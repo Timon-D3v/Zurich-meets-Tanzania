@@ -1,0 +1,58 @@
+div {
+    display: grid;
+    place-items: center;
+    position: relative;
+    width: 100%;
+    padding: var(--basic-margin);
+    padding-top: 2.5vh;
+    padding-bottom: 2.5vh;
+    box-sizing: border-box;
+}
+
+video {
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+    max-width: 70vw;
+    max-height: 60vh;
+}
+
+button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10%;
+    max-width: calc(70vw * 0.1);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    z-index: 10;
+    cursor: pointer;
+    background-color: var(--secondary-500);
+    border-radius: 50%;
+    display: grid;
+    border: none;
+    place-items: center;
+    padding: 0;
+
+    &.hidden {
+        display: none !important;
+    }
+
+    &:hover {
+        background-color: var(--secondary-400);
+    }
+
+    &:active {
+        background-color: var(--secondary-300);
+    }
+
+    & img {
+        height: 100%;
+        width: auto;
+        aspect-ratio: 1 / 1;
+        filter: invert(1);
+        padding: 15%;
+        box-sizing: border-box;
+    }
+}

@@ -1,0 +1,59 @@
+<div class="popup" (click)="close()">
+    <form class="wrapper" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+
+        <div class="button-wrapper">
+            @for (button of buttons(); track $index) {
+                <div class="button">
+                    <a [class]="button.secondary ? 'secondary' : 'primary'" [href]="button.url" target="_blank">
+                        <span>{{ button.content }}</span>
+
+                        <button type="button" class="reset" title="Aussehen bearbeiten" (click)="toggle($event, $index)">
+                            <img src="/svg/refresh.svg" alt="Aussehen bearbeiten" />
+                        </button>
+                        <button type="button" class="edit" title="Bearbeiten" (click)="edit($event, $index)">
+                            <img src="/svg/pen.svg" alt="Feld bearbeiten" />
+                        </button>
+                    </a>
+                </div>
+            }
+            <div class="button functional-buttons">
+                <button type="button" class="addButton" title="Button hinzufügen" (click)="addButton()">
+                    <img src="/svg/plus.svg" alt="Button hinzufügen" />
+                </button>
+                <button type="button" class="removeButton" title="Button entfernen" (click)="removeButton()">
+                    <img src="/svg/minus.svg" alt="Button entfernen" />
+                </button>
+            </div>
+        </div>
+
+        <button type="submit" class="submit">{{ submitButtonText() }}</button>
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>
+
+@if (inputOpen()) {
+    <app-popup-title-input
+        (resultOutput)="submit($event)"
+        (closeOutput)="closePopup()"
+        [title]="inputStage() === 'content' ? 'Button Text:' : 'Button URL:'"
+        [description]="inputStage() === 'content' ? 'Bitte gib einen neuen Text für den Button ein, der den aktuellen Text ersetzen soll.' : 'Bitte gib eine neue URL für den Button ein, der die Aktuelle ersetzen soll.'"
+        [label]="inputStage() === 'content' ? 'Text:' : 'URL:'"
+        [placeholder]="inputStage() === 'content' ? 'Text eingeben' : 'URL eingeben'"
+        [submitButtonText]="'Aktualisieren'"
+        [value]="placeholder()"
+    ></app-popup-title-input>
+}
+
+@if (confirmInputOpen()) {
+    <app-popup-confirm
+        [title]="'Popup schliessen'"
+        [description]="'Möchtest du das Popup wirklich schliessen? Alle ungespeicherten Änderungen gehen verloren.'"
+        [confirmButtonText]="'Schliessen'"
+        [cancelButtonText]="'Abbrechen'"
+        (resultOutput)="confirm($event)"
+    ></app-popup-confirm>
+}

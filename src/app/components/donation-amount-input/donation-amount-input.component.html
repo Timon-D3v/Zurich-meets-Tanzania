@@ -1,0 +1,4 @@
+<label [for]="id">
+    <input type="number" (input)="onInput($event)" [placeholder]="placeholder()" [id]="id" [attr.disabled]="disabled() || null" />
+    <span>{{ currency() }}</span>
+</label>

@@ -1,0 +1,123 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    margin: var(--basic-margin);
+    background-color: var(--background-100);
+    padding: 2vh 1vw;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & .progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0.5rem;
+        background: linear-gradient(to right, var(--secondary-500) 0%, var(--secondary-500) 33%, var(--text-950) 33%, var(--text-950) 34%, transparent 34%, transparent 66%, var(--text-950) 66%, var(--text-950) 67%, transparent 67%, transparent 100%);
+    }
+
+    & h2 {
+        font-size: 3.75em;
+        text-align: center;
+        margin: 0;
+        padding: 0 5vw;
+        text-decoration: underline;
+    }
+
+    & > p {
+        margin: 0;
+        padding: 1rem;
+        box-sizing: border-box;
+        width: 100%;
+        text-align: center;
+        font-size: 1.25rem;
+        text-wrap: balance;
+
+        &.current-stage-counter {
+            padding: 0 1vh 0 0;
+            margin-top: 0.5rem;
+            text-align: end;
+            font-size: 1.2rem;
+        }
+
+        & span {
+            font-size: 1rem;
+            text-wrap: balance;
+        }
+    }
+
+    & > .center {
+        flex: 1;
+        max-width: 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @media screen and (max-width: 900px) {
+            max-width: 60%;
+        }
+
+        @media screen and (max-width: 500px) {
+            max-width: 80%;
+        }
+
+        @media screen and (max-width: 300px) {
+            max-width: 100%;
+        }
+
+        & > img {
+            filter: invert(1) invert(92%) sepia(6%) saturate(2857%) hue-rotate(312deg) brightness(113%) contrast(101%); /* White to --background-100 */
+            width: 100%;
+            max-height: calc(402px + 2rem); /* Picture is 402px wide */
+            max-width: calc(402px + 2rem);
+            object-fit: contain;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        & > p {
+            width: 100%;
+            max-width: calc(402px + 2rem);
+            padding: 0 1rem;
+            box-sizing: border-box;
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+    & .buttons-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 1.5rem;
+
+        & > button.next {
+            @include primary-button(50px, 30px, 1rem 0.5rem 0.5rem 0.5rem, 0 1rem);
+        }
+
+        & > button.back {
+            @include secondary-button(50px, 30px, 1rem 0.5rem 0.5rem 0.5rem, 0 1rem);
+            background-color: transparent;
+        }
+    }
+}
+
+form {
+    width: 80%;
+
+    & .group {
+        display: flex;
+        gap: 0 1rem;
+
+        @media screen and (max-width: 600px) {
+            flex-direction: column;
+        }
+
+        & > * {
+            flex: 1;
+        }
+    }
+}

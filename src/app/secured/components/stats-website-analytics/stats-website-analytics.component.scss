@@ -1,0 +1,83 @@
+.wrapper {
+    padding: 2vh 5vw;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 0 10vw;
+}
+
+p {
+    font-size: medium;
+    margin: 1vh 5%;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-950);
+    margin-top: 5vh;
+    position: relative;
+    top: -5vh;
+
+    &:hover {
+        color: var(--primary-500);
+    }
+}
+
+svg {
+    background-color: #f9f9f980;
+    height: 75vh;
+    width: 100%;
+}
+
+stop {
+    stop-color: var(--secondary-500);
+}
+
+text {
+    font-family: "Titillium Web", sans-serif;
+    font-size: 1rem;
+    fill: var(--text-950);
+    text-anchor: middle;
+
+    &.y-axis-label {
+        text-anchor: start;
+        transform: translateY(0.25rem);
+    }
+}
+
+path {
+    fill: url(#svg-path-gradient);
+    stroke: var(--secondary-500);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+line {
+    stroke: var(--text-950);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+circle {
+    fill: var(--background-50);
+    stroke: var(--secondary-500);
+    stroke-width: 2;
+
+    &:hover {
+        stroke: var(--background-50);
+        fill: var(--secondary-500);
+        cursor: pointer;
+    }
+}

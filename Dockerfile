@@ -1,13 +1,17 @@
-FROM node:24.14.0-alpine3.23
+FROM node:24-slim
 
-WORKDIR /zurich-meets-tanzania-website
+WORKDIR /zurich-meets-tanzania
 
-COPY package*.json .
-COPY . .
+COPY package.json package-lock.json ./
+
+RUN npm ci --omit=dev
+
+# RUN npm install --omit=dev
+# RUN npm cache clean --force
+
+COPY dist ./dist
+COPY public ./public
 
 RUN mkdir cert
 
-RUN npm install --omit=dev
-RUN npm cache clean --force
-
-CMD ["node", "index.js"]
+CMD ["node", "dist/server/server.mjs"]

@@ -1,0 +1,53 @@
+<div class="wrapper" id="scrollToDonate">
+    <div
+        class="progress"
+        [style.background]="`
+    linear-gradient(to right, 
+        var(--secondary-500) 0%, 
+        var(--secondary-500) 33.3%, 
+        var(--text-950) 33.3%, 
+        var(--text-950) 33.7%, 
+        ${currentStage() > 1 ? 'var(--secondary-500)' : 'transparent'} 33.7%, 
+        ${currentStage() > 1 ? 'var(--secondary-500)' : 'transparent'} 66.6%, 
+        var(--text-950) 66.6%, 
+        var(--text-950) 67%, 
+        ${currentStage() > 2 ? 'var(--secondary-500)' : 'transparent'} 67%,  
+        ${currentStage() > 2 ? 'var(--secondary-500)' : 'transparent'} 100%)`"
+    ></div>
+    <h2>Spendenformular</h2>
+    @if (currentStage() === 1) {
+        <p>Vielen Dank, dass du zurich meets tanzania und unseren Unterprojekte eine Spende widmest. Bitte gib unten an wie viel du spenden möchtest, um fortzufahren.</p>
+        <app-donation-amount-input (valueOutput)="setAmount($event)"></app-donation-amount-input>
+    } @else if (currentStage() === 2) {
+        <p>
+            Bitte scanne den QR-Code unten in deiner Bank-App oder benutze die Überweisungsdaten darunter um deine Spende zu tätigen.
+            <br />
+            <span> (Achte darauf, dass die Maus beim scannen nicht über dem QR-Code gehalten wird.) </span>
+        </p>
+        <div class="center">
+            <img src="/common/donate-qr-code.png" alt="Der QR-Code zum Spenden" />
+            <p>
+                CH 20 0900 0000 6184 2154 0<br />
+                zurich - meets - tanzania<br />
+                8049 Zürich
+            </p>
+        </div>
+    } @else {
+        <p>Vielen Dank! Bitte übermittle uns zum Schluss deine Daten über das Formular unten, damit wir den Verwendungszweck festhalten und dir eine Spendenbescheinigung ausstellen können.</p>
+        <form (submit)="submitDonationForm($event)">
+            <div class="group">
+                <app-edit-account-input [label]="'Vorname'" [iconSource]="'/svg/text.svg'" [iconAlt]="'Ein Buchstabe'" [placeholder]="'Vorname'" (valueOutput)="setFirstName($event)"></app-edit-account-input>
+                <app-edit-account-input [label]="'Nachname'" [iconSource]="'/svg/text.svg'" [iconAlt]="'Ein Buchstabe'" [placeholder]="'Nachname'" (valueOutput)="setLastName($event)"></app-edit-account-input>
+            </div>
+            <app-edit-account-input [label]="'E-Mail'" [iconSource]="'/svg/mail.svg'" [iconAlt]="'Ein Brief'" [placeholder]="'E-Mail-Adresse'" (valueOutput)="setEmail($event)"></app-edit-account-input>
+            <app-edit-account-select-input [label]="'Spendenzweck'" [iconSource]="'/svg/text.svg'" [iconAlt]="'Ein Buchstabe'" [options]="donationUsageTypes()" (valueOutput)="setUsageType($event)"></app-edit-account-select-input>
+        </form>
+    }
+    <div class="buttons-wrapper">
+        @if (currentStage() !== 1) {
+            <button class="back" (click)="previousStage()" [disabled]="buttonDisabled()">Zurück</button>
+        }
+        <button class="next" (click)="nextStage()" [disabled]="buttonDisabled()">{{ buttonText() }}</button>
+    </div>
+    <p class="current-stage-counter">Teil {{ currentStage() }}/3</p>
+</div>

@@ -1,0 +1,9 @@
+<div class="wrapper">
+    @if (sideOfImage() === "left") {
+        <img [src]="imageUrl()" [alt]="imageAlt()" loading="lazy" />
+        <p [innerHTML]="markdownToHtml(content())"></p>
+    } @else {
+        <p [innerHTML]="markdownToHtml(content())"></p>
+        <img [src]="imageUrl()" [alt]="imageAlt()" loading="lazy" />
+    }
+</div>

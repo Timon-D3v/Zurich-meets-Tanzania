@@ -1,0 +1,19 @@
+@use "../../../styles/index" as *;
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: max(1vh, 1rem) max(3vw, 1rem);
+    margin: 3vh 5vw;
+}
+
+a {
+    &.primary {
+        @include primary-button($min-height: 50px, $padding: 0 3vw);
+    }
+
+    &.secondary {
+        @include secondary-button($min-height: 50px, $padding: 0 3vw);
+    }
+}

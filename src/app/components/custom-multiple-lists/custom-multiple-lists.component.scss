@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 min(5vw, 2.5rem);
+    justify-content: space-evenly;
+    padding: 0 calc(5vw + 20px) 0 5vw;
+    box-sizing: border-box;
+}
+
+@media screen and (min-width: 750px) {
+    .list {
+        max-width: 40vw;
+    }
+}
+
+h2 {
+    text-align: center;
+}
+
+li ::ng-deep a:hover {
+    color: var(--primary-500);
+}

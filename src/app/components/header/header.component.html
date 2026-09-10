@@ -1,0 +1,38 @@
+<header>
+    <app-logo></app-logo>
+    <div class="navigation">
+        <div class="top">
+            <div class="large">
+                <a [routerLink]="becomeMemberUrl()" class="button member">{{ becomeMemberUrl() === "/membership" ? "Mitglied werden" : "Account" }}</a>
+                <a [routerLink]="'/donate'" class="button donate">Spenden</a>
+                <a [routerLink]="'/contact'" class="button contact">Kontakt</a>
+                <a href="{{ UNIKAT_URL }}" target="_blank" class="button shop">Shop</a>
+            </div>
+            <div class="medium">
+                <a [routerLink]="becomeMemberUrl()" class="icon member" [title]="becomeMemberUrl() === '/membership' ? 'Mitglied werden' : 'Account'">
+                    <img alt="Mitglied werden" src="/svg/member.svg" />
+                </a>
+                <a [routerLink]="'/donate'" class="icon donate" title="Spenden">
+                    <img alt="Spenden" src="/svg/spenden.svg" />
+                </a>
+                <a [routerLink]="'/contact'" class="icon contact" title="Kontakt">
+                    <img alt="Kontakt" src="/svg/mail.svg" />
+                </a>
+                <a href="{{ UNIKAT_URL }}" target="_blank" class="icon shop" title="Shop">
+                    <img alt="Shop" src="/svg/shop.svg" />
+                </a>
+            </div>
+            <div class="small">
+                <app-hamburger></app-hamburger>
+            </div>
+        </div>
+        <div class="bottom">
+            <app-header-link [type]="'Verein'" (click)="moveNavElement($event)" [linkIndex]="0"></app-header-link>
+            <app-header-link [type]="'Projekte'" (click)="moveNavElement($event)" [linkIndex]="1"></app-header-link>
+            <app-header-link [type]="'Blogs'" (click)="moveNavElement($event)" [linkIndex]="2"></app-header-link>
+            <app-header-link [type]="'Bilder'" (click)="moveNavElement($event)" [linkIndex]="3"></app-header-link>
+            <app-header-link [type]="'Weiteres'" (click)="moveNavElement($event)" [linkIndex]="4"></app-header-link>
+            <app-theme-switch></app-theme-switch>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,20 @@
+<app-hero
+    [title]="gallery().title"
+    [subtitle]="gallery().subtitle"
+    [pictureUrl]="gallery().data.length === 0 ? heroImage() : gallery().data[0].url"
+    [pictureAlt]="gallery().data.length === 0 ? 'Eine Hintergrundfarbe' : gallery().data[0].uuid"
+></app-hero>
+@defer (when gallery().data.length > 0; prefetch on immediate) {
+    <div class="wrapper">
+        @for (image of gallery().data; track image.uuid) {
+            <app-gallery-image [image]="image" [transformation]="'?width=640&height=360&fit=outside'" (click)="openImagePreview($event, $index)"></app-gallery-image>
+        }
+    </div>
+    <p class="date">Zuletzt aktualisiert: {{ formatDate(gallery().date) }}</p>
+} @placeholder (minimum 100ms) {
+    <app-loading></app-loading>
+}
+
+@if (currentOpenIndex() >= 0) {
+    <app-gallery-image-preview [image]="gallery().data[currentOpenIndex()]" (closeOutput)="closeImagePreview()" (nextOutput)="showNextImage()" (previousOutput)="showPreviousImage()"></app-gallery-image-preview>
+}

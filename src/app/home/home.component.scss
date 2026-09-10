@@ -1,0 +1,22 @@
+@use "../../styles/home.namespace" as *;
+
+a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-950);
+    margin-top: 5vh;
+    position: relative;
+    top: -5vh;
+
+    &:hover {
+        color: var(--primary-500);
+    }
+}
+
+.min-width-750px {
+    @media screen and (min-width: 750px) {
+        display: none;
+    }
+}

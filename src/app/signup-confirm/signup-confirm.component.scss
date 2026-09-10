@@ -1,0 +1,24 @@
+@use "../../styles/index" as *;
+@use "../../styles/auth.namespace" as *;
+
+.wrapper {
+    @include auth-wrapper;
+}
+
+form {
+    @include auth-form;
+}
+
+app-auth-input {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+p {
+    color: var(--c-text-950);
+}
+
+button {
+    @include form-submit-button;
+}

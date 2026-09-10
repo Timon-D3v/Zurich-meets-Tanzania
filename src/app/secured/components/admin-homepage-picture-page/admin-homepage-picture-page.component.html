@@ -1,0 +1,10 @@
+<form (submit)="onSubmit($event)">
+    <h2>Homepage Bild aktualisieren</h2>
+    <p>Lade ein Bild hoch, welches als neues Homepage-Bild verwendet werden soll. Das Bild wird auf der Startseite ganz oben angezeigt.</p>
+    <label for="image">
+        <h3>Bild</h3>
+        <img alt="Vorschau" [src]="imagePreview()" />
+    </label>
+    <input type="file" id="image" required (change)="streamValue($event)" accept="image/*" />
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

@@ -1,0 +1,24 @@
+<div class="popup" (click)="close()">
+    <form class="wrapper" [formGroup]="selectForm" (submit)="onSubmit($event)" (click)="$event.stopPropagation()">
+        <h2>{{ title() }}</h2>
+
+        <p>{{ description() }}</p>
+
+        <label for="title">{{ label() }}</label>
+        <input type="text" id="title" [placeholder]="placeholder()" formControlName="filterControl" (input)="updateInput()" />
+
+        <ul>
+            @for (element of filteredOptions(); track $index) {
+                <li [class]="selectedValue() === element ? 'selected' : ''" (click)="selectOption(element)">{{ element }}</li>
+            } @empty {
+                <li>Keine Ergebnisse gefunden</li>
+            }
+        </ul>
+
+        <button type="submit" class="submit">{{ submitButtonText() }}</button>
+
+        <button type="button" class="close" (click)="close()">
+            <img src="/svg/close.svg" alt="Popup schließen" />
+        </button>
+    </form>
+</div>

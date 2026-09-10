@@ -1,0 +1,43 @@
+import { inject, Injectable } from "@angular/core";
+import { PublicEnvService } from "./public-env.service";
+import { PUBLIC_CONFIG } from "../../publicConfig";
+
+@Injectable({
+    providedIn: "root",
+})
+export class SanitizerService {
+    private publicEnvService = inject(PublicEnvService);
+
+    async verifyUrlIsTrusted(url: string): Promise<boolean> {
+        const ORIGIN = await this.publicEnvService.getOrigin();
+        const DELIVAPI_URL = await this.publicEnvService.getDelivApiUrl();
+        const DELIVAPI_USER = await this.publicEnvService.getDelivApiUser();
+
+        const CDN_URL_WITH_USER = `${DELIVAPI_URL}/cdn/${DELIVAPI_USER}/`;
+
+        try {
+            // Check if the URL has a trusted origin
+            if (
+                !url.startsWith(ORIGIN) &&
+                !url.startsWith(ORIGIN.replace(/http(s*):\/\/www\./, "http$1://")) &&
+                !url.startsWith(CDN_URL_WITH_USER) &&
+                !url.startsWith(`blob:${ORIGIN}`) &&
+                !url.startsWith(`blob:${ORIGIN.replace(/http(s*):\/\/www\./, "http$1://")}`)
+            ) {
+                throw new Error(`URL is not from a trusted origin. URL: ${url}, Trusted Origins: ${ORIGIN}, ${CDN_URL_WITH_USER}, blob:${ORIGIN}`);
+            }
+
+            return true;
+        } catch (error) {
+            if (error instanceof Error) {
+                console.warn("URL verification error:", error.message);
+
+                return false;
+            }
+
+            console.error(error);
+
+            return false;
+        }
+    }
+}

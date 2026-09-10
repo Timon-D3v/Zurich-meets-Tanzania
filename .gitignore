@@ -1,3 +1,47 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Custom
 .hintrc
 .env
 _old/
@@ -9,15 +53,17 @@ _Beiträge/
 static/vid/
 route.zmt.js
 _important/
+dev/mysql/
+dev/delivapi/
 node_modules/
 plainToHash.js
 _Tutorials/
 Redesign spenden.txt
 *.env
+TODO.txt
 _ZMT Marketing/
-Buissness Information.txt
-_files/
-Redesign Blogstorage.txt
-pureHtmlToBlogJson.js
-todo.txt
-cert/
+dev/*.sql
+dev/*.sh
+*.docx
+public/.archive
+dev/bugs/

@@ -1,0 +1,19 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(auto-fit, max(40vh, 1fr));
+    gap: 5vh 5vw;
+    margin: var(--basic-margin);
+}
+
+@media screen and (min-width: 2000px) {
+    .wrapper {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .wrapper {
+        grid-template-columns: 1fr;
+    }
+}

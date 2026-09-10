@@ -1,0 +1,3 @@
+<a class="wrapper" target="_blank" [href]="image().url" [title]="image().uuid" [id]="'file-preview-' + image().uuid" (click)="$event.preventDefault()">
+    <img [src]="getFilePreviewUrl(image(), stripTransformation())" [alt]="getFilePreviewAlt(image())" loading="lazy" (load)="stripTransformation.set(true)" />
+</a>

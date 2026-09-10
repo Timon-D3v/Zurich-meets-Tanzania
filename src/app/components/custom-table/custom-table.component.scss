@@ -1,0 +1,42 @@
+.wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    font-family: "Titillium Web", sans-serif;
+    border-collapse: collapse;
+    margin: 5vh 5vw;
+    width: calc(100% - 10vw);
+}
+
+td,
+th {
+    border: 1px solid var(--text-950);
+    text-align: left;
+    padding: 8px;
+    color: var(--text-950);
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+img {
+    max-height: 20vh;
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+    filter: none !important;
+}
+
+::ng-deep :root[data-theme="dark"] app-custom-table tr:nth-child(even) {
+    background-color: #7c7c7c;
+}
+
+tfoot td {
+    border: none;
+    text-align: right;
+    font-style: italic;
+    font-size: 0.9em;
+}

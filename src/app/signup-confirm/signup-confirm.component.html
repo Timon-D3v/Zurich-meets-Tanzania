@@ -1,0 +1,12 @@
+<div class="wrapper">
+    <form (submit)="confirm($event)">
+        <h1>Registrierung bestätigen</h1>
+        <p>
+            Damit dein Account erstellt werden kann musst du zuerst deine E-Mail-Adresse verifizieren. Dazu hast du von uns einen Code per E-Mail erhalten. Bitte gib diesen im Textfeld unten ein, um deine Registrierung abzuschliessen. Danach wirst du
+            automatch eingeloggt.
+        </p>
+        <p>E-Mail: {{ email() }}</p>
+        <app-auth-input [type]="'text'" [label]="'Bestätigungscode'" [placeholder]="'Code eingeben'" [required]="true" [iconSource]="'/svg/text.svg'" [iconAlt]="'Buchstaben und Zahlen'" (valueOutput)="updateCodeInput($event)"></app-auth-input>
+        <button type="submit">{{ submitButtonText() }}</button>
+    </form>
+</div>

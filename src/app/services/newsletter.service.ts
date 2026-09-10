@@ -1,0 +1,72 @@
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { AddToNewsletterListApiEndpointResponse, ApiEndpointResponse, GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse } from "../..";
+
+@Injectable({
+    providedIn: "root",
+})
+export class NewsletterService {
+    private http = inject(HttpClient);
+
+    signUp(firstName: string, lastName: string, email: string, gender: "Herr" | "Frau" | "Divers"): Observable<AddToNewsletterListApiEndpointResponse> {
+        const request = this.http.post<AddToNewsletterListApiEndpointResponse>("/api/newsletter/signUp", {
+            firstName,
+            lastName,
+            email,
+            gender,
+        });
+
+        return request;
+    }
+
+    confirmSignUp(firstName: string, lastName: string, email: string, gender: string, id: string, timestamp: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/newsletter/confirm", {
+            firstName,
+            lastName,
+            email,
+            gender,
+            id,
+            timestamp,
+        });
+
+        return request;
+    }
+
+    signOut(email: string): Observable<GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse> {
+        const request = this.http.post<GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse>("/api/newsletter/unsubscribe", {
+            email,
+        });
+
+        return request;
+    }
+
+    confirmSignOut(code: string, token: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/newsletter/confirmUnsubscribe", {
+            code,
+            token,
+        });
+
+        return request;
+    }
+
+    signUpWithAccount(gender: "Herr" | "Frau" | "Divers"): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/account/newsletterSignUp", {
+            gender,
+        });
+
+        return request;
+    }
+
+    signOutWithAccount(): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/account/newsletterSignOut", {});
+
+        return request;
+    }
+
+    checkIfSignedUpWithAccount(): Observable<ApiEndpointResponse> {
+        const request = this.http.get<ApiEndpointResponse>("/api/secured/account/newsletterCheck");
+
+        return request;
+    }
+}

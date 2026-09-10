@@ -1,0 +1,8 @@
+<a [routerLink]="['/blog', urlEncode(metadata().title)]">
+    <div class="image-wrapper" [style.background-image]="'url(' + metadata().imageUrl + ')'">
+        <div class="overlay">
+            <h2>{{ metadata().title }}</h2>
+            <p>{{ metadata().subtitle }}</p>
+        </div>
+    </div>
+</a>

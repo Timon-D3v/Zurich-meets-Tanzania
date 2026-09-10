@@ -1,0 +1,71 @@
+label {
+    display: block;
+    background-color: var(--background-100);
+    border: 10px solid var(--text-950);
+    color: var(--text-950);
+    transition: all 0.2s ease-out;
+    font-family: "Titillium Web", sans-serif;
+    height: auto;
+    box-sizing: border-box;
+    margin: 2vh auto;
+    width: 40%;
+    cursor: pointer;
+
+    @media screen and (max-width: 1000px) {
+        width: 60%;
+    }
+
+    @media screen and (max-width: 600px) {
+        width: 80%;
+    }
+
+    @media screen and (max-width: 350px) {
+        width: 95%;
+    }
+
+    &:hover {
+        border-color: var(--secondary-500);
+
+        & input,
+        & span,
+        & input::placeholder {
+            color: var(--secondary-500);
+            transition: all 0.2s ease-out;
+        }
+    }
+}
+
+input {
+    height: calc(100% / 27 * 21);
+    width: 100%;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 90px;
+    font-weight: 900;
+    line-height: 1;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    pointer-events: none;
+    color: inherit;
+    transition: inherit;
+    box-sizing: border-box;
+
+    &::-webkit-inner-spin-button {
+        display: none !important;
+    }
+}
+
+span {
+    height: calc(100% / 27 * 5);
+    width: 100%;
+    padding: 5px 10px;
+    line-height: 1;
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: inherit;
+    transition: inherit;
+    pointer-events: none;
+    box-sizing: border-box;
+}

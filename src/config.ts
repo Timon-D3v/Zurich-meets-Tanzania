@@ -1,0 +1,66 @@
+import dotenv from "dotenv";
+import type { Config } from ".";
+
+dotenv.config();
+
+export const CONFIG: Config = {
+    ENV: process.env["ENV"] as "dev" | "prod",
+    HOST: process.env["HOST"] as string,
+    PORT: Number(process.env["PORT"]),
+
+    ALLOWED_HOSTS: (process.env["ALLOWED_HOSTS"] as string).split(","),
+
+    HTTPS_ACTIVE: process.env["HTTPS_ACTIVE"] === "true",
+    HTTPS_PORT: Number(process.env["HTTPS_PORT"]),
+    HTTPS_CERT_PASSPHRASE: process.env["HTTPS_CERT_PASSPHRASE"] as string,
+
+    SESSION_SECRET: process.env["SESSION_SECRET_KEY"] as string,
+
+    MYSQL_HOST: process.env["MYSQL_HOST"] as string,
+    MYSQL_PORT: Number(process.env["MYSQL_PORT"]),
+    MYSQL_USER: process.env["MYSQL_USER"] as string,
+    MYSQL_PASSWORD: process.env["MYSQL_PW"] as string,
+    MYSQL_SCHEMA: process.env["MYSQL_DB"] as string,
+
+    MAILJET_PUBLIC_KEY: process.env["MAILJET_PUBLIC_KEY"] as string,
+    MAILJET_PRIVATE_KEY: process.env["MAILJET_PRIVATE_KEY"] as string,
+
+    ORIGIN: process.env["ORIGIN"] as string,
+
+    EMAIL_SENDER_ADDRESS: process.env["EMAIL_SENDER_ADDRESS"] as string,
+    EMAIL_SENDER_NAME: process.env["EMAIL_SENDER_NAME"] as string,
+
+    DELIVAPI_URL: process.env["DELIVAPI_URL"] as string,
+    DELIVAPI_USER: process.env["DELIVAPI_USER"] as string,
+    DELIVAPI_KEY: process.env["DELIVAPI_KEY"] as string,
+
+    PASSWORD_GOOGLE_ACCOUNT: process.env["PASSWORD_GOOGLE_ACCOUNT"] as string,
+    PASSWORD_IMAGEKIT_ACCOUNT: process.env["PASSWORD_IMAGEKIT_ACCOUNT"] as string,
+    PASSWORD_STRIPE_ACCOUNT: process.env["PASSWORD_STRIPE_ACCOUNT"] as string,
+    PASSWORD_STRIPE_READONLY_ACCOUNT: process.env["PASSWORD_STRIPE_READONLY_ACCOUNT"] as string,
+    PASSWORD_MAILJET_ACCOUNT: process.env["PASSWORD_MAILJET_ACCOUNT"] as string,
+    PASSWORD_INFOMANIAK_ACCOUNT: process.env["PASSWORD_INFOMANIAK_ACCOUNT"] as string,
+
+    EMAIL_GOOGLE_ACCOUNT: process.env["EMAIL_GOOGLE_ACCOUNT"] as string,
+    EMAIL_IMAGEKIT_ACCOUNT: process.env["EMAIL_IMAGEKIT_ACCOUNT"] as string,
+    EMAIL_INFOMANIAK_ACCOUNT: process.env["EMAIL_INFOMANIAK_ACCOUNT"] as string,
+    EMAIL_STRIPE_ACCOUNT: process.env["EMAIL_STRIPE_ACCOUNT"] as string,
+    EMAIL_STRIPE_READONLY_ACCOUNT: process.env["EMAIL_STRIPE_READONLY_ACCOUNT"] as string,
+    EMAIL_MAILJET_ACCOUNT: process.env["EMAIL_MAILJET_ACCOUNT"] as string,
+
+    TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_READONLY_ACCOUNT: process.env["TWO_FACTOR_AUTHENTICATION_SECRET_STRIPE_READONLY_ACCOUNT"] as string,
+
+    TIANJI_API_KEY: process.env["TIANJI_API_KEY"] as string,
+    TIANJI_WORKSPACE_ID: process.env["TIANJI_WORKSPACE_ID"] as string,
+    TIANJI_WEBSITE_ID: process.env["TIANJI_WEBSITE_ID"] as string,
+    TIANJI_URL: process.env["TIANJI_URL"] as string,
+
+    STRIPE_PRIVATE_KEY: process.env["STRIPE_PRIVATE_KEY"] as string,
+    STRIPE_PUBLIC_KEY: process.env["STRIPE_PUBLIC_KEY"] as string,
+    STRIPE_PRIVATE_KEY_TEST: process.env["STRIPE_PRIVATE_KEY_TEST"] as string,
+    STRIPE_PUBLIC_KEY_TEST: process.env["STRIPE_PUBLIC_KEY_TEST"] as string,
+    STRIPE_ENDPOINT_SECRET: process.env["STRIPE_ENDPOINT_SECRET"] as string,
+    STRIPE_ENDPOINT_SECRET_TEST: process.env["STRIPE_ENDPOINT_SECRET_TEST"] as string,
+    STRIPE_PRICE_MEMBERSHIP: process.env["STRIPE_PRICE_MEMBERSHIP"] as string,
+    STRIPE_PRICE_MEMBERSHIP_TEST: process.env["STRIPE_PRICE_MEMBERSHIP_TEST"] as string,
+};

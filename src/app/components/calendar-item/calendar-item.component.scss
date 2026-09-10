@@ -1,0 +1,37 @@
+.wrapper {
+    border-bottom: 2px solid var(--text-950);
+    padding: 0 2.5vw;
+    gap: 2.5vw;
+    display: flex;
+}
+
+.dot-wrapper {
+    display: grid;
+    place-items: center;
+    width: 40px;
+}
+
+.dot {
+    background-color: var(--text-950);
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+    aspect-ratio: 1 / 1;
+}
+
+h2 {
+    font-size: 1.75rem;
+    letter-spacing: 0.75px;
+    margin: 0.5rem 0 0 0;
+    line-height: 1.2;
+}
+
+h3 {
+    display: block;
+    margin-top: 6px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-family: "Titillium Web", sans-serif;
+    line-height: 1.2;
+    font-size: 1.25rem;
+}

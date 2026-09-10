@@ -1,0 +1,20 @@
+<div [class]="isOpen() ? 'details open' : 'details'">
+    <p class="description" (click)="toggleDetails()">{{ description() }}</p>
+    <ul>
+        @for (link of linkArray(); let i = $index; track link.href) {
+            <li [class]="withPicture() ? 'picture' : null">
+                @if (withPicture()) {
+                    <img [src]="pictureArray()[i].src" [alt]="pictureArray()[i].alt" />
+                }
+
+                @if (typeof link?.external === "boolean" && link.external) {
+                    <a [href]="link.href" target="_blank" rel="noopener" (click)="closeDetails()">{{ link.label }}</a>
+                } @else if (typeof link?.clickable === "boolean" && link.clickable && typeof link.onClick === "function") {
+                    <p (click)="link.onClick()">{{ link.label }}</p>
+                } @else {
+                    <a [routerLink]="link.href" (click)="closeDetails()">{{ link.label }}</a>
+                }
+            </li>
+        }
+    </ul>
+</div>

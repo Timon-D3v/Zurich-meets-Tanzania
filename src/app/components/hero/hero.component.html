@@ -1,0 +1,15 @@
+<div>
+    <img [alt]="pictureAlt()" [src]="pictureUrl()" />
+
+    <h1 [innerHTML]="title()"></h1>
+
+    @if (subtitle() !== undefined) {
+        <p>{{ subtitle() }}</p>
+    }
+
+    @if (buttonType() === "url" && buttonText() !== undefined && buttonLink() !== undefined) {
+        <button type="button" [routerLink]="buttonLink()">{{ buttonText() }}</button>
+    } @else if (buttonType() === "scroll" && buttonText() !== undefined && buttonLink() !== undefined) {
+        <button type="button" (click)="scrollToInput()">{{ buttonText() }}</button>
+    }
+</div>

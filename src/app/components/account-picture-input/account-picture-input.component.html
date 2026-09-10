@@ -1,0 +1,5 @@
+<label class="label" for="hiddenAccountImageFileInput">Profilbild (optional)</label>
+<label class="div" for="hiddenAccountImageFileInput">
+    <img [src]="imageUrl()" [alt]="imageAlt()" />
+    <input class="hidden" id="hiddenAccountImageFileInput" type="file" accept="image/png, image/jpg, image/gif, image/jpeg, image/tiff, image/raw, image/bpm, image/webp, image/ico" (change)="streamValue($event)" />
+</label>
