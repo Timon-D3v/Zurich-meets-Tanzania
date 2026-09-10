@@ -1,5 +1,7 @@
 # Zurich meets Tanzania
 
+# THIS IS TEMPORARY TO FIX GITHUB MERGES
+
 A modern, server-side rendered web platform for the **zurich meets tanzania** association — a non-profit organization supported by hospital staff in Zurich. The website provides information about the main project, subsidiary projects, news, finances, member areas, donation options and more.
 
 The application is built as an **Angular SSR** project and is served by an **Express** backend. It supports, among other things, member management, newsletter functionality, contact forms, donation and payment flows, as well as German-language content and strong SEO metadata.
