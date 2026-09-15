@@ -156,6 +156,31 @@ export async function getAllUsers(): Promise<DatabaseResult> {
     }
 }
 
+export async function getAllUserEmails(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT email from \`zmt\`.\`users\`;`);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
 export async function deleteUserWithId(id: number): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`DELETE FROM \`zmt\`.\`users\` WHERE \`id\` = ?;`, [id]);

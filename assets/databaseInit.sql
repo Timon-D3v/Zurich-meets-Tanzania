@@ -223,9 +223,6 @@ CREATE TABLE IF NOT EXISTS `zmt`.`board` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `userId` INT NOT NULL,
     `role` VARCHAR(256),
-    `profession` VARCHAR(256) NOT NULL,
-    `motive` TEXT NOT NULL,
-    `secondaryPicture` VARCHAR(512),
     PRIMARY KEY (`id`),
     UNIQUE INDEX `board_id_UNIQUE` (`id` ASC) VISIBLE
 )

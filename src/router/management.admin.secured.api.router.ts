@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { ApiEndpointResponse, DelivApiFile, GetAllFileInformationApiEndpointResponse, GetPasswordsApiEndpointResponse, PrivateUser } from "..";
+import { ApiEndpointResponse, DelivApiFile, GetAllFileInformationApiEndpointResponse, GetPasswordsApiEndpointResponse, PrivateUser, GetAllUserEmailsApiEndpointResponse } from "..";
 import { PASSWORDS } from "../shared/passwords";
-import { createUser, getUserWithEmail, setUserType } from "../shared/user.database";
+import { createUser, getAllUserEmails, getUserWithEmail, setUserType } from "../shared/user.database";
 import { getMemberWithUserId } from "../shared/member.database";
 import bcrypt from "bcryptjs";
 import { createDarkmodeEntry } from "../shared/darkmode.database";
@@ -12,6 +12,8 @@ import { delivApiUpdateFile } from "delivapi-client";
 import { CONFIG } from "../config";
 import { updateDonationMeterWithId } from "../shared/donation.database";
 import { getSecureHexString } from "../shared/secure.utils";
+import { addBoardMember, getBoardDatabase, removeBoardMember } from "../shared/board.database";
+import { createTeamMemberEntry, getTeamMemberEntry } from "../shared/team.database";
 
 // Router Serves under /api/secured/admin/management
 const router = Router();
@@ -371,6 +373,187 @@ router.post("/updateDonationMeter", async (req: Request, res: Response): Promise
         res.json({
             error: false,
             message: "Success",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getAllUserEmails", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const result = await getAllUserEmails();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Die E-Mail-Adressen der Benutzer wurden erfolgreich abgerufen.",
+            data: result.data,
+        } as GetAllUserEmailsApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetAllUserEmailsApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetAllUserEmailsApiEndpointResponse);
+    }
+});
+
+router.post("/addBoardMember", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email } = req.body;
+
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
+            throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
+        }
+
+        const userResult = await getUserWithEmail(email);
+
+        if (userResult.error || !userResult.data) {
+            throw new Error(userResult.error);
+        }
+
+        if (userResult.data.length === 0) {
+            throw new Error("Es existiert kein Benutzer mit dieser E-Mail-Adresse.");
+        }
+
+        const user = userResult.data[0];
+
+        const boardResult = await getBoardDatabase();
+
+        if (boardResult.error || !boardResult.data) {
+            throw new Error(boardResult.error);
+        }
+
+        for (let i = 0; i < boardResult.data.length; i++) {
+            if (boardResult.data[i].userId === user.id) {
+                throw new Error("Der Benutzer ist bereits ein Vorstandsmitglied.");
+            }
+        }
+
+        // Before adding the user as a board member, create a teamMember entry for the user if it doesn't exist
+        const memberResult = await getTeamMemberEntry(user.id);
+
+        if (memberResult.error || memberResult.data === null) {
+            throw new Error(memberResult.error);
+        }
+
+        if (memberResult.data.length === 0) {
+            // Create a new team member entry
+            const createResult = await createTeamMemberEntry(user.id);
+
+            if (createResult.error) {
+                throw new Error(createResult.error);
+            }
+        }
+
+        // Add the user as a board member
+        const addResult = await addBoardMember(user.id);
+
+        if (addResult.error) {
+            throw new Error(addResult.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Der Benutzer wurde erfolgreich als Vorstandsmitglied hinzugefügt.",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.post("/removeBoardMember", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email } = req.body;
+
+        if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
+            throw new Error("Bitte gib eine gültige E-Mail-Adresse ein.");
+        }
+
+        const userResult = await getUserWithEmail(email);
+
+        if (userResult.error || !userResult.data) {
+            throw new Error(userResult.error);
+        }
+
+        if (userResult.data.length === 0) {
+            throw new Error("Es existiert kein Benutzer mit dieser E-Mail-Adresse.");
+        }
+
+        const user = userResult.data[0];
+
+        const boardResult = await getBoardDatabase();
+
+        if (boardResult.error || !boardResult.data) {
+            throw new Error(boardResult.error);
+        }
+
+        let isBoardMember = false;
+
+        for (let i = 0; i < boardResult.data.length; i++) {
+            if (boardResult.data[i].userId === user.id) {
+                isBoardMember = true;
+                break;
+            }
+        }
+
+        if (!isBoardMember) {
+            throw new Error("Der Benutzer ist kein Vorstandsmitglied.");
+        }
+
+        // Remove the user as a board member
+        const removeResult = await removeBoardMember(user.id);
+
+        if (removeResult.error) {
+            throw new Error(removeResult.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Der Benutzer wurde erfolgreich als Vorstandsmitglied entfernt.",
         } as ApiEndpointResponse);
     } catch (error) {
         console.error(error);

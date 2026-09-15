@@ -18,10 +18,10 @@ export class BoardComponent implements OnInit {
     private teamService = inject(TeamService);
     private notificationService = inject(NotificationService);
 
-    private platfromId = inject(PLATFORM_ID);
+    private platformId = inject(PLATFORM_ID);
 
     ngOnInit(): void {
-        if (!isPlatformBrowser(this.platfromId)) {
+        if (!isPlatformBrowser(this.platformId)) {
             console.error("Cannot make API calls on the server side. Calendar events will not be loaded.");
             return;
         }

@@ -80,6 +80,7 @@ import { DonationService } from "../../services/donation.service";
 import { PopupTableInputComponent } from "../../components/popup-table-input/popup-table-input.component";
 import { PopupMultipleButtonsInputComponent } from "../../components/popup-multiple-buttons-input/popup-multiple-buttons-input.component";
 import { PopupMultipleListsInputComponent } from "../../components/popup-multiple-lists-input/popup-multiple-lists-input.component";
+import { AdminEditBoardComponent } from "../components/admin-edit-board/admin-edit-board.component";
 
 @Component({
     selector: "app-dashboard",
@@ -127,6 +128,7 @@ import { PopupMultipleListsInputComponent } from "../../components/popup-multipl
         PopupTableInputComponent,
         PopupMultipleButtonsInputComponent,
         PopupMultipleListsInputComponent,
+        AdminEditBoardComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",

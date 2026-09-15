@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { ApiEndpointResponse } from "../..";
+import { ApiEndpointResponse, GetAllUserEmailsApiEndpointResponse } from "../..";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -44,6 +44,28 @@ export class AdminManagementService {
         formData.append("picture", blob);
 
         const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/changeHomepagePicture", formData);
+
+        return request;
+    }
+
+    getAllUserEmails(): Observable<GetAllUserEmailsApiEndpointResponse> {
+        const request = this.http.get<GetAllUserEmailsApiEndpointResponse>("/api/secured/admin/management/getAllUserEmails");
+
+        return request;
+    }
+
+    addBoardMember(email: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/addBoardMember", {
+            email,
+        });
+
+        return request;
+    }
+
+    removeBoardMember(email: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/management/removeBoardMember", {
+            email,
+        });
 
         return request;
     }

@@ -1,0 +1,36 @@
+<form>
+    <h2>Vorstand bearbeiten</h2>
+    <p>Hier kannst du jemanden zum Vorstand hinzufügen oder entfernen. Drücke dafür auf den entsprechenden Button und wähle die E-Mail-Adresse der Person aus, die du hinzufügen oder entfernen möchtest.</p>
+    <div>
+        <button type="button" (click)="editBoard('remove')">Mitglied entfernen</button>
+        <button type="button" (click)="editBoard('add')">Mitglied hinzufügen</button>
+    </div>
+    <br />
+    <h2>Aktueller Vorstand:</h2>
+</form>
+<app-board></app-board>
+
+@if (selectionInputOpen()) {
+    <app-popup-selection-input
+        [selectionOptions]="emailList()"
+        [title]="action() === 'add' ? 'Mitglied hinzufügen' : 'Mitglied entfernen'"
+        [description]="action() === 'add' ? 'Bitte wählen Sie die E-Mail-Adresse der Person aus, die Sie zum Vorstand hinzufügen möchten.' : 'Bitte wählen Sie die E-Mail-Adresse der Person aus, die Sie aus dem Vorstand entfernen möchten.'"
+        label="E-Mail"
+        placeholder="E-Mail eingeben"
+        (resultOutput)="handleSelectionInputResult($event)"
+    ></app-popup-selection-input>
+}
+
+@if (confirmInputOpen()) {
+    <app-popup-confirm
+        [title]="action() === 'add' ? 'Mitglied hinzufügen' : 'Mitglied entfernen'"
+        [description]="
+            action() === 'add'
+                ? 'Sind Sie sicher, dass Sie die Person mit der E-Mail-Adresse ' + selection() + ' zum Vorstand hinzufügen möchten?'
+                : 'Sind Sie sicher, dass Sie die Person mit der E-Mail-Adresse ' + selection() + ' aus dem Vorstand entfernen möchten?'
+        "
+        [confirmButtonText]="action() === 'add' ? 'Hinzufügen' : 'Entfernen'"
+        cancelButtonText="Abbrechen"
+        (resultOutput)="handleConfirmInputResult($event)"
+    ></app-popup-confirm>
+}

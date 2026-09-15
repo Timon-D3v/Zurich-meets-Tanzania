@@ -429,6 +429,10 @@ export interface CreateCheckoutSessionApiEndpointResponse extends ApiEndpointRes
     data: { url: string } | null;
 }
 
+export interface GetAllUserEmailsApiEndpointResponse extends ApiEndpointResponse {
+    data: { email: string }[];
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
