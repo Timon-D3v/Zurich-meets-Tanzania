@@ -1,6 +1,6 @@
 {
   "name": "zurich-meets-tanzania-website",
-  "version": "3.26.0",
+  "version": "3.26.1",
   "description": "This is the website for the non profit organization \"zurich - meets - tanzania\".",
   "homepage": "https://www.zurich-meets-tanzania.com",
   "author": "Timon Fiedler",
@@ -98,8 +98,8 @@
   ],
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
-    "esbuild@0.28.1": true,
     "lmdb@3.5.6": true,
-    "msgpackr-extract@3.0.4": true
+    "msgpackr-extract@3.0.4": true,
+    "esbuild@0.28.2": true
   }
 }

@@ -26,6 +26,9 @@
         @if (isInAnyTeam()) {
             <app-add-additional-user-information></app-add-additional-user-information>
         }
+        @if (isInBoard()) {
+            <app-add-board-information></app-add-board-information>
+        }
         <app-view-account-membership-details [user]="user()"></app-view-account-membership-details>
     </section>
 </div>

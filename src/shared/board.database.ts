@@ -24,3 +24,53 @@ export async function getBoard(): Promise<DatabaseResult> {
         };
     }
 }
+
+export async function getBoardMemberEntry(userId: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * FROM \`zmt\`.\`board\` WHERE \`userId\` = ?`, [userId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function updateBoardRole(userId: number, role: string): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`board\` SET \`role\` = ? WHERE \`userId\` = ?`, [role, userId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}

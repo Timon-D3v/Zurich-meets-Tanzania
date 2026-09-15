@@ -19,6 +19,7 @@ import { getAllNewsletterEmails, updateNewsletterList, addToNewsletterList, remo
 import { stripeClient } from "../shared/stripe";
 import { getMemberWithUserId } from "../shared/member.database";
 import { getTeamMemberEntry, updateTeamMemberMotive, updateTeamMemberProfession, updateTeamMemberRole, updateTeamMemberSecondaryPicture } from "../shared/team.database";
+import { getBoardMemberEntry, updateBoardRole } from "../shared/board.database";
 
 // Router Serves under /api/secured/account
 const router = Router();
@@ -555,6 +556,12 @@ router.post("/updateExpandedUserInformation", async (req: Request, res: Response
 
         const user = req.session.user!;
 
+        const entryResult = await getTeamMemberEntry(user.id);
+
+        if (entryResult.error !== null) {
+            throw new Error(entryResult.error);
+        }
+
         const alreadyDoneUpdates: Array<"motive" | "profession" | "role" | "secondaryPicture"> = [];
 
         if (motive === null) {
@@ -734,6 +741,124 @@ router.post("/updateExpandedUserInformation", async (req: Request, res: Response
                 newUser: null,
             },
         } as UpdateExpandedUserInformationApiEndpointResponse);
+    }
+});
+
+router.get("/inBoardCheck", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const memberResult = await getBoardMemberEntry(user.id);
+
+        if (memberResult.error !== null) {
+            throw new Error(memberResult.error);
+        }
+
+        res.json({
+            error: false,
+            message: memberResult.data.length > 0 ? "true" : "false",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getBoardRole", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const result = await getBoardMemberEntry(user.id);
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: result.data[0]?.role || "",
+        } as GetExpandedUserInformationApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: null,
+            } as GetExpandedUserInformationApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: null,
+        } as GetExpandedUserInformationApiEndpointResponse);
+    }
+});
+
+router.post("/updateBoardRole", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { role } = req.body;
+
+        const user = req.session.user!;
+
+        const memberResult = await getBoardMemberEntry(user.id);
+
+        if (memberResult.error !== null) {
+            throw new Error(memberResult.error);
+        }
+
+        if (typeof role !== "string") {
+            throw new Error("Die eingegebene Rollenbezeichnung ist ungültig. Bitte überprüfe deine Eingabe.");
+        }
+
+        const result = await updateBoardRole(user.id, role);
+
+        if (result.error) {
+            res.json({
+                error: true,
+                message: "Beim Speichern der Rollenbezeichnung ist ein Fehler aufgetreten: " + PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.json({
+            error: false,
+            message: "Deine Rollenbezeichnung wurde erfolgreich aktualisiert.",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
     }
 });
 

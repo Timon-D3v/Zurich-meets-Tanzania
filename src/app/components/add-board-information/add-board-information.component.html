@@ -1,0 +1,14 @@
+<form [formGroup]="editBoardRoleForm" (submit)="onSubmit($event)">
+    <h2>Vorstandsrolle bearbeiten</h2>
+    <app-edit-account-input
+        [type]="'text'"
+        [label]="'Rolle im Vorstand'"
+        [placeholder]="boardRole() || 'Keine Spezielle Rolle'"
+        [autocomplete]="'off'"
+        [iconSource]="'/svg/text.svg'"
+        [iconAlt]="'Buchstaben'"
+        (valueOutput)="updateBoardRoleInput($event)"
+    ></app-edit-account-input>
+
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>

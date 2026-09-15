@@ -9,10 +9,11 @@ import { NotificationService } from "../services/notification.service";
 import { EditAccountPreferencesComponent } from "../components/edit-account-preferences/edit-account-preferences.component";
 import { ViewAccountMembershipDetailsComponent } from "../components/view-account-membership-details/view-account-membership-details.component";
 import { AddAdditionalUserInformationComponent } from "../components/add-additional-user-information/add-additional-user-information.component";
+import { AddBoardInformationComponent } from "../components/add-board-information/add-board-information.component";
 
 @Component({
     selector: "app-account",
-    imports: [EditAccountInformationComponent, PopupImageInputComponent, EditAccountPreferencesComponent, ViewAccountMembershipDetailsComponent, AddAdditionalUserInformationComponent],
+    imports: [EditAccountInformationComponent, PopupImageInputComponent, EditAccountPreferencesComponent, ViewAccountMembershipDetailsComponent, AddAdditionalUserInformationComponent, AddBoardInformationComponent],
     templateUrl: "./account.component.html",
     styleUrl: "./account.component.scss",
 })
@@ -32,6 +33,7 @@ export class AccountComponent {
     editPictureInputOpen = signal(false);
 
     isInAnyTeam = signal<boolean>(false);
+    isInBoard = signal<boolean>(false);
 
     private authService = inject(AuthService);
     private accountService = inject(AccountService);
@@ -55,6 +57,7 @@ export class AccountComponent {
         }
 
         this.isInAnyTeamCheck();
+        this.isInBoardCheck();
     });
 
     editPictureInputResult(event: { file: File | null; url: string }): void {
@@ -126,6 +129,19 @@ export class AccountComponent {
             }
 
             this.isInAnyTeam.set(response.message === "true");
+        });
+    }
+
+    isInBoardCheck(): void {
+        const request = this.accountService.checkIfUserIsInBoard();
+
+        request.subscribe((response: ApiEndpointResponse) => {
+            if (response.error) {
+                this.notificationService.error("Fehler", response.message);
+                return;
+            }
+
+            this.isInBoard.set(response.message === "true");
         });
     }
 }

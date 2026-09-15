@@ -9,6 +9,7 @@ import {
     UpdateExpandedUserInformationRequestBody,
     UpdateExpandedUserInformationApiEndpointResponse,
     GetExpandedUserInformationApiEndpointResponse,
+    ApiEndpointResponse,
 } from "../..";
 
 @Injectable({
@@ -45,14 +46,32 @@ export class AccountService {
         return request;
     }
 
-    checkIfUserIsInAnyTeam(): Observable<GetInvoicesApiEndpointResponse> {
-        const request = this.http.get<GetInvoicesApiEndpointResponse>("/api/secured/account/inAnyTeamCheck");
+    checkIfUserIsInAnyTeam(): Observable<ApiEndpointResponse> {
+        const request = this.http.get<ApiEndpointResponse>("/api/secured/account/inAnyTeamCheck");
 
         return request;
     }
 
     getExpandedUserInformation(): Observable<GetExpandedUserInformationApiEndpointResponse> {
         const request = this.http.get<GetExpandedUserInformationApiEndpointResponse>("/api/secured/account/getExpandedUserInformation");
+
+        return request;
+    }
+
+    checkIfUserIsInBoard(): Observable<ApiEndpointResponse> {
+        const request = this.http.get<ApiEndpointResponse>("/api/secured/account/inBoardCheck");
+
+        return request;
+    }
+
+    getBoardRole(): Observable<ApiEndpointResponse> {
+        const request = this.http.get<GetExpandedUserInformationApiEndpointResponse>("/api/secured/account/getBoardRole");
+
+        return request;
+    }
+
+    updateBoardRole(role: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/account/updateBoardRole", { role });
 
         return request;
     }
