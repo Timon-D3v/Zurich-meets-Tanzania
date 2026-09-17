@@ -137,6 +137,8 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
             throw new Error("Invalid parameter 'postalCode'.");
         }
 
+        console.log("Phone:", phone);
+
         if (phone !== "" && !PUBLIC_CONFIG.REGEX.MATCH_VALID_PHONE.test(phone)) {
             throw new Error("Invalid parameter 'phone'");
         }
@@ -180,7 +182,7 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
                 firstName,
                 lastName,
                 address: `${address}, ${postalCode} ${city}`,
-                phone,
+                phone: phone === "" ? "Keine Nummer" : phone,
                 hasPicture: hasPicture === "true",
                 pictureFile: req.file,
             },

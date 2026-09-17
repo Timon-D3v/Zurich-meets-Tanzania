@@ -67,3 +67,4 @@ dev/*.sh
 *.docx
 public/.archive
 dev/bugs/
+dockerize.sh
