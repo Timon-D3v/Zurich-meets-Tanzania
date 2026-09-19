@@ -1,4 +1,5 @@
-import { Component, effect, ElementRef, inject, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, effect, ElementRef, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { AnalyticsService } from "../../../services/analytics.service";
 import { GetVisitorCountsApiEndpointResponse, VisitorCounts } from "../../../..";
 import { NotificationService } from "../../../services/notification.service";
@@ -29,6 +30,8 @@ export class StatsWebsiteAnalyticsComponent implements OnInit, OnDestroy {
     pageViewsDataSteps = signal<number[]>([]);
     uniqueViewsDataSteps = signal<number[]>([]);
     totalTimeDataSteps = signal<number[]>([]);
+
+    private platformId = inject(PLATFORM_ID);
 
     private analyticsService = inject(AnalyticsService);
     private notificationService = inject(NotificationService);
@@ -65,14 +68,23 @@ export class StatsWebsiteAnalyticsComponent implements OnInit, OnDestroy {
         this.updateDataSteps();
     });
 
-    private _updateSvgDimensionsInterval = setInterval(this.updateSvgDimensions.bind(this), 1000);
-    private _updateSvgPathInterval = setInterval(this.updateSvgPath.bind(this), 1000);
+    private _updateSvgDimensionsInterval: NodeJS.Timeout | undefined = undefined;
+    private _updateSvgPathInterval: NodeJS.Timeout | undefined = undefined;
 
     ngOnInit(): void {
         this.getVisitorCounts(7);
 
         this.elementReference.nativeElement.addEventListener("resize", this.updateSvgDimensions.bind(this));
         this.elementReference.nativeElement.addEventListener("resize", this.updateSvgPath.bind(this));
+
+        if (!isPlatformBrowser(this.platformId)) {
+            console.log("Not running in a browser, skipping SVG dimension and path updates.");
+
+            return;
+        }
+
+        this._updateSvgDimensionsInterval = setInterval(this.updateSvgDimensions.bind(this), 1000);
+        this._updateSvgPathInterval = setInterval(this.updateSvgPath.bind(this), 1000);
     }
 
     ngOnDestroy(): void {

@@ -43,6 +43,10 @@ export const serverRoutes: ServerRoute[] = [
     },
 
     // Secured routes
+    {
+        path: "account",
+        renderMode: RenderMode.Client,
+    },
 
     // Only for unauthenticated users
     {
@@ -67,6 +71,10 @@ export const serverRoutes: ServerRoute[] = [
     },
 
     // Admin routes
+    {
+        path: "admin",
+        renderMode: RenderMode.Client,
+    },
 
     // All not specified routes
     {

@@ -140,4 +140,50 @@ export class AuthService {
 
         return request;
     }
+
+    async isUserCurrentlyLoggedIn(): Promise<boolean> {
+        const request = this.http.get<GetPublicUserDetailsApiEndpointResponse>("/api/auth/getUserDetails");
+
+        return new Promise<boolean>((resolve, reject) => {
+            request.subscribe({
+                next: (response: GetPublicUserDetailsApiEndpointResponse): void => {
+                    if (response.error || response.data === null) {
+                        reject(false);
+                        return;
+                    }
+
+                    this.user.set(response.data.user);
+                    this.isLoggedIn.set(response.data.isLoggedIn);
+
+                    resolve(response.data.isLoggedIn);
+                },
+                error: (error: any): void => {
+                    reject(false);
+                },
+            });
+        });
+    }
+
+    async fetchCurrentUserDetails(): Promise<PublicUser | null> {
+        const request = this.http.get<GetPublicUserDetailsApiEndpointResponse>("/api/auth/getUserDetails");
+
+        return new Promise<PublicUser | null>((resolve, reject) => {
+            request.subscribe({
+                next: (response: GetPublicUserDetailsApiEndpointResponse): void => {
+                    if (response.error || response.data === null) {
+                        reject(null);
+                        return;
+                    }
+
+                    this.user.set(response.data.user);
+                    this.isLoggedIn.set(response.data.isLoggedIn);
+
+                    resolve(response.data.user);
+                },
+                error: (error: any): void => {
+                    reject(null);
+                },
+            });
+        });
+    }
 }

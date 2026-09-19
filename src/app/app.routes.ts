@@ -200,7 +200,6 @@ export const routes: Routes = [
             const component = await import("./newsletter-sign-up-confirm/newsletter-sign-up-confirm.component");
             return component.NewsletterSignUpConfirmComponent;
         },
-        // TODO: Add an entry to the route titles
         title: PUBLIC_CONFIG.ROUTES.TITLES["/newsletter/confirm"].title + PUBLIC_CONFIG.ROUTES.TITLE_SUFFIX,
     },
     {

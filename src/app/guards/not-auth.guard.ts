@@ -1,14 +1,13 @@
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 
-export const notAuthGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
+export const notAuthGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    if (authService.isLoggedIn()) {
-        router.navigate(["/"]);
-        return false;
+    if (await authService.isUserCurrentlyLoggedIn()) {
+        return router.createUrlTree(["/"]);
     }
 
     return true;

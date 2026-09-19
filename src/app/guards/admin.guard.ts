@@ -1,15 +1,20 @@
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 
-export const adminGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
+export const adminGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    if (authService.isLoggedIn() && authService.user()?.type === "admin") {
+    const user = await authService.fetchCurrentUserDetails();
+
+    if (user?.type === "admin") {
         return true;
     }
 
-    router.navigate(["/login"]);
-    return false;
+    if (user?.type === "user" || user?.type === "member") {
+        return router.createUrlTree(["/"]);
+    }
+
+    return router.createUrlTree(["/login"], { queryParams: { returnUrl: route.url } });
 };

@@ -1,4 +1,5 @@
-import { Component, effect, inject, input, OnDestroy, output, PLATFORM_ID, signal } from "@angular/core";
+import { Component, effect, inject, input, OnDestroy, OnInit, output, PLATFORM_ID, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { News } from "../../../..";
 import { PUBLIC_CONFIG } from "../../../../publicConfig";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
@@ -19,7 +20,7 @@ import { CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from "@angular/cdk/
     templateUrl: "./news-edit-news.component.html",
     styleUrl: "./news-edit-news.component.scss",
 })
-export class NewsEditNewsComponent implements OnDestroy {
+export class NewsEditNewsComponent implements OnInit, OnDestroy {
     newsTitle = input<string | null>(null);
     news = input<News>(PUBLIC_CONFIG.NEWS.LOADING(PUBLIC_CONFIG.FALLBACK_IMAGE_URL));
 
@@ -30,6 +31,8 @@ export class NewsEditNewsComponent implements OnDestroy {
     deleteOutput = output<number>();
 
     readonly FALLBACK_IMAGE_URL = PUBLIC_CONFIG.FALLBACK_IMAGE_URL;
+
+    private platformId = inject(PLATFORM_ID);
 
     private sanitizerService = inject(SanitizerService);
 
@@ -43,19 +46,28 @@ export class NewsEditNewsComponent implements OnDestroy {
         this.pdfUrl.set(pdfUrl);
     });
 
-    private _updatePdfUrlAllTheTime = setInterval(async () => {
-        if (this.news().data.type !== "pdf") {
+    private _updatePdfUrlAllTheTime: NodeJS.Timeout | undefined = undefined;
+
+    ngOnInit(): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            console.error("NewsEditNewsComponent: Current platform is not browser. Skipping PDF URL updates.");
             return;
         }
 
-        const pdfUrl = await this.sanitizePdfUrl(this.news().data?.pdfUrl);
+        this._updatePdfUrlAllTheTime = setInterval(async () => {
+            if (this.news().data.type !== "pdf") {
+                return;
+            }
 
-        if (pdfUrl.toString() === this.pdfUrl().toString()) {
-            return;
-        }
+            const pdfUrl = await this.sanitizePdfUrl(this.news().data?.pdfUrl);
 
-        this.pdfUrl.set(pdfUrl);
-    }, 500);
+            if (pdfUrl.toString() === this.pdfUrl().toString()) {
+                return;
+            }
+
+            this.pdfUrl.set(pdfUrl);
+        }, 500);
+    }
 
     ngOnDestroy(): void {
         clearInterval(this._updatePdfUrlAllTheTime);
