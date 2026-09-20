@@ -22,8 +22,11 @@ export const CONFIG: Config = {
     MYSQL_PASSWORD: process.env["MYSQL_PW"] as string,
     MYSQL_SCHEMA: process.env["MYSQL_DB"] as string,
 
-    MAILJET_PUBLIC_KEY: process.env["MAILJET_PUBLIC_KEY"] as string,
-    MAILJET_PRIVATE_KEY: process.env["MAILJET_PRIVATE_KEY"] as string,
+    SMTP_HOST: process.env["SMTP_HOST"] as string,
+    SMTP_PORT: Number(process.env["SMTP_PORT"]),
+    SMTP_USER: process.env["SMTP_USER"] as string,
+    SMTP_PASSWORD: process.env["SMTP_PASSWORD"] as string,
+    SMTP_SECURE: process.env["SMTP_SECURE"] === "true",
 
     ORIGIN: process.env["ORIGIN"] as string,
 

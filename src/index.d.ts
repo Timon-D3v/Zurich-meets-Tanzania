@@ -26,8 +26,11 @@ export type Config = {
     MYSQL_PASSWORD: string;
     MYSQL_SCHEMA: string;
 
-    MAILJET_PUBLIC_KEY: string;
-    MAILJET_PRIVATE_KEY: string;
+    SMTP_HOST: string;
+    SMTP_PORT: number;
+    SMTP_USER: string;
+    SMTP_PASSWORD: string;
+    SMTP_SECURE: boolean;
 
     ORIGIN: string;
 
@@ -504,12 +507,6 @@ export type SignUpConfirmRequest = {
         address: string;
     };
     timestamp: number;
-};
-
-export type MailjetAttachment = {
-    ContentType: string;
-    Filename: string;
-    Base64Content: string;
 };
 
 export type LoginInformation = {

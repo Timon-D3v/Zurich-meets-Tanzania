@@ -24,7 +24,19 @@ export async function sendContactRequestConfirmation(firstName: string, lastName
 
     const request = await sendMail(email, "Kontaktformular-Bestätigung", text, html, "Contact Confirmation Code");
 
-    return request !== null && request.response.status === 200;
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
+
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
 
 export async function sendContactRequest(userEmail: string, userFirstName: string, userLastName: string, message: string): Promise<boolean> {
@@ -65,5 +77,17 @@ export async function sendContactRequest(userEmail: string, userFirstName: strin
 
     const request = await sendMail(CONFIG.EMAIL_SENDER_ADDRESS, `${userFirstName} schreibt über Kontaktformular`, text, html, "Contact Request");
 
-    return request !== null && request.response.status === 200;
+    if (request === null) {
+        console.error(`Failed to send email to ${userEmail}:`, "Request returned null");
+
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${userEmail}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }

@@ -22,7 +22,19 @@ export async function sendNewsletterSignUpConfirmation(email: string, id: string
 
     const request = await sendMail(email, "Anmeldebestätigung Newsletter", text, html, "Newsletter Anmeldung");
 
-    return request !== null && request.response.status === 200;
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
+
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
 
 export async function sendNewsletterSignOutConfirmation(email: string, code: string, firstName: string, lastName: string, gender: "Herr" | "Frau" | "Divers"): Promise<boolean> {
@@ -41,7 +53,19 @@ export async function sendNewsletterSignOutConfirmation(email: string, code: str
 
     const request = await sendMail(email, "Vom Newsletter Abmelden", text, html, "Newsletter Abmeldung");
 
-    return request !== null && request.response.status === 200;
+    if (request === null) {
+        console.error(`Failed to send newsletter to ${email}:`, "Request returned null");
+
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send newsletter to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
 
 export async function sendNewsletterForNews(newsContent: NewsContent): Promise<boolean> {
@@ -81,8 +105,12 @@ export async function sendNewsletterForNews(newsContent: NewsContent): Promise<b
 
         const request = await sendMail(recipient.email, PUBLIC_CONFIG.EMAIL.NEWSLETTER_SUBJECT, text, html, "Newsletter");
 
-        if (request === null || request.response.status !== 200) {
-            console.error(`Failed to send newsletter to ${recipient.email}:`, request?.response.statusText || "Unknown error");
+        if (request === null) {
+            console.error(`Failed to send newsletter to ${recipient.email}:`, "Request returned null");
+        }
+
+        if (request !== null && request.rejected.length > 0) {
+            console.error(`Failed to send newsletter to ${recipient.email}:`, "Recipient was rejected by the SMTP server");
         }
     }
 

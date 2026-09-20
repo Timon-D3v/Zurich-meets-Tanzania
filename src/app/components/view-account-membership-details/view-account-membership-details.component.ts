@@ -28,7 +28,7 @@ export class ViewAccountMembershipDetailsComponent implements OnInit {
 
         request.subscribe((response: GetInvoicesApiEndpointResponse) => {
             if (response.error) {
-                this.notificationService.error("Fehler bin Laden:", "Deine Rechnungen konnten nicht geladen werden. Bitte versuche es später erneut.");
+                this.notificationService.error("Fehler beim Laden:", "Deine Rechnungen konnten nicht geladen werden. Bitte versuche es später erneut.");
 
                 return;
             }

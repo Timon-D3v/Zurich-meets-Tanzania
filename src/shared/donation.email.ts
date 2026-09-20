@@ -27,5 +27,17 @@ export async function sendDonationRequestEmail(amount: number, firstName: string
 
     const request = await sendMail(PUBLIC_CONFIG.PERSONAS["CHAIRMAN"].email, `${firstName} ${lastName} hat gespendet`, text, html, "Donation Request");
 
-    return request !== null && request.response.status === 200;
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
+
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }

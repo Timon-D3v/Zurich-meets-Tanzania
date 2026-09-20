@@ -23,8 +23,19 @@ export async function sendPasswordRecoveryConfirmationCode(code: string, email: 
         PUBLIC_CONFIG.EMAIL.FOOTER;
 
     const request = await sendMail(email, "Passwort zurücksetzten?", text, html, "Password Recovery Confirmation Code");
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
 
-    return request !== null && request.response.status === 200;
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
 
 export async function sendNewPassword(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
@@ -48,8 +59,19 @@ export async function sendNewPassword(password: string, email: string, firstName
         PUBLIC_CONFIG.EMAIL.FOOTER;
 
     const request = await sendMail(email, "Neues Passwort", text, html, "New Password");
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
 
-    return request !== null && request.response.status === 200;
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
 
 export async function sendPasswordChangeConfirmation(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
@@ -73,8 +95,19 @@ export async function sendPasswordChangeConfirmation(password: string, email: st
         PUBLIC_CONFIG.EMAIL.FOOTER;
 
     const request = await sendMail(email, "Passwort geändert", text, html, "Password Change Confirmation");
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
 
-    return request !== null && request.response.status === 200;
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
 
 export async function sendSignUpConfirmationCode(code: string, email: string, firstName: string, lastName: string): Promise<boolean> {
@@ -98,8 +131,19 @@ export async function sendSignUpConfirmationCode(code: string, email: string, fi
         PUBLIC_CONFIG.EMAIL.FOOTER;
 
     const request = await sendMail(email, "Account erstellen?", text, html, "Signup Confirmation Code");
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
 
-    return request !== null && request.response.status === 200;
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
 
 export async function sendPasswordFromAdmin(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
@@ -124,5 +168,17 @@ export async function sendPasswordFromAdmin(password: string, email: string, fir
 
     const request = await sendMail(email, "Account erstellen?", text, html, "Signup Confirmation Code");
 
-    return request !== null && request.response.status === 200;
+    if (request === null) {
+        console.error(`Failed to send email to ${email}:`, "Request returned null");
+
+        return false;
+    }
+
+    if (request !== null && request.rejected.length > 0) {
+        console.error(`Failed to send email to ${email}:`, "Recipient was rejected by the SMTP server");
+
+        return false;
+    }
+
+    return true;
 }
