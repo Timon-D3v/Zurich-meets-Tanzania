@@ -86,7 +86,14 @@ export class NewsEditNewsComponent implements OnInit, OnDestroy {
     }
 
     formatDate(dateString: string): string {
-        return new Date(dateString).toLocaleString();
+        return new Date(dateString).toLocaleDateString("de-CH", {
+            weekday: "short",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+        });
     }
 
     formatTitleDate(dateString: string): string {

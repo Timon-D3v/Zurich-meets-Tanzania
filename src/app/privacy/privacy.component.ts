@@ -18,7 +18,14 @@ export class PrivacyComponent implements OnInit {
     readonly developerName = PUBLIC_CONFIG.PERSONAS["DEVELOPER"].name;
     readonly developerContactUrl = PUBLIC_CONFIG.PERSONAS["DEVELOPER"].website;
 
-    date = new Date("2026-07-25T10:59:29.031Z").toLocaleString();
+    date = new Date("2026-07-25T10:59:29.031Z").toLocaleDateString("de-CH", {
+        weekday: "short",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+    });
 
     origin = signal<string>("www.zurich-meets-tanzania.com");
 

@@ -84,7 +84,16 @@ export class StaticSiteComponent {
             }
 
             this.site.set(response.data.site);
-            this.date.set(new Date(response.data.date).toLocaleString());
+            this.date.set(
+                new Date(response.data.date).toLocaleDateString("de-CH", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                }),
+            );
         });
     }
 }

@@ -68,3 +68,4 @@ dev/*.sh
 public/.archive
 dev/bugs/
 dockerize.sh
+imprint.txt

@@ -63,7 +63,14 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 id: -1,
                 title: name,
                 author: "Das ZMT-Team",
-                date: new Date().toLocaleString(),
+                date: new Date().toLocaleDateString("de-CH", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                }),
                 data: {
                     metadata: {
                         title: name,
@@ -81,7 +88,14 @@ export const PUBLIC_CONFIG: PublicConfig = {
                 id: -2,
                 title: name,
                 author: "Das ZMT-Team",
-                date: new Date().toLocaleString(),
+                date: new Date().toLocaleDateString("de-CH", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                }),
                 data: {
                     metadata: {
                         title: name,
@@ -109,7 +123,14 @@ export const PUBLIC_CONFIG: PublicConfig = {
         LOADING: (imageUrl: string): News => {
             return {
                 id: -1,
-                date: new Date().toLocaleString(),
+                date: new Date().toLocaleDateString("de-CH", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                }),
                 data: {
                     type: "image",
                     imageUrl: imageUrl,
@@ -122,7 +143,14 @@ export const PUBLIC_CONFIG: PublicConfig = {
         ERROR: (imageUrl: string, message: string): News => {
             return {
                 id: -2,
-                date: new Date().toLocaleString(),
+                date: new Date().toLocaleDateString("de-CH", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                }),
                 data: {
                     type: "image",
                     imageUrl: imageUrl,

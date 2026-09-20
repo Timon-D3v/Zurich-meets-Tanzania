@@ -9,7 +9,16 @@ import { PublicEnvService } from "../services/public-env.service";
 })
 export class ImprintComponent implements OnInit {
     origin = signal<string>("");
-    date = signal<string>(new Date(1769351031110).toLocaleString());
+    date = signal<string>(
+        new Date(1769351031110).toLocaleDateString("de-CH", {
+            weekday: "short",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+        }),
+    );
 
     private publicEnvService = inject(PublicEnvService);
 
