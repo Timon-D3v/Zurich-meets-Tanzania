@@ -29,28 +29,36 @@ export class BlogPreviewComponent implements OnInit {
 
     getBlogMetadata(count: number): void {
         const request = this.blogService.getBlogMetadata(count);
-        request.subscribe((response: GetBlogMetadataApiEndpointResponse) => {
-            this.blogs.set([]);
+        request.subscribe({
+            next: (response: GetBlogMetadataApiEndpointResponse) => {
+                this.blogs.set([]);
 
-            if (response.error) {
-                this.notificationService.error("Fehler", "Die Blog-Vorschau konnte nicht geladen werden: " + response.message);
-            } else {
-                this.blogs.set(response.data);
-            }
+                if (response.error) {
+                    this.notificationService.error("Fehler", "Die Blog-Vorschau konnte nicht geladen werden: " + response.message);
+                } else {
+                    this.blogs.set(response.data);
+                }
 
-            while (this.blogs().length < this.numberOfItems()) {
-                this.blogs.update((blogs) => {
-                    blogs.push({
-                        title: "Fehler",
-                        subtitle: "Die Blog-Vorschau konnte nicht geladen werden.",
-                        author: "",
-                        imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
-                        imageAlt: "Platzhalter",
+                while (this.blogs().length < this.numberOfItems()) {
+                    this.blogs.update((blogs) => {
+                        blogs.push({
+                            title: "Fehler",
+                            subtitle: "Die Blog-Vorschau konnte nicht geladen werden.",
+                            author: "",
+                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                            imageAlt: "Platzhalter",
+                        });
+
+                        return blogs;
                     });
+                }
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching blog metadata:", error);
+                this.notificationService.error("Fehler", "Die Blog-Vorschau konnte nicht geladen werden. Bitte versuche es erneut.");
 
-                    return blogs;
-                });
-            }
+                this.blogs.set([]);
+            },
         });
     }
 }

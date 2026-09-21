@@ -73,27 +73,36 @@ export class StaticSiteComponent {
 
         const request = this.subpagesService.getStaticSite(this.siteName);
 
-        request.subscribe((response: GetStaticSiteApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${this.siteName}' konnte nicht geladen werden: ` + response.message);
+        request.subscribe({
+            next: (response: GetStaticSiteApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${this.siteName}' konnte nicht geladen werden: ` + response.message);
+
+                    // Set a Warning as the sites content
+                    this.site.set(PUBLIC_CONFIG.STATIC_SITES.ERROR(this.siteName, PUBLIC_CONFIG.FALLBACK_IMAGE_URL, response.message));
+
+                    return;
+                }
+
+                this.site.set(response.data.site);
+                this.date.set(
+                    new Date(response.data.date).toLocaleDateString("de-CH", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                    }),
+                );
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching static site:", error);
+                this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${this.siteName}' konnte nicht geladen werden. Bitte versuche es später erneut.`);
 
                 // Set a Warning as the sites content
-                this.site.set(PUBLIC_CONFIG.STATIC_SITES.ERROR(this.siteName, PUBLIC_CONFIG.FALLBACK_IMAGE_URL, response.message));
-
-                return;
-            }
-
-            this.site.set(response.data.site);
-            this.date.set(
-                new Date(response.data.date).toLocaleDateString("de-CH", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                }),
-            );
+                this.site.set(PUBLIC_CONFIG.STATIC_SITES.ERROR(this.siteName, PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Fehler beim Laden der Seite. Bitte versuche es später erneut."));
+            },
         });
     }
 }

@@ -74,21 +74,27 @@ export class AccountComponent {
 
         const request = this.accountService.updateUserProfilePicture(event.file);
 
-        request.subscribe((response: UpdateUserProfilePictureWithIdApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", response.message);
-                return;
-            }
+        request.subscribe({
+            next: (response: UpdateUserProfilePictureWithIdApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", response.message);
+                    return;
+                }
 
-            this.notificationService.success("Erfolg", response.message);
+                this.notificationService.success("Erfolg", response.message);
 
-            this.user.update((user: PublicUser) => {
-                user.picture = response.data?.pictureUrl || user.picture;
+                this.user.update((user: PublicUser) => {
+                    user.picture = response.data?.pictureUrl || user.picture;
 
-                user.picture += `?t=${Date.now()}`;
+                    user.picture += `?t=${Date.now()}`;
 
-                return user;
-            });
+                    return user;
+                });
+            },
+            error: (error: unknown) => {
+                console.error("Error while updating user profile picture:", error);
+                this.notificationService.error("Fehler", "Das Profilbild konnte nicht aktualisiert werden. Bitte versuche es erneut.");
+            },
         });
     }
 
@@ -122,26 +128,38 @@ export class AccountComponent {
     isInAnyTeamCheck(): void {
         const request = this.accountService.checkIfUserIsInAnyTeam();
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", response.message);
-                return;
-            }
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", response.message);
+                    return;
+                }
 
-            this.isInAnyTeam.set(response.message === "true");
+                this.isInAnyTeam.set(response.message === "true");
+            },
+            error: (error: unknown) => {
+                console.error("Error while checking if user is in any team:", error);
+                this.notificationService.error("Fehler", "Es konnte nicht geprüft werden, ob du in einem Team bist. Bitte versuche es erneut.");
+            },
         });
     }
 
     isInBoardCheck(): void {
         const request = this.accountService.checkIfUserIsInBoard();
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", response.message);
-                return;
-            }
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", response.message);
+                    return;
+                }
 
-            this.isInBoard.set(response.message === "true");
+                this.isInBoard.set(response.message === "true");
+            },
+            error: (error: unknown) => {
+                console.error("Error while checking if user is in board:", error);
+                this.notificationService.error("Fehler", "Es konnte nicht geprüft werden, ob du im Vorstand bist. Bitte versuche es erneut.");
+            },
         });
     }
 }

@@ -56,53 +56,80 @@ export class AppComponent implements OnInit {
         const navigationEndPipe = this.router.events.pipe(filter((event): boolean => event instanceof NavigationEnd));
         const navigationStartPipe = this.router.events.pipe(filter((event): boolean => event instanceof NavigationStart));
 
-        navigationEndPipe.subscribe((): void => {
-            // The part below is called every time the route changes.
+        navigationEndPipe.subscribe({
+            next: (): void => {
+                // The part below is called every time the route changes.
 
-            // Close the mobile nav
-            this.navigationService.closeNavigation();
+                // Close the mobile nav
+                this.navigationService.closeNavigation();
 
-            // Update the user object to bring it up to date
-            this.authService.getCurrentUserDetails();
+                // Update the user object to bring it up to date
+                this.authService.getCurrentUserDetails();
 
-            // Update the current membership url in the header
-            this.headerService.updateBecomeMemberUrl();
+                // Update the current membership url in the header
+                this.headerService.updateBecomeMemberUrl();
 
-            // Loads the current user theme
-            this.themeService.initTheme();
+                // Loads the current user theme
+                this.themeService.initTheme();
 
-            // Strips the queryParameters so that the paths can match
-            const currentUrlWithoutParameters = this.router.url.split("?")[0];
+                // Strips the queryParameters so that the paths can match
+                const currentUrlWithoutParameters = this.router.url.split("?")[0];
+                const currentUrlWithoutHash = currentUrlWithoutParameters.split("#")[0];
 
-            // Sets the correct style namespace for the current route
-            if (PUBLIC_CONFIG.ROUTES.TYPES.HOME.includes(currentUrlWithoutParameters)) {
-                this.styleNamespaceService.setHomeStyleNamespace();
-            } else if (PUBLIC_CONFIG.ROUTES.TYPES.AUTH.includes(currentUrlWithoutParameters)) {
-                this.styleNamespaceService.setAuthStyleNamespace();
-            } else if (PUBLIC_CONFIG.ROUTES.TYPES.CONTACT.includes(currentUrlWithoutParameters)) {
-                this.styleNamespaceService.setContactStyleNamespace();
-            } else {
-                this.styleNamespaceService.setDefaultStyleNamespace();
-            }
+                // Sets the correct style namespace for the current route
+                if (PUBLIC_CONFIG.ROUTES.TYPES.HOME.includes(currentUrlWithoutHash)) {
+                    this.styleNamespaceService.setHomeStyleNamespace();
+                } else if (PUBLIC_CONFIG.ROUTES.TYPES.AUTH.includes(currentUrlWithoutHash)) {
+                    this.styleNamespaceService.setAuthStyleNamespace();
+                } else if (PUBLIC_CONFIG.ROUTES.TYPES.CONTACT.includes(currentUrlWithoutHash)) {
+                    this.styleNamespaceService.setContactStyleNamespace();
+                } else {
+                    this.styleNamespaceService.setDefaultStyleNamespace();
+                }
 
-            // Sets the robot permissions for the route
-            this.siteMetadataService.updateRobotsSettingsForRoute(currentUrlWithoutParameters);
+                // Sets the robot permissions for the route
+                this.siteMetadataService.updateRobotsSettingsForRoute(currentUrlWithoutHash);
 
-            // Sets the current metadata for the route
-            this.siteMetadataService.updateMetadataForRoute(currentUrlWithoutParameters);
+                // Sets the current metadata for the route
+                this.siteMetadataService.updateMetadataForRoute(currentUrlWithoutHash);
 
-            // Scroll to the top of the page
-            if (isPlatformBrowser(this.platformId)) {
-                window.scroll({
-                    top: 0,
-                    left: 0,
-                    behavior: "smooth",
-                });
-            }
+                // Scroll to the top of the page
+                if (isPlatformBrowser(this.platformId)) {
+                    if (typeof this.router.url.split("#")[1] === "string") {
+                        const elementId = this.router.url.split("#")[1];
+
+                        const element = document.getElementById(elementId);
+
+                        if (element !== null) {
+                            element.scrollIntoView({ behavior: "smooth" });
+                        } else {
+                            window.scroll({
+                                top: 0,
+                                left: 0,
+                                behavior: "smooth",
+                            });
+                        }
+                    } else {
+                        window.scroll({
+                            top: 0,
+                            left: 0,
+                            behavior: "smooth",
+                        });
+                    }
+                }
+            },
+            error: (error: unknown): void => {
+                console.error("Error during navigation end:", error);
+            },
         });
 
-        navigationStartPipe.subscribe((): void => {
-            // The part below is called every time the route could change.
+        navigationStartPipe.subscribe({
+            next: (): void => {
+                // The part below is called every time the route could change.
+            },
+            error: (error: unknown): void => {
+                console.error("Error during navigation start:", error);
+            },
         });
     }
 }

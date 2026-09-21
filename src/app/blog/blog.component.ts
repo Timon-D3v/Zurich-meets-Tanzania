@@ -73,16 +73,24 @@ export class BlogComponent implements OnInit {
 
         const request = this.blogService.getBlog(name);
 
-        request.subscribe((response: GetBlogApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler:", "Der Blog konnte nicht geladen werden: " + response.message);
+        request.subscribe({
+            next: (response: GetBlogApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler:", "Der Blog konnte nicht geladen werden: " + response.message);
+
+                    this.router.navigate(["/"]);
+
+                    return;
+                }
+
+                this.blog.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching blog:", error);
+                this.notificationService.error("Fehler", "Der Blog konnte nicht geladen werden. Bitte versuche es erneut.");
 
                 this.router.navigate(["/"]);
-
-                return;
-            }
-
-            this.blog.set(response.data);
+            },
         });
     });
 
@@ -97,18 +105,26 @@ export class BlogComponent implements OnInit {
 
         this.name.set(this.route.snapshot.params["name"]);
 
-        this.route.params.subscribe((params) => {
-            const name = params["name"];
+        this.route.params.subscribe({
+            next: (params) => {
+                const name = params["name"];
 
-            if (typeof name !== "string") {
-                this.notificationService.warn("Kein Titel", "Es konnte kein Blog geladen werden, da kein Titel angegeben wurde.");
+                if (typeof name !== "string") {
+                    this.notificationService.warn("Kein Titel", "Es konnte kein Blog geladen werden, da kein Titel angegeben wurde.");
+
+                    this.router.navigate(["/"]);
+
+                    return;
+                }
+
+                this.name.set(name);
+            },
+            error: (error: unknown) => {
+                console.error("Error while subscribing to route params:", error);
+                this.notificationService.error("Fehler", "Es konnte kein Blog geladen werden. Bitte versuche es erneut.");
 
                 this.router.navigate(["/"]);
-
-                return;
-            }
-
-            this.name.set(name);
+            },
         });
     }
 

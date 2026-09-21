@@ -95,34 +95,40 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
 
         const request = this.blogService.getBlogLinks(count);
 
-        request.subscribe((response: DatabaseApiEndpointResponse) => {
-            if (response.error) {
-                console.error(response.message);
-                this.notificationService.error("Fehler", "Blogs konnten nicht geladen werden, da keine Verbindung zur Datenbank möglich ist.");
-                return;
-            }
+        request.subscribe({
+            next: (response: DatabaseApiEndpointResponse) => {
+                if (response.error) {
+                    console.error(response.message);
+                    this.notificationService.error("Fehler", "Blogs konnten nicht geladen werden, da keine Verbindung zur Datenbank möglich ist.");
+                    return;
+                }
 
-            this.blogLinks.set([]);
+                this.blogLinks.set([]);
 
-            response.data?.data?.forEach((element: { title: string }) => {
-                this.blogLinks().push({
-                    label: element.title,
-                    href: "/blog/" + encodeURIComponent(element.title),
+                response.data?.data?.forEach((element: { title: string }) => {
+                    this.blogLinks().push({
+                        label: element.title,
+                        href: "/blog/" + encodeURIComponent(element.title),
+                    });
                 });
-            });
 
-            if (this.blogLinks().length === count) {
-                this.blogLinks().push({
-                    label: "Weitere",
-                    href: "",
-                    clickable: true,
-                    onClick: (event: Event) => {
-                        event.stopPropagation();
+                if (this.blogLinks().length === count) {
+                    this.blogLinks().push({
+                        label: "Weitere",
+                        href: "",
+                        clickable: true,
+                        onClick: (event: Event) => {
+                            event.stopPropagation();
 
-                        this.setBlogLinks(count + 5);
-                    },
-                });
-            }
+                            this.setBlogLinks(count + 5);
+                        },
+                    });
+                }
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching blog links:", error);
+                this.notificationService.error("Fehler", "Blogs konnten nicht geladen werden. Bitte versuche es erneut.");
+            },
         });
     }
 
@@ -133,34 +139,40 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
 
         const request = this.galleryService.getGalleryLinks(count);
 
-        request.subscribe((response: DatabaseApiEndpointResponse) => {
-            if (response.error) {
-                console.error(response.message);
-                this.notificationService.error("Fehler", "Galerien konnten nicht geladen werden, da keine Verbindung zur Datenbank möglich ist.");
-                return;
-            }
+        request.subscribe({
+            next: (response: DatabaseApiEndpointResponse) => {
+                if (response.error) {
+                    console.error(response.message);
+                    this.notificationService.error("Fehler", "Galerien konnten nicht geladen werden, da keine Verbindung zur Datenbank möglich ist.");
+                    return;
+                }
 
-            this.galleryLinks.set([]);
+                this.galleryLinks.set([]);
 
-            response.data?.data?.forEach((element: { title: string }) => {
-                this.galleryLinks().push({
-                    label: element.title,
-                    href: "/gallery/" + encodeURIComponent(element.title),
+                response.data?.data?.forEach((element: { title: string }) => {
+                    this.galleryLinks().push({
+                        label: element.title,
+                        href: "/gallery/" + encodeURIComponent(element.title),
+                    });
                 });
-            });
 
-            if (this.galleryLinks().length === count) {
-                this.galleryLinks().push({
-                    label: "Weitere",
-                    href: "",
-                    clickable: true,
-                    onClick: (event: Event) => {
-                        event.stopPropagation();
+                if (this.galleryLinks().length === count) {
+                    this.galleryLinks().push({
+                        label: "Weitere",
+                        href: "",
+                        clickable: true,
+                        onClick: (event: Event) => {
+                            event.stopPropagation();
 
-                        this.setGalleryLinks(count + 5);
-                    },
-                });
-            }
+                            this.setGalleryLinks(count + 5);
+                        },
+                    });
+                }
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching gallery links:", error);
+                this.notificationService.error("Fehler", "Galerien konnten nicht geladen werden. Bitte versuche es erneut.");
+            },
         });
     }
 

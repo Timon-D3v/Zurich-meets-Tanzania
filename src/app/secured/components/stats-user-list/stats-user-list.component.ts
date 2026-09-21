@@ -77,23 +77,29 @@ export class StatsUserListComponent implements OnInit {
     loadAllUsers(): void {
         const request = this.analyticsService.getAllUsers();
 
-        request.subscribe((response: GetAllUsersApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", "Die Benutzer konnten nicht geladen werden: " + response.error);
+        request.subscribe({
+            next: (response: GetAllUsersApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", "Die Benutzer konnten nicht geladen werden: " + response.error);
 
-                return;
-            }
+                    return;
+                }
 
-            this.users.set(response.data);
+                this.users.set(response.data);
 
-            const deepCopiedUsers = response.data.map((user) => ({
-                ...user,
-            }));
+                const deepCopiedUsers = response.data.map((user) => ({
+                    ...user,
+                }));
 
-            // Deep copy the user list to be able to revert changes later if needed
-            this.originalUsers = response.data.map((user) => ({
-                ...user,
-            }));
+                // Deep copy the user list to be able to revert changes later if needed
+                this.originalUsers = response.data.map((user) => ({
+                    ...user,
+                }));
+            },
+            error: (error: unknown) => {
+                console.error("Error while loading all users:", error);
+                this.notificationService.error("Fehler:", "Die Benutzer konnten nicht geladen werden. Bitte versuchen Sie es erneut.");
+            },
         });
     }
 
@@ -162,37 +168,43 @@ export class StatsUserListComponent implements OnInit {
                 // Upload a new image (This happens independent from the other updates)
                 const request = this.analyticsService.uploadPicture(userId, command);
 
-                request.subscribe((response: UpdateUserProfilePictureWithIdApiEndpointResponse) => {
-                    if (response.error || response.data === null) {
-                        this.notificationService.error("Fehler", "Das Bild für den Benutzer mit Id '" + userId + "' konnte nicht hochgeladen werden: " + response.message);
+                request.subscribe({
+                    next: (response: UpdateUserProfilePictureWithIdApiEndpointResponse) => {
+                        if (response.error || response.data === null) {
+                            this.notificationService.error("Fehler", "Das Bild für den Benutzer mit Id '" + userId + "' konnte nicht hochgeladen werden: " + response.message);
 
-                        return;
-                    }
-
-                    this.notificationService.success("Erfolg", "Das Bild für den Benutzer mit Id '" + userId + "' wurde erfolgreich hochgeladen.");
-
-                    // Update the displayed picture URL to the new one
-                    const picture = response.data.pictureUrl;
-
-                    for (let i = 0; i < this.originalUsers.length; i++) {
-                        if (this.originalUsers[i].id === userId) {
-                            this.originalUsers[i].picture = picture;
-
-                            break;
+                            return;
                         }
-                    }
 
-                    this.users.update((users: PrivateUser[]): PrivateUser[] => {
-                        for (let i = 0; i < users.length; i++) {
-                            if (users[i].id === userId) {
-                                users[i].picture = picture;
+                        this.notificationService.success("Erfolg", "Das Bild für den Benutzer mit Id '" + userId + "' wurde erfolgreich hochgeladen.");
+
+                        // Update the displayed picture URL to the new one
+                        const picture = response.data.pictureUrl;
+
+                        for (let i = 0; i < this.originalUsers.length; i++) {
+                            if (this.originalUsers[i].id === userId) {
+                                this.originalUsers[i].picture = picture;
 
                                 break;
                             }
                         }
 
-                        return users;
-                    });
+                        this.users.update((users: PrivateUser[]): PrivateUser[] => {
+                            for (let i = 0; i < users.length; i++) {
+                                if (users[i].id === userId) {
+                                    users[i].picture = picture;
+
+                                    break;
+                                }
+                            }
+
+                            return users;
+                        });
+                    },
+                    error: (error: unknown) => {
+                        console.error("Error while uploading user picture:", error);
+                        this.notificationService.error("Fehler:", "Das Bild für den Benutzer mit Id '" + userId + "' konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut.");
+                    },
                 });
             }
         }
@@ -211,43 +223,49 @@ export class StatsUserListComponent implements OnInit {
             }),
         );
 
-        request.subscribe((response: UpdateUserWithIdApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler", "Die Änderungen konnten nicht gespeichert werden: " + response.error);
+        request.subscribe({
+            next: (response: UpdateUserWithIdApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler", "Die Änderungen konnten nicht gespeichert werden: " + response.error);
 
-                return;
-            }
-
-            this.notificationService.success("Erfolg", response.message === "NO_CHANGE" ? "Keine Daten mussten aktualisiert werden." : "Die Änderungen wurden erfolgreich gespeichert.");
-
-            // Set the new data for the current user
-            const user = response.data;
-
-            for (let i = 0; i < this.originalUsers.length; i++) {
-                if (this.originalUsers[i].id === user.id) {
-                    this.originalUsers[i] = user;
-
-                    break;
+                    return;
                 }
-            }
 
-            this.users.update((localUsers: PrivateUser[]): PrivateUser[] => {
-                for (let i = 0; i < localUsers.length; i++) {
-                    if (localUsers[i].id === user.id) {
-                        localUsers[i] = user;
+                this.notificationService.success("Erfolg", response.message === "NO_CHANGE" ? "Keine Daten mussten aktualisiert werden." : "Die Änderungen wurden erfolgreich gespeichert.");
+
+                // Set the new data for the current user
+                const user = response.data;
+
+                for (let i = 0; i < this.originalUsers.length; i++) {
+                    if (this.originalUsers[i].id === user.id) {
+                        this.originalUsers[i] = user;
 
                         break;
                     }
                 }
 
-                return localUsers;
-            });
+                this.users.update((localUsers: PrivateUser[]): PrivateUser[] => {
+                    for (let i = 0; i < localUsers.length; i++) {
+                        if (localUsers[i].id === user.id) {
+                            localUsers[i] = user;
 
-            // Remove all edits for the user with id userId from the editsToPush array
-            // Note that this also removes the edit entry for the profile picture
-            // If the image upload fails, but the rest succeeds the entry for the picture is removed
-            // This is inconvenient but no a big issue and (at the time of writing) no worth the effort to fix
-            this.editsToPush = this.editsToPush.filter((edit) => edit.userId !== userId);
+                            break;
+                        }
+                    }
+
+                    return localUsers;
+                });
+
+                // Remove all edits for the user with id userId from the editsToPush array
+                // Note that this also removes the edit entry for the profile picture
+                // If the image upload fails, but the rest succeeds the entry for the picture is removed
+                // This is inconvenient but no a big issue and (at the time of writing) no worth the effort to fix
+                this.editsToPush = this.editsToPush.filter((edit) => edit.userId !== userId);
+            },
+            error: (error: unknown) => {
+                console.error("Error while updating user:", error);
+                this.notificationService.error("Fehler:", "Beim Aktualisieren des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+            },
         });
     }
 
@@ -279,22 +297,28 @@ export class StatsUserListComponent implements OnInit {
 
         const request = this.analyticsService.deleteUser(userId);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", "Der Benutzer konnte nicht gelöscht werden: " + response.error);
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", "Der Benutzer konnte nicht gelöscht werden: " + response.error);
 
-                return;
-            }
+                    return;
+                }
 
-            this.notificationService.success("Erfolg", "Der Benutzer wurde erfolgreich gelöscht.");
+                this.notificationService.success("Erfolg", "Der Benutzer wurde erfolgreich gelöscht.");
 
-            // Remove the user from the displayed list of users
-            this.users.update((users: PrivateUser[]): PrivateUser[] => {
-                return users.filter((user) => user.id !== userId);
-            });
+                // Remove the user from the displayed list of users
+                this.users.update((users: PrivateUser[]): PrivateUser[] => {
+                    return users.filter((user) => user.id !== userId);
+                });
 
-            // Remove the user from the originalUsers list
-            this.originalUsers = this.originalUsers.filter((user) => user.id !== userId);
+                // Remove the user from the originalUsers list
+                this.originalUsers = this.originalUsers.filter((user) => user.id !== userId);
+            },
+            error: (error: unknown) => {
+                console.error("Error while deleting user:", error);
+                this.notificationService.error("Fehler:", "Beim Löschen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+            },
         });
     }
 
@@ -308,14 +332,20 @@ export class StatsUserListComponent implements OnInit {
 
         const request = this.analyticsService.resetUserPassword(userId);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", "Das Passwort konnte nicht zurückgesetzt werden: " + response.error);
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", "Das Passwort konnte nicht zurückgesetzt werden: " + response.error);
 
-                return;
-            }
+                    return;
+                }
 
-            this.notificationService.success("Erfolg", "Das Passwort wurde erfolgreich zurückgesetzt.");
+                this.notificationService.success("Erfolg", "Das Passwort wurde erfolgreich zurückgesetzt.");
+            },
+            error: (error) => {
+                console.error("Error while resetting user password:", error);
+                this.notificationService.error("Fehler:", "Beim Zurücksetzen des Passworts ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+            },
         });
     }
 
@@ -572,8 +602,16 @@ export class StatsUserListComponent implements OnInit {
         this.popups.confirm.equalOptions.set(equalOptions);
 
         return new Promise<boolean>((resolve) => {
-            this.popups.confirm.observable.pipe(take(1)).subscribe((result) => {
-                resolve(result || false);
+            this.popups.confirm.observable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result || false);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting confirmation:", error);
+                    this.notificationService.error("Fehler:", "Beim Bestätigen der Aktion ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+
+                    resolve(false);
+                },
             });
         });
     }
@@ -595,8 +633,18 @@ export class StatsUserListComponent implements OnInit {
         this.popups.title.submitButtonText.set(buttonText);
 
         return new Promise<string>((resolve) => {
-            this.popups.title.observable.pipe(take(1)).subscribe((result) => {
-                resolve(result);
+            this.popups.title.observable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting title input:", error);
+
+                    this.notificationService.error("Fehler:", "Beim Auswählen des neuen Titels ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+
+                    // Return the current value if an error occurs
+                    resolve(value);
+                },
             });
         });
     }
@@ -614,8 +662,16 @@ export class StatsUserListComponent implements OnInit {
         this.popups.image.description.set(`Du änderst gerade das Profilbild des Benutzers mit der Id '${userId}'.`);
 
         return new Promise<{ file: File | null; url: string }>((resolve) => {
-            this.popups.image.observable.pipe(take(1)).subscribe((result) => {
-                resolve(result);
+            this.popups.image.observable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting image input:", error);
+                    this.notificationService.error("Fehler:", "Beim Auswählen des neuen Profilbilds ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+
+                    resolve({ file: null, url: currentUrl });
+                },
             });
         });
     }
@@ -636,8 +692,18 @@ export class StatsUserListComponent implements OnInit {
         this.popups.selection.value.set(currentType);
 
         return new Promise<string>((resolve) => {
-            this.popups.selection.observable.pipe(take(1)).subscribe((result) => {
-                resolve(result);
+            this.popups.selection.observable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting selection:", error);
+
+                    this.notificationService.error("Fehler:", "Beim Auswählen des neuen Typs ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+
+                    // Return the current type if an error occurs
+                    resolve(currentType);
+                },
             });
         });
     }

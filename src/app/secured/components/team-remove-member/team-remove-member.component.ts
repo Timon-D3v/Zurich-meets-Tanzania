@@ -53,22 +53,31 @@ export class TeamRemoveMemberComponent {
 
         const request = this.teamService.removeMember(email);
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Entfernen");
+
+                    return;
+                }
+
+                this.notificationService.success("Erfolg:", `Das Teammitglied mit der E-Mail "${email}" wurde erfolgreich entfernt.`);
+
+                this.removeTeamMemberForm.reset();
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Entfernen");
+            },
+            error: (error: unknown): void => {
+                console.error("Error while removing team member:", error);
+                this.notificationService.error("Fehler:", "Beim Entfernen des Teammitglieds ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
 
-                return;
-            }
-
-            this.notificationService.success("Erfolg:", `Das Teammitglied mit der E-Mail "${email}" wurde erfolgreich entfernt.`);
-
-            this.removeTeamMemberForm.reset();
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Entfernen");
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Entfernen");
+            },
         });
     }
 }

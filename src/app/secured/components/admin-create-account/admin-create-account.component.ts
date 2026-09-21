@@ -86,22 +86,31 @@ export class AdminCreateAccountComponent {
 
         const request = this.adminManagementService.createUser(email, firstName, lastName, address);
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Erstellen");
+
+                    return;
+                }
+
+                this.notificationService.success("Erfolg:", `Der Benutzer mit der E-Mail "${email}" wurde erfolgreich erstellt. Das Passwort wurde an diese E-Mail-Adresse gesendet.`);
+
+                this.createUserForm.reset();
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Erstellen");
+            },
+            error: (error: unknown): void => {
+                console.error("Error while creating user:", error);
+                this.notificationService.error("Fehler", "Beim Erstellen des Benutzers ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
-                return;
-            }
-
-            this.notificationService.success("Erfolg:", `Der Benutzer mit der E-Mail "${email}" wurde erfolgreich erstellt. Das Passwort wurde an diese E-Mail-Adresse gesendet.`);
-
-            this.createUserForm.reset();
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Erstellen");
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Erstellen");
+            },
         });
     }
 }

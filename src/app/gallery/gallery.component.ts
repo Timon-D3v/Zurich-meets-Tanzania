@@ -59,16 +59,24 @@ export class GalleryComponent implements OnInit {
     getGallery(): void {
         const request = this.galleryService.getGalleryWithName(this.name());
 
-        request.subscribe((response: GetGalleryImagesApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler:", "Diese Galerie konnte nicht geladen werden: " + response.message);
+        request.subscribe({
+            next: (response: GetGalleryImagesApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler:", "Diese Galerie konnte nicht geladen werden: " + response.message);
+
+                    this.router.navigate(["/"]);
+
+                    return;
+                }
+
+                this.gallery.set(response.data || this.gallery());
+            },
+            error: (error: unknown) => {
+                console.error("Error while loading gallery:", error);
+                this.notificationService.error("Fehler:", "Diese Galerie konnte nicht geladen werden. Bitte versuche es erneut.");
 
                 this.router.navigate(["/"]);
-
-                return;
-            }
-
-            this.gallery.set(response.data || this.gallery());
+            },
         });
     }
 

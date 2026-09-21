@@ -39,24 +39,36 @@ export class EditAccountPreferencesComponent implements OnInit {
         if (this.newsletterIsChecked()) {
             const request = this.newsletterService.signUpWithAccount("Divers");
 
-            request.subscribe((response: ApiEndpointResponse): void => {
-                if (response.error) {
-                    this.notificationService.error("Fehler:", response.message);
-                    return;
-                }
+            request.subscribe({
+                next: (response: ApiEndpointResponse): void => {
+                    if (response.error) {
+                        this.notificationService.error("Fehler:", response.message);
+                        return;
+                    }
 
-                this.notificationService.success("Erfolg:", response.message);
+                    this.notificationService.success("Erfolg:", response.message);
+                },
+                error: (error: unknown): void => {
+                    console.error("Error while signing up for newsletter:", error);
+                    this.notificationService.error("Fehler:", "Die Anmeldung für den Newsletter ist fehlgeschlagen. Bitte versuche es erneut.");
+                },
             });
         } else {
             const request = this.newsletterService.signOutWithAccount();
 
-            request.subscribe((response: ApiEndpointResponse): void => {
-                if (response.error) {
-                    this.notificationService.error("Fehler:", response.message);
-                    return;
-                }
+            request.subscribe({
+                next: (response: ApiEndpointResponse): void => {
+                    if (response.error) {
+                        this.notificationService.error("Fehler:", response.message);
+                        return;
+                    }
 
-                this.notificationService.success("Schade...", "Du hast dich erfolgreich vom Newsletter abgemeldet. Schade, dass du nicht mehr dabei sein möchtest!");
+                    this.notificationService.success("Schade...", "Du hast dich erfolgreich vom Newsletter abgemeldet. Schade, dass du nicht mehr dabei sein möchtest!");
+                },
+                error: (error: unknown): void => {
+                    console.error("Error while signing out of newsletter:", error);
+                    this.notificationService.error("Fehler:", "Das Abmelden vom Newsletter ist fehlgeschlagen. Bitte versuche es erneut.");
+                },
             });
         }
     }
@@ -84,29 +96,41 @@ export class EditAccountPreferencesComponent implements OnInit {
 
         const request = this.newsletterService.signUpWithAccount(selectedGender as "Herr" | "Frau" | "Divers");
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
-                return;
-            }
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
+                    return;
+                }
 
-            this.notificationService.success("Erfolg:", response.message);
+                this.notificationService.success("Erfolg:", response.message);
+            },
+            error: (error: unknown): void => {
+                console.error("Error while updating newsletter gender:", error);
+                this.notificationService.error("Fehler:", "Deine Anrede konnte nicht aktualisiert werden. Bitte versuche es erneut.");
+            },
         });
     }
 
     checkIfAlreadySubscribedToNewsletter(): void {
         const request = this.newsletterService.checkIfSignedUpWithAccount();
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
-                return;
-            }
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
+                    return;
+                }
 
-            if (["Herr", "Frau", "Divers"].includes(response.message)) {
-                this.newsletterIsChecked.set(true);
-                this.newsletterInitialGender.set(response.message as "Herr" | "Frau" | "Divers");
-            }
+                if (["Herr", "Frau", "Divers"].includes(response.message)) {
+                    this.newsletterIsChecked.set(true);
+                    this.newsletterInitialGender.set(response.message as "Herr" | "Frau" | "Divers");
+                }
+            },
+            error: (error: unknown): void => {
+                console.error("Error while checking newsletter subscription status:", error);
+                this.notificationService.error("Fehler:", "Dein Newsletter-Status konnte nicht überprüft werden. Bitte versuche es erneut.");
+            },
         });
     }
 

@@ -121,8 +121,15 @@ export class PopupMultipleListsInputComponent {
         this.confirmInputOpen.set(true);
 
         return new Promise<boolean>((resolve) => {
-            this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result || false);
+            this.confirmInputObservable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result || false);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting confirmation:", error);
+                    this.notificationService.error("Fehler", "Beim Bestätigen der Aktion ist ein Fehler aufgetreten. Bitte versuche es erneut.");
+                    resolve(false);
+                },
             });
         });
     }

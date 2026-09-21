@@ -26,14 +26,20 @@ export class ViewAccountMembershipDetailsComponent implements OnInit {
     getInvoices(): void {
         const request = this.accountService.getInvoices();
 
-        request.subscribe((response: GetInvoicesApiEndpointResponse) => {
-            if (response.error) {
+        request.subscribe({
+            next: (response: GetInvoicesApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Laden:", "Deine Rechnungen konnten nicht geladen werden. Bitte versuche es später erneut.");
+
+                    return;
+                }
+
+                this.invoices.set(response.data || []);
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching invoices:", error);
                 this.notificationService.error("Fehler beim Laden:", "Deine Rechnungen konnten nicht geladen werden. Bitte versuche es später erneut.");
-
-                return;
-            }
-
-            this.invoices.set(response.data || []);
+            },
         });
     }
 

@@ -73,24 +73,33 @@ export class FooterNewsletterSignUpFormComponent {
 
         const request = this.footerService.addToNewsletterList(firstName, lastName, email, gender);
 
-        request.subscribe((response: AddToNewsletterListApiEndpointResponse): void => {
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Anmelden");
+        request.subscribe({
+            next: (response: AddToNewsletterListApiEndpointResponse): void => {
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Anmelden");
 
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            if (response.data.alreadyLoggedIn) {
-                this.notificationService.info("Info:", "Du bist bereits auf der Newsletter-Liste.");
+                if (response.data.alreadyLoggedIn) {
+                    this.notificationService.info("Info:", "Du bist bereits auf der Newsletter-Liste.");
 
-                return;
-            }
+                    return;
+                }
 
-            this.notificationService.success("Vielen Dank!", response.message);
-            this.newsletterSignUpForm.reset();
+                this.notificationService.success("Vielen Dank!", response.message);
+                this.newsletterSignUpForm.reset();
+            },
+            error: (error: unknown): void => {
+                console.error("Error while adding to newsletter list:", error);
+                this.notificationService.error("Fehler:", "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.");
+
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Anmelden");
+            },
         });
     }
 

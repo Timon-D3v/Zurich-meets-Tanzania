@@ -100,14 +100,20 @@ export class StatsWebsiteAnalyticsComponent implements OnInit, OnDestroy {
 
         const request = this.analyticsService.getVisitorCounts(days);
 
-        request.subscribe((response: GetVisitorCountsApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", "Die Besucherzahlen konnten nicht geladen werden: " + response.message);
+        request.subscribe({
+            next: (response: GetVisitorCountsApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", "Die Besucherzahlen konnten nicht geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            this.visitorCounts.set(response.data);
+                this.visitorCounts.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching visitor counts:", error);
+                this.notificationService.error("Fehler", "Die Besucherzahlen konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
         });
     }
 

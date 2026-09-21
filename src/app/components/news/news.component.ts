@@ -51,16 +51,24 @@ export class NewsComponent {
 
         const request = id === -1 ? this.newsService.getLatestNews() : this.newsService.getNews(id);
 
-        request.subscribe((response: GetNewsApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler:", "Die News konnte nicht geladen werden: " + response.message);
+        request.subscribe({
+            next: (response: GetNewsApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler:", "Die News konnte nicht geladen werden: " + response.message);
 
-                this.news.set(PUBLIC_CONFIG.NEWS.ERROR(PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Die News konnte nicht geladen werden: " + response.message));
+                    this.news.set(PUBLIC_CONFIG.NEWS.ERROR(PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Die News konnte nicht geladen werden: " + response.message));
 
-                return;
-            }
+                    return;
+                }
 
-            this.news.set(response.data);
+                this.news.set(response.data);
+            },
+            error: (error) => {
+                console.error("Error while fetching news:", error);
+                this.notificationService.error("Fehler:", "Die News konnte nicht geladen werden. Bitte versuche es erneut.");
+
+                this.news.set(PUBLIC_CONFIG.NEWS.ERROR(PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Die News konnte nicht geladen werden. Bitte versuche es erneut."));
+            },
         });
     });
 
@@ -85,16 +93,24 @@ export class NewsComponent {
 
         const request = id === -1 ? this.newsService.getLatestNews() : this.newsService.getNews(id);
 
-        request.subscribe((response: GetNewsApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler:", "Die News konnte nicht geladen werden: " + response.message);
+        request.subscribe({
+            next: (response: GetNewsApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler:", "Die News konnte nicht geladen werden: " + response.message);
 
-                this.news.set(PUBLIC_CONFIG.NEWS.ERROR(PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Die News konnte nicht geladen werden: " + response.message));
+                    this.news.set(PUBLIC_CONFIG.NEWS.ERROR(PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Die News konnte nicht geladen werden: " + response.message));
 
-                return;
-            }
+                    return;
+                }
 
-            this.news.set(response.data);
+                this.news.set(response.data);
+            },
+            error: (error) => {
+                console.error("Error while fetching news:", error);
+                this.notificationService.error("Fehler:", "Die News konnte nicht geladen werden. Bitte versuche es erneut.");
+
+                this.news.set(PUBLIC_CONFIG.NEWS.ERROR(PUBLIC_CONFIG.FALLBACK_IMAGE_URL, "Die News konnte nicht geladen werden. Bitte versuche es erneut."));
+            },
         });
     }
 

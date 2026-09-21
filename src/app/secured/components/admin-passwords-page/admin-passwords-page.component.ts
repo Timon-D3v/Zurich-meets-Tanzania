@@ -38,17 +38,24 @@ export class AdminPasswordsPageComponent implements OnInit {
     fetchPasswords(): void {
         const request = this.http.get<GetPasswordsApiEndpointResponse>("/api/secured/admin/management/getPasswords");
 
-        request.subscribe((response: GetPasswordsApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Laden fehlgeschlagen: ", response.message);
+        request.subscribe({
+            next: (response: GetPasswordsApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Laden fehlgeschlagen: ", response.message);
 
+                    this.failedFetching.set(true);
+
+                    return;
+                }
+
+                this.passwords.set(response.data);
+                this.doneFetching.set(true);
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching passwords:", error);
+                this.notificationService.error("Fehler", "Die Passwörter konnten nicht geladen werden. Bitte versuche es erneut.");
                 this.failedFetching.set(true);
-
-                return;
-            }
-
-            this.passwords.set(response.data);
-            this.doneFetching.set(true);
+            },
         });
     }
 }

@@ -111,28 +111,37 @@ export class ContactComponent implements OnInit {
 
         const request = this.contactService.submitMessageAndGetVerificationToken(firstName.trim(), lastName.trim(), email.trim(), message.trim());
 
-        request.subscribe((response: GetContactRequestVerificationTokenApiEndpointResponse) => {
-            if (response.error || !response.data?.token) {
-                this.notificationService.error("Fehler:", response.message);
+        request.subscribe({
+            next: (response: GetContactRequestVerificationTokenApiEndpointResponse) => {
+                if (response.error || !response.data?.token) {
+                    this.notificationService.error("Fehler:", response.message);
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Absenden");
+
+                    return;
+                }
+
+                this.notificationService.info("Bestätigung erforderlich:", "Um Spam zu vermeiden, bitten wir dich, deine E-Mail-Adresse zu bestätigen. Bitte gib den Code aus deinem Postfach ein, um deine Anfrage zu bestätigen.");
+
+                this.contactForm.reset();
+
+                this.verificationCodeSent.set(true);
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Bestätigen");
+
+                console.info("Verification token:", response.data.token);
+                this.contactVerificationForm.patchValue({
+                    tokenControl: response.data.token,
+                });
+            },
+            error: (error: unknown) => {
+                console.error("Error while submitting contact request:", error);
+                this.notificationService.error("Fehler", "Beim Absenden deiner Nachricht ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Absenden");
-
-                return;
-            }
-
-            this.notificationService.info("Bestätigung erforderlich:", "Um Spam zu vermeiden, bitten wir dich, deine E-Mail-Adresse zu bestätigen. Bitte gib den Code aus deinem Postfach ein, um deine Anfrage zu bestätigen.");
-
-            this.contactForm.reset();
-
-            this.verificationCodeSent.set(true);
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Bestätigen");
-
-            console.info("Verification token:", response.data.token);
-            this.contactVerificationForm.patchValue({
-                tokenControl: response.data.token,
-            });
+            },
         });
     }
 
@@ -165,24 +174,33 @@ export class ContactComponent implements OnInit {
 
         const request = this.contactService.confirmVerificationToken(token, verificationCode);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", "Deine Anfrage konnte nicht bestätigt werden, da der Bestätigungscode ungültig oder abgelaufen ist.");
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", "Deine Anfrage konnte nicht bestätigt werden, da der Bestätigungscode ungültig oder abgelaufen ist.");
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Bestätigen");
+
+                    return;
+                }
+
+                this.notificationService.success("Versendet!", "Deine E-Mail-Adresse wurde erfolgreich bestätigt und deine Nachricht wurde versendet. Wir werden uns so schnell wie möglich bei dir melden.");
+
+                this.verificationCodeSent.set(false);
+
+                this.contactVerificationForm.reset();
+
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Absenden");
+            },
+            error: (error: unknown) => {
+                console.error("Error while confirming contact request verification token:", error);
+                this.notificationService.error("Fehler", "Beim Bestätigen des Bestätigungscodes ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Bestätigen");
-
-                return;
-            }
-
-            this.notificationService.success("Versendet!", "Deine E-Mail-Adresse wurde erfolgreich bestätigt und deine Nachricht wurde versendet. Wir werden uns so schnell wie möglich bei dir melden.");
-
-            this.verificationCodeSent.set(false);
-
-            this.contactVerificationForm.reset();
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Absenden");
+            },
         });
     }
 

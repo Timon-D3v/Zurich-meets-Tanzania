@@ -22,14 +22,20 @@ export class NewsArchiveComponent implements OnInit {
     ngOnInit(): void {
         const initialRequest = this.newsService.getLastXNews(this.loaded());
 
-        initialRequest.subscribe((response: GetLastXNewsIdsApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", "Das News-Archiv konnte nicht geladen werden: " + response.message);
+        initialRequest.subscribe({
+            next: (response: GetLastXNewsIdsApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", "Das News-Archiv konnte nicht geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            this.newsIds.set(response.data);
+                this.newsIds.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while loading news archive:", error);
+                this.notificationService.error("Fehler", "Das News-Archiv konnte nicht geladen werden. Bitte versuche es erneut.");
+            },
         });
     }
 
@@ -40,14 +46,20 @@ export class NewsArchiveComponent implements OnInit {
 
         const request = this.newsService.getLastXNews(this.loaded());
 
-        request.subscribe((response: GetLastXNewsIdsApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", "Es konnten keine älteren News mehr geladen werden: " + response.message);
+        request.subscribe({
+            next: (response: GetLastXNewsIdsApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", "Es konnten keine älteren News mehr geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            this.newsIds.set(response.data);
+                this.newsIds.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while loading news archive:", error);
+                this.notificationService.error("Fehler", "Das News-Archiv konnte nicht geladen werden. Bitte versuche es erneut.");
+            },
         });
     }
 }

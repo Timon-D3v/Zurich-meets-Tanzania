@@ -419,17 +419,23 @@ export class DashboardComponent implements OnInit {
         // Get all static sites for editing
         const staticSitesRequest = this.subpagesService.getAllStaticSites();
 
-        staticSitesRequest.subscribe((response: GetAllStaticSitesApiEndpointResponse) => {
-            if (response.error || response.data === null || !Array.isArray(response.data)) {
-                this.notificationService.error("Fehler beim Laden der Seiten", "Die statischen Seiten konnten nicht geladen werden: " + response.message);
+        staticSitesRequest.subscribe({
+            next: (response: GetAllStaticSitesApiEndpointResponse) => {
+                if (response.error || response.data === null || !Array.isArray(response.data)) {
+                    this.notificationService.error("Fehler beim Laden der Seiten", "Die statischen Seiten konnten nicht geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            for (const site of response.data) {
-                this.siteEdits[site.title].set(site.data);
-                this.siteEditImages[site.title] = [];
-            }
+                for (const site of response.data) {
+                    this.siteEdits[site.title].set(site.data);
+                    this.siteEditImages[site.title] = [];
+                }
+            },
+            error: (error) => {
+                console.error("Error while fetching static sites:", error);
+                this.notificationService.error("Fehler beim Laden der Seiten", "Die statischen Seiten konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
         });
 
         // Get all existing blog titles for editing
@@ -438,17 +444,23 @@ export class DashboardComponent implements OnInit {
         // Get all blogs for editing
         const getAllBlogsRequest = this.blogService.getAllBlogs();
 
-        getAllBlogsRequest.subscribe((response: GetAllBlogsApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
+        getAllBlogsRequest.subscribe({
+            next: (response: GetAllBlogsApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            for (const blog of response.data) {
-                this.blogs.existingBlogs[blog.title] = signal<BlogContent>(blog.data);
-                this.blogImages.existingBlogs[blog.title] = [];
-            }
+                for (const blog of response.data) {
+                    this.blogs.existingBlogs[blog.title] = signal<BlogContent>(blog.data);
+                    this.blogImages.existingBlogs[blog.title] = [];
+                }
+            },
+            error: (error) => {
+                console.error("Error while fetching blogs:", error);
+                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
         });
 
         // Get all news for editing
@@ -466,16 +478,22 @@ export class DashboardComponent implements OnInit {
 
         const blogTitlesRequest = this.blogService.getAllBlogLinks();
 
-        blogTitlesRequest.subscribe((response: DatabaseApiEndpointResponse) => {
-            if (response.error || response.data?.data === null || !Array.isArray(response.data?.data)) {
-                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
+        blogTitlesRequest.subscribe({
+            next: (response: DatabaseApiEndpointResponse) => {
+                if (response.error || response.data?.data === null || !Array.isArray(response.data?.data)) {
+                    this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            for (const blog of response.data.data) {
-                this.allEditableBlogs.push(blog["title"]);
-            }
+                for (const blog of response.data.data) {
+                    this.allEditableBlogs.push(blog["title"]);
+                }
+            },
+            error: (error) => {
+                console.error("Error while fetching blog titles:", error);
+                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -484,33 +502,39 @@ export class DashboardComponent implements OnInit {
 
         const newsRequest = this.newsService.getAllNews();
 
-        newsRequest.subscribe((response: GetAllNewsApiEndpointResponse) => {
-            if (response.error || response.data === null || !Array.isArray(response.data)) {
-                this.notificationService.error("Fehler beim Laden der News", "Die News konnten nicht geladen werden: " + response.message);
+        newsRequest.subscribe({
+            next: (response: GetAllNewsApiEndpointResponse) => {
+                if (response.error || response.data === null || !Array.isArray(response.data)) {
+                    this.notificationService.error("Fehler beim Laden der News", "Die News konnten nicht geladen werden: " + response.message);
 
-                return;
-            }
-
-            const getNewsName = (news: News, round = 0): string => {
-                const date = new Date(news["date"]).toLocaleDateString();
-
-                const newsName = round === 0 ? date : `${date} (${round})`;
-
-                if (this.allEditableNews.includes(newsName)) {
-                    return getNewsName(news, round + 1);
+                    return;
                 }
 
-                return newsName;
-            };
+                const getNewsName = (news: News, round = 0): string => {
+                    const date = new Date(news["date"]).toLocaleDateString();
 
-            for (const news of response.data) {
-                const newsName = getNewsName(news);
+                    const newsName = round === 0 ? date : `${date} (${round})`;
 
-                this.allEditableNews.push(newsName);
+                    if (this.allEditableNews.includes(newsName)) {
+                        return getNewsName(news, round + 1);
+                    }
 
-                this.news.existingNews[newsName] = signal<News>(news);
-                this.newsImages.existingNews[newsName] = [];
-            }
+                    return newsName;
+                };
+
+                for (const news of response.data) {
+                    const newsName = getNewsName(news);
+
+                    this.allEditableNews.push(newsName);
+
+                    this.news.existingNews[newsName] = signal<News>(news);
+                    this.newsImages.existingNews[newsName] = [];
+                }
+            },
+            error: (error) => {
+                console.error("Error while fetching news:", error);
+                this.notificationService.error("Fehler beim Laden der News", "Die News konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -519,17 +543,23 @@ export class DashboardComponent implements OnInit {
 
         const calendarRequest = this.calendarService.getAllEvents();
 
-        calendarRequest.subscribe((response: GetCalendarEventsApiEndpointResponse) => {
-            if (response.error || response.data === null || !Array.isArray(response.data)) {
-                this.notificationService.error("Fehler beim Laden der Events", "Die Events konnten nicht geladen werden: " + response.message);
+        calendarRequest.subscribe({
+            next: (response: GetCalendarEventsApiEndpointResponse) => {
+                if (response.error || response.data === null || !Array.isArray(response.data)) {
+                    this.notificationService.error("Fehler beim Laden der Events", "Die Events konnten nicht geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            for (const event of response.data) {
-                this.calendarEvents.push(event);
-                this.allEditableEvents.push(`${formatDateRangeString(new Date(event.startDate), new Date(event.endDate))} - ${event.title}`);
-            }
+                for (const event of response.data) {
+                    this.calendarEvents.push(event);
+                    this.allEditableEvents.push(`${formatDateRangeString(new Date(event.startDate), new Date(event.endDate))} - ${event.title}`);
+                }
+            },
+            error: (error) => {
+                console.error("Error while fetching calendar events:", error);
+                this.notificationService.error("Fehler beim Laden der Events", "Die Events konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -538,17 +568,23 @@ export class DashboardComponent implements OnInit {
 
         const donationMeterRequest = this.donationService.getDonationMeters();
 
-        donationMeterRequest.subscribe((response: GetDonationMetersApiEndpointResponse) => {
-            if (response.error || response.data === null || !Array.isArray(response.data)) {
-                this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden: " + response.message);
+        donationMeterRequest.subscribe({
+            next: (response: GetDonationMetersApiEndpointResponse) => {
+                if (response.error || response.data === null || !Array.isArray(response.data)) {
+                    this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            for (const meter of response.data) {
-                this.donationMeters.push(meter);
-                this.allEditableDonationMeters.push(meter.title);
-            }
+                for (const meter of response.data) {
+                    this.donationMeters.push(meter);
+                    this.allEditableDonationMeters.push(meter.title);
+                }
+            },
+            error: (error) => {
+                console.error("Error while fetching donation meters:", error);
+                this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -592,8 +628,16 @@ export class DashboardComponent implements OnInit {
         this.confirmInputEqualOptions.set(equalOptions);
 
         return new Promise<boolean>((resolve) => {
-            this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result || false);
+            this.confirmInputObservable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result || false);
+                },
+                error: (error) => {
+                    console.error("Error in awaitConfirmation:", error);
+
+                    // If an error occurs, just go save and don't confirm the action, so resolve with false
+                    resolve(false);
+                },
             });
         });
     }
@@ -608,8 +652,18 @@ export class DashboardComponent implements OnInit {
         this.selectionInputOptions.set(options);
 
         return new Promise<string>((resolve) => {
-            this.selectionInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result);
+            this.selectionInputObservable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result);
+                },
+                error: (error) => {
+                    console.error("Error in awaitSelection:", error);
+
+                    this.notificationService.error("Fehler bei der Auswahl", "Es ist ein Fehler bei der Auswahl aufgetreten. Bitte versuche es erneut.");
+
+                    // If an error occurs, just go save and return an empty string
+                    resolve("");
+                },
             });
         });
     }
@@ -911,43 +965,67 @@ export class DashboardComponent implements OnInit {
         // Submit the edits to the backend
         const request = this.subpagesService.updateStaticSite(this.currentActiveSiteEdit(), this.siteEdits[this.currentActiveSiteEdit()](), this.siteEditImages[this.currentActiveSiteEdit()]);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            this.submitEditsButton.set("Abschliessen");
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                this.submitEditsButton.set("Abschliessen");
 
-            if (response.error) {
-                this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
-
-                return;
-            }
-
-            this.notificationService.success("Änderungen gespeichert", response.message);
-
-            // Reset the siteEdits
-            this.siteEditImages[this.currentActiveSiteEdit()] = [];
-
-            const request = this.subpagesService.getStaticSite(this.currentActiveSiteEdit());
-
-            request.subscribe((response: GetStaticSiteApiEndpointResponse) => {
-                if (response.error || response.data === null) {
-                    this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${this.currentActiveSiteEdit()}' konnte nicht geladen werden: ` + response.message);
-
-                    // Set a Warning as the sites content
-                    this.siteEdits[this.currentActiveSiteEdit()].set({
-                        data: [],
-                        metadata: {
-                            title: "Fehler beim Laden der Seite",
-                            subtitle: "",
-                            author: "",
-                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
-                            imageAlt: "",
-                        },
-                    });
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
 
                     return;
                 }
 
-                this.siteEdits[this.currentActiveSiteEdit()].set(response.data.site);
-            });
+                this.notificationService.success("Änderungen gespeichert", response.message);
+
+                // Reset the siteEdits
+                this.siteEditImages[this.currentActiveSiteEdit()] = [];
+
+                const request = this.subpagesService.getStaticSite(this.currentActiveSiteEdit());
+
+                request.subscribe({
+                    next: (response: GetStaticSiteApiEndpointResponse) => {
+                        if (response.error || response.data === null) {
+                            this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${this.currentActiveSiteEdit()}' konnte nicht geladen werden: ` + response.message);
+
+                            // Set a Warning as the sites content
+                            this.siteEdits[this.currentActiveSiteEdit()].set({
+                                data: [],
+                                metadata: {
+                                    title: "Fehler beim Laden der Seite",
+                                    subtitle: "",
+                                    author: "",
+                                    imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                                    imageAlt: "",
+                                },
+                            });
+
+                            return;
+                        }
+
+                        this.siteEdits[this.currentActiveSiteEdit()].set(response.data.site);
+                    },
+                    error: (error) => {
+                        console.error("Error while fetching site:", error);
+                        this.notificationService.error("Fehler beim Laden der Seite", `Die Seite '${this.currentActiveSiteEdit()}' konnte nicht geladen werden. Bitte versuche es später erneut.`);
+
+                        // Set a Warning as the sites content
+                        this.siteEdits[this.currentActiveSiteEdit()].set({
+                            data: [],
+                            metadata: {
+                                title: "Fehler beim Laden der Seite",
+                                subtitle: "",
+                                author: "",
+                                imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                                imageAlt: "",
+                            },
+                        });
+                    },
+                });
+            },
+            error: (error) => {
+                console.error("Error while updating site:", error);
+                this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -964,56 +1042,82 @@ export class DashboardComponent implements OnInit {
         // Submit the edits to the backend
         const request = this.blogService.createBlog(this.blogs.newBlog().metadata.title, this.blogs.newBlog(), this.blogImages.newBlog);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            this.submitEditsButton.set("Abschliessen");
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                this.submitEditsButton.set("Abschliessen");
 
-            this.getAllBlogTitles();
+                this.getAllBlogTitles();
 
-            if (response.error) {
-                this.notificationService.error("Fehler beim Erstellen", "Der Blog konnte nicht erstellt werden: " + response.message);
-
-                return;
-            }
-
-            this.notificationService.success("Blog erstellt", response.message);
-
-            const blogName = this.blogs.newBlog().metadata.title;
-
-            // Reset the blogEdits
-            this.currentActiveBlogEdit.set("awaitSelection");
-
-            this.blogImages.newBlog = [];
-            this.blogs.newBlog = signal<BlogContent>({ metadata: { title: "Bearbeite mich :)", subtitle: "", author: "", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "" }, data: [] });
-
-            this.blogImages.existingBlogs[blogName] = [];
-
-            const request = this.blogService.getBlog(blogName);
-
-            request.subscribe((response: GetBlogApiEndpointResponse) => {
-                if (response.error || response.data === null) {
-                    this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${blogName}' konnte nicht geladen werden: ` + response.message);
-
-                    // Set a Warning as the sites content
-                    this.blogs.existingBlogs[blogName].set({
-                        data: [],
-                        metadata: {
-                            title: "Fehler beim Laden der Seite",
-                            subtitle: "",
-                            author: "",
-                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
-                            imageAlt: "",
-                        },
-                    });
-
-                    this.currentActiveBlogEdit.set(blogName);
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Erstellen", "Der Blog konnte nicht erstellt werden: " + response.message);
 
                     return;
                 }
 
-                this.blogs.existingBlogs[blogName] = signal<BlogContent>(response.data.data);
+                this.notificationService.success("Blog erstellt", response.message);
 
-                this.currentActiveBlogEdit.set(blogName);
-            });
+                const blogName = this.blogs.newBlog().metadata.title;
+
+                // Reset the blogEdits
+                this.currentActiveBlogEdit.set("awaitSelection");
+
+                this.blogImages.newBlog = [];
+                this.blogs.newBlog = signal<BlogContent>({ metadata: { title: "Bearbeite mich :)", subtitle: "", author: "", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "" }, data: [] });
+
+                this.blogImages.existingBlogs[blogName] = [];
+
+                const request = this.blogService.getBlog(blogName);
+
+                request.subscribe({
+                    next: (response: GetBlogApiEndpointResponse) => {
+                        if (response.error || response.data === null) {
+                            this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${blogName}' konnte nicht geladen werden: ` + response.message);
+
+                            // Set a Warning as the sites content
+                            this.blogs.existingBlogs[blogName].set({
+                                data: [],
+                                metadata: {
+                                    title: "Fehler beim Laden der Seite",
+                                    subtitle: "",
+                                    author: "",
+                                    imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                                    imageAlt: "",
+                                },
+                            });
+
+                            this.currentActiveBlogEdit.set(blogName);
+
+                            return;
+                        }
+
+                        this.blogs.existingBlogs[blogName] = signal<BlogContent>(response.data.data);
+
+                        this.currentActiveBlogEdit.set(blogName);
+                    },
+                    error: (error) => {
+                        console.error("Error while fetching blog:", error);
+                        this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${blogName}' konnte nicht geladen werden. Bitte versuche es später erneut.`);
+
+                        // Set a Warning as the sites content
+                        this.blogs.existingBlogs[blogName].set({
+                            data: [],
+                            metadata: {
+                                title: "Fehler beim Laden der Seite",
+                                subtitle: "",
+                                author: "",
+                                imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                                imageAlt: "",
+                            },
+                        });
+
+                        this.currentActiveBlogEdit.set(blogName);
+                    },
+                });
+            },
+            error: (error) => {
+                console.error("Error while creating blog:", error);
+                this.notificationService.error("Fehler beim Erstellen", "Der Blog konnte nicht erstellt werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -1030,58 +1134,83 @@ export class DashboardComponent implements OnInit {
         // Submit the edits to the backend
         const request = this.blogService.updateBlog(this.currentActiveBlogEdit(), this.blogs.existingBlogs[this.currentActiveBlogEdit()](), this.blogImages.existingBlogs[this.currentActiveBlogEdit()]);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            this.submitEditsButton.set("Abschliessen");
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                this.submitEditsButton.set("Abschliessen");
 
-            this.getAllBlogTitles();
+                this.getAllBlogTitles();
 
-            if (response.error) {
-                this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
-
-                return;
-            }
-
-            this.notificationService.success("Änderungen gespeichert", response.message);
-
-            // Reset the blogEdits
-            const oldBlogTitle = this.currentActiveBlogEdit();
-            const newBlogTitle = this.blogs.existingBlogs[this.currentActiveBlogEdit()]().metadata.title;
-
-            this.currentActiveBlogEdit.set("awaitSelection");
-
-            // Delete the existing images array since the blog name might have changed
-            delete this.blogImages.existingBlogs[oldBlogTitle];
-            delete this.blogs.existingBlogs[oldBlogTitle];
-
-            this.blogImages.existingBlogs[newBlogTitle] = [];
-
-            const request = this.blogService.getBlog(newBlogTitle);
-
-            request.subscribe((response: GetBlogApiEndpointResponse) => {
-                if (response.error || response.data === null) {
-                    this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${newBlogTitle}' konnte nicht geladen werden: ` + response.message);
-
-                    // Set a Warning as the sites content
-                    this.blogs.existingBlogs[newBlogTitle].set({
-                        data: [],
-                        metadata: {
-                            title: "Fehler beim Laden der Seite",
-                            subtitle: "",
-                            author: "",
-                            imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
-                            imageAlt: "",
-                        },
-                    });
-
-                    this.currentActiveBlogEdit.set(newBlogTitle);
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
 
                     return;
                 }
 
-                this.blogs.existingBlogs[newBlogTitle] = signal<BlogContent>(response.data.data);
+                this.notificationService.success("Änderungen gespeichert", response.message);
 
-                this.currentActiveBlogEdit.set(newBlogTitle);
-            });
+                // Reset the blogEdits
+                const oldBlogTitle = this.currentActiveBlogEdit();
+                const newBlogTitle = this.blogs.existingBlogs[this.currentActiveBlogEdit()]().metadata.title;
+
+                this.currentActiveBlogEdit.set("awaitSelection");
+
+                // Delete the existing images array since the blog name might have changed
+                delete this.blogImages.existingBlogs[oldBlogTitle];
+                delete this.blogs.existingBlogs[oldBlogTitle];
+
+                this.blogImages.existingBlogs[newBlogTitle] = [];
+
+                const request = this.blogService.getBlog(newBlogTitle);
+
+                request.subscribe({
+                    next: (response: GetBlogApiEndpointResponse) => {
+                        if (response.error || response.data === null) {
+                            this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${newBlogTitle}' konnte nicht geladen werden: ` + response.message);
+
+                            // Set a Warning as the sites content
+                            this.blogs.existingBlogs[newBlogTitle].set({
+                                data: [],
+                                metadata: {
+                                    title: "Fehler beim Laden der Seite",
+                                    subtitle: "",
+                                    author: "",
+                                    imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                                    imageAlt: "",
+                                },
+                            });
+
+                            this.currentActiveBlogEdit.set(newBlogTitle);
+
+                            return;
+                        }
+
+                        this.blogs.existingBlogs[newBlogTitle] = signal<BlogContent>(response.data.data);
+
+                        this.currentActiveBlogEdit.set(newBlogTitle);
+                    },
+                    error: (error) => {
+                        console.error("Error while fetching blog after update:", error);
+                        this.notificationService.error("Fehler beim Laden des Blogs", `Der Blog '${newBlogTitle}' konnte nicht geladen werden. Bitte versuche es später erneut.`);
+
+                        this.blogs.existingBlogs[newBlogTitle].set({
+                            data: [],
+                            metadata: {
+                                title: "Fehler beim Laden der Seite",
+                                subtitle: "",
+                                author: "",
+                                imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                                imageAlt: "",
+                            },
+                        });
+
+                        this.currentActiveBlogEdit.set(newBlogTitle);
+                    },
+                });
+            },
+            error: (error) => {
+                console.error("Error while updating blog:", error);
+                this.notificationService.error("Fehler beim Speichern", "Die Änderungen konnten nicht gespeichert werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -1099,24 +1228,30 @@ export class DashboardComponent implements OnInit {
 
         const request = this.newsService.createNews(this.news.newNews().data, this.newsImages.newNews, shouldSendNewsletter);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            this.submitEditsButton.set("Abschliessen");
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                this.submitEditsButton.set("Abschliessen");
 
-            this.getAllNews();
+                this.getAllNews();
 
-            if (response.error) {
-                this.notificationService.error("Fehler beim Erstellen", "Die News konnten nicht erstellt werden: " + response.message);
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Erstellen", "Die News konnten nicht erstellt werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            this.notificationService.success("News erstellt", response.message);
+                this.notificationService.success("News erstellt", response.message);
 
-            // Reset the newsEdits
-            this.currentActiveNewsEdit.set("awaitSelection");
+                // Reset the newsEdits
+                this.currentActiveNewsEdit.set("awaitSelection");
 
-            this.newsImages.newNews = [];
-            this.news.newNews = signal<News>({ id: -1, date: "1900/12/22", data: { type: "image", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "", imagePosition: "center", content: [] } });
+                this.newsImages.newNews = [];
+                this.news.newNews = signal<News>({ id: -1, date: "1900/12/22", data: { type: "image", imageUrl: PUBLIC_CONFIG.FALLBACK_IMAGE_URL, imageAlt: "", imagePosition: "center", content: [] } });
+            },
+            error: (error) => {
+                console.error("Error while creating news:", error);
+                this.notificationService.error("Fehler beim Erstellen", "Die News konnten nicht erstellt werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -1137,21 +1272,27 @@ export class DashboardComponent implements OnInit {
 
         const request = this.newsService.updateNews(currentNews.id, currentNews.data, currentNewsImages, shouldSendNewsletter);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            this.submitEditsButton.set("Abschliessen");
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                this.submitEditsButton.set("Abschliessen");
 
-            this.getAllNews();
+                this.getAllNews();
 
-            if (response.error) {
-                this.notificationService.error("Fehler beim Aktualisieren", "Die News konnten nicht aktualisiert werden: " + response.message);
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Aktualisieren", "Die News konnten nicht aktualisiert werden: " + response.message);
 
-                return;
-            }
+                    return;
+                }
 
-            this.notificationService.success("News aktualisiert", response.message);
+                this.notificationService.success("News aktualisiert", response.message);
 
-            // Reset the newsEdits
-            this.currentActiveNewsEdit.set("awaitSelection");
+                // Reset the newsEdits
+                this.currentActiveNewsEdit.set("awaitSelection");
+            },
+            error: (error) => {
+                console.error("Error while updating news:", error);
+                this.notificationService.error("Fehler beim Aktualisieren", "Die News konnten nicht aktualisiert werden. Bitte versuche es später erneut.");
+            },
         });
     }
 
@@ -1219,21 +1360,28 @@ export class DashboardComponent implements OnInit {
             } else if (type === "addCurrentTeam") {
                 const request = _this.teamService.getCurrentTeam();
 
-                request.subscribe((response: GetTeamApiEndpointResponse) => {
-                    if (response.error || response.data === null) {
-                        _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden: " + response.message);
+                request.subscribe({
+                    next: (response: GetTeamApiEndpointResponse) => {
+                        if (response.error || response.data === null) {
+                            _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden: " + response.message);
 
-                        return;
-                    }
+                            return;
+                        }
 
-                    const element = _this.editService.addCurrentTeam(response.data.id);
+                        const element = _this.editService.addCurrentTeam(response.data.id);
 
-                    _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
-                        return {
-                            ...siteOrBlog,
-                            data: [element, ...siteOrBlog.data],
-                        };
-                    });
+                        _this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                            return {
+                                ...siteOrBlog,
+                                data: [element, ...siteOrBlog.data],
+                            };
+                        });
+                    },
+                    error: (error) => {
+                        console.error("Fehler beim Laden des Teams:", error);
+
+                        _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden. Bitte versuche es später erneut.");
+                    },
                 });
             } else if (type === "addMultipleButtons") {
                 _this.multipleButtonsInputOpen.set(true);
@@ -2724,28 +2872,38 @@ export class DashboardComponent implements OnInit {
 
         const request = this.blogService.deleteBlog(blogName);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler beim Löschen", "Der Blog konnte nicht gelöscht werden: " + response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Löschen", "Der Blog konnte nicht gelöscht werden: " + response.message);
+
+                    this.setCurrentActiveNavigation("main");
+                    this.currentActiveSection.set("stats-website-analytics");
+
+                    return;
+                }
+
+                this.notificationService.success("Blog gelöscht", response.message);
+
+                // Refresh the blog titles
+                this.getAllBlogTitles();
+
+                // Reset the current active blog edit if it was the deleted blog
+                if (this.currentActiveBlogEdit() === blogName) {
+                    this.currentActiveBlogEdit.set("awaitSelection");
+                }
 
                 this.setCurrentActiveNavigation("main");
                 this.currentActiveSection.set("stats-website-analytics");
+            },
+            error: (error: unknown) => {
+                console.error("Error while deleting blog:", error);
 
-                return;
-            }
+                this.notificationService.error("Fehler beim Löschen", "Der Blog konnte nicht gelöscht werden. Bitte versuche es später erneut.");
 
-            this.notificationService.success("Blog gelöscht", response.message);
-
-            // Refresh the blog titles
-            this.getAllBlogTitles();
-
-            // Reset the current active blog edit if it was the deleted blog
-            if (this.currentActiveBlogEdit() === blogName) {
-                this.currentActiveBlogEdit.set("awaitSelection");
-            }
-
-            this.setCurrentActiveNavigation("main");
-            this.currentActiveSection.set("stats-website-analytics");
+                this.setCurrentActiveNavigation("main");
+                this.currentActiveSection.set("stats-website-analytics");
+            },
         });
     }
 
@@ -2784,23 +2942,33 @@ export class DashboardComponent implements OnInit {
 
         const request = this.calendarService.deleteEvent(eventId);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler beim Löschen", "Das Event konnte nicht gelöscht werden: " + response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Löschen", "Das Event konnte nicht gelöscht werden: " + response.message);
+
+                    this.setCurrentActiveNavigation("main");
+                    this.currentActiveSection.set("stats-website-analytics");
+
+                    return;
+                }
+
+                this.notificationService.success("Event gelöscht", "Das Event wurde erfolgreich gelöscht.");
+
+                // Refresh the events
+                this.getAllEvents();
 
                 this.setCurrentActiveNavigation("main");
                 this.currentActiveSection.set("stats-website-analytics");
+            },
+            error: (error: unknown) => {
+                console.error("Error while deleting event:", error);
 
-                return;
-            }
+                this.notificationService.error("Fehler beim Löschen", "Das Event konnte nicht gelöscht werden. Bitte versuche es später erneut.");
 
-            this.notificationService.success("Event gelöscht", "Das Event wurde erfolgreich gelöscht.");
-
-            // Refresh the events
-            this.getAllEvents();
-
-            this.setCurrentActiveNavigation("main");
-            this.currentActiveSection.set("stats-website-analytics");
+                this.setCurrentActiveNavigation("main");
+                this.currentActiveSection.set("stats-website-analytics");
+            },
         });
     }
 }

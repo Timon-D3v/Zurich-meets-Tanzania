@@ -38,20 +38,28 @@ export class NewsletterSignUpConfirmComponent implements OnInit {
 
         const request = this.newsletterService.confirmSignUp(params["firstName"] ?? "", params["lastName"] ?? "", params["email"] ?? "", params["gender"] ?? "", params["id"] ?? "", params["timestamp"] ?? "");
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Etwas hat nicht geklappt.", response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Etwas hat nicht geklappt.", response.message);
+
+                    this.router.navigate(["/"]);
+
+                    return;
+                }
+
+                this.notificationService.success("Das hat geklappt.", "Du hast dich erfolgreich für den Newsletter angemeldet.");
+
+                this.buttonVisible.set(true);
+
+                this.autoRedirect();
+            },
+            error: (error: unknown): void => {
+                console.error("Error while confirming newsletter sign up:", error);
+                this.notificationService.error("Etwas hat nicht geklappt.", "Beim Bestätigen der Newsletter Anmeldung ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
                 this.router.navigate(["/"]);
-
-                return;
-            }
-
-            this.notificationService.success("Das hat geklappt.", "Du hast dich erfolgreich für den Newsletter angemeldet.");
-
-            this.buttonVisible.set(true);
-
-            this.autoRedirect();
+            },
         });
     }
 

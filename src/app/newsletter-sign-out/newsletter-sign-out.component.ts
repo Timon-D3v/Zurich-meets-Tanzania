@@ -66,32 +66,41 @@ export class NewsletterSignOutComponent {
 
         const request = this.newsletterService.signOut(email.trim());
 
-        request.subscribe((response: GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse) => {
-            if (response.error || !response.data?.token) {
-                if (response.message === "Du bist nicht auf der Newsletterliste. Es gibt nichts mehr zu tun.") {
-                    this.notificationService.info("Nicht auf der Liste:", response.message);
-                } else {
-                    this.notificationService.error("Fehler:", response.message);
+        request.subscribe({
+            next: (response: GetNewsletterUnsubscribeRequestVerificationTokenApiEndpointResponse) => {
+                if (response.error || !response.data?.token) {
+                    if (response.message === "Du bist nicht auf der Newsletterliste. Es gibt nichts mehr zu tun.") {
+                        this.notificationService.info("Nicht auf der Liste:", response.message);
+                    } else {
+                        this.notificationService.error("Fehler:", response.message);
+                    }
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Abmelden");
+
+                    return;
                 }
+
+                this.notificationService.info("Bestätigung erforderlich:", "Um Missbrauch zu vermeiden, bitten wir dich, deine E-Mail-Adresse zu bestätigen. Bitte gib den Code aus deinem Postfach ein, um deine Anfrage zu bestätigen.");
+
+                this.newsletterUnsubscribeForm.reset();
+
+                this.verificationCodeSent.set(true);
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Bestätigen");
+
+                console.info("Verification token:", response.data.token);
+                this.newsletterUnsubscribeVerificationForm.patchValue({
+                    tokenControl: response.data.token,
+                });
+            },
+            error: (error: unknown) => {
+                console.error("Error while requesting newsletter unsubscribe verification token:", error);
+                this.notificationService.error("Fehler", "Beim Anfordern des Bestätigungs-Codes ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Abmelden");
-
-                return;
-            }
-
-            this.notificationService.info("Bestätigung erforderlich:", "Um Missbrauch zu vermeiden, bitten wir dich, deine E-Mail-Adresse zu bestätigen. Bitte gib den Code aus deinem Postfach ein, um deine Anfrage zu bestätigen.");
-
-            this.newsletterUnsubscribeForm.reset();
-
-            this.verificationCodeSent.set(true);
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Bestätigen");
-
-            console.info("Verification token:", response.data.token);
-            this.newsletterUnsubscribeVerificationForm.patchValue({
-                tokenControl: response.data.token,
-            });
+            },
         });
     }
 
@@ -124,19 +133,28 @@ export class NewsletterSignOutComponent {
 
         const request = this.newsletterService.confirmSignOut(verificationCode, token);
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", "Deine Anfrage konnte nicht bestätigt werden, da der Bestätigungscode ungültig oder abgelaufen ist.");
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", "Deine Anfrage konnte nicht bestätigt werden, da der Bestätigungscode ungültig oder abgelaufen ist.");
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Bestätigen");
+
+                    return;
+                }
+
+                this.notificationService.success("Abgemeldet", "Du hast dich erfolgreich vom Newsletter abgemeldet. Schade... Wenn du es dir noch einmal anders überlegst, kannst du dich jederzeit wieder anmelden.");
+
+                this.router.navigate(["/"]);
+            },
+            error: (error: unknown) => {
+                console.error("Error while confirming newsletter sign out:", error);
+                this.notificationService.error("Fehler", "Beim Bestätigen der Newsletter Abmeldung ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Bestätigen");
-
-                return;
-            }
-
-            this.notificationService.success("Abgemeldet", "Du hast dich erfolgreich vom Newsletter abgemeldet. Schade... Wenn du es dir noch einmal anders überlegst, kannst du dich jederzeit wieder anmelden.");
-
-            this.router.navigate(["/"]);
+            },
         });
     }
 

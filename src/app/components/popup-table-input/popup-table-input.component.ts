@@ -352,8 +352,16 @@ export class PopupTableInputComponent {
         this.inputs.selectionOpen.set(true);
 
         return new Promise<"Text" | "Bild">((resolve) => {
-            this.selectionInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result || "Text");
+            this.selectionInputObservable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result || "Text");
+                },
+                error: (error) => {
+                    console.error("Error while awaiting selection:", error);
+                    this.notificationService.error("Fehler", "Beim Auswählen der Eingabeart ist ein Fehler aufgetreten. Es wurde 'Text' ausgewählt.");
+
+                    resolve("Text");
+                },
             });
         });
     }
@@ -362,8 +370,16 @@ export class PopupTableInputComponent {
         this.inputs.confirmOpen.set(true);
 
         return new Promise<boolean>((resolve) => {
-            this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result || false);
+            this.confirmInputObservable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result || false);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting confirmation:", error);
+                    this.notificationService.error("Fehler", "Beim Bestätigen der Aktion ist ein Fehler aufgetreten. Bitte versuche es erneut.");
+
+                    resolve(false);
+                },
             });
         });
     }

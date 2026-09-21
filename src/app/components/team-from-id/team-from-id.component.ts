@@ -50,9 +50,28 @@ export class TeamFromIdComponent {
 
         const request = this.teamService.getTeam(id);
 
-        request.subscribe((response: GetTeamApiEndpointResponse) => {
-            if (response.error || response.data === null) {
-                this.notificationService.error("Fehler beim Laden des Teams:", response.message);
+        request.subscribe({
+            next: (response: GetTeamApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler beim Laden des Teams:", response.message);
+
+                    this.team.set({
+                        id: -2,
+                        motto: "Fehler beim Laden des Teams",
+                        text: "",
+                        picture: PUBLIC_CONFIG.FALLBACK_IMAGE_URL,
+                        members: [],
+                        date: "",
+                    });
+
+                    return;
+                }
+
+                this.team.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching team:", error);
+                this.notificationService.error("Fehler beim Laden des Teams:", "Das Team konnte nicht geladen werden. Bitte versuche es später erneut.");
 
                 this.team.set({
                     id: -2,
@@ -62,11 +81,7 @@ export class TeamFromIdComponent {
                     members: [],
                     date: "",
                 });
-
-                return;
-            }
-
-            this.team.set(response.data);
+            },
         });
     }
 }

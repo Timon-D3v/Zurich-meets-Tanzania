@@ -77,24 +77,33 @@ export class TeamCreateTeamComponent {
 
         const request = this.teamManagementService.createTeam(motto, description, this.imageFile() as File);
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Erstellen");
+
+                    return;
+                }
+
+                this.notificationService.success("Erfolg:", `Das Team mit dem Motto "${motto}" wurde erfolgreich erstellt.`);
+
+                this.createTeamForm.reset();
+                this.imageFile.set(null);
+                this.imagePreview.set(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Erstellen");
+            },
+            error: (error: unknown): void => {
+                console.error("Error while creating team:", error);
+                this.notificationService.error("Fehler:", "Beim Erstellen des Teams ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
 
-                return;
-            }
-
-            this.notificationService.success("Erfolg:", `Das Team mit dem Motto "${motto}" wurde erfolgreich erstellt.`);
-
-            this.createTeamForm.reset();
-            this.imageFile.set(null);
-            this.imagePreview.set(PUBLIC_CONFIG.FALLBACK_IMAGE_URL);
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Erstellen");
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Erstellen");
+            },
         });
     }
 

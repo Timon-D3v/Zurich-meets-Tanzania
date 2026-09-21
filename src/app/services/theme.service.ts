@@ -53,10 +53,15 @@ export class ThemeService {
             theme,
         });
 
-        request.subscribe((response: ApiEndpointResponse) => {
-            if (!response.error) {
-                window.localStorage.setItem("remote-theme", theme);
-            }
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (!response.error) {
+                    window.localStorage.setItem("remote-theme", theme);
+                }
+            },
+            error: (error: unknown) => {
+                console.error("Failed to set remote theme:", error);
+            },
         });
     }
 

@@ -53,22 +53,31 @@ export class AdminRemoveAdminComponent {
 
         const request = this.adminManagementService.removeAdmin(email);
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Entfernen");
+
+                    return;
+                }
+
+                this.notificationService.success("Erfolg:", `Die Admin-Rechte des Benutzers mit der E-Mail "${email}" wurden erfolgreich entzogen.`);
+
+                this.removeAdminForm.reset();
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Entfernen");
+            },
+            error: (error: unknown): void => {
+                console.error("Error while removing admin rights for user with email " + email + ":", error);
+                this.notificationService.error("Fehler", "Beim Entfernen der Admin-Rechte ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
-                return;
-            }
-
-            this.notificationService.success("Erfolg:", `Die Admin-Rechte des Benutzers mit der E-Mail "${email}" wurden erfolgreich entzogen.`);
-
-            this.removeAdminForm.reset();
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Entfernen");
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Entfernen");
+            },
         });
     }
 }

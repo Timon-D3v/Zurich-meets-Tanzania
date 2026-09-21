@@ -222,9 +222,46 @@ export class DonationFormComponent implements OnInit {
     getDonationUsageTypes(): void {
         const request = this.donationService.getDonationUsageTypes();
 
-        request.subscribe((response: GetDonationUsageTypesApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler beim Laden der Spendenverwendungsarten", response.message);
+        request.subscribe({
+            next: (response: GetDonationUsageTypesApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Laden der Spendenverwendungsarten", response.message);
+
+                    this.donationUsageTypes.set([
+                        {
+                            disabled: false,
+                            label: "Allgemeine Spende",
+                            selected: true,
+                            value: "Allgemeine Spende",
+                        },
+                        {
+                            disabled: true,
+                            label: "Mehr werden geladen...",
+                            selected: false,
+                            value: "Mehr werden geladen...",
+                        },
+                    ]);
+
+                    return;
+                }
+
+                this.donationUsageTypes.set([]);
+
+                for (const usageType of response.data) {
+                    this.donationUsageTypes.update((currentUsageTypes) => [
+                        ...currentUsageTypes,
+                        {
+                            disabled: false,
+                            label: usageType,
+                            selected: false,
+                            value: usageType,
+                        },
+                    ]);
+                }
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching donation usage types:", error);
+                this.notificationService.error("Fehler beim Laden der Spendenverwendungsarten", "Die Spendenverwendungsarten konnten nicht geladen werden. Bitte versuche es erneut.");
 
                 this.donationUsageTypes.set([
                     {
@@ -240,23 +277,7 @@ export class DonationFormComponent implements OnInit {
                         value: "Mehr werden geladen...",
                     },
                 ]);
-
-                return;
-            }
-
-            this.donationUsageTypes.set([]);
-
-            for (const usageType of response.data) {
-                this.donationUsageTypes.update((currentUsageTypes) => [
-                    ...currentUsageTypes,
-                    {
-                        disabled: false,
-                        label: usageType,
-                        selected: false,
-                        value: usageType,
-                    },
-                ]);
-            }
+            },
         });
     }
 }

@@ -25,17 +25,25 @@ export class AddBoardInformationComponent implements OnInit {
     private notificationService = inject(NotificationService);
 
     ngOnInit(): void {
-        this.accountService.getBoardRole().subscribe((response: ApiEndpointResponse) => {
-            if (response.error) {
-                this.notificationService.error("Fehler", response.message);
-                return;
-            }
+        const request = this.accountService.getBoardRole();
 
-            this.boardRole.set(response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler", response.message);
+                    return;
+                }
 
-            this.editBoardRoleForm.patchValue({
-                roleControl: this.boardRole(),
-            });
+                this.boardRole.set(response.message);
+
+                this.editBoardRoleForm.patchValue({
+                    roleControl: this.boardRole(),
+                });
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching board role:", error);
+                this.notificationService.error("Fehler", "Die Vorstandsrolle konnte nicht geladen werden. Bitte versuche es erneut.");
+            },
         });
     }
 

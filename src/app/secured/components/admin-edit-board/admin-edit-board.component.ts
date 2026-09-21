@@ -121,8 +121,17 @@ export class AdminEditBoardComponent implements OnInit {
         this.selectionInputOpen.set(true);
 
         return new Promise<string>((resolve) => {
-            this.selectionInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result);
+            this.selectionInputObservable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting selection:", error);
+
+                    this.notificationService.error("Fehler:", "Beim Auswählen des Vorstandsmitglieds ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+
+                    resolve("");
+                },
             });
         });
     }
@@ -131,8 +140,14 @@ export class AdminEditBoardComponent implements OnInit {
         this.confirmInputOpen.set(true);
 
         return new Promise<boolean>((resolve) => {
-            this.confirmInputObservable.pipe(take(1)).subscribe((result) => {
-                resolve(result || false);
+            this.confirmInputObservable.pipe(take(1)).subscribe({
+                next: (result) => {
+                    resolve(result || false);
+                },
+                error: (error) => {
+                    console.error("Error while awaiting confirmation:", error);
+                    resolve(false);
+                },
             });
         });
     }

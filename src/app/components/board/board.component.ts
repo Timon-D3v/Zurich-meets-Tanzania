@@ -32,14 +32,20 @@ export class BoardComponent implements OnInit {
     getBoard(): void {
         const request = this.teamService.getBoard();
 
-        request.subscribe((response: GetBoardApiEndpointResponse) => {
-            if (response.error || !response.data) {
+        request.subscribe({
+            next: (response: GetBoardApiEndpointResponse) => {
+                if (response.error || !response.data) {
+                    this.notificationService.error("Fehler:", "Der Vorstand konnte nicht geladen werden. Bitte versuchen Sie es später erneut.");
+
+                    return;
+                }
+
+                this.board.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching board:", error);
                 this.notificationService.error("Fehler:", "Der Vorstand konnte nicht geladen werden. Bitte versuchen Sie es später erneut.");
-
-                return;
-            }
-
-            this.board.set(response.data);
+            },
         });
     }
 }

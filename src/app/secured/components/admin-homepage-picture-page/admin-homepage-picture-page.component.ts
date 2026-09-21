@@ -63,20 +63,29 @@ export class AdminHomepagePicturePageComponent implements OnInit {
 
         const request = this.adminManagementService.changeHomepagePicture(blob);
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Fehler:", response.message);
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", response.message);
+
+                    this.submitButtonDisabled.set(false);
+                    this.submitButtonText.set("Aktualisieren");
+
+                    return;
+                }
+
+                this.notificationService.success("Erfolg:", `Das Homepage-Bild wurde erfolgreich aktualisiert.`);
 
                 this.submitButtonDisabled.set(false);
                 this.submitButtonText.set("Aktualisieren");
+            },
+            error: (error: unknown): void => {
+                console.error("Error while changing homepage picture:", error);
+                this.notificationService.error("Fehler", "Beim Aktualisieren des Homepage-Bildes ist ein Fehler aufgetreten. Bitte versuche es erneut.");
 
-                return;
-            }
-
-            this.notificationService.success("Erfolg:", `Das Homepage-Bild wurde erfolgreich aktualisiert.`);
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Aktualisieren");
+                this.submitButtonDisabled.set(false);
+                this.submitButtonText.set("Aktualisieren");
+            },
         });
     }
 

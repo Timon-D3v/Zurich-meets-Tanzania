@@ -54,14 +54,38 @@ export class HomeComponent implements OnInit {
     getEvents(): void {
         const request = this.calendarService.getLastXEvents(this.numberOfEvents());
 
-        request.subscribe((response: GetCalendarEventsApiEndpointResponse) => {
-            if (response.error || !response.data) {
-                this.notificationService.error("Fehler:", "Die Kalenderdaten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.");
+        request.subscribe({
+            next: (response: GetCalendarEventsApiEndpointResponse) => {
+                if (response.error || !response.data) {
+                    this.notificationService.error("Fehler:", "Die Kalenderdaten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.");
 
-                return;
-            }
+                    this.events.set([
+                        {
+                            startDate: new Date().toISOString(),
+                            endDate: new Date().toISOString(),
+                            title: "Fehler beim Laden der Kalenderdaten",
+                            id: -1,
+                        },
+                    ]);
 
-            this.events.set(response.data);
+                    return;
+                }
+
+                this.events.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while loading calendar events:", error);
+                this.notificationService.error("Fehler", "Die Kalenderdaten konnten nicht geladen werden. Bitte versuche es erneut.");
+
+                this.events.set([
+                    {
+                        startDate: new Date().toISOString(),
+                        endDate: new Date().toISOString(),
+                        title: "Fehler beim Laden der Kalenderdaten",
+                        id: -1,
+                    },
+                ]);
+            },
         });
     }
 }

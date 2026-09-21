@@ -31,23 +31,31 @@ export class AddAdditionalUserInformationComponent implements OnInit {
     private notificationService = inject(NotificationService);
 
     ngOnInit(): void {
-        this.accountService.getExpandedUserInformation().subscribe((response: GetExpandedUserInformationApiEndpointResponse) => {
-            if (response.error || !response.data) {
-                this.notificationService.error("Fehler", response.message);
-                return;
-            }
+        const request = this.accountService.getExpandedUserInformation();
 
-            this.expandedUser.set({
-                motive: response.data.motive || "",
-                profession: response.data.profession || "",
-                role: response.data.role || "",
-                secondaryPicture: response.data.secondaryPicture || "",
-            });
+        request.subscribe({
+            next: (response: GetExpandedUserInformationApiEndpointResponse) => {
+                if (response.error || !response.data) {
+                    this.notificationService.error("Fehler", response.message);
+                    return;
+                }
 
-            this.editProfileForm.patchValue({
-                professionControl: this.expandedUser().profession,
-                motiveControl: this.expandedUser().motive,
-            });
+                this.expandedUser.set({
+                    motive: response.data.motive || "",
+                    profession: response.data.profession || "",
+                    role: response.data.role || "",
+                    secondaryPicture: response.data.secondaryPicture || "",
+                });
+
+                this.editProfileForm.patchValue({
+                    professionControl: this.expandedUser().profession,
+                    motiveControl: this.expandedUser().motive,
+                });
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching expanded user information:", error);
+                this.notificationService.error("Fehler", "Die erweiterten Benutzerdaten konnten nicht geladen werden. Bitte versuche es erneut.");
+            },
         });
     }
 

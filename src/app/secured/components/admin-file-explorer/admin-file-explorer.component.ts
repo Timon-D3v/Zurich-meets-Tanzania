@@ -4,6 +4,7 @@ import { LoadingComponent } from "../../../components/loading/loading.component"
 import { FilePreviewComponent } from "../../../components/file-preview/file-preview.component";
 import { DelivApiFile, GetAllFileInformationApiEndpointResponse } from "../../../..";
 import { isPlatformBrowser } from "@angular/common";
+import { NotificationService } from "../../../services/notification.service";
 
 @Component({
     selector: "app-admin-file-explorer",
@@ -15,6 +16,7 @@ export class AdminFileExplorerComponent implements OnInit {
     files = signal<DelivApiFile[]>([]);
 
     private fileService = inject(FileService);
+    private notificationService = inject(NotificationService);
 
     private platformId = inject(PLATFORM_ID);
 
@@ -30,13 +32,21 @@ export class AdminFileExplorerComponent implements OnInit {
     getAllFiles(): void {
         const request = this.fileService.getAllFiles();
 
-        request.subscribe((response: GetAllFileInformationApiEndpointResponse) => {
-            if (response.error || !response.data) {
-                console.error("Die Datei Informationen konnten nicht abgerufen werden. Weitere Informationen: " + response.message);
-                return;
-            }
+        request.subscribe({
+            next: (response: GetAllFileInformationApiEndpointResponse) => {
+                if (response.error || !response.data) {
+                    console.error("Die Datei Informationen konnten nicht abgerufen werden. Weitere Informationen: " + response.message);
+                    this.notificationService.error("Fehler", "Die Datei Informationen konnten nicht abgerufen werden. Bitte versuche es erneut.");
 
-            this.files.set(response.data);
+                    return;
+                }
+
+                this.files.set(response.data);
+            },
+            error: (error: unknown) => {
+                console.error("Error while fetching files:", error);
+                this.notificationService.error("Fehler", "Die Datei Informationen konnten nicht abgerufen werden. Bitte versuche es erneut.");
+            },
         });
     }
 }

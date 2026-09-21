@@ -85,13 +85,20 @@ export class AuthService {
 
         const request = this.http.get<GetPublicUserDetailsApiEndpointResponse>("/api/auth/getUserDetails");
 
-        request.subscribe((response: GetPublicUserDetailsApiEndpointResponse): void => {
-            if (response.error || response.data === null) {
-                return this.getCurrentUserDetails(currentTry + 1);
-            }
+        request.subscribe({
+            next: (response: GetPublicUserDetailsApiEndpointResponse): void => {
+                if (response.error || response.data === null) {
+                    return this.getCurrentUserDetails(currentTry + 1);
+                }
 
-            this.user.set(response.data.user);
-            this.isLoggedIn.set(response.data.isLoggedIn);
+                this.user.set(response.data.user);
+                this.isLoggedIn.set(response.data.isLoggedIn);
+            },
+            error: (error: unknown) => {
+                console.error(`Error while fetching user details (Try ${currentTry + 1}):`, error);
+
+                return this.getCurrentUserDetails(currentTry + 1);
+            },
         });
     }
 
@@ -102,17 +109,23 @@ export class AuthService {
 
         const request = this.http.post<ApiEndpointResponse>("/api/auth/logout", null);
 
-        request.subscribe((response: ApiEndpointResponse): void => {
-            if (response.error) {
-                this.notificationService.error("Unerwarteter Fehler:", response.message);
-            }
+        request.subscribe({
+            next: (response: ApiEndpointResponse): void => {
+                if (response.error) {
+                    this.notificationService.error("Unerwarteter Fehler:", response.message);
+                }
 
-            this.user.set(null);
-            this.isLoggedIn.set(false);
+                this.user.set(null);
+                this.isLoggedIn.set(false);
 
-            this.notificationService.info("Ausgeloggt!", response.message);
+                this.notificationService.info("Ausgeloggt!", response.message);
 
-            this.router.navigate(["/"]);
+                this.router.navigate(["/"]);
+            },
+            error: (error: unknown) => {
+                this.notificationService.error("Unerwarteter Fehler:", "Beim Ausloggen ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut.");
+                console.error("Error while logging out:", error);
+            },
         });
     }
 
