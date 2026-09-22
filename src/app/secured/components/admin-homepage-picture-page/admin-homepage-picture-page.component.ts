@@ -1,10 +1,9 @@
-import { Component, inject, OnInit, PLATFORM_ID, signal } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 import { AdminManagementService } from "../../../services/admin-management.service";
 import { NotificationService } from "../../../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
 import { ApiEndpointResponse } from "../../../..";
-import { PublicEnvService } from "../../../services/public-env.service";
 
 @Component({
     selector: "app-admin-homepage-picture-page",
@@ -12,7 +11,7 @@ import { PublicEnvService } from "../../../services/public-env.service";
     templateUrl: "./admin-homepage-picture-page.component.html",
     styleUrl: "./admin-homepage-picture-page.component.scss",
 })
-export class AdminHomepagePicturePageComponent implements OnInit {
+export class AdminHomepagePicturePageComponent {
     private defaultImagePreview = "/redirects/heroImage";
     imagePreview = signal<string>(this.defaultImagePreview);
 
@@ -23,17 +22,8 @@ export class AdminHomepagePicturePageComponent implements OnInit {
 
     private adminManagementService = inject(AdminManagementService);
     private notificationService = inject(NotificationService);
-    private publicEnvService = inject(PublicEnvService);
 
     private platformId = inject(PLATFORM_ID);
-
-    async ngOnInit(): Promise<void> {
-        const env = await this.publicEnvService.getEnv();
-
-        if (env === "dev") {
-            this.imagePreview.set("https://api.timondev.com/cdn/dev/7a121");
-        }
-    }
 
     onSubmit(event: Event): void {
         event.preventDefault();

@@ -436,6 +436,10 @@ export interface GetAllUserEmailsApiEndpointResponse extends ApiEndpointResponse
     data: { email: string }[];
 }
 
+export interface GetLegacyMembersApiEndpointResponse extends ApiEndpointResponse {
+    data: LegacyMember[];
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -449,6 +453,15 @@ export interface PublicUser {
 export interface PrivateUser extends PublicUser {
     id: number;
     password: string; // Hashed
+}
+
+export interface LegacyMember extends PrivateUser {
+    legacyMemberId: number;
+    userId: number;
+    status: "unverified" | "verified" | "rejected";
+    periodStartTime: number;
+    periodEndTime: number;
+    subscriptionStartTime: number;
 }
 
 export type NewsletterUser = {

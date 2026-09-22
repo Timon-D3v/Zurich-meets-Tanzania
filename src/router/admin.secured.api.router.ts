@@ -7,6 +7,7 @@ import adminCalendarRouter from "./calendar.admin.secured.api.router";
 import adminSubpagesRouter from "./subpages.admin.secured.api.router";
 import adminAnalyticsRouter from "./analytics.admin.secured.api.router";
 import adminManagementRouter from "./management.admin.secured.api.router";
+import adminMembershipRouter from "./membership.admin.secured.api.router";
 
 // Router Serves under /api/secured/admin
 // To access apis under this router, authentication with admin privilege is required
@@ -19,5 +20,6 @@ router.use("/calendar", adminCalendarRouter);
 router.use("/subpages", adminSubpagesRouter);
 router.use("/analytics", adminAnalyticsRouter);
 router.use("/management", adminManagementRouter);
+router.use("/membership", adminMembershipRouter);
 
 export default router;

@@ -109,15 +109,194 @@ export async function updateMember(memberId: number, userId: number, subscriptio
     }
 }
 
-export async function createLegacyMember(userId: number, currentPeriodStart: number, currentPeriodEnd: number, startDate: number): Promise<DatabaseResult> {
+export async function createLegacyMember(userId: number, currentPeriodStart: number, currentPeriodEnd: number, startDate: number, status: "unverified" | "verified" | "rejected" = "unverified"): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`legacyMembers\` (\`userId\`, \`status\`, \`periodStartTime\`, \`periodEndTime\`, \`subscriptionStartTime\`) VALUES (?, ?, ?, ?, ?);`, [
             userId,
-            "unverified",
+            status,
             currentPeriodStart,
             currentPeriodEnd,
             startDate,
         ]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function getAllLegacyMembers(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * FROM \`zmt\`.\`legacyMembers\` JOIN \`zmt\`.\`users\` ON \`legacyMembers\`.\`userId\` = \`users\`.\`id\`;`);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function getAllUnverifiedLegacyMembers(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * FROM \`zmt\`.\`legacyMembers\` JOIN \`zmt\`.\`users\` ON \`legacyMembers\`.\`userId\` = \`users\`.\`id\` WHERE \`status\` = 'unverified';`);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function acceptLegacyMember(userId: number, memberId: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`legacyMembers\` SET \`status\` = 'verified' WHERE \`userId\` = ? AND \`legacyMemberId\` = ?;`, [userId, memberId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function rejectLegacyMember(userId: number, memberId: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`legacyMembers\` SET \`status\` = 'rejected' WHERE \`userId\` = ? AND \`legacyMemberId\` = ?;`, [userId, memberId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function setUserTypeToMemberForAllVerifiedLegacyMembers(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(
+            `UPDATE \`zmt\`.\`users\` JOIN \`zmt\`.\`legacyMembers\` ON \`users\`.\`id\` = \`legacyMembers\`.\`userId\` SET \`users\`.\`type\` = 'member' WHERE \`legacyMembers\`.\`status\` = 'verified' AND \`users\`.\`type\` != 'admin';`,
+        );
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function resetUserTypeForAllUnverifiedOrRejectedLegacyMembers(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(
+            `UPDATE \`zmt\`.\`users\` JOIN \`zmt\`.\`legacyMembers\` ON \`users\`.\`id\` = \`legacyMembers\`.\`userId\` SET \`users\`.\`type\` = 'user' WHERE (\`legacyMembers\`.\`status\` = 'unverified' OR \`legacyMembers\`.\`status\` = 'rejected') AND \`users\`.\`type\` != 'admin';`,
+        );
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function resetLegacyMemberStatusForExpiredLegacyMember(userId: number, legacyMemberId: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`legacyMembers\` SET \`status\` = 'unverified' WHERE \`userId\` = ? AND \`legacyMemberId\` = ?;`, [userId, legacyMemberId]);
 
         return {
             data: result,

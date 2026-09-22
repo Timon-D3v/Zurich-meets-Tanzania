@@ -1,0 +1,83 @@
+.wrapper {
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    box-sizing: border-box;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 1rem;
+}
+
+.content {
+    width: 100%;
+
+    & h2 {
+        text-align: center;
+    }
+
+    @media screen and (min-width: 850px) {
+        max-width: calc(100% - 100px - 1rem); // 100px is the min-width of the action buttons, 1rem is the gap between content and action
+
+        & h2 {
+            text-align: left;
+        }
+    }
+}
+
+.action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    min-width: 100px;
+
+    @media screen and (min-width: 850px) {
+        flex-direction: column;
+    }
+}
+
+.save,
+.discard,
+.delete {
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.1ch;
+    line-height: 1.5;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    display: grid;
+    place-items: center;
+
+    & img {
+        filter: invert(1);
+        width: 20px;
+        height: 20px;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        object-position: center;
+    }
+}
+
+.save {
+    background-color: var(--green);
+    color: var(--c-text-950);
+}
+
+.discard {
+    background-color: var(--background-500);
+    color: var(--c-text-950);
+}
+
+.delete {
+    background-color: var(--error);
+    color: var(--c-text-50);
+}

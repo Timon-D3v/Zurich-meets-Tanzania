@@ -11,6 +11,7 @@ import { PUBLIC_CONFIG } from "./publicConfig";
 import { isAdmin, isLoggedIn } from "./middleware/auth.middleware";
 import { readFileSync } from "node:fs";
 import https from "node:https";
+import "./shared/jobs";
 
 const browserDistFolder = join(import.meta.dirname, "../browser");
 

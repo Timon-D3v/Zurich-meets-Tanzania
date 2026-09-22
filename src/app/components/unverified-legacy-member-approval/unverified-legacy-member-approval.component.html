@@ -1,0 +1,20 @@
+<div class="wrapper">
+    <div class="content">
+        <h2>{{ member().firstName }} {{ member().lastName }} ({{ formatTimestamp(member().periodStartTime) }})</h2>
+        <p>
+            Der Benutzer mit der E-Mail {{ member().email }} möchte Mitglied werden via Banküberweisung. Bitte überprüfe ob eine Zahlung eingegangen ist und genehmige dann den Antrag. (Mitglied seit:
+            {{ formatTimestamp(member().subscriptionStartTime) }})
+        </p>
+    </div>
+    <div class="action">
+        <button type="button" class="save" (click)="acceptMember()" title="Anfrage annehmen">
+            <img src="/svg/checkmark.svg" alt="Anfrage annehmen" />
+        </button>
+        <!-- <button type="button" class="discard" (click)="rejectMember()" title="Änderungen verwerfen">
+                                        <img src="/svg/close.svg" alt="Änderungen verwerfen" />
+                                    </button> -->
+        <button type="button" class="delete" (click)="rejectMember()" title="Anfrage ablehnen">
+            <img src="/svg/close.svg" alt="Anfrage ablehnen" />
+        </button>
+    </div>
+</div>
