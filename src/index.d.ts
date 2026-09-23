@@ -436,6 +436,10 @@ export interface GetAllUserEmailsApiEndpointResponse extends ApiEndpointResponse
     data: { email: string }[];
 }
 
+export interface GetMembersApiEndpointResponse extends ApiEndpointResponse {
+    data: Member[];
+}
+
 export interface GetLegacyMembersApiEndpointResponse extends ApiEndpointResponse {
     data: LegacyMember[];
 }
@@ -453,6 +457,17 @@ export interface PublicUser {
 export interface PrivateUser extends PublicUser {
     id: number;
     password: string; // Hashed
+}
+
+export interface Member extends PrivateUser {
+    memberId: number;
+    userId: number;
+    subscriptionId: string;
+    customerId: string;
+    status: "incomplete" | "incomplete_expired" | "trialing" | "active" | "past_due" | "canceled" | "unpaid" | "paused";
+    periodStartTime: number;
+    periodEndTime: number;
+    subscriptionStartTime: number;
 }
 
 export interface LegacyMember extends PrivateUser {

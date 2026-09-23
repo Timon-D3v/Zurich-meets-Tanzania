@@ -1,11 +1,23 @@
 import { Service, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CreateCheckoutSessionApiEndpointResponse, ApiEndpointResponse, GetLegacyMembersApiEndpointResponse, GetAllUserEmailsApiEndpointResponse } from "../..";
+import { CreateCheckoutSessionApiEndpointResponse, ApiEndpointResponse, GetMembersApiEndpointResponse, GetLegacyMembersApiEndpointResponse, GetAllUserEmailsApiEndpointResponse } from "../..";
 import { Observable } from "rxjs";
 
 @Service()
 export class MembershipService {
     private http = inject(HttpClient);
+
+    getAllMembers(): Observable<GetMembersApiEndpointResponse> {
+        const request = this.http.get<GetMembersApiEndpointResponse>("/api/secured/admin/membership/getAllMembers");
+
+        return request;
+    }
+
+    getAllLegacyMembers(): Observable<GetLegacyMembersApiEndpointResponse> {
+        const request = this.http.get<GetLegacyMembersApiEndpointResponse>("/api/secured/admin/membership/getAllLegacyMembers");
+
+        return request;
+    }
 
     createCheckoutSession(): Observable<CreateCheckoutSessionApiEndpointResponse> {
         const request = this.http.get<CreateCheckoutSessionApiEndpointResponse>("/api/secured/payments/createCheckoutSession");

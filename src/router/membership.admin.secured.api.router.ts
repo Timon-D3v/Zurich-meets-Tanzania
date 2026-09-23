@@ -1,11 +1,79 @@
 import { Request, Response, Router } from "express";
-import { ApiEndpointResponse, GetLegacyMembersApiEndpointResponse, PrivateUser } from "..";
-import { acceptLegacyMember, createLegacyMember, getAllLegacyUserEmails, getAllUnverifiedLegacyMembers, rejectLegacyMember, removeLegacyMemberWithId } from "../shared/member.database";
+import { ApiEndpointResponse, GetLegacyMembersApiEndpointResponse, PrivateUser, GetMembersApiEndpointResponse } from "..";
+import { acceptLegacyMember, createLegacyMember, getAllMembers, getAllLegacyMembers, getAllLegacyUserEmails, getAllUnverifiedLegacyMembers, rejectLegacyMember, removeLegacyMemberWithId } from "../shared/member.database";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { getUserWithEmail, setUserType } from "../shared/user.database";
 
 // Router Serves under /api/secured/admin/membership
 const router = Router();
+
+router.get("/getAllMembers", async (req: Request, res: Response) => {
+    try {
+        const result = await getAllMembers();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Die Mitglieder wurden erfolgreich abgerufen.",
+            data: result.data,
+        } as GetMembersApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetMembersApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetMembersApiEndpointResponse);
+    }
+});
+
+router.get("/getAllLegacyMembers", async (req: Request, res: Response) => {
+    try {
+        const result = await getAllLegacyMembers();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Die Legacy-Mitglieder wurden erfolgreich abgerufen.",
+            data: result.data,
+        } as GetLegacyMembersApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetLegacyMembersApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetLegacyMembersApiEndpointResponse);
+    }
+});
 
 router.get("/getUnverifiedLegacyMembers", async (req: Request, res: Response) => {
     try {
