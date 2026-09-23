@@ -28,6 +28,31 @@ export async function getMemberWithUserId(userId: number): Promise<DatabaseResul
     }
 }
 
+export async function getLegacyMemberWithUserId(userId: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * from \`zmt\`.\`legacyMembers\` WHERE \`userId\` = ?;`, [userId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
 export async function setUserTypeToMember(userId: number): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`users\` SET \`type\` = 'member' WHERE \`id\` = ? AND \`type\` != 'admin';`, [userId]);

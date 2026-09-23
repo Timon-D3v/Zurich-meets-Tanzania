@@ -1,5 +1,5 @@
-import { Component, input, OnInit, signal, inject } from "@angular/core";
-import { PublicUser, Invoice, GetInvoicesApiEndpointResponse } from "../../../";
+import { Component, input, OnInit, signal, inject, effect } from "@angular/core";
+import { PublicUser, Invoice, GetInvoicesApiEndpointResponse, ApiEndpointResponse } from "../../../";
 import { RouterLink } from "@angular/router";
 import { LoadingComponent } from "../loading/loading.component";
 import { AccountService } from "../../services/account.service";
@@ -13,14 +13,22 @@ import { NotificationService } from "../../services/notification.service";
 })
 export class ViewAccountMembershipDetailsComponent implements OnInit {
     user = input.required<PublicUser>();
+    isLegacyMember = signal<"true" | "false" | "pending">("pending");
 
     invoices = signal<Invoice[]>([]);
 
     private accountService = inject(AccountService);
     private notificationService = inject(NotificationService);
 
+    private _loadInvoicesIfNeeded = effect((): void => {
+        if (this.isLegacyMember() === "false") {
+            console.log("Fetching invoices because user is not a legacy member.");
+            this.getInvoices();
+        }
+    });
+
     ngOnInit(): void {
-        this.getInvoices();
+        this.isLegacyMemberCheck();
     }
 
     getInvoices(): void {
@@ -39,6 +47,26 @@ export class ViewAccountMembershipDetailsComponent implements OnInit {
             error: (error: unknown) => {
                 console.error("Error while fetching invoices:", error);
                 this.notificationService.error("Fehler beim Laden:", "Deine Rechnungen konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
+        });
+    }
+
+    isLegacyMemberCheck(): void {
+        const request = this.accountService.isLegacyMemberCheck();
+
+        request.subscribe({
+            next: (response: ApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler beim Laden:", "Dein Mitgliedschaftsstatus konnte nicht geladen werden. Bitte versuche es später erneut.");
+
+                    return;
+                }
+
+                this.isLegacyMember.set(response.message === "true" ? "true" : "false");
+            },
+            error: (error: unknown) => {
+                console.error("Error while checking legacy member status:", error);
+                this.notificationService.error("Fehler beim Laden:", "Dein Mitgliedschaftsstatus konnte nicht geladen werden. Bitte versuche es später erneut.");
             },
         });
     }

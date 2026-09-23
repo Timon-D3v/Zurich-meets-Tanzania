@@ -6,6 +6,10 @@
             <br />
             <a [routerLink]="'/membership'" class="no-membership">Jetzt Mitglied werden</a>
         </p>
+    } @else if (user().type === "member" && isLegacyMember() === "true") {
+        <p class="no-membership">
+            <span class="no-membership">Wir können dir keine Rechnungen anzeigen, da du deinen Mitgliederbeitrag selbstständig per Banküberweisung leistest.</span>
+        </p>
     } @else {
         @defer (when invoices().length > 0; prefetch on immediate) {
             <div class="table-wrapper">

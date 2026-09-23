@@ -75,4 +75,10 @@ export class AccountService {
 
         return request;
     }
+
+    isLegacyMemberCheck(): Observable<ApiEndpointResponse> {
+        const request = this.http.get<ApiEndpointResponse>("/api/secured/account/isLegacyMemberCheck");
+
+        return request;
+    }
 }

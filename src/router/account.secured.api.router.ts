@@ -17,7 +17,7 @@ import bcrypt from "bcryptjs";
 import { sendPasswordChangeConfirmation } from "../shared/auth.email";
 import { getAllNewsletterEmails, updateNewsletterList, addToNewsletterList, removeFromNewsletterList, getNewsletterDetailsWithEmail } from "../shared/newsletter.database";
 import { stripeClient } from "../shared/stripe";
-import { getMemberWithUserId } from "../shared/member.database";
+import { getLegacyMemberWithUserId, getMemberWithUserId } from "../shared/member.database";
 import { getTeamMemberEntry, updateTeamMemberMotive, updateTeamMemberProfession, updateTeamMemberRole, updateTeamMemberSecondaryPicture } from "../shared/team.database";
 import { getBoardMemberEntry, updateBoardRole } from "../shared/board.database";
 
@@ -398,6 +398,39 @@ router.post("/newsletterSignOut", async (req: Request, res: Response): Promise<v
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: null,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.get("/isLegacyMemberCheck", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.session.user!;
+
+        const memberResult = await getLegacyMemberWithUserId(user.id);
+
+        if (memberResult.error !== null) {
+            throw new Error(memberResult.error);
+        }
+
+        res.json({
+            error: false,
+            message: memberResult.data.length === 0 ? "false" : "true",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
         } as ApiEndpointResponse);
     }
 });

@@ -9,9 +9,9 @@ import { resetLegacyMemberStatusIfPeriodHasEnded } from "./member.jobs";
 
 const MAX_RETRIES = 5;
 
-async function databaseJobsWrapper(jobFunction: Function, retries: number = 0) {
+async function databaseJobsWrapper(jobFunction: Function, name: string, retries: number = 0) {
     if (retries > MAX_RETRIES) {
-        const errorMessage = `${jobFunction.name} failed after ${MAX_RETRIES} retries. Sending email to admins...`;
+        const errorMessage = `${name} failed after ${MAX_RETRIES} retries. Sending email to admins...`;
 
         console.error(errorMessage);
 
@@ -27,18 +27,18 @@ async function databaseJobsWrapper(jobFunction: Function, retries: number = 0) {
         return;
     }
 
-    console.info(`Running job: ${jobFunction.name} (Attempt ${retries + 1}/${MAX_RETRIES})`);
+    console.info(`Running job: ${name} (Attempt ${retries + 1}/${MAX_RETRIES})`);
 
     const result = await jobFunction();
 
     if (result.error) {
-        console.error(`${jobFunction.name} failed with error: ${result.error}. Retrying... (${retries + 1}/${MAX_RETRIES})`);
+        console.error(`${name} failed with error: ${result.error}. Retrying... (${retries + 1}/${MAX_RETRIES})`);
 
-        await databaseJobsWrapper(jobFunction, retries + 1);
+        await databaseJobsWrapper(jobFunction, name, retries + 1);
 
         return;
     } else {
-        console.info(`${jobFunction.name} completed successfully.`);
+        console.info(`${name} completed successfully.`);
         return;
     }
 }
@@ -48,9 +48,9 @@ async function runAllJobs() {
 
     await resetLegacyMemberStatusIfPeriodHasEnded(MAX_RETRIES);
 
-    await databaseJobsWrapper(setUserTypeToMemberForAllVerifiedLegacyMembers);
+    await databaseJobsWrapper(setUserTypeToMemberForAllVerifiedLegacyMembers, "setUserTypeToMemberForAllVerifiedLegacyMembers");
 
-    await databaseJobsWrapper(resetUserTypeForAllUnverifiedOrRejectedLegacyMembers);
+    await databaseJobsWrapper(resetUserTypeForAllUnverifiedOrRejectedLegacyMembers, "resetUserTypeForAllUnverifiedOrRejectedLegacyMembers");
 
     console.info("All jobs completed.");
 }
