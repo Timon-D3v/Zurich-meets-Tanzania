@@ -21,13 +21,6 @@ export class MembersAddManualMemberComponent implements OnInit {
     private notificationService = inject(NotificationService);
     private adminManagementService = inject(AdminManagementService);
 
-    // TODO
-
-    // Fetch all unverified member
-    // List them in a table
-
-    // Add a form to add a new member manually
-
     ngOnInit(): void {
         this.getUnverifiedMembers();
         this.getAllUserEmails();

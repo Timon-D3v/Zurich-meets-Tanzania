@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import { ApiEndpointResponse, GetLegacyMembersApiEndpointResponse, PrivateUser } from "..";
-import { acceptLegacyMember, createLegacyMember, getAllUnverifiedLegacyMembers, rejectLegacyMember } from "../shared/member.database";
+import { acceptLegacyMember, createLegacyMember, getAllLegacyUserEmails, getAllUnverifiedLegacyMembers, rejectLegacyMember, removeLegacyMemberWithId } from "../shared/member.database";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { getUserWithEmail } from "../shared/user.database";
+import { getUserWithEmail, setUserType } from "../shared/user.database";
 
 // Router Serves under /api/secured/admin/membership
 const router = Router();
@@ -181,6 +181,91 @@ router.post("/createLegacyMembership", async (req: Request, res: Response): Prom
             error: true,
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
         } as ApiEndpointResponse);
+    }
+});
+
+router.post("/removeLegacyMember", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const email = req.body?.email;
+
+        if (!email || typeof email !== "string" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
+            throw new Error("Missing or invalid parameter: email is required and must be a valid email address.");
+        }
+
+        const userResult = await getUserWithEmail(email);
+
+        if (userResult.error || userResult.data === null || userResult.data.length === 0) {
+            throw new Error("Der Benutzer mit dieser E-Mail-Adresse existiert nicht.");
+        }
+
+        const user = userResult.data[0] as PrivateUser;
+
+        const deleteResult = await removeLegacyMemberWithId(user.id);
+
+        if (deleteResult.error) {
+            throw new Error(deleteResult.error);
+        }
+
+        const result = await setUserType(email, "user");
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+        } as ApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+            } as ApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+        } as ApiEndpointResponse);
+    }
+});
+
+router.get("/getAllLegacyMemberEmails", async (req: Request, res: Response) => {
+    try {
+        const result = await getAllLegacyUserEmails();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Die Legacy-Mitglieder-E-Mails wurden erfolgreich abgerufen.",
+            data: result.data,
+        } as GetLegacyMembersApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetLegacyMembersApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetLegacyMembersApiEndpointResponse);
     }
 });
 

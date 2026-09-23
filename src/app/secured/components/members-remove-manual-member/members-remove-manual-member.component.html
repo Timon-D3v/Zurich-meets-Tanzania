@@ -1,1 +1,18 @@
-<p>members-remove-manual-member works!</p>
+<div class="wrapper">
+    <h2>Mitglied manuell entfernen</h2>
+    <p>Gib eine E-Mail-Adresse ein, um ein neues Mitglied manuell zu entfernen. Es werden alle manuellen Mitglieder E-Mail-Adressen angezeigt.</p>
+    <button type="button" (click)="openSelection()">Mitglied entfernen</button>
+</div>
+
+@if (selectionOpen()) {
+    <app-popup-selection-input
+        title="Mitglied entfernen"
+        description="Gib eine E-Mail-Adresse ein, um ein neues Mitglied manuell zu entfernen. Es werden alle manuellen Mitglieder E-Mail-Adressen angezeigt."
+        label="E-Mail"
+        placeholder="E-Mail-Adresse eingeben"
+        submitButtonText="Entfernen"
+        [selectionOptions]="legacyMemberEmailList()"
+        (closeOutput)="closeSelection()"
+        (resultOutput)="removeLegacyMember($event)"
+    ></app-popup-selection-input>
+}

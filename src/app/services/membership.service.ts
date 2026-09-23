@@ -1,6 +1,6 @@
 import { Service, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CreateCheckoutSessionApiEndpointResponse, ApiEndpointResponse, GetLegacyMembersApiEndpointResponse } from "../..";
+import { CreateCheckoutSessionApiEndpointResponse, ApiEndpointResponse, GetLegacyMembersApiEndpointResponse, GetAllUserEmailsApiEndpointResponse } from "../..";
 import { Observable } from "rxjs";
 
 @Service()
@@ -39,6 +39,18 @@ export class MembershipService {
 
     createLegacyMember(email: string): Observable<ApiEndpointResponse> {
         const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/membership/createLegacyMembership", { email });
+
+        return request;
+    }
+
+    getAllLegacyMemberEmails(): Observable<GetAllUserEmailsApiEndpointResponse> {
+        const request = this.http.get<GetAllUserEmailsApiEndpointResponse>("/api/secured/admin/membership/getAllLegacyMemberEmails");
+
+        return request;
+    }
+
+    removeLegacyMember(email: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/membership/removeLegacyMember", { email });
 
         return request;
     }

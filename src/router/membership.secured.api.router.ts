@@ -17,6 +17,10 @@ router.get("/submitLegacyMembershipForm", async (req: Request, res: Response): P
         // Store the request in the database
         const result = await createLegacyMember(user.id, now, periodEnd, now);
 
+        if (result.error?.startsWith("Duplicate entry")) {
+            throw new Error("Sie haben bereits eine Mitgliedschaft beantragt. Bitte warten Sie auf die Genehmigung durch einen Administrator.");
+        }
+
         if (result.error) {
             throw new Error(result.error);
         }

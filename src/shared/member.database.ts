@@ -53,6 +53,33 @@ export async function getLegacyMemberWithUserId(userId: number): Promise<Databas
     }
 }
 
+export async function getAllLegacyUserEmails(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(
+            `SELECT \`email\` from \`zmt\`.\`users\` JOIN \`zmt\`.\`legacyMembers\` ON \`users\`.\`id\` = \`legacyMembers\`.\`userId\` WHERE \`legacyMembers\`.\`status\` = 'verified';`,
+        );
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
 export async function setUserTypeToMember(userId: number): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`users\` SET \`type\` = 'member' WHERE \`id\` = ? AND \`type\` != 'admin';`, [userId]);
@@ -322,6 +349,31 @@ export async function resetUserTypeForAllUnverifiedOrRejectedLegacyMembers(): Pr
 export async function resetLegacyMemberStatusForExpiredLegacyMember(userId: number, legacyMemberId: number): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`legacyMembers\` SET \`status\` = 'unverified' WHERE \`userId\` = ? AND \`legacyMemberId\` = ?;`, [userId, legacyMemberId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function removeLegacyMemberWithId(userId: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`DELETE FROM \`zmt\`.\`legacyMembers\` WHERE \`userId\` = ?`, [userId]);
 
         return {
             data: result,
