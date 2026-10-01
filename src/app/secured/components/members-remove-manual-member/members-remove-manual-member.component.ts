@@ -2,7 +2,6 @@ import { Component, OnInit, signal, inject } from "@angular/core";
 import { MembershipService } from "../../../services/membership.service";
 import { NotificationService } from "../../../services/notification.service";
 import { PopupSelectionInputComponent } from "../../../components/popup-selection-input/popup-selection-input.component";
-import { AdminManagementService } from "../../../services/admin-management.service";
 
 @Component({
     selector: "app-members-remove-manual-member",

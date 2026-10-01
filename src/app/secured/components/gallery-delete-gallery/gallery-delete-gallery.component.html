@@ -1,1 +1,18 @@
-<p>gallery-delete-gallery works!</p>
+<div class="wrapper">
+    <h2>Galerie entfernen</h2>
+    <p>Gib einen Galerie-Titel ein, um eine Galerie zu entfernen. Es werden alle manuellen Galerien angezeigt.</p>
+    <button type="button" (click)="openSelection()">Galerie entfernen</button>
+</div>
+
+@if (selectionOpen()) {
+    <app-popup-selection-input
+        title="Galerie entfernen"
+        description="Gib einen Galerie-Titel ein, um eine Galerie zu entfernen. Es werden alle Galerie-Titel angezeigt."
+        label="Galerie"
+        placeholder="Galerie-Titel eingeben"
+        submitButtonText="Entfernen"
+        [selectionOptions]="galleryTitleList()"
+        (closeOutput)="closeSelection()"
+        (resultOutput)="removeGallery($event)"
+    ></app-popup-selection-input>
+}

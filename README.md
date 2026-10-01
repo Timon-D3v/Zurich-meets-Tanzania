@@ -54,7 +54,7 @@ The website provides, among other things:
 * **Styling:** SCSS
 * **Database:** MySQL
 * **Auth / Sessions:** express-session, bcryptjs
-* **Email:** node-mailjet (nodemailer in the future)
+* **Email:** nodemailer
 * **Payments:** Stripe
 * **Uploads / Data Processing:** multer, xlsx
 * **Utilities:** dotenv, cors, compression, rxjs
@@ -198,8 +198,11 @@ The file `src/config.ts` shows which values are required at runtime. These inclu
 * `MYSQL_USER`
 * `MYSQL_PW`
 * `MYSQL_DB`
-* `MAILJET_PUBLIC_KEY`
-* `MAILJET_PRIVATE_KEY`
+* `SMTP_HOST`
+* `SMTP_PORT`
+* `SMTP_USER`
+* `SMTP_PASSWORD`
+* `SMTP_SECURE`
 * `ORIGIN`
 * `EMAIL_SENDER_ADDRESS`
 * `EMAIL_SENDER_NAME`
@@ -262,7 +265,7 @@ There are also redirects for legacy or alternative URL variants, such as `/zmt`,
 The application integrates with or references several external services:
 
 * **Stripe** for payments and webhooks
-* **Mailjet** for email delivery
+* **Nodemailer** for SMTP email delivery
 * **Delivapi** as a separate service in the development setup
 * **Tianji** for analytics/tracking
 * **Unikat** as a shop redirect

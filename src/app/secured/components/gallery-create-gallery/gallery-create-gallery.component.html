@@ -1,1 +1,9 @@
-<p>gallery-create-gallery works!</p>
+<form [formGroup]="addGalleryForm" (submit)="onSubmit($event)">
+    <h2>Galerie hinzufügen</h2>
+    <p>Bitte gib den Titel der neuen Galerie ein.</p>
+    <label for="title">Titel</label>
+    <input type="text" id="title" placeholder="Titel der Galerie eingeben" required formControlName="titleControl" />
+    <label for="subtitle">Untertitel</label>
+    <input type="text" id="subtitle" placeholder="Untertitel der Galerie eingeben" required formControlName="subtitleControl" />
+    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
+</form>
