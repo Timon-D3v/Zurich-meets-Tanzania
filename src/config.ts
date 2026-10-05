@@ -7,6 +7,7 @@ export const CONFIG: Config = {
     ENV: process.env["ENV"] as "dev" | "prod",
     HOST: process.env["HOST"] as string,
     PORT: Number(process.env["PORT"]),
+    MODE: process.env["MODE"] as "main" | "backup",
 
     ALLOWED_HOSTS: (process.env["ALLOWED_HOSTS"] as string).split(","),
 

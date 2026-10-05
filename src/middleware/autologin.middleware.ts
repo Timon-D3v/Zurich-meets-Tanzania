@@ -14,7 +14,7 @@ export function autoLogin(req: Request, res: Response, next: NextFunction): void
             phone: "Keine Nummer",
             address: "Test 1, DM-0000 Lego City",
             type: "admin",
-            picture: "http://localhost:8082/cdn/dev/7a122",
+            picture: "/svg/personal.svg",
         };
 
         req.session.resetMaxAge();

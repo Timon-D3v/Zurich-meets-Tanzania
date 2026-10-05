@@ -2,6 +2,7 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 import { sendCriticalJobFailureNotification } from "./jobs.email";
 import { getAllLegacyMembers, resetLegacyMemberStatusForExpiredLegacyMember } from "./member.database";
 import { sendLegacyMemberExpireNotice, sendLegacyMemberRequestEmail } from "./member.email";
+import { sleep } from "./utils";
 
 export async function resetLegacyMemberStatusIfPeriodHasEnded(maxRetries: number = 5, retries: number = 0): Promise<void> {
     const name = "resetLegacyMemberStatusIfPeriodHasEnded";
@@ -28,7 +29,9 @@ export async function resetLegacyMemberStatusIfPeriodHasEnded(maxRetries: number
     const result = await getAllLegacyMembers();
 
     if (result.error || result.data === null) {
-        console.error(`${name} failed with error: ${result.error}. Retrying... (${retries + 1}/${maxRetries})`);
+        console.error(`${name} failed with error: ${result.error}. Retrying in 10 seconds... (${retries + 1}/${maxRetries})`);
+
+        await sleep(10000); // Wait for 10 seconds before retrying
 
         return await resetLegacyMemberStatusIfPeriodHasEnded(maxRetries, retries + 1);
     }

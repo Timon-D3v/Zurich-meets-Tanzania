@@ -44,6 +44,10 @@
             max-width: 100%;
             border-radius: 50%;
             object-fit: cover;
+
+            &[src="/svg/personal.svg"] {
+                border-radius: 0;
+            }
         }
 
         & h3 {

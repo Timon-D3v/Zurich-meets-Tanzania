@@ -178,6 +178,8 @@ npm run format
 
 npm run stripe
 
+npm run backup
+
 npm run stop
 ```
 
@@ -188,6 +190,7 @@ The file `src/config.ts` shows which values are required at runtime. These inclu
 * `ENV`
 * `HOST`
 * `PORT`
+* `MODE`
 * `ALLOWED_HOSTS`
 * `HTTPS_ACTIVE`
 * `HTTPS_PORT`

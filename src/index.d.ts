@@ -11,6 +11,7 @@ export type Config = {
     ENV: "dev" | "prod";
     HOST: string;
     PORT: number;
+    MODE: "main" | "backup";
 
     ALLOWED_HOSTS: string[];
 

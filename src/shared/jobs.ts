@@ -3,9 +3,11 @@
 // If that email cannot be sent, the app will crash, because this is a critical error and needs to be fixed immediately
 
 import { PUBLIC_CONFIG } from "../publicConfig";
+import { waitForDatabase } from "./connection.database";
 import { sendCriticalJobFailureNotification } from "./jobs.email";
 import { setUserTypeToMemberForAllVerifiedLegacyMembers, resetUserTypeForAllUnverifiedOrRejectedLegacyMembers } from "./member.database";
 import { resetLegacyMemberStatusIfPeriodHasEnded } from "./member.jobs";
+import { sleep } from "./utils";
 
 const MAX_RETRIES = 5;
 
@@ -32,7 +34,9 @@ async function databaseJobsWrapper(jobFunction: Function, name: string, retries:
     const result = await jobFunction();
 
     if (result.error) {
-        console.error(`${name} failed with error: ${result.error}. Retrying... (${retries + 1}/${MAX_RETRIES})`);
+        console.error(`${name} failed with error: ${result.error}. Retrying in 10 seconds... (${retries + 1}/${MAX_RETRIES})`);
+
+        await sleep(10000); // Wait for 10 seconds before retrying
 
         await databaseJobsWrapper(jobFunction, name, retries + 1);
 
@@ -44,6 +48,10 @@ async function databaseJobsWrapper(jobFunction: Function, name: string, retries:
 }
 
 async function runAllJobs() {
+    console.info("Waiting for database to be ready...");
+
+    await waitForDatabase();
+
     console.info("Running all jobs...");
 
     await resetLegacyMemberStatusIfPeriodHasEnded(MAX_RETRIES);

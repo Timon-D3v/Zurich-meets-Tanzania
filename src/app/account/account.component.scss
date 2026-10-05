@@ -72,6 +72,7 @@
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     border: 2px var(--text-950) solid;
+    box-sizing: border-box;
     object-fit: cover;
     background-image: url(../../../public/backup/fallback.png);
     background-size: cover;
@@ -79,8 +80,10 @@
     background-repeat: no-repeat;
 
     &[src="/svg/personal.svg"] {
-        object-fit: contain;
-        background-color: var(--primary-500);
+        object-position: calc(10000% + 10000px + 10000vh + 10000vw) calc(10000% + 10000px + 10000vh + 10000vw); // Make the actual image invisible while still keeping the background image visible
+        background-image: url("/svg/personal.svg");
+        background-size: 67.5% 67.5%;
+        background-color: var(--accent-100);
     }
 
     @media screen and (max-width: 555px) {
@@ -108,6 +111,9 @@
     display: grid;
     place-items: center;
     cursor: pointer;
+    position: relative;
+    z-index: 50;
+    place-self: end;
 
     &:hover {
         background-color: var(--accent-600);
