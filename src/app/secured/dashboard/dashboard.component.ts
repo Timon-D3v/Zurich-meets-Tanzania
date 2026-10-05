@@ -54,8 +54,7 @@ import { MembersRemoveManualMemberComponent } from "../components/members-remove
 import { MembersMembersListComponent } from "../components/members-members-list/members-members-list.component";
 import { MembersManualMembersListComponent } from "../components/members-manual-members-list/members-manual-members-list.component";
 import { MembersStripeMembersListComponent } from "../components/members-stripe-members-list/members-stripe-members-list.component";
-import { GalleryRemoveImagesComponent } from "../components/gallery-remove-images/gallery-remove-images.component";
-import { GalleryAddImagesComponent } from "../components/gallery-add-images/gallery-add-images.component";
+import { GalleryEditImagesComponent } from "../components/gallery-edit-images/gallery-edit-images.component";
 import { GalleryDeleteGalleryComponent } from "../components/gallery-delete-gallery/gallery-delete-gallery.component";
 import { GalleryCreateGalleryComponent } from "../components/gallery-create-gallery/gallery-create-gallery.component";
 import { TeamRemoveMemberComponent } from "../components/team-remove-member/team-remove-member.component";
@@ -81,6 +80,7 @@ import { PopupTableInputComponent } from "../../components/popup-table-input/pop
 import { PopupMultipleButtonsInputComponent } from "../../components/popup-multiple-buttons-input/popup-multiple-buttons-input.component";
 import { PopupMultipleListsInputComponent } from "../../components/popup-multiple-lists-input/popup-multiple-lists-input.component";
 import { AdminEditBoardComponent } from "../components/admin-edit-board/admin-edit-board.component";
+import { GalleryEditDetailsComponent } from "../components/gallery-edit-details/gallery-edit-details.component";
 
 @Component({
     selector: "app-dashboard",
@@ -106,8 +106,8 @@ import { AdminEditBoardComponent } from "../components/admin-edit-board/admin-ed
         DonationsRemoveDonationMeterComponent,
         DonationsCreateDonationMeterComponent,
         DonationsFormEntriesComponent,
-        GalleryRemoveImagesComponent,
-        GalleryAddImagesComponent,
+        GalleryEditImagesComponent,
+        GalleryEditDetailsComponent,
         GalleryDeleteGalleryComponent,
         GalleryCreateGalleryComponent,
         TeamRemoveMemberComponent,

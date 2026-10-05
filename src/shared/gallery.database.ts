@@ -1,7 +1,7 @@
 import { FieldPacket, RowDataPacket } from "mysql2";
 import connection from "./connection.database";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { DatabaseResult } from "..";
+import { DatabaseResult, DelivApiFile } from "..";
 
 export async function getLastXGalleryTitles(x: number): Promise<DatabaseResult> {
     try {
@@ -31,6 +31,31 @@ export async function getLastXGalleryTitles(x: number): Promise<DatabaseResult> 
 export async function getAllGalleryTitles(): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`title\` from \`zmt\`.\`gallery\`;`);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function getAllGalleryTitlesAndSubtitles(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT \`title\`, \`subtitle\` from \`zmt\`.\`gallery\`;`);
 
         return {
             data: result,
@@ -106,6 +131,56 @@ export async function createGallery(title: string, subtitle: string): Promise<Da
 export async function removeGallery(title: string): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`DELETE FROM \`zmt\`.\`gallery\` WHERE \`title\` = ?`, [title]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function updateGalleryImages(title: string, urls: DelivApiFile[]): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`gallery\` SET \`date\` = CURRENT_TIMESTAMP, \`data\` = ? WHERE \`title\` = ?;`, [JSON.stringify(urls), title]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function updateGalleryDetails(title: string, newTitle: string, newSubtitle: string): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`gallery\` SET \`date\` = CURRENT_TIMESTAMP, \`title\` = ?, \`subtitle\` = ? WHERE \`title\` = ?;`, [newTitle, newSubtitle, title]);
 
         return {
             data: result,

@@ -1,0 +1,31 @@
+<div class="wrapper">
+    <h2>Bilder hinzufügen/entfernen</h2>
+    <p>Gib einen Galerie-Titel ein, um eine Galerie zu bearbeiten. Es werden alle Bilder angezeigt und diese können verschoben, gelöscht oder neue hinzugefügt werden.</p>
+    <button type="button" (click)="openSelection()">Galerie bearbeiten</button>
+</div>
+
+@if (selectionOpen()) {
+    <app-popup-selection-input
+        title="Galerie bearbeiten"
+        description="Gib einen Galerie-Titel ein, um eine Galerie zu bearbeiten. Es werden alle Galerie-Titel angezeigt."
+        label="Galerie"
+        placeholder="Galerie-Titel eingeben"
+        [submitButtonText]="selectionSubmitButtonText()"
+        [submitButtonDisabled]="selectionSubmitButtonDisabled()"
+        [selectionOptions]="galleryTitleList()"
+        (closeOutput)="closeSelection()"
+        (resultOutput)="loadGallery($event)"
+    ></app-popup-selection-input>
+}
+
+@if (imagePopupOpen()) {
+    <app-popup-multiple-images-input
+        (resultOutput)="updateGallery($event)"
+        (closeOutput)="closeImagePopup()"
+        title="Bilder bearbeiten"
+        description="Bitte suche dir Bilder aus, die du hinzufügen möchtest und bringe sie in die richtige Reihenfolge. Du kannst sie auch nachher noch ändern."
+        label="Bilder:"
+        [editArray]="imagesArray()"
+        submitButtonText="Aktualisieren"
+    ></app-popup-multiple-images-input>
+}

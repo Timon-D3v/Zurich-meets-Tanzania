@@ -15,6 +15,7 @@ export class PopupSelectionInputComponent {
     placeholder = input<string>("Titel suchen");
     value = input<string>("");
     submitButtonText = input<string>("Bestätigen");
+    submitButtonDisabled = input<boolean>(false);
     selectionOptions = input.required<string[]>();
 
     currentInput = signal<string>("");

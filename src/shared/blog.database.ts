@@ -131,7 +131,7 @@ export async function createBlog(title: string, blog: BlogContent): Promise<Data
 
 export async function updateBlog(originalTitle: string, blog: BlogContent): Promise<DatabaseResult> {
     try {
-        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`blogs\` SET \`title\` = ?, \`author\` = ?, \`data\` = ?, date = CURRENT_TIMESTAMP WHERE (\`title\` = ?);`, [
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`blogs\` SET \`title\` = ?, \`author\` = ?, \`data\` = ?, \`date\` = CURRENT_TIMESTAMP WHERE (\`title\` = ?);`, [
             blog.metadata.title,
             blog.metadata.author,
             JSON.stringify(blog),

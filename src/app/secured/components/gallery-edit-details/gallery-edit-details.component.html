@@ -1,0 +1,43 @@
+<div class="wrapper">
+    <h2>Galerie Details bearbeiten</h2>
+    <p>Gib einen Galerie-Titel ein, um eine Galerie zu bearbeiten. Du wirst nacheinander nach einem neuen Titel und Untertitel gefragt.</p>
+    <button type="button" (click)="openSelection()">Galerie bearbeiten</button>
+</div>
+
+@if (selectionOpen()) {
+    <app-popup-selection-input
+        title="Galerie bearbeiten"
+        description="Gib einen Galerie-Titel ein, um eine Galerie zu bearbeiten. Es werden alle Galerie-Titel angezeigt."
+        label="Galerie"
+        placeholder="Galerie-Titel eingeben"
+        [submitButtonText]="selectionSubmitButtonText()"
+        [submitButtonDisabled]="selectionSubmitButtonDisabled()"
+        [selectionOptions]="galleryTitleList()"
+        (closeOutput)="closeSelection()"
+        (resultOutput)="editNewTitle($event)"
+    ></app-popup-selection-input>
+}
+
+@if (titleInputOpen()) {
+    <app-popup-title-input
+        title="Galerie bearbeiten"
+        description="Bitte gib einen neuen Titel für die Galerie ein."
+        label="Titel:"
+        placeholder="Neuen Titel eingeben"
+        [value]="oldTitle()"
+        (closeOutput)="closeTitleInput()"
+        (resultOutput)="editNewSubtitle($event)"
+    ></app-popup-title-input>
+}
+
+@if (subtitleInputOpen()) {
+    <app-popup-title-input
+        title="Galerie bearbeiten"
+        description="Bitte gib einen neuen Untertitel für die Galerie ein."
+        label="Untertitel:"
+        placeholder="Neuen Untertitel eingeben"
+        [value]="oldSubtitle()"
+        (closeOutput)="closeSubtitleInput()"
+        (resultOutput)="updateGallery($event)"
+    ></app-popup-title-input>
+}

@@ -29,6 +29,12 @@ export class GalleryService {
         return request;
     }
 
+    getAllGalleryTitlesAndSubtitles(): Observable<DatabaseApiEndpointResponse> {
+        const request = this.http.get<DatabaseApiEndpointResponse>("/api/secured/admin/gallery/getAllGalleryTitlesAndSubtitles", {});
+
+        return request;
+    }
+
     addGallery(title: string, subtitle: string): Observable<ApiEndpointResponse> {
         const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/gallery/addGallery", {
             title,
@@ -41,6 +47,31 @@ export class GalleryService {
     removeGallery(title: string): Observable<ApiEndpointResponse> {
         const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/gallery/removeGallery", {
             title,
+        });
+
+        return request;
+    }
+
+    updateGalleryImages(title: string, files: { file: File; url: string }[]): Observable<ApiEndpointResponse> {
+        const formData = new FormData();
+
+        formData.append("title", title);
+
+        for (const file of files) {
+            formData.append("files", file.file);
+            formData.append("urls", file.url);
+        }
+
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/gallery/updateGalleryImages", formData);
+
+        return request;
+    }
+
+    updateGalleryDetails(title: string, newTitle: string, newSubtitle: string): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/gallery/updateGalleryDetails", {
+            title,
+            newTitle,
+            newSubtitle,
         });
 
         return request;

@@ -250,16 +250,16 @@
                             onClick: generateActivateFunction('gallery-delete-gallery'),
                         },
                         {
-                            href: '#Bilder-hinzufügen',
-                            label: 'Bilder hinzufügen',
+                            href: '#Bilder-bearbeiten',
+                            label: 'Bilder bearbeiten',
                             clickable: true,
-                            onClick: generateActivateFunction('gallery-add-images'),
+                            onClick: generateActivateFunction('gallery-edit-images'),
                         },
                         {
-                            href: '#Bilder-entfernen',
-                            label: 'Bilder entfernen',
+                            href: '#Galerie-Details-bearbeiten',
+                            label: 'Galerie Details bearbeiten',
                             clickable: true,
-                            onClick: generateActivateFunction('gallery-remove-images'),
+                            onClick: generateActivateFunction('gallery-edit-details'),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -624,10 +624,10 @@
             <app-gallery-create-gallery></app-gallery-create-gallery>
         } @else if (currentActiveSection() === "gallery-delete-gallery") {
             <app-gallery-delete-gallery></app-gallery-delete-gallery>
-        } @else if (currentActiveSection() === "gallery-add-images") {
-            <app-gallery-add-images></app-gallery-add-images>
-        } @else if (currentActiveSection() === "gallery-remove-images") {
-            <app-gallery-remove-images></app-gallery-remove-images>
+        } @else if (currentActiveSection() === "gallery-edit-images") {
+            <app-gallery-edit-images></app-gallery-edit-images>
+        } @else if (currentActiveSection() === "gallery-edit-details") {
+            <app-gallery-edit-details></app-gallery-edit-details>
         } @else if (currentActiveSection() === "members-add-manual-member") {
             <app-members-add-manual-member></app-members-add-manual-member>
         } @else if (currentActiveSection() === "members-remove-manual-member") {

@@ -11,7 +11,7 @@ import { PopupSelectionInputComponent } from "../../../components/popup-selectio
 })
 export class MembersRemoveManualMemberComponent implements OnInit {
     legacyMemberEmailList = signal<string[]>([]);
-    selectionOpen = signal<boolean>(false);
+    selectionOpen = signal<boolean>(true);
 
     private membershipService = inject(MembershipService);
     private notificationService = inject(NotificationService);

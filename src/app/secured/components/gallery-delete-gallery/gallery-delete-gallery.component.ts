@@ -11,7 +11,7 @@ import { GalleryService } from "../../../services/gallery.service";
 })
 export class GalleryDeleteGalleryComponent implements OnInit {
     galleryTitleList = signal<string[]>([]);
-    selectionOpen = signal<boolean>(false);
+    selectionOpen = signal<boolean>(true);
 
     private galleryService = inject(GalleryService);
     private notificationService = inject(NotificationService);
