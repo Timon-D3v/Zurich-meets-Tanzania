@@ -1,1 +1,18 @@
-<p>donations-remove-donation-meter works!</p>
+<div class="wrapper">
+    <h2>Spendenbarometer entfernen</h2>
+    <p>Gib Titel eines Spendenbarometers ein, um ihn zu entfernen. Es werden alle Spendenbarometer angezeigt.</p>
+    <button type="button" (click)="openSelection()">Spendenbarometer entfernen</button>
+</div>
+
+@if (selectionOpen()) {
+    <app-popup-selection-input
+        title="Spendenbarometer entfernen"
+        description="Gib einen Spendenbarometer-Titel ein, um ihn zu entfernen. Es werden alle Spendenbarometer angezeigt."
+        label="Spendenbarometer"
+        placeholder="Spendenbarometer-Titel eingeben"
+        submitButtonText="Entfernen"
+        [selectionOptions]="getOnlyTitles(donationMeterList())"
+        (closeOutput)="closeSelection()"
+        (resultOutput)="deactivateDonationMeter($event)"
+    ></app-popup-selection-input>
+}

@@ -194,6 +194,11 @@
     color: var(--text-950);
     width: 90%;
 
+    & + textarea {
+        min-height: 5em;
+        resize: vertical;
+    }
+
     & + input,
     & + textarea {
         background-color: inherit;

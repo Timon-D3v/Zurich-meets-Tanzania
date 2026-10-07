@@ -4,6 +4,7 @@ import { DonationMeter, GetDonationMetersApiEndpointResponse } from "../../..";
 import { RouterLink } from "@angular/router";
 import { DonationService } from "../../services/donation.service";
 import { NotificationService } from "../../services/notification.service";
+import { markdownToHtml } from "../../../shared/utils";
 
 @Component({
     selector: "app-donation-meter-banner",
@@ -107,4 +108,6 @@ export class DonationMeterBannerComponent implements OnInit {
     formatNumber(value: number): string {
         return new Intl.NumberFormat("de-CH").format(value);
     }
+
+    markdownToHtml = markdownToHtml;
 }

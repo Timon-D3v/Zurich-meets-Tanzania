@@ -8,7 +8,7 @@
         @for (banner of banners(); track $index) {
             <div class="banner" [attr.data-index]="$index">
                 <h2>{{ banner.title }}</h2>
-                <p>{{ banner.description }}</p>
+                <p [innerHTML]="markdownToHtml(banner.description)"></p>
                 <div class="progress" [style.background]="generateGradient(banner.currentValue, banner.maxValue)">
                     <p>{{ formatNumber(banner.currentValue) }}chf / {{ formatNumber(banner.maxValue) }}chf</p>
                 </div>

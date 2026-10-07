@@ -32,12 +32,30 @@ export class DonationService {
     }
 
     updateDonationMeter(id: number, title: string, description: string, currentValue: number, maxValue: number): Observable<ApiEndpointResponse> {
-        const request = this.http.post<ApiEndpointResponse>(`/api/secured/admin/management/updateDonationMeter`, {
+        const request = this.http.post<ApiEndpointResponse>(`/api/secured/admin/donation/updateDonationMeter`, {
             id,
             title,
             description,
             currentValue,
             maxValue,
+        });
+
+        return request;
+    }
+
+    addDonationMeter(title: string, description: string, target: number): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>(`/api/secured/admin/donation/addDonationMeter`, {
+            title,
+            description,
+            target,
+        });
+
+        return request;
+    }
+
+    deactivateDonationMeter(id: number): Observable<ApiEndpointResponse> {
+        const request = this.http.post<ApiEndpointResponse>(`/api/secured/admin/donation/deactivateDonationMeter`, {
+            id,
         });
 
         return request;
