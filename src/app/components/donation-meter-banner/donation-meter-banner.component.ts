@@ -14,6 +14,11 @@ import { NotificationService } from "../../services/notification.service";
 export class DonationMeterBannerComponent implements OnInit {
     banners = signal<DonationMeter[]>([]);
     open = signal<boolean>(true);
+    currentIndex = signal<number>(0);
+    topbarTimer = signal<number>(0);
+    topbarTimerInterval = 30_000; // Milliseconds (30 seconds)
+
+    topbarInterval: any = null;
 
     private donationService = inject(DonationService);
     private notificationService = inject(NotificationService);
@@ -47,6 +52,16 @@ export class DonationMeterBannerComponent implements OnInit {
                 }
 
                 this.banners.set(response.data);
+
+                if (this.banners().length > 1) {
+                    if (this.topbarInterval) {
+                        clearInterval(this.topbarInterval);
+                    }
+
+                    this.topbarInterval = setInterval(() => {
+                        this.incrementTimer();
+                    }, 100);
+                }
             },
             error: (error: any) => {
                 console.error(error);
@@ -61,6 +76,26 @@ export class DonationMeterBannerComponent implements OnInit {
 
         if (window?.sessionStorage) {
             window.sessionStorage.setItem("donationMeterBannerClosed", this.open() ? "false" : "true");
+        }
+    }
+
+    next(): void {
+        this.currentIndex.update((index) => (index + 1) % this.banners().length);
+
+        this.topbarTimer.set(0);
+    }
+
+    previous(): void {
+        this.currentIndex.update((index) => (index === 0 ? this.banners().length - 1 : index - 1));
+
+        this.topbarTimer.set(0);
+    }
+
+    incrementTimer(): void {
+        this.topbarTimer.update((timer) => timer + 100);
+
+        if (this.topbarTimer() === this.topbarTimerInterval) {
+            this.next();
         }
     }
 
