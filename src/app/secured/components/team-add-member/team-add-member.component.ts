@@ -1,43 +1,77 @@
-import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, inject, PLATFORM_ID, signal, OnInit } from "@angular/core";
 import { PUBLIC_CONFIG } from "../../../../publicConfig";
 import { NotificationService } from "../../../services/notification.service";
-import { ApiEndpointResponse } from "../../../..";
+import { ApiEndpointResponse, GetAllMembersOfAllTeamsApiEndpointResponse } from "../../../..";
 import { isPlatformBrowser } from "@angular/common";
 import { TeamService } from "../../../services/team.service";
+import { PopupSelectionInputComponent } from "../../../components/popup-selection-input/popup-selection-input.component";
+import { AdminManagementService } from "../../../services/admin-management.service";
 
 @Component({
     selector: "app-team-add-member",
-    imports: [ReactiveFormsModule],
+    imports: [PopupSelectionInputComponent],
     templateUrl: "./team-add-member.component.html",
     styleUrl: "./team-add-member.component.scss",
 })
-export class TeamAddMemberComponent {
-    submitButtonText = signal("Hinzufügen");
-    submitButtonDisabled = signal(false);
-
-    addTeamMemberForm = new FormGroup({
-        emailControl: new FormControl(""),
-    });
+export class TeamAddMemberComponent implements OnInit {
+    userEmailList = signal<string[]>([]);
+    alreadyInTeamEmailList = signal<string[]>([]);
+    selectionOpen = signal<boolean>(true);
 
     private teamService = inject(TeamService);
     private notificationService = inject(NotificationService);
+    private adminManagementService = inject(AdminManagementService);
 
     private platformId = inject(PLATFORM_ID);
 
-    onSubmit(event: Event): void {
-        event.preventDefault();
+    ngOnInit(): void {
+        this.getAllUserEmails();
+        this.getAllTeamMembers();
+    }
 
-        this.submitButtonDisabled.set(true);
-        this.submitButtonText.set("Verarbeiten...");
+    getAllUserEmails(): void {
+        const request = this.adminManagementService.getAllUserEmails();
 
-        const email = this.addTeamMemberForm.value.emailControl;
+        request.subscribe({
+            next: (response) => {
+                if (response.error) {
+                    console.error(response.message);
+                    this.notificationService.error("Fehler:", "Beim Abrufen der E-Mail-Adressen ist ein Fehler aufgetreten: " + response.message);
+                    return;
+                }
 
+                this.userEmailList.set(response.data.map((user) => user.email));
+            },
+            error: (error) => {
+                console.error("Error while fetching user emails:", error);
+                this.notificationService.error("Fehler:", "Beim Abrufen der E-Mail-Adressen ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
+            },
+        });
+    }
+
+    getAllTeamMembers(): void {
+        const request = this.teamService.getCurrentTeamMembers();
+
+        request.subscribe({
+            next: (response: GetAllMembersOfAllTeamsApiEndpointResponse) => {
+                if (response.error) {
+                    console.error(response.message);
+                    this.notificationService.error("Fehler:", "Beim Abrufen der E-Mail-Adressen welche schon im Team sind ist ein Fehler aufgetreten: " + response.message);
+                    return;
+                }
+
+                this.alreadyInTeamEmailList.set(response.data.map((user) => user.email));
+            },
+            error: (error) => {
+                console.error("Error while fetching user emails:", error);
+                this.notificationService.error("Fehler:", "Beim Abrufen der E-Mail-Adressen welche schon im Team sind ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
+            },
+        });
+    }
+
+    addTeamMember(email: string): void {
         if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige E-Mail-Adresse ein.");
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Hinzufügen");
 
             return;
         }
@@ -45,10 +79,10 @@ export class TeamAddMemberComponent {
         if (!isPlatformBrowser(this.platformId)) {
             console.error("Cannot send post request if not in browser context.");
 
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Hinzufügen");
             return;
         }
+
+        this.closeSelection();
 
         const request = this.teamService.addMember(email);
 
@@ -57,26 +91,23 @@ export class TeamAddMemberComponent {
                 if (response.error) {
                     this.notificationService.error("Fehler:", response.message);
 
-                    this.submitButtonDisabled.set(false);
-                    this.submitButtonText.set("Hinzufügen");
-
                     return;
                 }
 
                 this.notificationService.success("Erfolg:", `Das Teammitglied mit der E-Mail "${email}" wurde erfolgreich hinzugefügt.`);
-
-                this.addTeamMemberForm.reset();
-
-                this.submitButtonDisabled.set(false);
-                this.submitButtonText.set("Hinzufügen");
             },
             error: (error: unknown): void => {
                 console.error("Error while adding team member:", error);
                 this.notificationService.error("Fehler:", `Beim Hinzufügen des Teammitglieds mit der E-Mail "${email}" ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.`);
-
-                this.submitButtonDisabled.set(false);
-                this.submitButtonText.set("Hinzufügen");
             },
         });
+    }
+
+    openSelection(): void {
+        this.selectionOpen.set(true);
+    }
+
+    closeSelection(): void {
+        this.selectionOpen.set(false);
     }
 }

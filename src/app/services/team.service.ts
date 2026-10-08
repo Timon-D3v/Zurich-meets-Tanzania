@@ -50,6 +50,12 @@ export class TeamService {
         return request;
     }
 
+    getCurrentTeamMembers(): Observable<GetAllMembersOfAllTeamsApiEndpointResponse> {
+        const request = this.http.get<GetAllMembersOfAllTeamsApiEndpointResponse>("/api/secured/admin/team/getCurrentTeamMember");
+
+        return request;
+    }
+
     getAllMembersOfAllTeams(): Observable<GetAllMembersOfAllTeamsApiEndpointResponse> {
         const request = this.http.get<GetAllMembersOfAllTeamsApiEndpointResponse>("/api/secured/admin/team/getAllMembersOfAllTeams");
 

@@ -77,8 +77,9 @@ CREATE TABLE IF NOT EXISTS `zmt`.`calendar` (
     `endDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `title` VARCHAR(256) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `calendar_start_date_UNIQUE` (`startDate` ASC) VISIBLE,
-    UNIQUE INDEX `calendar_end_date_UNIQUE` (`endDate` ASC) VISIBLE
+    UNIQUE INDEX `calendar_id_UNIQUE` (`id` ASC) VISIBLE,
+    INDEX `calendar_start_date` (`startDate` ASC) VISIBLE,
+    INDEX `calendar_end_date` (`endDate` ASC) VISIBLE
 )
 COMMENT = 'This table holds all events from zurich meets tanzania.';
 

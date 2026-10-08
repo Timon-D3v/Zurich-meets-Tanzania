@@ -1,6 +1,6 @@
 @use "../../../../styles/index" as *;
 
-form {
+.wrapper {
     padding: 2vh 5vw;
     box-sizing: border-box;
 }
@@ -16,12 +16,8 @@ p {
     margin: 1vh 5%;
     padding: 0;
     width: 90%;
-    text-align: left;
+    text-align: center;
     text-wrap: pretty;
-}
-
-label {
-    @include admin-label;
 }
 
 button {

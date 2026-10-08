@@ -1,43 +1,53 @@
-import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, inject, PLATFORM_ID, signal, OnInit } from "@angular/core";
 import { PUBLIC_CONFIG } from "../../../../publicConfig";
 import { NotificationService } from "../../../services/notification.service";
-import { ApiEndpointResponse } from "../../../..";
+import { ApiEndpointResponse, GetAllMembersOfAllTeamsApiEndpointResponse } from "../../../..";
 import { isPlatformBrowser } from "@angular/common";
 import { TeamService } from "../../../services/team.service";
+import { PopupSelectionInputComponent } from "../../../components/popup-selection-input/popup-selection-input.component";
 
 @Component({
     selector: "app-team-remove-member",
-    imports: [ReactiveFormsModule],
+    imports: [PopupSelectionInputComponent],
     templateUrl: "./team-remove-member.component.html",
     styleUrl: "./team-remove-member.component.scss",
 })
-export class TeamRemoveMemberComponent {
-    submitButtonText = signal("Entfernen");
-    submitButtonDisabled = signal(false);
-
-    removeTeamMemberForm = new FormGroup({
-        emailControl: new FormControl(""),
-    });
+export class TeamRemoveMemberComponent implements OnInit {
+    userEmailList = signal<string[]>([]);
+    selectionOpen = signal<boolean>(true);
 
     private teamService = inject(TeamService);
     private notificationService = inject(NotificationService);
 
     private platformId = inject(PLATFORM_ID);
 
-    onSubmit(event: Event): void {
-        event.preventDefault();
+    ngOnInit(): void {
+        this.getAllTeamMembers();
+    }
 
-        this.submitButtonDisabled.set(true);
-        this.submitButtonText.set("Verarbeiten...");
+    getAllTeamMembers(): void {
+        const request = this.teamService.getCurrentTeamMembers();
 
-        const email = this.removeTeamMemberForm.value.emailControl;
+        request.subscribe({
+            next: (response: GetAllMembersOfAllTeamsApiEndpointResponse) => {
+                if (response.error) {
+                    console.error(response.message);
+                    this.notificationService.error("Fehler:", "Beim Abrufen der E-Mail-Adressen welche schon im Team sind ist ein Fehler aufgetreten: " + response.message);
+                    return;
+                }
 
+                this.userEmailList.set(response.data.map((user) => user.email));
+            },
+            error: (error) => {
+                console.error("Error while fetching user emails:", error);
+                this.notificationService.error("Fehler:", "Beim Abrufen der E-Mail-Adressen welche schon im Team sind ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
+            },
+        });
+    }
+
+    removeTeamMember(email: string): void {
         if (typeof email !== "string" || email.trim() === "" || !PUBLIC_CONFIG.REGEX.MATCH_VALID_EMAIL.test(email)) {
             this.notificationService.error("Eingabefehler:", "Bitte gib eine gültige E-Mail-Adresse ein.");
-
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Entfernen");
 
             return;
         }
@@ -45,11 +55,10 @@ export class TeamRemoveMemberComponent {
         if (!isPlatformBrowser(this.platformId)) {
             console.error("Cannot send post request if not in browser context.");
 
-            this.submitButtonDisabled.set(false);
-            this.submitButtonText.set("Entfernen");
-
             return;
         }
+
+        this.closeSelection();
 
         const request = this.teamService.removeMember(email);
 
@@ -58,26 +67,23 @@ export class TeamRemoveMemberComponent {
                 if (response.error) {
                     this.notificationService.error("Fehler:", response.message);
 
-                    this.submitButtonDisabled.set(false);
-                    this.submitButtonText.set("Entfernen");
-
                     return;
                 }
 
                 this.notificationService.success("Erfolg:", `Das Teammitglied mit der E-Mail "${email}" wurde erfolgreich entfernt.`);
-
-                this.removeTeamMemberForm.reset();
-
-                this.submitButtonDisabled.set(false);
-                this.submitButtonText.set("Entfernen");
             },
             error: (error: unknown): void => {
                 console.error("Error while removing team member:", error);
                 this.notificationService.error("Fehler:", "Beim Entfernen des Teammitglieds ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
-
-                this.submitButtonDisabled.set(false);
-                this.submitButtonText.set("Entfernen");
             },
         });
+    }
+
+    openSelection(): void {
+        this.selectionOpen.set(true);
+    }
+
+    closeSelection(): void {
+        this.selectionOpen.set(false);
     }
 }

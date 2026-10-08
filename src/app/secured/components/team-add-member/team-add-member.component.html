@@ -1,4 +1,4 @@
-<form [formGroup]="addTeamMemberForm" (submit)="onSubmit($event)">
+<div class="wrapper">
     <h2>Teammitglied hinzufügen</h2>
 
     <p>
@@ -7,8 +7,18 @@
         Beachte bitte, dass du diese Angaben nicht bearbeiten kannst. Wenn du dich vertippt hast, musst du das Teammitglied entfernen und erneut hinzufügen.
     </p>
 
-    <label for="email">E-Mail</label>
-    <input type="email" id="email" placeholder="E-Mail-Adresse eingeben" required formControlName="emailControl" />
+    <button type="button" (click)="openSelection()">Hinzufügen</button>
+</div>
 
-    <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
-</form>
+@if (selectionOpen()) {
+    <app-popup-selection-input
+        title="Teammitglied hinzufügen"
+        description='Gib eine E-Mail-Adresse ein, um ein neues Teammitglied hinzuzufügen. Die Person braucht dafür einen Account (Wenn die Person noch keinen Account hat, kannst du auch einen unter "Verwaltung" » "Account erstellen" anlegen).'
+        label="E-Mail"
+        placeholder="E-Mail-Adresse eingeben"
+        submitButtonText="Hinzufügen"
+        [selectionOptions]="userEmailList().filter((email) => !alreadyInTeamEmailList().includes(email))"
+        (closeOutput)="closeSelection()"
+        (resultOutput)="addTeamMember($event)"
+    ></app-popup-selection-input>
+}

@@ -528,4 +528,54 @@ router.post("/updateMemberWithId", async (req: Request, res: Response): Promise<
     }
 });
 
+router.get("/getCurrentTeamMember", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const teamResult = await getCurrentTeam();
+
+        if (teamResult.error !== null) {
+            throw new Error(teamResult.error);
+        }
+
+        if (teamResult.data.length === 0) {
+            throw new Error("Es existiert kein Team, dessen Mitglieder abgerufen werden können.");
+        }
+
+        const team = teamResult.data[0] as Team;
+
+        const result = await getAllMembersOfAllTeams();
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        if (result.data.length < 1) {
+            throw new Error("Es existieren keine Mitglieder, die abgerufen werden können.");
+        }
+
+        res.json({
+            error: false,
+            message: "Die Mitglieder des aktuellen Team wurden erfolgreich abgerufen.",
+            data: (result.data as TeamMemberUser[]).filter((member: TeamMemberUser): boolean => team.members.includes(member.id)),
+        } as GetAllMembersOfAllTeamsApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetAllMembersOfAllTeamsApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetAllMembersOfAllTeamsApiEndpointResponse);
+    }
+});
+
 export default router;

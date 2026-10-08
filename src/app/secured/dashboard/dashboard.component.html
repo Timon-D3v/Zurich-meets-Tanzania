@@ -338,6 +338,16 @@
                             onClick: generateSelectDonationMeterToEditFunction(),
                         },
                         {
+                            href: '#Spendenliste',
+                            label: 'Spendenliste',
+                            clickable: true,
+                            onClick: generateActivateFunction('donations-all-time-donations-list'),
+                        },
+                    ]"
+                ></app-admin-nav-element>
+                <!-- 
+                 Put this in Spenden if the shop page is added (Put above Spendenliste)
+                 {
                             href: '#Shopartikel-erstellen',
                             label: 'Shopartikel erstellen',
                             clickable: true,
@@ -349,14 +359,7 @@
                             clickable: true,
                             onClick: generateActivateFunction('donations-delete-shop-item'),
                         },
-                        {
-                            href: '#Spendenliste',
-                            label: 'Spendenliste',
-                            clickable: true,
-                            onClick: generateActivateFunction('donations-all-time-donations-list'),
-                        },
-                    ]"
-                ></app-admin-nav-element>
+                 -->
                 <app-admin-nav-element
                     description="Statistiken"
                     [linkArray]="[
