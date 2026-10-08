@@ -385,6 +385,10 @@ export interface UpdateUserWithIdApiEndpointResponse extends ApiEndpointResponse
     data: PrivateUser | null;
 }
 
+export interface UpdateTeamMemberWithIdApiEndpointResponse extends ApiEndpointResponse {
+    data: TeamMemberUser | null;
+}
+
 export interface UpdateUserProfilePictureWithIdApiEndpointResponse extends ApiEndpointResponse {
     data: { pictureUrl: string } | null;
 }
@@ -443,6 +447,10 @@ export interface GetMembersApiEndpointResponse extends ApiEndpointResponse {
 
 export interface GetLegacyMembersApiEndpointResponse extends ApiEndpointResponse {
     data: LegacyMember[];
+}
+
+export interface GetAllMembersOfAllTeamsApiEndpointResponse extends ApiEndpointResponse {
+    data: TeamMemberUser[];
 }
 
 export interface PublicUser {
@@ -761,6 +769,7 @@ export type TeamMember = {
     secondaryPicture: string | null;
 };
 
+export type TeamMemberUser = PrivateUser & TeamMember;
 export type BoardUser = {
     firstName: string;
     lastName: string;
@@ -871,6 +880,40 @@ export type EditUserCommand =
           pictureUploaded: true;
           picture: File;
       };
+
+export type EditStrictTeamMemberCommand =
+    | {
+          executionType: "reset";
+          fieldType: "profession" | "role" | "motive" | "secondaryPicture";
+          userId: number;
+      }
+    | {
+          executionType: "edit";
+          fieldType: "profession" | "role" | "motive";
+          userId: number;
+          previousValue: string;
+          newValue: string;
+      }
+    | {
+          executionType: "edit";
+          fieldType: "secondaryPicture";
+          userId: number;
+          previousUrl: string;
+          newUrl: string;
+          pictureUploaded: false;
+          picture: null;
+      }
+    | {
+          executionType: "edit";
+          fieldType: "secondaryPicture";
+          userId: number;
+          previousUrl: string;
+          newUrl: string;
+          pictureUploaded: true;
+          picture: File;
+      };
+
+export type EditTeamMemberCommand = EditUserCommand | EditStrictTeamMemberCommand;
 
 export type ContactConfirmRequest = {
     token: string;

@@ -228,13 +228,17 @@ export class MembersStripeMembersListComponent implements OnInit {
 
         request.subscribe({
             next: (response: UpdateUserWithIdApiEndpointResponse) => {
-                if (response.error || response.data === null) {
-                    this.notificationService.error("Fehler", "Die Änderungen konnten nicht gespeichert werden: " + response.error);
+                if (response.error || (response.data === null && response.message !== "NO_CHANGE")) {
+                    this.notificationService.error("Fehler", "Die Änderungen konnten nicht gespeichert werden: " + response.message);
 
                     return;
                 }
 
                 this.notificationService.success("Erfolg", response.message === "NO_CHANGE" ? "Keine Daten mussten aktualisiert werden." : "Die Änderungen wurden erfolgreich gespeichert.");
+
+                if (response.message === "NO_CHANGE" || response.data === null) {
+                    return;
+                }
 
                 // Set the new data for the current user
                 const user = response.data;
@@ -266,10 +270,17 @@ export class MembersStripeMembersListComponent implements OnInit {
                 });
 
                 // Remove all edits for the user with id userId from the editsToPush array
-                // Note that this also removes the edit entry for the profile picture
-                // If the image upload fails, but the rest succeeds the entry for the picture is removed
-                // This is inconvenient but no a big issue and (at the time of writing) no worth the effort to fix
-                this.editsToPush = this.editsToPush.filter((edit) => edit.userId !== userId);
+                this.editsToPush = this.editsToPush.filter((edit) => {
+                    if (edit.userId !== userId) {
+                        return true;
+                    }
+
+                    if (edit.fieldType === "picture" && edit.executionType === "edit" && edit.pictureUploaded) {
+                        return true;
+                    }
+
+                    return false;
+                });
             },
             error: (error: unknown) => {
                 console.error("Error while saving edits for user with id " + userId + ":", error);
@@ -424,7 +435,9 @@ export class MembersStripeMembersListComponent implements OnInit {
     tryToEditEmail(): void {
         this.customAlert(
             "Bearbeiten verboten",
-            "Die E-Mail-Adresse eines Benutzers kann nicht bearbeitet werden. Dies erfordert eine Bestätigung der neuen E-Mail-Adresse. Der Benutzer kann dies selbst in seinem Profil tun, indem er auf die Schaltfläche 'E-Mail-Adresse ändern' klickt. (Falls es dringend notwendig ist, melde dich bei Timon.)",
+            "Die E-Mail-Adresse eines Benutzers kann nicht bearbeitet werden. Dies erfordert eine Bestätigung der neuen E-Mail-Adresse. Der Benutzer kann dies selbst in seinem Profil tun, indem er auf die Schaltfläche 'E-Mail-Adresse ändern' klickt. (Falls es dringend notwendig ist, melde dich beim Entwickler unter: " +
+                PUBLIC_CONFIG.PERSONAS["developer"].email +
+                ")",
         );
     }
 
@@ -699,7 +712,9 @@ export class MembersStripeMembersListComponent implements OnInit {
 
         this.popups.selection.selectionOptions.set(options);
         this.popups.selection.description.set(
-            `Der Benutzer mit der Id '${userId}' hat aktuell den Typ '${currentType}'. Bitte wähle einen neuen Typ aus. (Bitte beachte, dass das Ändern der Rolle eines Benutzers unvorhergesehene Auswirkungen haben kann. Benutze also wenn möglich die speziellen Unterseiten. Für weitere Informationen melde dich bitte bei Timon.)`,
+            `Der Benutzer mit der Id '${userId}' hat aktuell den Typ '${currentType}'. Bitte wähle einen neuen Typ aus. (Bitte beachte, dass das Ändern der Rolle eines Benutzers unvorhergesehene Auswirkungen haben kann. Benutze also wenn möglich die speziellen Unterseiten. Für weitere Informationen melde dich bitte beim Entwickler unter: ` +
+                PUBLIC_CONFIG.PERSONAS["developer"].email +
+                `)`,
         );
         this.popups.selection.value.set(currentType);
 

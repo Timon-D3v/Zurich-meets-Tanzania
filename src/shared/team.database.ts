@@ -181,6 +181,56 @@ export async function getTeamMemberEntry(userId: number): Promise<DatabaseResult
     }
 }
 
+export async function getAllMembersOfAllTeams(): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * FROM \`zmt\`.\`teamMember\` JOIN \`zmt\`.\`users\` ON \`teamMember\`.\`userId\` = \`users\`.\`id\``);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
+export async function getTeamMemberWithUserData(userId: number): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * FROM \`zmt\`.\`teamMember\` JOIN \`zmt\`.\`users\` ON \`teamMember\`.\`userId\` = \`users\`.\`id\` WHERE \`teamMember\`.\`userId\` = ?`, [userId]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
 export async function createTeamMemberEntry(userId: number): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`INSERT INTO \`zmt\`.\`teamMember\` (\`userId\`, \`profession\`, \`motive\`) VALUES (?, 'Noch kein Beruf angegeben', 'Noch keine Motivation angegeben');`, [
@@ -283,7 +333,7 @@ export async function updateTeamMemberRole(userId: number, role: string): Promis
     }
 }
 
-export async function updateTeamMemberSecondaryPicture(userId: number, secondaryPicture: string): Promise<DatabaseResult> {
+export async function updateTeamMemberSecondaryPicture(userId: number, secondaryPicture: string | null): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`teamMember\` SET \`secondaryPicture\` = ? WHERE \`userId\` = ?`, [secondaryPicture, userId]);
 

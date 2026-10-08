@@ -1,6 +1,14 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { ApiEndpointResponse, GetTeamApiEndpointResponse, GetBoardApiEndpointResponse } from "../..";
+import {
+    ApiEndpointResponse,
+    GetTeamApiEndpointResponse,
+    GetBoardApiEndpointResponse,
+    GetAllMembersOfAllTeamsApiEndpointResponse,
+    EditTeamMemberCommand,
+    UpdateExpandedUserInformationApiEndpointResponse,
+    UpdateTeamMemberWithIdApiEndpointResponse,
+} from "../..";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({
@@ -42,6 +50,12 @@ export class TeamService {
         return request;
     }
 
+    getAllMembersOfAllTeams(): Observable<GetAllMembersOfAllTeamsApiEndpointResponse> {
+        const request = this.http.get<GetAllMembersOfAllTeamsApiEndpointResponse>("/api/secured/admin/team/getAllMembersOfAllTeams");
+
+        return request;
+    }
+
     getBoard(): Observable<GetBoardApiEndpointResponse> {
         const request = this.http.get<GetBoardApiEndpointResponse>("/api/team/getBoard");
 
@@ -62,6 +76,31 @@ export class TeamService {
 
     removeMember(email: string): Observable<ApiEndpointResponse> {
         const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/removeMember", { email });
+
+        return request;
+    }
+
+    updateTeamMember(userId: number, data: EditTeamMemberCommand[]): Observable<UpdateTeamMemberWithIdApiEndpointResponse> {
+        const request = this.http.post<UpdateTeamMemberWithIdApiEndpointResponse>("/api/secured/admin/team/updateMemberWithId", { userId, data });
+
+        return request;
+    }
+
+    uploadSecondaryPictureViaAdmin(userId: number, data: EditTeamMemberCommand): Observable<ApiEndpointResponse> {
+        const formData = new FormData();
+
+        if (data.fieldType !== "secondaryPicture" || data.executionType !== "edit") {
+            throw new Error("Invalid field type for uploadPicture");
+        }
+
+        if (!data.pictureUploaded || !data.picture || data.picture === null || typeof data.picture === "undefined") {
+            throw new Error("No picture uploaded for profile picture");
+        }
+
+        formData.append("userId", userId.toString());
+        formData.append("picture", data.picture);
+
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/uploadSecondaryPictureForUserWithId", formData);
 
         return request;
     }
