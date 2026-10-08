@@ -81,6 +81,8 @@ import { PopupMultipleButtonsInputComponent } from "../../components/popup-multi
 import { PopupMultipleListsInputComponent } from "../../components/popup-multiple-lists-input/popup-multiple-lists-input.component";
 import { AdminEditBoardComponent } from "../components/admin-edit-board/admin-edit-board.component";
 import { GalleryEditDetailsComponent } from "../components/gallery-edit-details/gallery-edit-details.component";
+import { TeamEditTeamComponent } from "../components/team-edit-team/team-edit-team.component";
+import { TeamEditMembersComponent } from "../components/team-edit-members/team-edit-members.component";
 
 @Component({
     selector: "app-dashboard",
@@ -110,9 +112,11 @@ import { GalleryEditDetailsComponent } from "../components/gallery-edit-details/
         GalleryEditDetailsComponent,
         GalleryDeleteGalleryComponent,
         GalleryCreateGalleryComponent,
+        TeamCreateTeamComponent,
+        TeamEditTeamComponent,
         TeamRemoveMemberComponent,
         TeamAddMemberComponent,
-        TeamCreateTeamComponent,
+        TeamEditMembersComponent,
         CalendarCreateEventComponent,
         NewsEditNewsComponent,
         PopupTitleInputComponent,

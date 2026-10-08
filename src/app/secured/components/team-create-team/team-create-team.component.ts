@@ -24,7 +24,7 @@ export class TeamCreateTeamComponent {
         descriptionControl: new FormControl(""),
     });
 
-    private teamManagementService = inject(TeamService);
+    private teamService = inject(TeamService);
     private notificationService = inject(NotificationService);
 
     private platformId = inject(PLATFORM_ID);
@@ -75,12 +75,12 @@ export class TeamCreateTeamComponent {
             return;
         }
 
-        const request = this.teamManagementService.createTeam(motto, description, this.imageFile() as File);
+        const request = this.teamService.createTeam(motto, description, this.imageFile() as File);
 
         request.subscribe({
             next: (response: ApiEndpointResponse): void => {
                 if (response.error) {
-                    this.notificationService.error("Fehler:", response.message);
+                    this.notificationService.error("Fehler:", "Beim erstellen des Teams ist ein Fehler aufgetreten: " + response.message);
 
                     this.submitButtonDisabled.set(false);
                     this.submitButtonText.set("Erstellen");

@@ -21,6 +21,21 @@ export class TeamService {
         return request;
     }
 
+    updateTeam(motto: string, description: string, image: File | null): Observable<ApiEndpointResponse> {
+        const formData = new FormData();
+
+        formData.append("motto", motto);
+        formData.append("description", description);
+
+        if (image !== null) {
+            formData.append("image", image);
+        }
+
+        const request = this.http.post<ApiEndpointResponse>("/api/secured/admin/team/updateTeam", formData);
+
+        return request;
+    }
+
     getCurrentTeam(): Observable<GetTeamApiEndpointResponse> {
         const request = this.http.get<GetTeamApiEndpointResponse>("/api/team/getCurrentTeam");
 

@@ -28,6 +28,31 @@ export async function createTeam(motto: string, description: string, imageUrl: s
     }
 }
 
+export async function updateTeam(id: number, motto: string, description: string, imageUrl: string): Promise<DatabaseResult> {
+    try {
+        const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`UPDATE \`zmt\`.\`team\` SET \`motto\` = ?, \`text\` = ?, \`picture\` = ? WHERE \`id\` = ?;`, [motto, description, imageUrl, id]);
+
+        return {
+            data: result,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+
+            return {
+                data: null,
+                error: error.message,
+            };
+        }
+
+        return {
+            data: null,
+            error: PUBLIC_CONFIG.ERROR.NO_CONNECTION_TO_DATABASE,
+        };
+    }
+}
+
 export async function getTeam(id: number): Promise<DatabaseResult> {
     try {
         const [result, _fields]: [RowDataPacket[], FieldPacket[]] = await connection.query(`SELECT * FROM \`zmt\`.\`team\` WHERE \`id\` = ?;`, [id]);

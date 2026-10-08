@@ -2,35 +2,16 @@ import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
 import { CONFIG } from "../config";
 import { GetDonationUsageTypesApiEndpointResponse, ApiEndpointResponse, GetDonationMetersApiEndpointResponse } from "..";
-import { getAllDonationUsageTypes, insertDonationRequest, getAllDonationMeters } from "../shared/donation.database";
+import { insertDonationRequest, getAllDonationMeters } from "../shared/donation.database";
 import { sendDonationRequestEmail } from "../shared/donation.email";
+import { getAllUsageTypes } from "../shared/donation.utils";
 
 // Router Serves under /api/donation
 const router = Router();
 
 router.get("/getDonationUsageTypes", async (req: Request, res: Response): Promise<void> => {
     try {
-        const usageTypes = [];
-
-        const result = await getAllDonationUsageTypes();
-
-        if (result.error) {
-            throw new Error(result.error);
-        }
-
-        for (let i = 0; i < result.data!.length; i++) {
-            usageTypes.push(result.data![i].title);
-        }
-
-        const donationMetersResult = await getAllDonationMeters();
-
-        if (donationMetersResult.error) {
-            throw new Error(donationMetersResult.error);
-        }
-
-        for (let i = 0; i < donationMetersResult.data!.length; i++) {
-            usageTypes.push(donationMetersResult.data![i].title);
-        }
+        const usageTypes = await getAllUsageTypes();
 
         res.json({
             error: false,
@@ -82,20 +63,9 @@ router.post("/submitDonationForm", async (req: Request, res: Response): Promise<
             throw new Error("Invalid usage type. Usage type must be a non-empty string.");
         }
 
-        const request = await fetch(`${CONFIG.ORIGIN}/api/donation/getDonationUsageTypes`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const usageTypes = await getAllUsageTypes();
 
-        const response = (await request.json()) as GetDonationUsageTypesApiEndpointResponse;
-
-        if (response.error) {
-            throw new Error(response.message);
-        }
-
-        if (!response.data.includes(usageType)) {
+        if (!usageTypes.includes(usageType)) {
             throw new Error("Invalid usage type. Usage type must be one of the usage types from the database.");
         }
 

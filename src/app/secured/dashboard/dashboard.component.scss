@@ -196,4 +196,11 @@ section {
     app-donation-meter-banner > * {
         display: none !important;
     }
+
+    @media screen and (min-width: 600px) {
+        footer {
+            position: relative;
+            z-index: 101;
+        }
+    }
 }

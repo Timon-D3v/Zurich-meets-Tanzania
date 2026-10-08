@@ -221,6 +221,12 @@
                             onClick: generateActivateFunction('team-create-team'),
                         },
                         {
+                            href: '#Team-bearbeiten',
+                            label: 'Team bearbeiten',
+                            clickable: true,
+                            onClick: generateActivateFunction('team-edit-team'),
+                        },
+                        {
                             href: '#Mitglied-hinzufügen',
                             label: 'Mitglied hinzufügen',
                             clickable: true,
@@ -231,6 +237,12 @@
                             label: 'Mitglied entfernen',
                             clickable: true,
                             onClick: generateActivateFunction('team-remove-member'),
+                        },
+                        {
+                            href: '#Mitglieder-bearbeiten',
+                            label: 'Mitglieder bearbeiten',
+                            clickable: true,
+                            onClick: generateActivateFunction('team-edit-members'),
                         },
                     ]"
                 ></app-admin-nav-element>
@@ -616,10 +628,14 @@
             <app-loading></app-loading>
         } @else if (currentActiveSection() === "team-create-team") {
             <app-team-create-team></app-team-create-team>
+        } @else if (currentActiveSection() === "team-edit-team") {
+            <app-team-edit-team></app-team-edit-team>
         } @else if (currentActiveSection() === "team-add-member") {
             <app-team-add-member></app-team-add-member>
         } @else if (currentActiveSection() === "team-remove-member") {
             <app-team-remove-member></app-team-remove-member>
+        } @else if (currentActiveSection() === "team-edit-members") {
+            <app-team-edit-members></app-team-edit-members>
         } @else if (currentActiveSection() === "gallery-create-gallery") {
             <app-gallery-create-gallery></app-gallery-create-gallery>
         } @else if (currentActiveSection() === "gallery-delete-gallery") {
