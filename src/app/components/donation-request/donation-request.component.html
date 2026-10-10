@@ -1,0 +1,32 @@
+<div class="wrapper">
+    <div class="content">
+        <h2>{{ donationRequest().firstName }} {{ donationRequest().lastName }} hat {{ formatNumber(donationRequest().amount) }}chf gespendet ({{ formatDate(donationRequest().createdAt) }})</h2>
+
+        <p>
+            @if (donationRequest().reviewed) {
+                @if (donationRequest().validated) {
+                    {{ donationRequest().firstName }} {{ donationRequest().lastName }} hat eine Spende in Höhe von {{ formatNumber(donationRequest().amount) }}chf geleistet. Die Spende wurde am
+                    {{ formatDate(donationRequest().createdAt) }} entgegengenommen und dann bestätigt.
+                } @else {
+                    {{ donationRequest().firstName }} {{ donationRequest().lastName }} hat angeblich eine Spende in Höhe von {{ formatNumber(donationRequest().amount) }}chf geleistet. Die Spende wurde am
+                    {{ formatDate(donationRequest().createdAt) }} entgegengenommen, wurde aber abgelehnt, da keine Zahlung eingegangen ist.
+                }
+            } @else {
+                {{ donationRequest().firstName }} {{ donationRequest().lastName }} hat möglicherweise eine Spende in Höhe von {{ formatNumber(donationRequest().amount) }}chf geleistet. Die Spende wurde am
+                {{ formatDate(donationRequest().createdAt) }} entgegengenommen. Bitte überprüfe ob eine Zahlung eingegangen ist und genehmige dann den Antrag.
+            }
+            <br />
+            Als Spendenzweck hat {{ donationRequest().firstName }} folgendes angegeben: {{ donationRequest().usageType }}.
+        </p>
+    </div>
+    @if (!donationRequest().reviewed) {
+        <div class="action">
+            <button type="button" class="save" (click)="acceptRequest()" title="Anfrage annehmen">
+                <img src="/svg/checkmark.svg" alt="Anfrage annehmen" />
+            </button>
+            <button type="button" class="delete" (click)="rejectRequest()" title="Anfrage ablehnen">
+                <img src="/svg/close.svg" alt="Anfrage ablehnen" />
+            </button>
+        </div>
+    }
+</div>

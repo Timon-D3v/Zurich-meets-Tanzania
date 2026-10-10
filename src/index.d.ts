@@ -453,6 +453,10 @@ export interface GetAllMembersOfAllTeamsApiEndpointResponse extends ApiEndpointR
     data: TeamMemberUser[];
 }
 
+export interface GetDonationHistoryApiEndpointResponse extends ApiEndpointResponse {
+    data: Donation[];
+}
+
 export interface PublicUser {
     email: string;
     firstName: string;
@@ -1087,4 +1091,16 @@ export type DonationMeter = {
     description: string;
     active: boolean;
     updatedAt: string;
+};
+
+export type Donation = {
+    id: number;
+    amount: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    usageType: string;
+    createdAt: string;
+    reviewed: boolean;
+    validated: boolean;
 };

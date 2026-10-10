@@ -16,7 +16,7 @@ nav {
     left: 0;
     width: min(220px, 30%);
     height: calc(100% - var(--header-height));
-    z-index: 100;
+    z-index: 20;
     padding: 0.5rem;
     background-color: var(--background-50);
     transition: all 0.3s ease-in-out;
@@ -200,7 +200,7 @@ section {
     @media screen and (min-width: 600px) {
         footer {
             position: relative;
-            z-index: 101;
+            z-index: 30;
         }
     }
 }

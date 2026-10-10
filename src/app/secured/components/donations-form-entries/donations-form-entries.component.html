@@ -1,1 +1,42 @@
-<p>donations-form-entries works!</p>
+<div class="wrapper">
+    <h2>Spendenverlauf</h2>
+
+    <p>
+        Hier findest du eine Übersicht der bisherigen Spenden. Zuoberst findest du alle Spenden, welche noch nicht bestätigt wurden. Bitte überprüfe ob diese wirklich Überwiesen worden sind und bestätige sie, falls dies der Fall ist. Andernfalls
+        kannst du die Anfrage ablehnen und sie wird nicht mehr angezeigt.
+    </p>
+
+    <h2>Nicht bestätigte Spenden</h2>
+    @for (donation of donationHistory().filter((item) => !item.reviewed); track $index) {
+        <app-donation-request [donationRequest]="donation" (onValidate)="loadDonationHistory()"></app-donation-request>
+    } @empty {
+        <p class="center">Nichts mehr zu tun :)</p>
+    }
+
+    <h2>Bestätigte Spenden</h2>
+    @for (donation of donationHistory().filter((item) => item.validated); track $index) {
+        @if ($index < acceptedPagination()) {
+            <app-donation-request [donationRequest]="donation"></app-donation-request>
+        } @else if ($index === acceptedPagination()) {
+            <a href="#" (click)="pushAcceptedPagination($event)">Mehr anzeigen</a>
+        }
+    } @empty {
+        <app-loading></app-loading>
+    }
+
+    <div class="details {{ detailsOpen() ? 'open' : '' }}">
+        <p class="description" (click)="toggleDetails()">Abgelehnte Spenden anzeigen</p>
+        <div class="content">
+            <h2>Abgelehnte Spenden</h2>
+            @for (donation of donationHistory().filter((item) => !item.validated && item.reviewed); track $index) {
+                @if ($index < rejectedPagination()) {
+                    <app-donation-request [donationRequest]="donation"></app-donation-request>
+                } @else if ($index === rejectedPagination()) {
+                    <a href="#" (click)="pushRejectedPagination($event)">Mehr anzeigen</a>
+                }
+            } @empty {
+                <p class="center">Keine abgelehnten Spenden vorhanden.</p>
+            }
+        </div>
+    </div>
+</div>
