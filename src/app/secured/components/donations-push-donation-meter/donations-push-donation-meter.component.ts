@@ -1,21 +1,27 @@
-import { Component, inject, PLATFORM_ID, signal, input, effect } from "@angular/core";
+import { Component, inject, PLATFORM_ID, signal, input, effect, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NotificationService } from "../../../services/notification.service";
 import { isPlatformBrowser } from "@angular/common";
-import { DonationMeter } from "../../../..";
+import { Donation, DonationMeter, GetDonationHistoryApiEndpointResponse, GetDonationMetersApiEndpointResponse } from "../../../..";
 import { DonationService } from "../../../services/donation.service";
+import { DonationRequestComponent } from "../../../components/donation-request/donation-request.component";
+import { PopupSelectionInputComponent } from "../../../components/popup-selection-input/popup-selection-input.component";
 
 @Component({
     selector: "app-donations-push-donation-meter",
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, DonationRequestComponent, PopupSelectionInputComponent],
     templateUrl: "./donations-push-donation-meter.component.html",
     styleUrl: "./donations-push-donation-meter.component.scss",
 })
-export class DonationsPushDonationMeterComponent {
-    donationMeter = input<DonationMeter | null>(null);
+export class DonationsPushDonationMeterComponent implements OnInit {
+    donationMeters = signal<DonationMeter[]>([{ title: "Wird geladen...", description: "", currentValue: 0, maxValue: 0, active: true, id: -1, updatedAt: "" }]);
+    donationMeterToEdit = signal<DonationMeter | null>(null);
+    donationHistory = signal<Donation[]>([]);
 
     submitButtonText = signal("Aktualisieren");
     submitButtonDisabled = signal(false);
+    selectionOpen = signal(true);
+    selectionDisabled = signal(true);
 
     updateDonationMeterForm = new FormGroup({
         titleControl: new FormControl(""),
@@ -30,7 +36,7 @@ export class DonationsPushDonationMeterComponent {
     private platformId = inject(PLATFORM_ID);
 
     private _prefillValues = effect(() => {
-        const meter = this.donationMeter();
+        const meter = this.donationMeterToEdit();
 
         console.log("Prefilling form values for donation meter:", meter);
 
@@ -44,6 +50,51 @@ export class DonationsPushDonationMeterComponent {
         }
     });
 
+    ngOnInit(): void {
+        this.getAllDonationMeters();
+        this.loadOpenDonationRequests();
+    }
+
+    getAllDonationMeters(): void {
+        const donationMeterRequest = this.donationService.getDonationMeters();
+
+        donationMeterRequest.subscribe({
+            next: (response: GetDonationMetersApiEndpointResponse) => {
+                if (response.error || response.data === null || !Array.isArray(response.data)) {
+                    this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden: " + response.message);
+
+                    return;
+                }
+
+                this.donationMeters.set(response.data);
+                this.selectionDisabled.set(false);
+            },
+            error: (error) => {
+                console.error("Error while fetching donation meters:", error);
+                this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
+        });
+    }
+
+    loadOpenDonationRequests(): void {
+        const request = this.donationService.getOpenDonationRequests();
+
+        request.subscribe({
+            next: (response: GetDonationHistoryApiEndpointResponse) => {
+                if (response.error) {
+                    this.notificationService.error("Fehler:", "Beim Abrufen der Spendenhistorie ist ein Fehler aufgetreten: " + response.message);
+                    return;
+                }
+
+                this.donationHistory.set(response.data);
+            },
+            error: (error) => {
+                console.error("Error while fetching donation history:", error);
+                this.notificationService.error("Fehler:", "Beim Abrufen der Spendenhistorie ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
+            },
+        });
+    }
+
     onSubmit(event: Event): void {
         event.preventDefault();
 
@@ -55,7 +106,7 @@ export class DonationsPushDonationMeterComponent {
         const currentValue = this.updateDonationMeterForm.value.currentValueControl;
         const maxValue = this.updateDonationMeterForm.value.maxValueControl;
 
-        const donationMeterId = this.donationMeter()?.id;
+        const donationMeterId = this.donationMeterToEdit()?.id;
 
         if (!isPlatformBrowser(this.platformId)) {
             console.error("Cannot send post request if not in browser context.");
@@ -145,5 +196,19 @@ export class DonationsPushDonationMeterComponent {
 
         this.submitButtonDisabled.set(false);
         this.submitButtonText.set("Aktualisieren");
+    }
+
+    selectDonationMeter(title: string): void {
+        this.donationMeterToEdit.set(this.donationMeters().find((meter) => meter.title === title) || null);
+
+        this.closeSelection();
+    }
+
+    openSelection(): void {
+        this.selectionOpen.set(true);
+    }
+
+    closeSelection(): void {
+        this.selectionOpen.set(false);
     }
 }

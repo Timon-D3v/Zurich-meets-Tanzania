@@ -335,7 +335,7 @@
                             href: '#Spendenbarometer-aktualisieren',
                             label: 'Spendenbarometer aktualisieren',
                             clickable: true,
-                            onClick: generateSelectDonationMeterToEditFunction(),
+                            onClick: generateActivateFunction('donations-push-donation-meter'),
                         },
                         {
                             href: '#Spendenliste',
@@ -664,7 +664,7 @@
         } @else if (currentActiveSection() === "donations-remove-donation-meter") {
             <app-donations-remove-donation-meter></app-donations-remove-donation-meter>
         } @else if (currentActiveSection() === "donations-push-donation-meter") {
-            <app-donations-push-donation-meter [donationMeter]="donationMeters[currentDonationMeterIndex()] || null"></app-donations-push-donation-meter>
+            <app-donations-push-donation-meter></app-donations-push-donation-meter>
         } @else if (currentActiveSection() === "donations-create-shop-item") {
             <app-donations-create-shop-item></app-donations-create-shop-item>
         } @else if (currentActiveSection() === "donations-delete-shop-item") {

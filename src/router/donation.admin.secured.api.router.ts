@@ -1,6 +1,16 @@
 import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { updateDonationMeterWithId, createDonationMeter, deactivateDonationMeterWithId, getDonationRequests, getDonationRequestById, reviewDonationRequest, getAllDonationMeters, increaseDonationMeter } from "../shared/donation.database";
+import {
+    updateDonationMeterWithId,
+    createDonationMeter,
+    deactivateDonationMeterWithId,
+    getDonationRequests,
+    getDonationRequestById,
+    reviewDonationRequest,
+    getAllDonationMeters,
+    increaseDonationMeter,
+    getOpenDonationRequests,
+} from "../shared/donation.database";
 import { ApiEndpointResponse, GetDonationHistoryApiEndpointResponse, Donation } from "..";
 
 // Router Serves under /api/secured/admin/donation
@@ -144,6 +154,40 @@ router.post("/updateDonationMeter", async (req: Request, res: Response): Promise
 router.get("/getDonationHistory", async (req: Request, res: Response): Promise<void> => {
     try {
         const result = await getDonationRequests();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: result.data,
+        } as GetDonationHistoryApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetDonationHistoryApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetDonationHistoryApiEndpointResponse);
+    }
+});
+
+router.get("/getOpenDonationRequests", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const result = await getOpenDonationRequests();
 
         if (result.error) {
             throw new Error(result.error);

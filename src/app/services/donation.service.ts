@@ -67,6 +67,12 @@ export class DonationService {
         return request;
     }
 
+    getOpenDonationRequests(): Observable<GetDonationHistoryApiEndpointResponse> {
+        const request = this.http.get<GetDonationHistoryApiEndpointResponse>(`/api/secured/admin/donation/getOpenDonationRequests`);
+
+        return request;
+    }
+
     verifyDonationRequest(id: number, accepted: boolean): Observable<ApiEndpointResponse> {
         const request = this.http.post<ApiEndpointResponse>(`/api/secured/admin/donation/verifyDonationRequest`, {
             id,

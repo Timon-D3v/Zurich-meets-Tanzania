@@ -1,6 +1,8 @@
 <form [formGroup]="updateDonationMeterForm" (submit)="onSubmit($event)">
     <h2>Spendenbarometer aktualisieren</h2>
     <p>Gib den Titel, die Beschreibung und den aktuellen Stande des Spendenbarometers ein, um ihn zu aktualisieren.</p>
+    <p>Du bearbeitest gerade den Spendenbarometer mit dem Titel "{{ donationMeterToEdit()?.title ?? "Kein Titel ausgewählt" }}" (<span (click)="openSelection()">Klicke zum Ändern</span>)</p>
+
     <label for="title">Titel:</label>
     <input type="text" id="title" placeholder="Titel eingeben" required formControlName="titleControl" />
 
@@ -15,3 +17,27 @@
 
     <button type="submit" [disabled]="submitButtonDisabled()">{{ submitButtonText() }}</button>
 </form>
+<div class="wrapper">
+    <h2>Nicht bestätigte Spenden</h2>
+    @for (donation of donationHistory().filter((item) => !item.reviewed && item.usageType === donationMeterToEdit()?.title); track $index) {
+        <app-donation-request [donationRequest]="donation" (onValidate)="loadOpenDonationRequests()"></app-donation-request>
+    }
+</div>
+
+@if (selectionOpen()) {
+    <app-popup-selection-input
+        title="Spendenbarometer bearbeiten"
+        description="Bitte gib den Titel des Spendenbarometers ein, welchen du bearbeiten möchtest. (Es werden nur aktive Spendenbarometer angezeigt.)"
+        label="Titel"
+        placeholder="Titel eingeben"
+        submitButtonText="Bearbeiten"
+        [submitButtonDisabled]="selectionDisabled()"
+        [selectionOptions]="
+            donationMeters()
+                .filter((meter) => meter.active)
+                .map((meter) => meter.title)
+        "
+        (closeOutput)="closeSelection()"
+        (resultOutput)="selectDonationMeter($event)"
+    ></app-popup-selection-input>
+}

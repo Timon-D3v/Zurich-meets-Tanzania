@@ -10,7 +10,6 @@ import {
     DashboardEditTypes,
     DashboardNavigationOptions,
     DatabaseApiEndpointResponse,
-    DonationMeter,
     GetAllBlogsApiEndpointResponse,
     GetAllNewsApiEndpointResponse,
     GetAllStaticSitesApiEndpointResponse,
@@ -21,7 +20,6 @@ import {
     News,
     StaticSite,
     StaticSiteNames,
-    GetDonationMetersApiEndpointResponse,
     CustomTableElement,
     CustomSourceElement,
     CustomMultipleButtonsElement,
@@ -75,7 +73,6 @@ import { PopupFileInputComponent } from "../../components/popup-file-input/popup
 import { CalendarService } from "../../services/calendar.service";
 import { formatDateRangeString } from "../../../shared/utils";
 import { AdminFileExplorerComponent } from "../components/admin-file-explorer/admin-file-explorer.component";
-import { DonationService } from "../../services/donation.service";
 import { PopupTableInputComponent } from "../../components/popup-table-input/popup-table-input.component";
 import { PopupMultipleButtonsInputComponent } from "../../components/popup-multiple-buttons-input/popup-multiple-buttons-input.component";
 import { PopupMultipleListsInputComponent } from "../../components/popup-multiple-lists-input/popup-multiple-lists-input.component";
@@ -155,7 +152,6 @@ export class DashboardComponent implements OnInit {
     allEditableBlogs: string[] = [];
     allEditableNews: string[] = [];
     allEditableEvents: string[] = [];
-    allEditableDonationMeters: string[] = [];
 
     /*
      * ===============================================================
@@ -170,7 +166,6 @@ export class DashboardComponent implements OnInit {
     currentActiveNewsEdit = signal<string>("awaitSelection");
     currentActionToPerform = signal<DashboardEditTypes>("addTitle");
     currentIndexToEdit = signal<number>(-1);
-    currentDonationMeterIndex = signal<number>(0);
 
     /*
      * ===============================================================
@@ -384,14 +379,6 @@ export class DashboardComponent implements OnInit {
 
     /*
      * ===============================================================
-     *                    DONATION METER CACHE
-     * ===============================================================
-     */
-
-    donationMeters: DonationMeter[] = [];
-
-    /*
-     * ===============================================================
      *                          SERVICES
      * ===============================================================
      */
@@ -400,7 +387,6 @@ export class DashboardComponent implements OnInit {
     private blogService = inject(BlogService);
     private newsService = inject(NewsService);
     private editService = inject(EditService);
-    private donationService = inject(DonationService);
     private calendarService = inject(CalendarService);
     private subpagesService = inject(SubpagesService);
     private notificationService = inject(NotificationService);
@@ -472,9 +458,6 @@ export class DashboardComponent implements OnInit {
 
         // Get all events for deleting
         this.getAllEvents();
-
-        // Get all donation meters for editing and deleting
-        this.getAllDonationMeters();
     }
 
     getAllBlogTitles(): void {
@@ -563,31 +546,6 @@ export class DashboardComponent implements OnInit {
             error: (error) => {
                 console.error("Error while fetching calendar events:", error);
                 this.notificationService.error("Fehler beim Laden der Events", "Die Events konnten nicht geladen werden. Bitte versuche es später erneut.");
-            },
-        });
-    }
-
-    getAllDonationMeters(): void {
-        this.allEditableDonationMeters = [];
-
-        const donationMeterRequest = this.donationService.getDonationMeters();
-
-        donationMeterRequest.subscribe({
-            next: (response: GetDonationMetersApiEndpointResponse) => {
-                if (response.error || response.data === null || !Array.isArray(response.data)) {
-                    this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden: " + response.message);
-
-                    return;
-                }
-
-                for (const meter of response.data) {
-                    this.donationMeters.push(meter);
-                    this.allEditableDonationMeters.push(meter.title);
-                }
-            },
-            error: (error) => {
-                console.error("Error while fetching donation meters:", error);
-                this.notificationService.error("Fehler beim Laden der Spendenziele", "Die Spendenziele konnten nicht geladen werden. Bitte versuche es später erneut.");
             },
         });
     }
@@ -807,27 +765,6 @@ export class DashboardComponent implements OnInit {
         this.selectionInputLabel.set("Titel:");
         this.selectionInputPlaceholder.set("Titel suchen");
         this.selectionInputOptions.set(this.allEditableEvents);
-    }
-
-    generateSelectDonationMeterToEditFunction(): Function {
-        const _this = this;
-
-        const activationFunction = () => {
-            _this.selectDonationMeterToEdit();
-            _this.generateActivateFunction("donations-push-donation-meter")();
-        };
-
-        return activationFunction;
-    }
-
-    selectDonationMeterToEdit(): void {
-        this.selectionInputOpen.set(true);
-
-        this.selectionInputTitle.set("Spendenbarometer bearbeiten");
-        this.selectionInputDescription.set("Bitte gib den Titel des Spendanbarometers ein, den du bearbeiten möchtest.");
-        this.selectionInputLabel.set("Titel:");
-        this.selectionInputPlaceholder.set("Titel suchen");
-        this.selectionInputOptions.set(this.allEditableDonationMeters);
     }
 
     /*
@@ -1861,9 +1798,6 @@ export class DashboardComponent implements OnInit {
                 break;
             case "calendar-delete-event":
                 this.deleteEvent(selectedOption);
-                break;
-            case "donations-push-donation-meter":
-                this.currentDonationMeterIndex.set(this.donationMeters.findIndex((meter) => meter.title === selectedOption));
                 break;
             default:
                 this.selectionInputObservable.next(selectedOption);
