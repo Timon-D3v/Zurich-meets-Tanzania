@@ -495,6 +495,12 @@
                             onClick: generateEditFunction('addCurrentTeam'),
                         },
                         {
+                            href: '#Spezifisches-Team',
+                            label: 'Spezifisches Team',
+                            clickable: true,
+                            onClick: generateEditFunction('addSpecificTeam'),
+                        },
+                        {
                             href: '#Vorstand',
                             label: 'Vorstand',
                             clickable: true,
@@ -788,6 +794,16 @@
         [initialLists]="multipleListsEditInputValue()"
         [submitButtonText]="'Aktualisieren'"
     ></app-popup-multiple-lists-input>
+} @else if (teamSelectionInputOpen()) {
+    <app-popup-selection-input
+        (resultOutput)="handleTeamSelectionInputResult($event)"
+        (closeOutput)="closePopup()"
+        [title]="teamSelectionInputTitle()"
+        [description]="teamSelectionInputDescription()"
+        [label]="teamSelectionInputLabel()"
+        [placeholder]="teamSelectionInputPlaceholder()"
+        [selectionOptions]="teamSelectionInputOptions()"
+    ></app-popup-selection-input>
 }
 
 @if (selectionInputOpen()) {

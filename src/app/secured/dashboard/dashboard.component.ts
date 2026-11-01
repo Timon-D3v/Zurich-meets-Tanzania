@@ -22,6 +22,8 @@ import {
     CustomSourceElement,
     CustomMultipleButtonsElement,
     CustomMultipleListsElement,
+    GetAllTeamsApiEndpointResponse,
+    Team,
 } from "../../..";
 import { PUBLIC_CONFIG } from "../../../publicConfig";
 import { TeamService } from "../../services/team.service";
@@ -189,6 +191,7 @@ export class DashboardComponent implements OnInit {
     multipleButtonsInputOpen = signal<boolean>(false);
     multipleListsInputOpen = signal<boolean>(false);
     selectionInputOpen = signal<boolean>(false);
+    teamSelectionInputOpen = signal<boolean>(false);
     confirmInputOpen = signal<boolean>(false);
     alertOpen = signal<boolean>(false);
 
@@ -266,6 +269,12 @@ export class DashboardComponent implements OnInit {
     selectionInputLabel = signal<string>("");
     selectionInputPlaceholder = signal<string>("");
     selectionInputOptions = signal<string[]>([]);
+
+    teamSelectionInputTitle = signal<string>("");
+    teamSelectionInputDescription = signal<string>("");
+    teamSelectionInputLabel = signal<string>("");
+    teamSelectionInputPlaceholder = signal<string>("");
+    teamSelectionInputOptions = signal<string[]>([]);
 
     fileInputAccept = signal<string>("*");
     fileEditInputAccept = signal<string>("*");
@@ -370,6 +379,14 @@ export class DashboardComponent implements OnInit {
 
     /*
      * ===============================================================
+     *                         TEAM CACHE
+     * ===============================================================
+     */
+
+    allTeams: Team[] = [];
+
+    /*
+     * ===============================================================
      *                          SERVICES
      * ===============================================================
      */
@@ -397,6 +414,22 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit(): void {
         // Get all static sites for editing
+        this.getAllStaticSites();
+
+        // Get all existing blog titles for editing
+        this.getAllBlogTitles();
+
+        // Get all blogs for editing
+        this.getAllBlogs();
+
+        // Get all news for editing
+        this.getAllNews();
+
+        // Get all teams to choose from when editing
+        this.getAllTeams();
+    }
+
+    getAllStaticSites(): void {
         const staticSitesRequest = this.subpagesService.getAllStaticSites();
 
         staticSitesRequest.subscribe({
@@ -417,34 +450,6 @@ export class DashboardComponent implements OnInit {
                 this.notificationService.error("Fehler beim Laden der Seiten", "Die statischen Seiten konnten nicht geladen werden. Bitte versuche es später erneut.");
             },
         });
-
-        // Get all existing blog titles for editing
-        this.getAllBlogTitles();
-
-        // Get all blogs for editing
-        const getAllBlogsRequest = this.blogService.getAllBlogs();
-
-        getAllBlogsRequest.subscribe({
-            next: (response: GetAllBlogsApiEndpointResponse) => {
-                if (response.error || response.data === null) {
-                    this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
-
-                    return;
-                }
-
-                for (const blog of response.data) {
-                    this.blogs.existingBlogs[blog.title] = signal<BlogContent>(blog.data);
-                    this.blogImages.existingBlogs[blog.title] = [];
-                }
-            },
-            error: (error) => {
-                console.error("Error while fetching blogs:", error);
-                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden. Bitte versuche es später erneut.");
-            },
-        });
-
-        // Get all news for editing
-        this.getAllNews();
     }
 
     getAllBlogTitles(): void {
@@ -462,6 +467,29 @@ export class DashboardComponent implements OnInit {
             },
             error: (error) => {
                 console.error("Error while fetching blog titles:", error);
+                this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
+        });
+    }
+
+    getAllBlogs(): void {
+        const getAllBlogsRequest = this.blogService.getAllBlogs();
+
+        getAllBlogsRequest.subscribe({
+            next: (response: GetAllBlogsApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden: " + response.message);
+
+                    return;
+                }
+
+                for (const blog of response.data) {
+                    this.blogs.existingBlogs[blog.title] = signal<BlogContent>(blog.data);
+                    this.blogImages.existingBlogs[blog.title] = [];
+                }
+            },
+            error: (error) => {
+                console.error("Error while fetching blogs:", error);
                 this.notificationService.error("Fehler beim Laden der Blogs", "Die Blogs konnten nicht geladen werden. Bitte versuche es später erneut.");
             },
         });
@@ -504,6 +532,26 @@ export class DashboardComponent implements OnInit {
             error: (error) => {
                 console.error("Error while fetching news:", error);
                 this.notificationService.error("Fehler beim Laden der News", "Die News konnten nicht geladen werden. Bitte versuche es später erneut.");
+            },
+        });
+    }
+
+    getAllTeams(): void {
+        const teamsRequest = this.teamService.getAllTeams();
+
+        teamsRequest.subscribe({
+            next: (response: GetAllTeamsApiEndpointResponse) => {
+                if (response.error || !Array.isArray(response.data)) {
+                    this.notificationService.error("Fehler beim Laden der Teams", "Die Teams konnten nicht geladen werden: " + response.message);
+
+                    return;
+                }
+
+                this.allTeams = response.data;
+            },
+            error: (error) => {
+                console.error("Error while fetching teams data:", error);
+                this.notificationService.error("Fehler beim Laden der Teams", "Die Teams konnten nicht geladen werden. Bitte versuche es später erneut.");
             },
         });
     }
@@ -738,6 +786,7 @@ export class DashboardComponent implements OnInit {
         this.tableEditInputOpen.set(false);
 
         this.selectionInputOpen.set(false);
+        this.teamSelectionInputOpen.set(false);
     }
 
     /*
@@ -1240,6 +1289,25 @@ export class DashboardComponent implements OnInit {
                         _this.notificationService.error("Fehler beim Laden des Teams", "Das aktuelle Team konnte nicht geladen werden. Bitte versuche es später erneut.");
                     },
                 });
+            } else if (type === "addSpecificTeam") {
+                this.teamSelectionInputTitle.set("Team hinzufügen");
+                this.teamSelectionInputDescription.set(
+                    "Bitte wähle das Team aus, das du hinzufügen möchtest. Beachte, dass du dieses Element nachher nicht mehr bearbeiten kannst. Wenn du es ersetzen möchtest, musst du das Element löschen und dann ein Neues erstellen.",
+                );
+                this.teamSelectionInputLabel.set("Motto [Datum]:");
+                this.teamSelectionInputPlaceholder.set("Motto eingeben");
+                this.teamSelectionInputOptions.set(
+                    this.allTeams.map(
+                        (team: Team) =>
+                            `${team.motto} [${new Date(team.updated).toLocaleDateString("de-CH", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                            })} | ${team.id}]`,
+                    ),
+                );
+
+                this.teamSelectionInputOpen.set(true);
             } else if (type === "addMultipleButtons") {
                 _this.multipleButtonsInputOpen.set(true);
             } else if (type === "addMultipleLists") {
@@ -1713,6 +1781,46 @@ export class DashboardComponent implements OnInit {
                 this.selectionInputObservable.next(selectedOption);
                 break;
         }
+    }
+
+    handleTeamSelectionInputResult(selectedOption: string): void {
+        console.log("Selected team option:", selectedOption);
+
+        this.closePopupWithoutConfirmation();
+
+        // Format of the output: Team Motto String [01.01.2001 | {{id}}]
+        const id = Number(selectedOption.split("|").pop()?.trim().replace("]", ""));
+
+        if (typeof id !== "number" || isNaN(id) || id <= 0) {
+            this.notificationService.error("Ungültige Auswahl", "Die ausgewählte Team-ID ist ungültig. Bitte wähle ein gültiges Team aus der Liste aus.");
+            return;
+        }
+
+        const request = this.teamService.getTeam(id);
+
+        request.subscribe({
+            next: (response: GetTeamApiEndpointResponse) => {
+                if (response.error || response.data === null) {
+                    this.notificationService.error("Fehler beim Laden des Teams", "Das Team mit ID " + id + " konnte nicht geladen werden: " + response.message);
+
+                    return;
+                }
+
+                const element = this.editService.addCurrentTeam(response.data.id);
+
+                this.getCurrentEditSignal().update((siteOrBlog: StaticSite | BlogContent): StaticSite | BlogContent => {
+                    return {
+                        ...siteOrBlog,
+                        data: [element, ...siteOrBlog.data],
+                    };
+                });
+            },
+            error: (error) => {
+                console.error("Fehler beim Laden des Teams:", error);
+
+                this.notificationService.error("Fehler beim Laden des Teams", "Das Team mit ID " + id + " konnte nicht geladen werden. Bitte versuche es später erneut.");
+            },
+        });
     }
 
     handleImageInputResult(file: { file: File | null; url: string }): void {

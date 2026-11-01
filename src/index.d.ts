@@ -348,6 +348,10 @@ export interface GetTeamApiEndpointResponse extends ApiEndpointResponse {
     data: AssembledTeam | null;
 }
 
+export interface GetAllTeamsApiEndpointResponse extends ApiEndpointResponse {
+    data: Team[];
+}
+
 export interface GetBoardApiEndpointResponse extends ApiEndpointResponse {
     data: BoardUser[] | null;
 }
@@ -754,7 +758,8 @@ export type DashboardEditTypes =
     | "addMultipleButtons"
     | "editMultipleButtons"
     | "addMultipleLists"
-    | "editMultipleLists";
+    | "editMultipleLists"
+    | "addSpecificTeam";
 
 export type Team = {
     id: number;
@@ -762,7 +767,7 @@ export type Team = {
     text: string;
     picture: string;
     members: number[];
-    date: string;
+    updated: string;
 };
 
 export type AssembledTeam = {

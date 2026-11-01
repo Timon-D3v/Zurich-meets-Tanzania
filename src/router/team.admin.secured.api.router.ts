@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { PUBLIC_CONFIG } from "../publicConfig";
-import { ApiEndpointResponse, EditStrictTeamMemberCommand, GetAllMembersOfAllTeamsApiEndpointResponse, PrivateUser, Team, TeamMemberUser, UpdateTeamMemberWithIdApiEndpointResponse } from "..";
+import { ApiEndpointResponse, EditStrictTeamMemberCommand, GetAllMembersOfAllTeamsApiEndpointResponse, GetAllTeamsApiEndpointResponse, PrivateUser, Team, TeamMemberUser, UpdateTeamMemberWithIdApiEndpointResponse } from "..";
 import multerInstance from "../shared/instance.multer";
 import { delivApiUpload } from "delivapi-client";
 import {
@@ -16,6 +16,7 @@ import {
     updateTeamMemberProfession,
     updateTeamMemberMotive,
     updateTeamMemberRole,
+    getAllTeams,
 } from "../shared/team.database";
 import { getUserWithEmail } from "../shared/user.database";
 
@@ -575,6 +576,40 @@ router.get("/getCurrentTeamMember", async (req: Request, res: Response): Promise
             message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
             data: [],
         } as GetAllMembersOfAllTeamsApiEndpointResponse);
+    }
+});
+
+router.get("/getAllTeams", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const result = await getAllTeams();
+
+        if (result.error !== null) {
+            throw new Error(result.error);
+        }
+
+        res.json({
+            error: false,
+            message: "Success",
+            data: result.data as Team[],
+        } as GetAllTeamsApiEndpointResponse);
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof Error) {
+            res.json({
+                error: true,
+                message: error.message,
+                data: [],
+            } as GetAllTeamsApiEndpointResponse);
+
+            return;
+        }
+
+        res.status(501).json({
+            error: true,
+            message: PUBLIC_CONFIG.ERROR.INTERNAL_ERROR,
+            data: [],
+        } as GetAllTeamsApiEndpointResponse);
     }
 });
 

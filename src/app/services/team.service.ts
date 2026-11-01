@@ -1,14 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import {
-    ApiEndpointResponse,
-    GetTeamApiEndpointResponse,
-    GetBoardApiEndpointResponse,
-    GetAllMembersOfAllTeamsApiEndpointResponse,
-    EditTeamMemberCommand,
-    UpdateExpandedUserInformationApiEndpointResponse,
-    UpdateTeamMemberWithIdApiEndpointResponse,
-} from "../..";
+import { ApiEndpointResponse, GetTeamApiEndpointResponse, GetBoardApiEndpointResponse, GetAllMembersOfAllTeamsApiEndpointResponse, EditTeamMemberCommand, GetAllTeamsApiEndpointResponse, UpdateTeamMemberWithIdApiEndpointResponse } from "../..";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({
@@ -70,6 +62,12 @@ export class TeamService {
 
     getTeam(id: number): Observable<GetTeamApiEndpointResponse> {
         const request = this.http.get<GetTeamApiEndpointResponse>(`/api/team/getTeam?id=${id}`);
+
+        return request;
+    }
+
+    getAllTeams(): Observable<GetAllTeamsApiEndpointResponse> {
+        const request = this.http.get<GetAllTeamsApiEndpointResponse>("/api/secured/admin/team/getAllTeams");
 
         return request;
     }
