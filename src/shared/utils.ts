@@ -34,13 +34,13 @@ export function formatDateRangeString(startDate: Date, endDate: Date): string {
 
     const startYear = startDate.getFullYear();
     const startMonth = startDate.toLocaleDateString("de-CH", { month: "long" });
-    const startDay = startDate.getDay();
+    const startDay = startDate.getDate(); // Get the day of the month (1-31)
     const startHour = startDate.getHours();
     const startMinute = startDate.getMinutes();
 
     const endYear = endDate.getFullYear();
     const endMonth = endDate.toLocaleDateString("de-CH", { month: "long" });
-    const endDay = endDate.getDay();
+    const endDay = endDate.getDate();
     const endHour = endDate.getHours();
     const endMinute = endDate.getMinutes();
 
