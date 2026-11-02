@@ -4,12 +4,12 @@ import { sendMail } from "./send.email";
 
 /**
  * <Function>sendDonationRequestEmail</Function>
- * 
+ *
  * Sends a notification email to the chairman/admin about a new donation submission.
  * The email includes donor name, amount donated (in CHF), specified usage type (purpose), and donor email address.
  * Uses EMAIL_CONFIG templates with proper logos, headers, and developer disclaimer footer.
  * Part of the donation intake workflow for admin approval/rejection processes.
- * 
+ *
  * @param {number} amount - The donation amount in Swiss Francs (CHF).
  * @param {string} firstName - The donor's first name who submitted this donation.
  * @param {string} lastName - The donor's last name who submitted this donation.

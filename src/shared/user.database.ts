@@ -5,9 +5,9 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 
 /**
  * <Function>getUserWithEmail</Function>
- * 
+ *
  * Retrieves user information from the database by email address.
- * 
+ *
  * @param {string} email - The email address of the user to find.
  * @returns {Promise<DatabaseResult>} An object containing either `data` (user object or null) and `error` (null or error message).
  *     Returns `null` if the user is not found. Throws a database connection error on failure.
@@ -39,9 +39,9 @@ export async function getUserWithEmail(email: string): Promise<DatabaseResult> {
 
 /**
  * <Function>getUserWithId</Function>
- * 
+ *
  * Retrieves user information from the database by user ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user to find.
  * @returns {Promise<DatabaseResult>} An object containing either `data` (user object or null) and `error` (null or error message).
  *     Returns `null` if no user is found with that ID. Throws a database connection error on failure.
@@ -73,9 +73,9 @@ export async function getUserWithId(id: number): Promise<DatabaseResult> {
 
 /**
  * <Function>createUser</Function>
- * 
+ *
  * Creates a new user account in the database.
- * 
+ *
  * @param {string} email - The user's unique email address.
  * @param {string} hashedPassword - The password hash for the account (password should be hashed before calling).
  * @param {string} fistName - The user's first name.
@@ -116,9 +116,9 @@ export async function createUser(email: string, hashedPassword: string, fistName
 
 /**
  * <Function>setNewPassword</Function>
- * 
+ *
  * Sets a new password hash for the specified email address.
- * 
+ *
  * @param {string} email - The email address of the account whose password will be changed.
  * @param {string} hashedPassword - The new password hash to store in the database (password should be hashed before calling).
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that email or on failure.
@@ -150,9 +150,9 @@ export async function setNewPassword(email: string, hashedPassword: string): Pro
 
 /**
  * <Function>setUserType</Function>
- * 
+ *
  * Updates the user type (role) for the specified email address.
- * 
+ *
  * @param {string} email - The email address of the user whose role will be changed.
  * @param {('user'|'member'|'admin')} type - The new user type. Valid values are 'user', 'member', or 'admin'.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that email or on failure.
@@ -184,9 +184,9 @@ export async function setUserType(email: string, type: "user" | "member" | "admi
 
 /**
  * <Function>getAllUsers</Function>
- * 
+ *
  * Retrieves all users from the database (typically for admin purposes).
- * 
+ *
  * @returns {Promise<DatabaseResult>} An object containing `data` (array of all user objects) and `error` (null or error message). Throws a database connection error on failure.
  */
 export async function getAllUsers(): Promise<DatabaseResult> {
@@ -216,9 +216,9 @@ export async function getAllUsers(): Promise<DatabaseResult> {
 
 /**
  * <Function>getAllUserEmails</Function>
- * 
+ *
  * Retrieves all email addresses from the users table (useful for mailing list operations).
- * 
+ *
  * @returns {Promise<DatabaseResult>} An object containing `data` (array of user emails) and `error` (null or error message). Throws a database connection error on failure.
  */
 export async function getAllUserEmails(): Promise<DatabaseResult> {
@@ -248,9 +248,9 @@ export async function getAllUserEmails(): Promise<DatabaseResult> {
 
 /**
  * <Function>deleteUserWithId</Function>
- * 
+ *
  * Deletes a user account from the database by user ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user to delete.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
  */
@@ -281,9 +281,9 @@ export async function deleteUserWithId(id: number): Promise<DatabaseResult> {
 
 /**
  * <Function>setNewEmailWithId</Function>
- * 
+ *
  * Changes the email address for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose email will be changed.
  * @param {string} email - The new email address to set for this user.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
@@ -315,9 +315,9 @@ export async function setNewEmailWithId(id: number, email: string): Promise<Data
 
 /**
  * <Function>setNewPasswordWithId</Function>
- * 
+ *
  * Changes the password hash for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose password will be changed.
  * @param {string} password - The new hashed password to set for this user (password should be hashed before calling).
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
@@ -349,9 +349,9 @@ export async function setNewPasswordWithId(id: number, password: string): Promis
 
 /**
  * <Function>setNewFirstNameWithId</Function>
- * 
+ *
  * Changes the first name for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose name will be changed.
  * @param {string} firstName - The new first name to set for this user.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
@@ -383,9 +383,9 @@ export async function setNewFirstNameWithId(id: number, firstName: string): Prom
 
 /**
  * <Function>setNewLastNameWithId</Function>
- * 
+ *
  * Changes the last name for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose name will be changed.
  * @param {string} lastName - The new last name to set for this user.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
@@ -417,9 +417,9 @@ export async function setNewLastNameWithId(id: number, lastName: string): Promis
 
 /**
  * <Function>setNewPhoneNumberWithId</Function>
- * 
+ *
  * Changes the phone number for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose phone will be changed.
  * @param {string} phone - The new phone number to set for this user.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
@@ -451,9 +451,9 @@ export async function setNewPhoneNumberWithId(id: number, phone: string): Promis
 
 /**
  * <Function>setNewAddressWithId</Function>
- * 
+ *
  * Changes the physical address for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose address will be changed.
  * @param {string} address - The new physical address to set for this user.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
@@ -485,9 +485,9 @@ export async function setNewAddressWithId(id: number, address: string): Promise<
 
 /**
  * <Function>setUserTypeWithId</Function>
- * 
+ *
  * Changes the user type (role) for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose role will be changed.
  * @param {('user'|'member'|'admin')} type - The new user type to set. Valid values are 'user', 'member', or 'admin'.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.
@@ -519,9 +519,9 @@ export async function setUserTypeWithId(id: number, type: "user" | "member" | "a
 
 /**
  * <Function>setNewProfilePictureWithId</Function>
- * 
+ *
  * Changes the profile picture URL for a user by their ID.
- * 
+ *
  * @param {number} id - The unique identifier of the user whose profile will be updated.
  * @param {string} pictureUrl - The URL of the new profile picture to set.
  * @returns {Promise<DatabaseResult>} An object containing database query result and null on success. Throws a database connection error if no user is found with that ID or on failure.

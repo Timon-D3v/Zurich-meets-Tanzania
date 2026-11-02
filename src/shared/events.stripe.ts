@@ -4,13 +4,13 @@ import { sendCriticalErrorEmailForStripeSubscriptionNotFound } from "./member.em
 
 /**
  * <Function>paymentIntentSucceeded</Function>
- * 
+ *
  * Handles Stripe webhook event when a payment intention is successfully completed.
  * Processes customer subscription lookup, updates user type to member, and syncs member subscription data (start/end dates, status).
  * If a new customer/subscription not found for userId, automatically creates member record with subscription info.
  * Sends critical error notification if subscription cannot be found after multiple retries (FATAL ERROR).
  * Part of the donation checkout flow on Stripe checkout session completion.
- * 
+ *
  * @param {any} event - The Stripe webhook event object containing: id, type ("payment_intent.succeeded"), and eventData with paymentIntent details.
  *     Can be any JSON-serializable object since stripe package uses `any` type for webhook events.
  * @returns {Promise<void>} Resolves successfully when payment processing is complete and member/subscriptions are synced up. Never returns a value (void). Logs success message to console on completion; throws Error if critical issues occur like deleted customer or missing subscription after retries. Sends failure notification email if needed before throwing.
@@ -111,12 +111,12 @@ export async function paymentIntentSucceeded(event: any): Promise<void> {
 
 /**
  * <Function>paymentIntentFailed</Function>
- * 
+ *
  * Handles Stripe webhook event when a payment intention fails or is cancelled.
  * Logs the failed payment attempt details for debugging and monitoring purposes.
  * Does NOT throw errors; simply logs information to console for admin review.
  * Part of the error handling flow if card charge fails or customer cancels checkout session.
- * 
+ *
  * @param {any} event - The Stripe webhook event object containing: id, type ("payment_intent.payment_failed" or similar), and eventData with failed payment details.
  *     Can be any JSON-serializable object since stripe package uses `any` type for webhook events.
  * @returns {Promise<void>} Resolves successfully after logging failure info. Never returns a value (void); always throws no errors unless event processing itself fails internally.

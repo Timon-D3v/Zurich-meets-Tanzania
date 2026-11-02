@@ -16,7 +16,7 @@ import { createTeamMemberEntry, getTeamMemberEntry } from "../shared/team.databa
 // Router Serves under /api/secured/admin/management
 const router = Router();
 
-router.get("/getPasswords", (req: Request, res: Response): void => {
+router.get("/getPasswords", async (req: Request, res: Response): Promise<void> => {
     try {
         res.json({
             error: false,

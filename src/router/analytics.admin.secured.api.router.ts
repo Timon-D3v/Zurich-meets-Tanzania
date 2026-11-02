@@ -347,7 +347,7 @@ router.post("/deleteUserWithId", async (req: Request, res: Response): Promise<vo
     }
 });
 
-router.post("/resetUserPasswordWithId", async (req: Request, res: Response) => {
+router.post("/resetUserPasswordWithId", async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId } = req.body;
 

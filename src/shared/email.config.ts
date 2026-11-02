@@ -5,28 +5,28 @@ import { type MailComposerOptions } from "nodemailer";
 
 /**
  * <Constant>BANNER_LOGO_CID</Constant>
- * 
+ *
  * The content ID for the banner logo image attachment in emails.
  * Used when sending HTML emails with embedded images via nodemailer.
  */
 const BANNER_LOGO_CID = "banner-logo@" + CONFIG.ORIGIN; // Archive: https://ik.imagekit.io/zmt/email%20files/logo.png
 /**
  * <Constant>INSTAGRAM_LOGO_CID</Constant>
- * 
+ *
  * The content ID for the Instagram logo image attachment in emails.
  * Used when sending HTML emails with embedded images via nodemailer.
  */
 const INSTAGRAM_LOGO_CID = "instagram-logo@" + CONFIG.ORIGIN; // Archive: https://ik.imagekit.io/zmt/email%20files/instgram.png
 /**
  * <Constant>FACEBOOK_LOGO_CID</Constant>
- * 
+ *
  * The content ID for the Facebook logo image attachment in emails.
  * Used when sending HTML emails with embedded images via nodemailer.
  */
 const FACEBOOK_LOGO_CID = "facebook-logo@" + CONFIG.ORIGIN; // Archive: https://ik.imagekit.io/zmt/email%20files/facebook.png
 /**
  * <Constant>DEVELOPER_LOGO_CID</Constant>
- * 
+ *
  * The content ID for the developer's logo image attachment in emails.
  * Used when sending HTML emails with embedded images via nodemailer.
  */
@@ -55,7 +55,7 @@ async function loadAsset(path: string): Promise<Buffer> {
 
 /**
  * <Object>EMAIL_CONFIG</Object>
- * 
+ *
  * Configuration object containing email templates, greeting texts, footers, and attachment handlers for sending emails.
  * Used by auth.email.ts (password recovery), donation.email.ts (donation confirmation), newsletter.email.ts (newsletters), etc.
  * Includes HTML/plain text versions of messages with logos from website assets via CID base64 attachments.
@@ -63,7 +63,7 @@ async function loadAsset(path: string): Promise<Buffer> {
 export const EMAIL_CONFIG: EmailConfig = {
     /**
      * <Property>NEWSLETTER_SUBJECT</Property>
-     * 
+     *
      * Subject line used for newsletter emails sent to subscribers about news updates from the organization.
      * Used in newsletters when sending updates about blog posts, events, etc. (see newsletter.email.ts).
      */

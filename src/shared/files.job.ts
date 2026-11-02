@@ -7,14 +7,14 @@ import { LocalFile } from "../.";
 
 /**
  * <Function>updateLocalFilesMetadataDatabase</Function>
- * 
+ *
  * Background job that synchronizes local database with external DelivAPI CDN file system.
  * Compares stored files against remote CDN listing to detect additions, deletions, and MIME type changes.
  * Automatically adds new files, updates changed mime types (especially for JSON chunked uploads), and removes deleted files from tracking.
  * Uses retry logic: pauses 10 seconds between attempts if errors occur, up to `maxRetries` times before sending critical error notification emails.
  * Monitors both additions and deletions; retries entire operation if API calls fail. Logs progress to console during execution.
  * Intended for scheduled cron jobs or manual trigger via admin panel to keep file tracking in sync with CDN storage.
- * 
+ *
  * @param {number} maxRetries - Maximum number of retry attempts before giving up (default: 5). After exceeding this limit, sends critical error notifications to developers and chairman email addresses configued in PUBLIC_CONFIG.
  * @returns {Promise<void>} Resolves successfully when metadata sync completes or is abandoned due to retries exhausted. Never returns a value (void); logs all operations including successes warnings, errors, and retry attempts to console.
  */

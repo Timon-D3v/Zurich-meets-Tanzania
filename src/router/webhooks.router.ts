@@ -9,7 +9,7 @@ import { storeStripeEvent } from "../shared/payments.database";
 // Router Serves under /webhooks
 const router = Router();
 
-router.post("/stripe", raw({ type: "application/json" }), async (req: Request, res: Response) => {
+router.post("/stripe", raw({ type: "application/json" }), async (req: Request, res: Response): Promise<void> => {
     try {
         const signature = req.headers["stripe-signature"] as string;
 

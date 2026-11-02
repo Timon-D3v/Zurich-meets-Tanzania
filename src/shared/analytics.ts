@@ -8,11 +8,11 @@ initOpenapiSDK(CONFIG.TIANJI_URL, {
 
 /**
  * <Function>getLastXDaysVisitorCounts</Function>
- * 
+ *
  * Fetches visitor counts (page views, uniques, bounces, time) for the last N days from Tiangji analytics API.
  * Handles rate limits and failures gracefully by returning zero stats for problematic days.
  * Useful for displaying statistics on homepage or admin dashboard showing weekly/monthly trends.
- * 
+ *
  * @param {number} days - Number of past days to fetch (e.g., 7 for weekly, 30 for monthly).
  * @returns {Promise<VisitorCounts[]>} Array of visitor count objects with pageviews, uniques, bounces, and totaltime data per day. Throws an error if API request fails completely. Logs errors to console during retries.
  */

@@ -4,13 +4,13 @@ import { sendMail } from "./send.email";
 
 /**
  * <Function>sendCriticalJobFailureNotification</Function>
- * 
+ *
  * Sends an email to development team and administration about a critical background job failure.
  * Includes error details, retry attempt count (up to 5 attempts before abandoning), and current timestamp.
  * Only sends if running in production environment (`CONFIG.ENV !== "dev`); skips entirely in development mode.
  * Used after background jobs exceed `maxRetries` threshold for critical errors like Stripe webhook failures or file sync issues.
  * Emails sent configued to DEVELOPER and CHAIRMAN from PUBLIC_CONFIG.personas so admins can fix immediately.
- * 
+ *
  * @param {string} fullName - The full name of the person to notify (typically developer or chairman).
  * @param {string} email - The email address of the recipient receiving this critical error notification.
  * @param {string} errorMessage - The detailed error message describing what job failed and why (includes retry logs).

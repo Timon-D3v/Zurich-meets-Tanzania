@@ -7,7 +7,7 @@ import { getUserWithEmail, setUserType } from "../shared/user.database";
 // Router Serves under /api/secured/admin/membership
 const router = Router();
 
-router.get("/getAllMembers", async (req: Request, res: Response) => {
+router.get("/getAllMembers", async (req: Request, res: Response): Promise<void> => {
     try {
         const result = await getAllMembers();
 
@@ -41,7 +41,7 @@ router.get("/getAllMembers", async (req: Request, res: Response) => {
     }
 });
 
-router.get("/getAllLegacyMembers", async (req: Request, res: Response) => {
+router.get("/getAllLegacyMembers", async (req: Request, res: Response): Promise<void> => {
     try {
         const result = await getAllLegacyMembers();
 
@@ -75,7 +75,7 @@ router.get("/getAllLegacyMembers", async (req: Request, res: Response) => {
     }
 });
 
-router.get("/getUnverifiedLegacyMembers", async (req: Request, res: Response) => {
+router.get("/getUnverifiedLegacyMembers", async (req: Request, res: Response): Promise<void> => {
     try {
         const result = await getAllUnverifiedLegacyMembers();
 
@@ -109,7 +109,7 @@ router.get("/getUnverifiedLegacyMembers", async (req: Request, res: Response) =>
     }
 });
 
-router.post("/acceptLegacyMember", async (req: Request, res: Response) => {
+router.post("/acceptLegacyMember", async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId, memberId } = req.body;
 
@@ -154,7 +154,7 @@ router.post("/acceptLegacyMember", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/rejectLegacyMember", async (req: Request, res: Response) => {
+router.post("/rejectLegacyMember", async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId, memberId } = req.body;
 
@@ -303,7 +303,7 @@ router.post("/removeLegacyMember", async (req: Request, res: Response): Promise<
     }
 });
 
-router.get("/getAllLegacyMemberEmails", async (req: Request, res: Response) => {
+router.get("/getAllLegacyMemberEmails", async (req: Request, res: Response): Promise<void> => {
     try {
         const result = await getAllLegacyUserEmails();
 

@@ -214,7 +214,7 @@ router.post("/signup", multerInstance.single("picture"), async (req: Request, re
     }
 });
 
-router.post("/confirmSignUp", async (req: Request, res: Response) => {
+router.post("/confirmSignUp", async (req: Request, res: Response): Promise<void> => {
     try {
         const { email, code } = req.body;
 
@@ -359,7 +359,7 @@ router.post("/confirmSignUp", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/logout", (req: Request, res: Response) => {
+router.post("/logout", (req: Request, res: Response): void => {
     try {
         req.session.isLoggedIn = false;
         req.session.user = null;
@@ -437,7 +437,7 @@ router.get("/getUserDetails", (req: Request, res: Response): void => {
     }
 });
 
-router.post("/startPasswordRecovery", async (req: Request, res: Response) => {
+router.post("/startPasswordRecovery", async (req: Request, res: Response): Promise<void> => {
     try {
         const { email } = req.body;
 
@@ -532,7 +532,7 @@ router.post("/startPasswordRecovery", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/confirmPasswordRecovery", async (req: Request, res: Response) => {
+router.post("/confirmPasswordRecovery", async (req: Request, res: Response): Promise<void> => {
     try {
         const { email, code } = req.body;
 
