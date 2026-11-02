@@ -2,6 +2,19 @@ import { CONFIG } from "../config";
 import { EMAIL_CONFIG } from "./email.config";
 import { sendMail } from "./send.email";
 
+/**
+ * <Function>sendPasswordRecoveryConfirmationCode</Function>
+ * 
+ * Sends an email to a user containing a password recovery confirmation code.
+ * The email includes a unique code that expires after approximately 60 minutes and links to the password recovery page.
+ * Uses both plain text and HTML versions of the message with proper formatting.
+ * 
+ * @param {string} code - The one-time password recovery code generated on the server.
+ * @param {string} email - The recipient's email address.
+ * @param {string} firstName - The user's first name for personalized greeting.
+ * @param {string} lastName - The user's last name for personalized greeting.
+ * @returns {Promise<boolean>} Returns `true` if the email was sent successfully, `false` if sending failed (null request or rejected recipient). Logs errors to console.
+ */
 export async function sendPasswordRecoveryConfirmationCode(code: string, email: string, firstName: string, lastName: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS(firstName, lastName, "Divers"),
@@ -38,6 +51,19 @@ export async function sendPasswordRecoveryConfirmationCode(code: string, email: 
     return true;
 }
 
+/**
+ * <Function>sendNewPassword</Function>
+ * 
+ * Sends an email containing a newly generated password for account recovery.
+ * The notification informs users to change the password immediately after first login
+ * and provides a link to the account settings page. Includes security warning about changing password.
+ * 
+ * @param {string} password - The new password hash that was generated (should be hashed before this function call).
+ * @param {string} email - The recipient's email address.
+ * @param {string} firstName - The user's first name for personalized greeting.
+ * @param {string} lastName - The user's last name for personalized greeting.
+ * @returns {Promise<boolean>} Returns `true` if the email was sent successfully, `false` if sending failed. Logs errors to console on failure.
+ */
 export async function sendNewPassword(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS(firstName, lastName, "Divers"),
@@ -74,6 +100,20 @@ export async function sendNewPassword(password: string, email: string, firstName
     return true;
 }
 
+/**
+ * <Function>sendPasswordChangeConfirmation</Function>
+ * 
+ * Sends a notification email when a user has changed their password on the account page.
+ * Informs users that they have successfully changed their password and warns them to change it
+ * via account settings if they didn't initiate this change (possible security incident).
+ * Includes recommendation to create a new password immediately after first login for security.
+ * 
+ * @param {string} password - The user's new hashed password (shown in the notification email).
+ * @param {string} email - The recipient's email address.
+ * @param {string} firstName - The user's first name for personalized greeting.
+ * @param {string} lastName - The user's last name for personalized greeting.
+ * @returns {Promise<boolean>} Returns `true` if the email was sent successfully, `false` if sending failed. Logs errors to console on failure.
+ */
 export async function sendPasswordChangeConfirmation(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS(firstName, lastName, "Divers"),
@@ -110,6 +150,19 @@ export async function sendPasswordChangeConfirmation(password: string, email: st
     return true;
 }
 
+/**
+ * <Function>sendSignUpConfirmationCode</Function>
+ * 
+ * Sends an email containing a confirmation code for new account registration.
+ * The code expires after approximately 60 minutes and includes a link to the signup confirmation page.
+ * Part of the user onboarding process when someone creates a new membership account.
+ * 
+ * @param {string} code - The one-time confirmation code to display in the email.
+ * @param {string} email - The recipient's email address (used for the confirmation link).
+ * @param {string} firstName - The user's first name for personalized greeting.
+ * @param {string} lastName - The user's last name for personalized greeting.
+ * @returns {Promise<boolean>} Returns `true` if the email was sent successfully, `false` if sending failed. Logs errors to console on failure.
+ */
 export async function sendSignUpConfirmationCode(code: string, email: string, firstName: string, lastName: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS(firstName, lastName, "Divers"),
@@ -146,6 +199,20 @@ export async function sendSignUpConfirmationCode(code: string, email: string, fi
     return true;
 }
 
+/**
+ * <Function>sendPasswordFromAdmin</Function>
+ * 
+ * Sends an email with auto-generated password when an administrator creates an account for a user.
+ * The notification informs the user that an account has been created specifically for them,
+ * and recommends changing the password immediately after first login for security.
+ * Includes contact information for administrators if the recipient didn't expect this email.
+ * 
+ * @param {string} password - The initially generated password (plain text to display in email).
+ * @param {string} email - The recipient's email address.
+ * @param {string} firstName - The user's first name for personalized greeting.
+ * @param {string} lastName - The user's last name for personalized greeting.
+ * @returns {Promise<boolean>} Returns `true` if the email was sent successfully, `false` if sending failed. Logs errors to console on failure.
+ */
 export async function sendPasswordFromAdmin(password: string, email: string, firstName: string, lastName: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS(firstName, lastName, "Divers"),

@@ -3,6 +3,20 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 import { EMAIL_CONFIG } from "./email.config";
 import { sendMail } from "./send.email";
 
+/**
+ * <Function>sendLegacyMemberRequestEmail</Function>
+ * 
+ * Sends a notification email to the chairman/admin about a new membership request submission.
+ * Uses this function for legacy manual memberships or membership renewal reminders via member form.
+ * The email verifies if the member dues have been transferred and requests confirmation on admin side.
+ * Includes contact email address of the applicant for follow-up communication.
+ * Part of legacy membership workflow for members using traditional payment methods (not Stripe).
+ * 
+ * @param {string} firstName - The member's first name who submitted the request or needs renewal.
+ * @param {string} lastName - The member's last name associated with this membership request.
+ * @param {string} email - The applicant's contact email address as provided in the membership form.
+ * @returns {Promise<boolean>} Returns `true` if the notification email was sent successfully, `false` if sending failed (null request or rejected recipient). Logs errors to console.
+ */
 export async function sendLegacyMemberRequestEmail(firstName: string, lastName: string, email: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS("", "", "Divers"),
@@ -44,6 +58,20 @@ export async function sendLegacyMemberRequestEmail(firstName: string, lastName: 
     return true;
 }
 
+/**
+ * <Function>sendLegacyMemberExpireNotice</Function>
+ * 
+ * Sends an email notification to a legacy member whose membership period has expired.
+ * Alerts the member that their membership is no longer active and requests renewal via bank transfer.
+ * Informs them that their membership will be automatically renewed upon receipt of transferred dues.
+ * Provides link to membership bank account details without requiring form re-submission.
+ * Part of legacy membership expiration handling workflow for traditional payment members.
+ * 
+ * @param {string} firstName - The member's first name who needs renewal notification.
+ * @param {string} lastName - The member's last name associated with the expiring membership.
+ * @param {string} email - The member's contact email address for sending renewal notice.
+ * @returns {Promise<boolean>} Returns `true` if the expiration notice was sent successfully, `false` if sending failed (null request or rejected recipient). Logs errors to console.
+ */
 export async function sendLegacyMemberExpireNotice(firstName: string, lastName: string, email: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS(firstName, lastName, "Divers"),
@@ -81,6 +109,19 @@ export async function sendLegacyMemberExpireNotice(firstName: string, lastName: 
     return true;
 }
 
+/**
+ * <Function>sendCriticalErrorEmailForStripeSubscriptionNotFound</Function>
+ * 
+ * Sends critical error notifications when a Stripe payment succeeds but the member cannot be found.
+ * Occurs during onboarding/payment flow when user data does not match any existing member records.
+ * Alerts both chairman and developer for manual intervention to resolve membership registration issue.
+ * Provides customer ID and user ID for debugging the membership lookup failure in backend systems.
+ * Part of Stripe subscription processing error handling when legacy member records are missing.
+ * 
+ * @param {string} customerId - The Stripe customer identifier from successful payment intent.
+ * @param {number} userId - The internal user identification that failed to match an existing member record.
+ * @returns {Promise<void>} Sends notification emails and completes execution. Logs errors if email delivery fails. Throws no errors.
+ */
 export async function sendCriticalErrorEmailForStripeSubscriptionNotFound(customerId: string, userId: number): Promise<void> {
     const text = [
         EMAIL_CONFIG.GREETINGS("", "", "Divers"),

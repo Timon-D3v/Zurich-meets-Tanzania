@@ -3,9 +3,33 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 import { EmailConfig } from "..";
 import { type MailComposerOptions } from "nodemailer";
 
+/**
+ * <Constant>BANNER_LOGO_CID</Constant>
+ * 
+ * The content ID for the banner logo image attachment in emails.
+ * Used when sending HTML emails with embedded images via nodemailer.
+ */
 const BANNER_LOGO_CID = "banner-logo@" + CONFIG.ORIGIN; // Archive: https://ik.imagekit.io/zmt/email%20files/logo.png
+/**
+ * <Constant>INSTAGRAM_LOGO_CID</Constant>
+ * 
+ * The content ID for the Instagram logo image attachment in emails.
+ * Used when sending HTML emails with embedded images via nodemailer.
+ */
 const INSTAGRAM_LOGO_CID = "instagram-logo@" + CONFIG.ORIGIN; // Archive: https://ik.imagekit.io/zmt/email%20files/instgram.png
+/**
+ * <Constant>FACEBOOK_LOGO_CID</Constant>
+ * 
+ * The content ID for the Facebook logo image attachment in emails.
+ * Used when sending HTML emails with embedded images via nodemailer.
+ */
 const FACEBOOK_LOGO_CID = "facebook-logo@" + CONFIG.ORIGIN; // Archive: https://ik.imagekit.io/zmt/email%20files/facebook.png
+/**
+ * <Constant>DEVELOPER_LOGO_CID</Constant>
+ * 
+ * The content ID for the developer's logo image attachment in emails.
+ * Used when sending HTML emails with embedded images via nodemailer.
+ */
 const DEVELOPER_LOGO_CID = "dev-logo@" + CONFIG.ORIGIN; // Archive: https://ik.imagekit.io/timon/cdn/icon
 
 const BANNER_LOGO_PATH = "/email/logo.png";
@@ -29,7 +53,20 @@ async function loadAsset(path: string): Promise<Buffer> {
     return Buffer.from(arrayBuffer);
 }
 
+/**
+ * <Object>EMAIL_CONFIG</Object>
+ * 
+ * Configuration object containing email templates, greeting texts, footers, and attachment handlers for sending emails.
+ * Used by auth.email.ts (password recovery), donation.email.ts (donation confirmation), newsletter.email.ts (newsletters), etc.
+ * Includes HTML/plain text versions of messages with logos from website assets via CID base64 attachments.
+ */
 export const EMAIL_CONFIG: EmailConfig = {
+    /**
+     * <Property>NEWSLETTER_SUBJECT</Property>
+     * 
+     * Subject line used for newsletter emails sent to subscribers about news updates from the organization.
+     * Used in newsletters when sending updates about blog posts, events, etc. (see newsletter.email.ts).
+     */
     NEWSLETTER_SUBJECT: "Es gibt Neuigkeiten!",
     GREETINGS: (fistName: string, lastName: string, gender: "Herr" | "Frau" | "Divers"): string => {
         switch (gender) {
@@ -44,6 +81,9 @@ export const EMAIL_CONFIG: EmailConfig = {
                 break;
         }
     },
+    /**
+     * HTML formatted greeting text with proper CSS styling for email client rendering.
+     */
     GREETINGS_HTML: (greetings: string): string => `<p style="
             font-size: 18px; 
             color: #070d13; 
@@ -73,7 +113,13 @@ export const EMAIL_CONFIG: EmailConfig = {
             word-break: keep-all; 
             -webkit-hyphens: auto;
             hyphens: auto; ">`,
+    /**
+     * Plain text regards/sign-off message for email footer.
+     */
     REGARDS: "\n\nMit freundlichen Grüssen\nzurich meets tanzania",
+    /**
+     * HTML formatted regards/sign-off message with styling for email client rendering.
+     */
     REGARDS_HTML: `</p><p style="
             font-size: 18px; 
             color: #070d13; 
@@ -326,4 +372,6 @@ export const EMAIL_CONFIG: EmailConfig = {
             { filename: "dev.png", content: DEVELOPER_LOGO_BUFFER, cid: DEVELOPER_LOGO_CID },
         ];
     },
-};
+}; /**
+ * <Object>EMAIL_CONFIG</Object> - Contains greeting functions, GREETINGS_HTML(), REGARDS, REGARDS_HTML, HEADER, FOOTER, NEWSLETTER_BODY, NEWSLETTER_BODY_HTML, and ATTACHMENTS() for email sending operations. All emails use nodemailer via send.email.ts with proper HTML/text templates.
+ */

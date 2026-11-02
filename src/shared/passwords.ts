@@ -1,6 +1,17 @@
 import { LoginInformation } from "..";
 import { CONFIG } from "../config";
 
+/**
+ * <Variable>PASSWORDS</Variable>
+ * 
+ * Contains login credentials for various service accounts used across the ZMT platform.
+ * Each entry represents one service account with website label, URL, username, and password.
+ * Some accounts include two-factor authentication secrets for dashboard access requiring 2FA.
+ * Note: These credentials are stored in codebase and should be reviewed regularly for security updates.
+ * Unmarked accounts ("Unbenutzt" = Unused) are legacy or planned services not currently in use.
+ * Used in environment-specific configuration files (not .git) to prevent commit of actual secrets.
+ * 
+ */
 export const PASSWORDS: LoginInformation[] = [
     {
         websiteLabel: "Google Account",

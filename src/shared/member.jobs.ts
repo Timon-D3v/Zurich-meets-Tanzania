@@ -4,6 +4,20 @@ import { getAllLegacyMembers, resetLegacyMemberStatusForExpiredLegacyMember } fr
 import { sendLegacyMemberExpireNotice, sendLegacyMemberRequestEmail } from "./member.email";
 import { sleep } from "./utils";
 
+/**
+ * <Function>resetLegacyMemberStatusIfPeriodHasEnded</Function>
+ * 
+ * Checks legacy members with expired membership periods and resets their status to unverified.
+ * Sends expiration notice emails to affected members and requests new re-submission for manual memberships.
+ * Retries database operations on failure (with exponential backoff of 10 seconds) up to configurable max retries.
+ * Uses getAllLegacyMembers to fetch all legacy members, then processes each one whose periodEndTime is before now.
+ * For verified members with expired periods: resets status, sends expiration notice, and requests new membership form.
+ * Part of automated member management for legacy (non-Stripe) membership renewals.
+ * 
+ * @param {number} maxRetries - Maximum number of retry attempts for failed database queries (default: 5).
+ * @param {number} retries - Current retry attempt count, incremented on failure (default: 0).
+ * @returns {Promise<void>} Executes member status checks and sends notifications. Logs information about processed members or errors during execution. Throws no explicit errors; may log to console on issues.
+ */
 export async function resetLegacyMemberStatusIfPeriodHasEnded(maxRetries: number = 5, retries: number = 0): Promise<void> {
     const name = "resetLegacyMemberStatusIfPeriodHasEnded";
 

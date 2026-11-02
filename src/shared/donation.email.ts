@@ -2,6 +2,21 @@ import { PUBLIC_CONFIG } from "../publicConfig";
 import { EMAIL_CONFIG } from "./email.config";
 import { sendMail } from "./send.email";
 
+/**
+ * <Function>sendDonationRequestEmail</Function>
+ * 
+ * Sends a notification email to the chairman/admin about a new donation submission.
+ * The email includes donor name, amount donated (in CHF), specified usage type (purpose), and donor email address.
+ * Uses EMAIL_CONFIG templates with proper logos, headers, and developer disclaimer footer.
+ * Part of the donation intake workflow for admin approval/rejection processes.
+ * 
+ * @param {number} amount - The donation amount in Swiss Francs (CHF).
+ * @param {string} firstName - The donor's first name who submitted this donation.
+ * @param {string} lastName - The donor's last name who submitted this donation.
+ * @param {string} email - The donor's contact email address as provided in the donation form.
+ * @param {string} usageType - The designated purpose/category for where this donation should be spent.
+ * @returns {Promise<boolean>} Returns `true` if the notification was sent successfully, `false` if sending failed (null request or rejected recipient). Logs errors to console.
+ */
 export async function sendDonationRequestEmail(amount: number, firstName: string, lastName: string, email: string, usageType: string): Promise<boolean> {
     const text = [
         EMAIL_CONFIG.GREETINGS("", "", "Divers"),
