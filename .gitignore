@@ -71,3 +71,4 @@ dockerize.sh
 imprint.txt
 opencode.json
 ai-instructions.txt
+.opencode/

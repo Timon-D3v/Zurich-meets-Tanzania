@@ -52,6 +52,19 @@ export class CurrentTeamComponent implements OnInit {
         this.loadCurrentTeam();
     }
 
+    /**
+     * <Function>loadCurrentTeam</Function>
+     * 
+     * Fetches and loads the current team data from the API.
+     * Makes an asynchronous request via TeamService.getCurrentTeam() to retrieve the complete team information including members, motto, text content, picture URL, date, and ID.
+     * Checks browser context in ngOnInit(); if not valid, sets failure state with error message and fallback values (id: -2), preventing server-side fetch attempts on Node.js environments.
+     * Handles API responses: displays success notification or empty result handling; invalid data (error flag set or null payload) triggers error flow by showing error message, setting failedFetching signal to true, updating team signal with fallback object displaying error text and falling picture.
+     * Handles subscription errors via error callback: logs errors to console, shows error notification in German explaining load failure and retry advice, updates team state with error placeholder values, marks fetching as failed.
+     * On all success cases: resets failedFetching flag to false to indicate successful data loading. Always avoids throwing and ensures proper UI state transitions for user experience.
+     * 
+     * @param {void} No required parameters; invoked automatically during component initialization or via external trigger.
+     * @returns {void} Does not return a value; handles all async operations via Observable subscriptions ensuring complete lifecycle management without exceptions. Throws no errors.
+     */
     loadCurrentTeam(): void {
         const request = this.teamService.getCurrentTeam();
 

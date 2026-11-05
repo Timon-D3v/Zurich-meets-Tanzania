@@ -53,6 +53,22 @@ export class ContactComponent implements OnInit {
         }
     }
 
+    /**
+     * <Function>onSubmit</Function>
+     * 
+     * Handles submission of the contact form after validating all required fields.
+     * Checks if running in browser context first (to avoid server-side POST requests).
+     * Performs client-side validation for firstName, lastName, email (with regex pattern matching), and message
+     * (minimum 10 characters required) displaying error notifications for any invalid input.
+     * Shows submission loading state by disabling submit button and updating text to "Versenden...".
+     * Makes an API request via ContactService.submitMessageAndGetVerificationToken() after passing validation.
+     * On successful token generation: shows confirmation notification, switches forms (to verification), updates UI state for awaiting verification code input.
+     * On API error or null token: displays error message, resets submission state to original values.
+     * On subscription errors: logs to console and notifies user with error then reset button to enabled state.
+     * 
+     * @param {Event} event - The submit event triggered by clicking the contact form's submit button.
+     * @returns {void} Does not return a value; handles all async responses via Observable and ensures UI state properly resets. Throws no errors.
+     */
     onSubmit(event: Event): void {
         event.preventDefault();
 
@@ -145,6 +161,20 @@ export class ContactComponent implements OnInit {
         });
     }
 
+    /**
+     * <Function>onVerificationSubmit</Function>
+     * 
+     * Handles submission of the verification token form after validating required fields.
+     * Validates submission token format (64-character lowercase alphanumeric string) and verification code format (10-character lowercase alphanumeric string).
+     * Checks if running in browser context first (to avoid server-side API calls).
+     * Makes an API request via ContactService.confirmVerificationToken() using the provided token and verification code.
+     * On successful confirmation: shows success notification, resets verification form, switches back to contact submission mode, re-enables original submit button.
+     * On error responses (invalid/expired code): displays error message informing user their request cannot be confirmed.
+     * On subscription errors: logs to console and notifies user of error before resetting UI state.
+     * 
+     * @param {Event} event - The submit event triggered by clicking the verification form's submit button.
+     * @returns {void} Does not return a value; handles all async responses via Observable and ensures UI properly resets. Throws no errors.
+     */
     onVerificationSubmit(event: Event): void {
         event.preventDefault();
 
@@ -204,6 +234,16 @@ export class ContactComponent implements OnInit {
         });
     }
 
+    /**
+     * <Function>autofill</Function>
+     * 
+     * Auto-populates the contact form with user's profile information if they are currently logged in.
+     * Reads user data from AuthService.user() signal (returns null if not authenticated).
+     * Extracts firstName, lastName, and email from user object to pre-fill corresponding form controls.
+     * Used during ngOnInit when authService.isLoggedIn() is true to improve user experience for returning visitors.
+     * 
+     * @returns {void} Does not return a value; updates the contactForm with autofilled values via patchValue(). Throws no errors.
+     */
     autofill(): void {
         this.contactForm.patchValue({
             firstNameControl: this.authService.user()?.firstName ?? "",

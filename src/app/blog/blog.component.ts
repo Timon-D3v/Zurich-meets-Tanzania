@@ -102,6 +102,19 @@ export class BlogComponent implements OnInit {
         this.getBlog(this.name());
     }
 
+    /**
+     * <Function>getBlog</Function>
+     * 
+     * Fetches and loads the blog content for a specified blog by its name/title.
+     * Checks if running in browser context first (avoiding server-side requests).
+     * Makes an API request via BlogService.getBlog() to retrieve the full blog data including title, image URL, and content.
+     * Handles both API error cases (error flag or null data) and subscription errors by displaying error notifications.
+     * On successful fetch: updates the blog signal with retrieved data and resets failedFetching flag.
+     * On failure: redirects to home route (/) and marks fetching as failed. Always completes without throwing exceptions.
+     * 
+     * @param {string} name - The name/title of the blog to fetch (URL-safe string).
+     * @returns {void} Does not return a value; handles loading state asynchronously and always completes normally. Throws no errors.
+     */
     getBlog(name: string): void {
         if (!isPlatformBrowser(this.platformId)) {
             console.error("Cannot fetch when not in browser context.");
@@ -139,6 +152,16 @@ export class BlogComponent implements OnInit {
         });
     }
 
+    /**
+     * <Function>formatDate</Function>
+     * 
+     * Formats a date string into a localized German (Swiss) locale representation with day, month, year, and time components.
+     * Uses JavaScript's Date constructor and toLocaleDateString() with Swiss-German locale settings for consistent formatting.
+     * Useful for displaying blog post publication dates in the site's UI with proper cultural formatting.
+     * 
+     * @param {string} dateString - The ISO 8601 formatted date string (e.g., "2024-01-15T10:30:00Z") to format.
+     * @returns {string} A German-stringified, human-readable date including weekday, day of month, full month name, year, hour of day (0-24), and 2-digit minute value in dd./MMMM YYYY hh:mm format (localized de-CH). Throws no errors.
+     */
     formatDate(dateString: string): string {
         return new Date(dateString).toLocaleDateString("de-CH", {
             weekday: "short",

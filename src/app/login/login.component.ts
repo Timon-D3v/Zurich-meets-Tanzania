@@ -27,7 +27,7 @@ export class LoginComponent {
 
     private platformId = inject(PLATFORM_ID);
 
-    updateEmailInput(input: null | string | number | object) {
+    updateEmailInput(input: null | string | number | object): void {
         if (typeof input !== "string") {
             throw new Error(`Input type not allowed. Expected: string, Actual value: ${typeof input}`);
         }
@@ -35,7 +35,7 @@ export class LoginComponent {
         this.emailInput.set(input);
     }
 
-    updatePasswordInput(input: null | string | number | object) {
+    updatePasswordInput(input: null | string | number | object): void {
         if (typeof input !== "string") {
             throw new Error(`Input type not allowed. Expected: string, Actual value: ${typeof input}`);
         }
@@ -43,6 +43,21 @@ export class LoginComponent {
         this.passwordInput.set(input);
     }
 
+    /**
+     * <Function>login</Function>
+     * 
+     * Handles form submission for user login with email and password authentication.
+     * Checks browser context first (returns early on non-browser platforms to avoid server-side authentication attempts).
+     * Prevents default event behavior and validates both email (required, not empty, valid regex pattern) and password fields.
+     * Shows loading state by disabling submit button and updating text to "Laden..." during API request.
+     * Makes login API call via AuthService.login() with user credentials. On success: shows notification with response message, refreshes user data from getCurrentUserDetails(), updates submit button text to "Eingeloggt" for confirmation display.
+     * Handles API error responses by showing error notifications without clearing form inputs, resets button state enabling retry attempts.
+     * After successful authentication calls redirectUserAfterLogin() which redirects to stored redirectUrl query parameter if exists (uses setInterval with up to 20 retries of polling isLoggedIn signal until user is authenticated or max retries exceeded) otherwise redirects to home page (/).
+     * Returns early without errors in all edge cases ensuring graceful browser/server-side handling.
+     * 
+     * @param {Event} event - The submit event triggered by clicking the login form's submit button (prevented default behavior and propagated via stopPropagation or direct call if needed for component functionality).
+     * @returns {void} Does not return a value; handles asynchronous login flow via Observable subscription completing on success, error or redirect with no errors thrown. Throws only when input is wrong type in updateEmailInput/updatePasswordInput private methods (not in login itself which validates strings first).
+     */
     login(event: Event): void {
         if (!isPlatformBrowser(this.platformId)) {
             return;
